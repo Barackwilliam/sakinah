@@ -5,11 +5,12 @@
   <form class="search filters" method="get">
     <label>Looking for a<div class="sel"><svg><use href="#i-user"/></svg><select name="seek"><option value="">Anyone</option><option value="M" {% if seek == 'M' %}selected{% endif %}>Man</option><option value="F" {% if seek == 'F' %}selected{% endif %}>Woman</option></select></div></label>
     <label>Age<div class="sel"><select name="age"><option value="">Any</option>{% for k in ages %}<option value="{{ k }}" {% if f.age == k %}selected{% endif %}>{{ k }}</option>{% endfor %}</select></div></label>
-    <label>Location<div class="sel"><svg class="red"><use href="#i-pin"/></svg><select name="city"><option value="">Anywhere</option>{% for l in locations %}<option {% if f.city == l %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div></label>
+    <label>Location<div class="sel"><svg><use href="#i-pin"/></svg><select name="city"><option value="">Anywhere</option>{% for l in locations %}<option {% if f.city == l %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div></label>
+    <label>Religion<div class="sel"><svg><use href="#i-moon"/></svg><select name="religion"><option value="">Any</option>{% for v, l in religions %}<option value="{{ v }}" {% if f.religion == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div></label>
     <label class="chk"><input type="checkbox" name="verified" value="1" {% if f.verified %}checked{% endif %}> Verified only</label>
     <button class="btn btn-s"><svg><use href="#i-search"/></svg>Search</button>
   </form>
-  {% if page %}<div class="grid-m">{% for m in page %}{% include "partials/member_card.html" %}{% endfor %}</div>
+  {% if page %}<div class="pgrid">{% for m in page %}{% include "partials/profile_card.html" %}{% endfor %}</div>
   {% if page.has_other_pages %}<nav class="pager">
     {% if page.has_previous %}<a class="btn btn-o xs" href="?{{ qs }}&page={{ page.previous_page_number }}">&lsaquo; Previous</a>{% endif %}
     <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>

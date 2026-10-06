@@ -1,7 +1,7 @@
 <article class="mcard">
-  <a class="m-ph" href="{% url 'member' m.pk %}">{% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" loading="lazy">{% endif %}{% if m.verified %}<span class="vbadge"><svg><use href="#i-check-c"/></svg>Verified</span>{% endif %}</a>
+  <a class="m-ph" href="{% url 'member' m.pk %}"{% if not user.is_authenticated %} data-auth="{% url 'member' m.pk %}"{% endif %}>{% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" loading="lazy">{% endif %}{% if m.verified %}<span class="vbadge"><svg><use href="#i-check-c"/></svg>Verified</span>{% endif %}</a>
   <div class="m-b"><h3>{{ m.name }}, {{ m.age }}</h3>
     <ul><li><svg><use href="#i-pin"/></svg>{{ m.city }}</li><li><svg><use href="#i-user"/></svg>{{ m.occupation }}</li><li><svg><use href="#i-people"/></svg>{{ m.intention }}</li></ul>
     <div class="compat"><span>Compatibility <b>{{ m.compatibility }}%</b></span><i style="--p:{{ m.compatibility }}%"></i></div>
-    <div class="m-act">{% include "partials/like_button.html" with cls="sm" %}<a class="btn btn-v sm" href="{% url 'member' m.pk %}">View Profile</a></div></div>
+    <div class="m-act">{% include "partials/like_button.html" with cls="sm" %}{% url 'member' m.pk as u_view %}<a class="btn btn-v sm" href="{% if user.is_authenticated %}{{ u_view }}{% else %}{% url 'login' %}?next={{ u_view|urlencode }}" data-auth="{{ u_view }}{% endif %}">View Profile</a></div></div>
 </article>

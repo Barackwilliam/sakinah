@@ -12,5 +12,6 @@
 {% if messages %}<div class="msgs">{% for m in messages %}<p class="msg {{ m.tags }}">{{ m }}</p>{% endfor %}</div>{% endif %}
 <main>{% block content %}{% endblock %}</main>
 {% include "partials/footer.html" %}
+{% if modal_login %}{% include "partials/auth_modal.html" %}{% endif %}
 <script src="{% static 'js/main.js' %}"></script>
 </body></html>

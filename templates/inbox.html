@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}Ujumbe - {{ site.brand }}{% endblock %}
+{% block content %}<div class="wrap page narrow">
+  <div class="sec-h"><div><h2>Ujumbe</h2><p>Mazungumzo yako na wanachama wengine.</p></div></div>
+  {% if convos %}<ul class="convos">{% for c in convos %}<li><a href="{% url 'thread' c.member.pk %}">
+    <span class="av">{% if c.member.photo %}<img src="{{ c.member.photo.url }}" alt="">{% endif %}</span>
+    <span class="cv-t"><b>{{ c.member.name }}</b><small>{% if c.last.sender_id == user.id %}Wewe: {% endif %}{{ c.last.body|truncatechars:70 }}</small></span>
+    <span class="cv-r"><small>{{ c.last.created|timesince }}</small>{% if c.unread %}<span class="badge">{{ c.unread }}</span>{% endif %}</span></a></li>{% endfor %}</ul>
+  {% else %}<p class="empty">Bado huna ujumbe. <a class="more inl" href="{% url 'matches' %}">Tafuta mwenza</a></p>{% endif %}
+</div>{% endblock %}

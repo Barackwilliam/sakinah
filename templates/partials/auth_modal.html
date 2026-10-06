@@ -1,0 +1,12 @@
+<div class="amodal" id="amodal" hidden>
+  <div class="am-box" role="dialog" aria-modal="true" aria-labelledby="am-title">
+    <button type="button" class="am-x" data-close aria-label="Funga">&times;</button>
+    <h2 id="am-title">Jiunge na {{ site.brand }}</h2>
+    <p class="sub">Ili kutazama profaili au kuwasiliana na mwanachama, jisajili bure au ingia kwenye akaunti yako.</p>
+    <div class="am-tabs" role="tablist"><button type="button" class="on" data-tab="su">Jisajili</button><button type="button" data-tab="li">Ingia</button></div>
+    <form id="am-su" method="post" action="{% url 'signup' %}" class="form two">{% csrf_token %}{% include "partials/form.html" with form=modal_signup %}
+      <input type="hidden" name="next" class="am-next"><button class="btn btn-s block">Jisajili Bure</button></form>
+    <form id="am-li" method="post" action="{% url 'login' %}" class="form" hidden>{% csrf_token %}{% include "partials/form.html" with form=modal_login %}
+      <input type="hidden" name="next" class="am-next"><button class="btn btn-s block">Ingia</button></form>
+  </div>
+</div>

@@ -23,10 +23,23 @@ class Command(BaseCommand):
             ServiceCategory.objects.get_or_create(slug=n.lower().replace(" & ","-").replace(" ","-"),
               defaults=dict(name=n,blurb=b.replace("\n"," "),order=i,button_label="View Venues" if n=="Wedding Venues" else "View Advert"))
         for c in ServiceCategory.objects.all(): attach(c, "image", IMG / "site" / f"svc_{c.slug}.jpg")
-        for n,a,c,o,comp,g,f,img in [("Amina",28,"Dar es Salaam","Accountant",91,"F",1,"amina"),("Hassan",31,"Arusha","Engineer",88,"M",1,"hassan"),
-                                 ("Zahra",26,"Mwanza","Teacher",85,"F",1,"zahra"),("Omar",30,"Dar es Salaam","Business Owner",87,"M",1,"omar"),
-                                 ("Maryam",24,"Arusha","Nurse",86,"F",0,"maryam")]:
-            m,_ = Member.objects.get_or_create(name=n,age=a,defaults=dict(city=c,occupation=o,compatibility=comp,gender=g,verified=True,featured=bool(f)))
+        people = [  # name, age, city, occupation, compat, gender, featured, image, religion, education, bio
+            ("Amina",28,"Dar es Salaam","Accountant",91,"F",1,"amina","Islam","Shahada ya Uhasibu","Ninathamini imani, familia na heshima. Natafuta mume mcha Mungu kwa ajili ya ndoa ya kudumu."),
+            ("Hassan",31,"Arusha","Engineer",88,"M",1,"hassan","Islam","Shahada","Ninapenda dini yangu, ninathamini familia, na ninatafuta mwenza wa maisha kwa ajili ya ndoa ya kudumu."),
+            ("Zahra",26,"Mwanza","Teacher",85,"F",1,"zahra","Islam","Stashahada ya Ualimu","Mwalimu mpenda watoto na amani. Natafuta mwenza mwenye maadili ya Kiislamu."),
+            ("Omar",30,"Dar es Salaam","Business Owner",87,"M",1,"omar","Islam","Shahada","Ninaheshimu dini, naweza kushirikiana, na ninatamani kupata mwenza wa maisha kwa ajili ya ndoa ya kudumu."),
+            ("Maryam",24,"Arusha","Nurse",86,"F",0,"maryam","Islam","Stashahada ya Uuguzi","Ninapenda kusaidia watu. Natafuta mume mwenye upendo na heshima."),
+            ("Salim",52,"Dodoma","Mfanyabiashara",84,"M",0,"salim","Islam","Shahada ya Uzamili","Ninaamini familia ni msingi wa maisha. Ninathamini maadili, heshima, na malezi mema. Ninataka mwenza wa maisha kwa ajili ya ndoa ya kudumu."),
+            ("Daniel",32,"Arusha","Mchungaji",86,"M",0,"daniel","Christian","Shahada ya Theolojia","Ninampenda Mungu, na ninaamini katika familia. Ninatafuta mwenza wa maisha kwa ajili ya ndoa ya kudumu."),
+            ("Abdullah",38,"Dar es Salaam","Mtaalamu wa TEHAMA",89,"M",0,"abdullah","Islam","Shahada ya Uzamili","Ninaamini katika familia yenye maadili ya Kiislamu. Napenda uaminifu, heshima na mawasiliano mazuri. Ninatafuta mwenza wa maisha kwa ajili ya ndoa ya kudumu."),
+            ("Neema",27,"Mwanza","Muuguzi",83,"F",0,"church_woman","Christian","Stashahada ya Uuguzi","Ninamtumikia Mungu na ninapenda familia. Natafuta mume mwenye imani na upendo wa dhati."),
+            ("Grace",29,"Dar es Salaam","Afisa Masoko",82,"F",0,"woman_pink","Christian","Shahada ya Biashara","Mchangamfu, mwenye bidii na mpenda familia. Natafuta mwenza wa maisha mwenye hofu ya Mungu."),
+        ]
+        for n,a,c,o,comp,g,f,img,rel,edu,bio in people:
+            m,_ = Member.objects.get_or_create(name=n,age=a,defaults=dict(city=c,occupation=o,compatibility=comp,gender=g,verified=True,featured=bool(f),religion=rel))
+            blank = [k for k in ("education", "bio") if not getattr(m, k)]
+            for k in blank: setattr(m, k, {"education": edu, "bio": bio}[k])
+            if blank: m.save(update_fields=blank)
             attach(m, "photo", IMG / f"{img}.jpg")
         for n,p in [("Free",0),("Basic",10000),("Silver",25000),("Gold",50000),("Tanzanite",100000)]:
             Plan.objects.get_or_create(name=n,defaults=dict(price=p,order=p))

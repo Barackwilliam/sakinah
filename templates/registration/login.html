@@ -3,5 +3,5 @@
   <h1>Welcome back</h1><p class="sub">Log in to see your matches and likes.</p>
   <form method="post" class="form">{% csrf_token %}{% include "partials/form.html" %}<input type="hidden" name="next" value="{{ next }}">
     <button class="btn btn-s block">Login</button></form>
-  <p class="alt">New to {{ site.brand }}? <a href="{% url 'signup' %}">Join free</a></p>
+  <p class="alt">New to {{ site.brand }}? <a href="{% url 'signup' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Join free</a></p>
 </section>{% endblock %}
