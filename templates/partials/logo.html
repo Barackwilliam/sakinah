@@ -1,0 +1,5 @@
+<a class="logo" href="{% url 'home' %}">
+  {% if site.logo %}<img src="{{ site.logo.url }}" alt="{{ site.brand }}">{% else %}
+  <svg class="logo-mark" viewBox="0 0 48 44"><circle cx="15" cy="8" r="5" fill="currentColor"/><circle cx="33" cy="8" r="5" fill="currentColor"/><path fill="currentColor" d="M24 42S3 29 3 17c0-5 4-8 8-8 5 0 9 5 13 11 4-6 8-11 13-11 4 0 8 3 8 8 0 12-21 25-21 25z"/><path fill="#fff" d="M24 36S11 27 11 20c0-2 1.500-3.500 3.500-3.500 3 0 6 4 9.500 9 3.500-5 6.500-9 9.500-9 2 0 3.500 1.500 3.500 3.500 0 7-13 16-13 16z" opacity=".25"/></svg>{% endif %}
+  <span class="logo-text"><b>{{ site.brand }}</b><small>{{ site.tagline }}</small></span>
+</a>

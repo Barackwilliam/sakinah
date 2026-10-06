@@ -1,0 +1,16 @@
+<header class="nav">
+  <div class="nav-in">
+    {% include "partials/logo.html" %}
+    <nav class="nav-links" id="navlinks">
+      <a href="{% url 'home' %}" class="{% if current == 'home' %}on{% endif %}"><svg><use href="#i-home"/></svg>Home</a>
+      <a href="#"><svg><use href="#i-heart"/></svg>Find a Match</a>
+      <a href="#"><svg><use href="#i-ring"/></svg>Marriage Services</a>
+      <a href="#"><svg><use href="#i-cal"/></svg>Events</a>
+      <a href="#"><svg class="gold"><use href="#i-crown"/></svg>Premium</a>
+      <a href="#"><svg><use href="#i-book"/></svg>Articles</a>
+      <div class="nav-auth-m"><a class="btn btn-o" href="#">Login</a><a class="btn btn-s" href="#">Join Free</a></div>
+    </nav>
+    <div class="nav-auth"><a class="btn btn-o" href="#">Login</a><a class="btn btn-s" href="#">Join Free</a></div>
+    <button class="burger" id="burger" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
+  </div>
+</header>

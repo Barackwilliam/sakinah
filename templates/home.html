@@ -1,0 +1,67 @@
+{% extends "base.html" %}{% load static %}
+{% block content %}
+<section class="hero" {% if site.hero_image %}style="--hero:url('{{ site.hero_image.url }}')"{% endif %}>
+  <div class="hero-in">
+    <div class="hero-txt">
+      <h1>{{ site.hero_title_1 }}<br><span>{{ site.hero_title_2 }}</span></h1>
+      <p>{{ site.hero_text }}</p>
+      <form class="search" action="#" method="get">
+        <label>I am a<div class="sel"><svg><use href="#i-user"/></svg><select name="gender"><option>Woman</option><option>Man</option></select></div></label>
+        <label>Looking for a<div class="sel"><svg><use href="#i-user"/></svg><select name="seek"><option>Man</option><option>Woman</option></select></div></label>
+        <label>Age<div class="sel"><select name="age"><option>20 - 35</option><option>25 - 40</option><option>35+</option></select></div></label>
+        <label>Location<div class="sel"><svg class="red"><use href="#i-pin"/></svg><select name="city">{% for l in locations %}<option>{{ l }}</option>{% endfor %}</select></div></label>
+        <label>Religion<div class="sel"><svg><use href="#i-moon"/></svg><select name="religion"><option>Islam</option></select></div></label>
+        <button class="btn btn-s">Search</button>
+      </form>
+      <ul class="trust"><li><svg class="gold"><use href="#i-shield"/></svg>Verified Profiles</li><li><svg class="gold"><use href="#i-heart-f"/></svg>Serious Intentions</li><li><svg class="gold"><use href="#i-shield"/></svg>Safe &amp; Secure</li><li><svg class="gold"><use href="#i-people"/></svg>Real People</li></ul>
+    </div>
+    <blockquote class="hero-q">&ldquo;{{ site.hero_quote }}&rdquo;<i></i></blockquote>
+  </div>
+</section>
+
+<section class="wrap panel pink">
+  <div class="sec-h"><div><h2>Everything You Need for Your Nikah &amp; Wedding</h2><p>Discover trusted vendors and services to make your special day perfect.</p></div><a class="more" href="#">View All Services <svg><use href="#i-arrow"/></svg></a></div>
+  <div class="svc-grid">
+    {% for c in categories %}
+    <article class="svc"><div class="svc-img">{% if c.image %}<img src="{{ c.image.url }}" alt="{{ c.name }}" loading="lazy">{% endif %}</div>
+      <h3>{{ c.name }}</h3><p>{{ c.blurb }}</p><a class="btn btn-p" href="#">{{ c.button_label }}</a></article>
+    {% endfor %}
+  </div>
+</section>
+
+<div class="wrap trio">
+  <section class="panel">
+    <div class="sec-h"><div><h2>Featured Matches</h2><p>Meet verified members looking for serious relationships and marriage.</p></div><a class="more" href="#">View More Matches <svg><use href="#i-arrow"/></svg></a></div>
+    <div class="m-wrap"><button class="arr l" aria-label="Previous">&#8249;</button><div class="m-grid">
+      {% for m in matches %}
+      <article class="mcard">
+        <div class="m-ph">{% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" loading="lazy">{% endif %}{% if m.verified %}<span class="vbadge"><svg><use href="#i-check"/></svg>Verified</span>{% endif %}</div>
+        <div class="m-b"><h3>{{ m.name }}, {{ m.age }}</h3>
+          <ul><li><svg><use href="#i-pin"/></svg>{{ m.city }}</li><li><svg><use href="#i-briefcase"/></svg>{{ m.occupation }}</li><li><svg><use href="#i-heart-f"/></svg>{{ m.intention }}</li></ul>
+          <div class="compat"><span>Compatibility <b>{{ m.compatibility }}%</b></span><i style="--p:{{ m.compatibility }}%"></i></div>
+          <div class="m-act"><a class="btn btn-p sm" href="#"><svg><use href="#i-heart-f"/></svg>Like</a><a class="btn btn-s sm" href="#">View Profile</a></div></div>
+      </article>{% endfor %}
+    </div><button class="arr r" aria-label="Next">&#8250;</button></div>
+  </section>
+
+  <div class="prem"><h2><svg><use href="#i-crown"/></svg>GO PREMIUM</h2><p>Get matches and powerful features.</p>
+      <ul>{% for p in perks %}<li><svg><use href="#i-check"/></svg>{{ p.text }}</li>{% endfor %}</ul>
+      <div class="price">From {{ site.currency }} {{ from_price|floatformat:"0g" }}/month</div>
+      <a class="btn btn-s block" href="#">Upgrade Now <svg><use href="#i-arrow"/></svg></a></div>
+  <aside class="side">
+    <div class="panel ev">
+      <div class="sec-h sm"><h2>Upcoming Events</h2><a class="more" href="#">View All <svg><use href="#i-arrow"/></svg></a></div>
+      {% for e in events %}
+      <div class="ev-row"><div class="ev-img">{% if e.image %}<img src="{{ e.image.url }}" alt="" loading="lazy">{% endif %}</div>
+        <div class="ev-d"><b>{{ e.date|date:"d" }}</b>{{ e.date|date:"M"|upper }}</div>
+        <div class="ev-t"><h4>{{ e.title }}</h4><p>{{ e.description }}</p><span><svg><use href="#i-pin"/></svg>{{ e.city }}</span></div>
+        <a class="btn btn-p xs" href="#">Register</a></div>{% endfor %}
+    </div>
+    <div class="adv"><div><h3>Advertise Your Marriage Service</h3><p>Reach thousands of members looking for trusted wedding services.</p><a class="btn btn-p xs" href="#">Advertise Now <svg><use href="#i-arrow"/></svg></a></div></div>
+  </aside>
+</div>
+
+<section class="wrap strip">
+  {% for s in strip %}<div><span class="ic"><svg><use href="#i-{{ s.icon }}"/></svg></span><div><b>{{ s.title }}</b><small>{{ s.text }}</small></div></div>{% endfor %}
+</section>
+{% endblock %}
