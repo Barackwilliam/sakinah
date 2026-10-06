@@ -4,10 +4,10 @@
     <nav class="nav-links" id="navlinks">
       <a href="{% url 'home' %}" class="{% if current == 'home' %}on{% endif %}"><svg><use href="#i-home"/></svg>Home</a>
       <a href="{% url 'matches' %}" class="{% if current == 'matches' or current == 'member' %}on{% endif %}"><svg><use href="#i-heart"/></svg>Find a Match</a>
-      <a href="{% url 'services' %}" class="{% if current == 'services' %}on{% endif %}"><svg><use href="#i-ring"/></svg>Marriage Services</a>
-      <a href="{% url 'events' %}" class="{% if current == 'events' %}on{% endif %}"><svg><use href="#i-cal"/></svg>Events</a>
+      <a href="{% url 'services' %}" class="{% if current == 'services' %}on{% endif %}"><svg><use href="#i-camera"/></svg>Marriage Services</a>
+      <a href="{% url 'events' %}" class="{% if current == 'events' %}on{% endif %}"><svg><use href="#i-cal-f"/></svg>Events</a>
       <a href="{% url 'premium' %}" class="{% if current == 'premium' %}on{% endif %}"><svg class="gold"><use href="#i-crown"/></svg>Premium</a>
-      <a href="#"><svg><use href="#i-book"/></svg>Articles</a>
+      <a href="#"><svg><use href="#i-doc"/></svg>Articles</a>
       <div class="nav-auth-m">{% include "partials/auth_links.html" %}</div>
     </nav>
     <div class="nav-auth">{% include "partials/auth_links.html" %}</div>

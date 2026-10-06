@@ -4,14 +4,16 @@ from django.utils import timezone
 
 class SiteSetting(models.Model):
     """Everything editable in header/footer/hero lives here (no hardcoded text)."""
-    brand = models.CharField(max_length=50, default="Nusrah")
-    tagline = models.CharField(max_length=100, default="People • Values • Marriage")
+    brand = models.CharField(max_length=50, default="Sakinah")
+    tagline = models.CharField(max_length=100, default="Imani • Mapenzi • Ndoa")
     hero_title_1 = models.CharField(max_length=100, default="Find Someone Special.")
     hero_title_2 = models.CharField(max_length=100, default="Build a Marriage.")
     hero_text = models.CharField(max_length=250, default="Connect with verified people who are looking for meaningful relationships and marriage.")
-    hero_quote = models.CharField(max_length=200, default="More than a date. A path to a brighter tomorrow.")
+    hero_quote = models.CharField(max_length=200, default="Zaidi ya uchumba, ni safari ya maisha na mwenye kheri.")
     hero_image = models.ImageField(upload_to="site/", blank=True)
     logo = models.ImageField(upload_to="site/", blank=True)
+    premium_image = models.ImageField(upload_to="site/", blank=True, help_text="Couple photo on the Go Premium card")
+    advert_image = models.ImageField(upload_to="site/", blank=True, help_text="Photo on the Advertise Your Marriage Service card")
     currency = models.CharField(max_length=10, default="TSh")
     class Meta: verbose_name = "Site setting"
     @classmethod
