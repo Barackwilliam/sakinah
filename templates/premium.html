@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}Premium - {{ site.brand }}{% endblock %}
+{% block content %}<div class="wrap page">
+  <div class="sec-h"><div><h2>Go Premium</h2><p>Get noticed faster and unlock every feature.</p></div></div>
+  <ul class="perks">{% for p in perks %}<li><svg><use href="#i-check"/></svg>{{ p.text }}</li>{% endfor %}</ul>
+  <div class="plans">{% for p in plans %}<article class="plan{% if forloop.last %} top{% endif %}"><h3>{% if forloop.last %}<svg><use href="#i-crown"/></svg>{% endif %}{{ p.name }}</h3>
+    <div class="amt">{{ site.currency }} {{ p.price|floatformat:"0g" }}<small>/month</small></div>
+    <a class="btn {% if forloop.last %}btn-s{% else %}btn-o{% endif %} block" href="{% if user.is_authenticated %}#{% else %}{% url 'signup' %}{% endif %}">Choose {{ p.name }}</a></article>{% endfor %}</div>
+  <p class="note">Mobile money payments (M-Pesa, Tigo Pesa, Airtel Money) are coming soon.</p>
+</div>{% endblock %}

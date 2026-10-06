@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}Events - {{ site.brand }}{% endblock %}
+{% block content %}<div class="wrap page">
+  <div class="sec-h"><div><h2>Events &amp; Workshops</h2><p>Seminars, meetings and workshops to prepare for a blessed marriage.</p></div></div>
+  {% if upcoming %}<div class="cards">{% for e in upcoming %}<article class="card" id="e{{ e.pk }}">
+    <div class="card-img">{% if e.image %}<img src="{{ e.image.url }}" alt="" loading="lazy">{% endif %}<span class="date"><b>{{ e.date|date:"d" }}</b>{{ e.date|date:"M Y"|upper }}</span></div>
+    <div class="card-b"><h3>{{ e.title }}</h3><p>{{ e.description }}</p><span class="loc"><svg><use href="#i-pin"/></svg>{{ e.city }}</span></div></article>{% endfor %}</div>
+  {% else %}<p class="empty">No upcoming events right now. Check back soon.</p>{% endif %}
+  {% if past %}<h3 class="sub-h">Past events</h3><ul class="past">{% for e in past %}<li>{{ e.date|date:"d M Y" }} &middot; {{ e.title }} &middot; {{ e.city }}</li>{% endfor %}</ul>{% endif %}
+</div>{% endblock %}

@@ -1,0 +1,2 @@
+{% if form.non_field_errors %}<div class="ferr">{{ form.non_field_errors }}</div>{% endif %}
+{% for f in form %}<div class="fld{% if f.errors %} bad{% endif %}">{{ f.label_tag }}{{ f }}{% if f.help_text %}<small>{{ f.help_text|safe }}</small>{% endif %}{{ f.errors }}</div>{% endfor %}

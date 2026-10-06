@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block title %}{{ m.name }} - {{ site.brand }}{% endblock %}
+{% block content %}<div class="wrap page"><article class="prof panel">
+  <div class="prof-ph">{% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}">{% endif %}{% if m.verified %}<span class="vbadge"><svg><use href="#i-check"/></svg>Verified</span>{% endif %}</div>
+  <div class="prof-b">
+    <h1>{{ m.name }}, {{ m.age }}</h1>
+    <ul class="facts"><li><svg><use href="#i-pin"/></svg>{{ m.city }}</li><li><svg><use href="#i-briefcase"/></svg>{{ m.occupation }}</li>
+      <li><svg><use href="#i-heart-f"/></svg>{{ m.intention }}</li><li><svg><use href="#i-moon"/></svg>{{ m.religion }}</li><li><svg><use href="#i-user"/></svg>{{ m.get_gender_display }}</li></ul>
+    {% if not is_me %}<div class="compat"><span>Compatibility <b>{{ m.compatibility }}%</b></span><i style="--p:{{ m.compatibility }}%"></i></div>{% endif %}
+    <h3>About</h3><p class="bio">{{ m.bio|default:"This member hasn't written an introduction yet."|linebreaksbr }}</p>
+    <div class="prof-act">{% if is_me %}<a class="btn btn-s" href="{% url 'profile_edit' %}">Edit Profile</a>
+      {% else %}{% include "partials/like_button.html" %}<a class="btn btn-o" href="{% url 'matches' %}">Back to Matches</a>{% endif %}</div>
+  </div>
+</article></div>{% endblock %}

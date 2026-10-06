@@ -9,6 +9,7 @@
 </head><body>
 {% include "partials/icons.html" %}
 {% include "partials/navbar.html" %}
+{% if messages %}<div class="msgs">{% for m in messages %}<p class="msg {{ m.tags }}">{{ m }}</p>{% endfor %}</div>{% endif %}
 <main>{% block content %}{% endblock %}</main>
 {% include "partials/footer.html" %}
 <script src="{% static 'js/main.js' %}"></script>

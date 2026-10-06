@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
@@ -33,6 +34,7 @@ class PremiumPerk(models.Model):
 
 class Member(models.Model):
     GENDER = [("F", "Woman"), ("M", "Man")]
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name="member")
     name = models.CharField(max_length=80)
     age = models.PositiveSmallIntegerField()
     gender = models.CharField(max_length=1, choices=GENDER)
@@ -40,12 +42,21 @@ class Member(models.Model):
     occupation = models.CharField(max_length=80)
     intention = models.CharField(max_length=60, default="Marriage-oriented")
     religion = models.CharField(max_length=30, default="Islam")
+    bio = models.TextField(max_length=600, blank=True)
     photo = models.ImageField(upload_to="members/", blank=True)
     verified = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)
     compatibility = models.PositiveSmallIntegerField(default=80)
     joined = models.DateTimeField(default=timezone.now)
+    class Meta: ordering = ["-featured", "-verified", "-joined"]
     def __str__(self): return f"{self.name}, {self.age}"
+
+class Like(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="likes")
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="likes")
+    created = models.DateTimeField(auto_now_add=True)
+    class Meta: constraints = [models.UniqueConstraint(fields=["user", "member"], name="unique_like")]
+    def __str__(self): return f"{self.user} -> {self.member}"
 
 class ServiceCategory(models.Model):
     name = models.CharField(max_length=60)

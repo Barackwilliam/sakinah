@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %}Marriage Services - {{ site.brand }}{% endblock %}
+{% block content %}<div class="wrap page">
+  <div class="sec-h"><div><h2>Marriage Services</h2><p>Trusted vendors for your Nikah and wedding.</p></div></div>
+  <div class="cards">{% for c in categories %}<article class="card" id="{{ c.slug }}">
+    <div class="card-img">{% if c.image %}<img src="{{ c.image.url }}" alt="{{ c.name }}" loading="lazy">{% endif %}</div>
+    <div class="card-b"><h3>{{ c.name }}</h3><p>{{ c.blurb }}</p></div></article>{% endfor %}</div>
+  <div class="adv cta"><div><h3>Advertise Your Marriage Service</h3><p>Reach thousands of members looking for trusted wedding services.</p></div></div>
+</div>{% endblock %}

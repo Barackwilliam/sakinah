@@ -1,0 +1,2 @@
+<form class="likef" method="post" action="{% url 'like' m.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
+<button class="btn btn-p {{ cls }}{% if m.pk in liked %} on{% endif %}"><svg><use href="#i-heart-f"/></svg>{% if m.pk in liked %}Liked{% else %}Like{% endif %}</button></form>

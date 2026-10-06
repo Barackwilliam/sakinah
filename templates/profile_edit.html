@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}Edit Profile - {{ site.brand }}{% endblock %}
+{% block content %}<section class="authbox panel wide">
+  <h1>Your profile</h1><p class="sub">A complete profile with a clear photo gets far more interest.</p>
+  <form method="post" enctype="multipart/form-data" class="form two">{% csrf_token %}{% include "partials/form.html" %}
+    <button class="btn btn-s block">Save Profile</button></form>
+</section>{% endblock %}

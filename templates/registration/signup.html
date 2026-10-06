@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Join Free - {{ site.brand }}{% endblock %}
+{% block content %}<section class="authbox panel wide">
+  <h1>Join {{ site.brand }} free</h1><p class="sub">Create your account and start meeting verified, marriage-minded people.</p>
+  <form method="post" class="form two">{% csrf_token %}{% include "partials/form.html" %}
+    <button class="btn btn-s block">Create Account</button></form>
+  <p class="alt">Already a member? <a href="{% url 'login' %}">Login</a></p>
+</section>{% endblock %}
