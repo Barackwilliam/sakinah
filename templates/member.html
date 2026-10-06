@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}{{ m.name }} - {{ site.brand }}{% endblock %}
+{% block content %}<div class="wrap page narrow">
+  <a class="more back" href="{% url 'matches' %}"><svg class="flip"><use href="#i-arrow"/></svg>Rudi kwenye Matches</a>
+  {% include "partials/profile_card.html" with full=1 %}
+  {% if gallery %}<div class="gallery" data-for="{{ m.pk }}">
+    {% if m.photo %}<button type="button" class="on" data-src="{{ m.photo.url }}" data-n="1"><img src="{{ m.photo.url }}" alt=""></button>{% endif %}
+    {% for p in gallery %}<button type="button" data-src="{{ p.image.url }}" data-n="{{ forloop.counter|add:1 }}"><img src="{{ p.image.url }}" alt="" loading="lazy"></button>{% endfor %}
+  </div>{% endif %}
+</div>{% endblock %}

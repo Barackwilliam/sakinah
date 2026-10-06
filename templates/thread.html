@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}{{ other.name }} - Ujumbe{% endblock %}
+{% block content %}<div class="wrap page narrow">
+  <div class="th-h"><a class="more back" href="{% url 'inbox' %}"><svg class="flip"><use href="#i-arrow"/></svg>Ujumbe</a>
+    <a class="th-who" href="{% url 'member' other.pk %}"><span class="av">{% if other.photo %}<img src="{{ other.photo.url }}" alt="">{% endif %}</span><b>{{ other.name }}, {{ other.age }}</b>{% if other.is_online %}<span class="pc-on">Online sasa</span>{% endif %}</a></div>
+  <div class="thread">{% for msg in msgs %}<div class="bub{% if msg.sender_id == user.id %} me{% endif %}"><p>{{ msg.body|linebreaksbr }}</p><small>{{ msg.created|date:"d M, H:i" }}</small></div>
+  {% empty %}<p class="empty">Anza mazungumzo na {{ other.name }}. Kuwa mstaarabu na mwenye heshima.</p>{% endfor %}</div>
+  {% if not other.user_id %}<p class="note">{{ other.name }} bado hajaanza kutumia ujumbe wa Sakinah; ujumbe wako utamfikia atakapoingia.</p>{% endif %}
+  <form method="post" class="th-form">{% csrf_token %}{{ form.body }}<button class="btn btn-s"><svg><use href="#i-chat"/></svg>Tuma</button></form>
+</div>{% endblock %}

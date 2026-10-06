@@ -1,0 +1,38 @@
+{% url 'member' m.pk as u_view %}{% url 'thread' m.pk as u_chat %}{% url 'login' as u_login %}
+<article class="pcard">
+  <div class="pc-ph">
+    {% if m.photo %}<img id="pc-main-{{ m.pk }}" src="{{ m.photo.url }}" alt="{{ m.name }}" loading="lazy">{% endif %}
+    {% if m.verified %}<span class="pc-ver"><svg><use href="#i-check-o"/></svg>Imethibitishwa</span>{% endif %}
+    {% if m.photo_total %}<span class="pc-cnt"><svg><use href="#i-camera-f"/></svg><span><span id="pc-n-{{ m.pk }}">1</span> / {{ m.photo_total }}</span></span>{% endif %}
+  </div>
+  <div class="pc-b">
+    <span class="pc-seek"><svg><use href="#i-ring2"/></svg>Anatafuta {{ m.seeking }}</span>
+    <h3>{{ m.name }}</h3>
+    <div class="pc-age">Miaka {{ m.age }}{% if m.is_online %}<span class="pc-on">Online sasa</span>{% endif %}</div>
+    <dl class="pc-facts">
+      <div><dt><svg><use href="#i-pin"/></svg>Mahali:</dt><dd>{{ m.city }}, Tanzania</dd></div>
+      <div><dt><svg><use href="#i-{% if m.religion == 'Christian' %}church{% else %}mosque{% endif %}"/></svg>Dini:</dt><dd>{{ m.get_religion_display }}</dd></div>
+      <div><dt><svg><use href="#i-cap"/></svg>Elimu:</dt><dd>{{ m.education|default:"&mdash;" }}</dd></div>
+      <div><dt><svg><use href="#i-briefcase"/></svg>Kazi:</dt><dd>{{ m.occupation }}</dd></div>
+      <div><dt><svg><use href="#i-heart-f"/></svg>Hali ya Ndoa:</dt><dd>{{ m.marital }}</dd></div>
+      <div><dt><svg><use href="#i-people"/></svg>Asili:</dt><dd>{{ m.origin }}</dd></div>
+    </dl>
+    <div class="pc-box pc-goal"><svg><use href="#i-ring2"/></svg><div><b class="pc-t">Anatafuta: {{ m.seeking }}</b><p><b>Lengo:</b> {{ m.goal_text }}</p></div></div>
+    {% if m.bio %}<div class="pc-box pc-about"><svg><use href="#i-msg-sq"/></svg><div><b>Kuhusu Mimi:</b><p>{% if full %}{{ m.bio|linebreaksbr }}{% else %}{{ m.bio|truncatewords:38 }}{% endif %}</p></div></div>{% endif %}
+  </div>
+  <div class="pc-act">
+    {% if is_me %}<a class="btn pc-b1" href="{% url 'profile_edit' %}"><svg><use href="#i-user"/></svg>Hariri Profaili</a>
+    {% elif not user.is_authenticated %}
+      <a class="btn pc-b1" href="{{ u_login }}?next={{ u_view|urlencode }}" data-auth="{{ u_view }}"><svg><use href="#i-heart"/></svg>Tazama Profaili</a>
+      <a class="btn pc-b2" href="{{ u_login }}?next={{ u_chat|urlencode }}" data-auth="{{ u_chat }}"><svg><use href="#i-chat"/></svg>Wasiliana</a>
+      <a class="btn pc-b3" href="{{ u_login }}?next={{ u_view|urlencode }}" data-auth="{{ u_view }}"><svg><use href="#i-wa-f"/></svg>Tuma Ujumbe</a>
+    {% else %}
+      {% if full %}<form class="likef" method="post" action="{% url 'like' m.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <button class="btn pc-b1{% if m.pk in liked %} on{% endif %}"><svg><use href="#i-heart{% if m.pk in liked %}-f{% endif %}"/></svg>{% if m.pk in liked %}Umempenda{% else %}Mpende{% endif %}</button></form>
+      {% else %}<a class="btn pc-b1" href="{{ u_view }}"><svg><use href="#i-heart"/></svg>Tazama Profaili</a>{% endif %}
+      <a class="btn pc-b2" href="{{ u_chat }}"><svg><use href="#i-chat"/></svg>Wasiliana</a>
+      {% if m.whatsapp_url %}<a class="btn pc-b3" href="{{ m.whatsapp_url }}" target="_blank" rel="noopener"><svg><use href="#i-wa-f"/></svg>Tuma Ujumbe</a>
+      {% else %}<a class="btn pc-b3" href="{{ u_chat }}" title="Mwanachama huyu hajaweka WhatsApp; utamtumia ujumbe hapa Sakinah"><svg><use href="#i-wa-f"/></svg>Tuma Ujumbe</a>{% endif %}
+    {% endif %}
+  </div>
+</article>

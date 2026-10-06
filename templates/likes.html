@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}My Likes - {{ site.brand }}{% endblock %}
+{% block content %}<div class="wrap page">
+  <div class="sec-h"><div><h2>My Likes</h2><p>Members you have shown interest in.</p></div><a class="more" href="{% url 'matches' %}">Find more <svg><use href="#i-arrow"/></svg></a></div>
+  {% if members %}<div class="grid-m">{% for m in members %}{% include "partials/member_card.html" %}{% endfor %}</div>
+  {% else %}<p class="empty">You haven't liked anyone yet.</p>{% endif %}
+</div>{% endblock %}

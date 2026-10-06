@@ -1,0 +1,3 @@
+{% if user.is_authenticated %}<form class="likef" method="post" action="{% url 'like' m.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
+<button class="btn btn-like {{ cls }}{% if m.pk in liked %} on{% endif %}"><svg><use href="#i-heart-f"/></svg>{% if m.pk in liked %}Liked{% else %}Like{% endif %}</button></form>
+{% else %}<a class="btn btn-like {{ cls }}" href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" data-auth="{{ request.get_full_path }}"><svg><use href="#i-heart-f"/></svg>Like</a>{% endif %}
