@@ -68,4 +68,5 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 LANGUAGE_CODE = "en"; TIME_ZONE = "Africa/Dar_es_Salaam"; USE_TZ = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+AUTHENTICATION_BACKENDS = ["core.backends.EmailOrUsernameBackend"]
 LOGIN_URL = "login"; LOGIN_REDIRECT_URL = "home"; LOGOUT_REDIRECT_URL = "home"

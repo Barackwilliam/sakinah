@@ -1,6 +1,6 @@
 from datetime import date
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import login, views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Count, Q
@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
-from .forms import LOCATIONS, SignupForm, ProfileForm, MessageForm
+from .forms import LOCATIONS, LoginForm, SignupForm, ProfileForm, MessageForm
 from .models import *
 
 AGES = {"20-35": (20, 35), "25-40": (25, 40), "35+": (35, 99)}
@@ -23,11 +23,15 @@ def safe_next(request):
 def me(request):
     return getattr(request.user, "member", None) if request.user.is_authenticated else None
 
+def faces():
+    return Member.objects.exclude(photo="").filter(verified=True).order_by("joined", "pk")[:5]
+
 def home(request):
     gold = Plan.objects.order_by("price").first()
     return render(request, "home.html", {
         "categories": ServiceCategory.objects.all()[:8],
         "matches": Member.objects.filter(featured=True).order_by("joined", "pk")[:4],
+        "faces": faces(),
         "events": Event.objects.filter(date__gte=date.today())[:3],
         "perks": PremiumPerk.objects.all(),
         "from_price": gold.price if gold else 0,
@@ -75,6 +79,13 @@ def my_likes(request):
     members = Member.objects.filter(likes__user=request.user).order_by("-likes__created")
     return render(request, "likes.html", {"members": members, "liked": liked_ids(request)})
 
+class LoginView(auth_views.LoginView):
+    """Django's LoginView puts the current Site object in the context as "site"; restore our SiteSetting."""
+    redirect_authenticated_user = True
+    authentication_form = LoginForm
+    def get_context_data(self, **kwargs):
+        return {**super().get_context_data(**kwargs), "site": SiteSetting.load(), "faces": faces()}
+
 def signup(request):
     if request.user.is_authenticated: return redirect("home")
     form = SignupForm(request.POST or None)
@@ -82,7 +93,7 @@ def signup(request):
         user = form.save(); login(request, user)
         messages.success(request, "Karibu Sakinah! Complete your profile so others can get to know you.")
         return redirect(safe_next(request) or "profile_edit")
-    return render(request, "registration/signup.html", {"form": form, "next": safe_next(request) or ""})
+    return render(request, "registration/signup.html", {"form": form, "next": safe_next(request) or "", "faces": faces()})
 
 @login_required
 def profile_edit(request):

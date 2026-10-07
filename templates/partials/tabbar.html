@@ -1,0 +1,13 @@
+<nav class="tabbar" aria-label="Quick navigation">
+  <a href="{% url 'home' %}" class="{% if current == 'home' %}on{% endif %}"><svg><use href="#i-home"/></svg>Home</a>
+  <a href="{% url 'matches' %}" class="{% if current == 'matches' or current == 'member' %}on{% endif %}"><svg><use href="#i-heart"/></svg>Matches</a>
+  {% if user.is_authenticated %}
+  <a href="{% url 'inbox' %}" class="{% if current == 'inbox' or current == 'thread' %}on{% endif %}"><span class="tb-ic"><svg><use href="#i-chat"/></svg>{% if unread %}<i>{{ unread }}</i>{% endif %}</span>Ujumbe</a>
+  <a href="{% url 'events' %}" class="{% if current == 'events' %}on{% endif %}"><svg><use href="#i-cal-f"/></svg>Events</a>
+  <a href="{% if user.member %}{% url 'member' user.member.pk %}{% else %}{% url 'profile_edit' %}{% endif %}" class="{% if current == 'profile_edit' %}on{% endif %}"><svg><use href="#i-user"/></svg>Profile</a>
+  {% else %}
+  <a href="{% url 'events' %}" class="{% if current == 'events' %}on{% endif %}"><svg><use href="#i-cal-f"/></svg>Events</a>
+  <a href="{% url 'login' %}" class="{% if current == 'login' %}on{% endif %}"><svg><use href="#i-user"/></svg>Login</a>
+  <a href="{% url 'signup' %}" class="tb-cta"><span><svg><use href="#i-heart-f"/></svg></span>Join</a>
+  {% endif %}
+</nav>

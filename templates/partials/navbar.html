@@ -1,4 +1,4 @@
-<header class="nav">
+<header class="nav" id="nav">
   <div class="nav-in">
     {% include "partials/logo.html" %}
     <nav class="nav-links" id="navlinks">
@@ -11,6 +11,7 @@
       <div class="nav-auth-m">{% include "partials/auth_links.html" %}</div>
     </nav>
     <div class="nav-auth">{% include "partials/auth_links.html" %}</div>
-    <button class="burger" id="burger" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
   </div>
 </header>
+<div class="scrim" id="scrim" hidden></div>

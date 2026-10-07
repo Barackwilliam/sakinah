@@ -11,7 +11,7 @@ urlpatterns = [
     path("messages/<int:pk>/", views.thread, name="thread"),
     path("profile/edit/", views.profile_edit, name="profile_edit"),
     path("signup/", views.signup, name="signup"),
-    path("login/", auth.LoginView.as_view(redirect_authenticated_user=True), name="login"),
+    path("login/", views.LoginView.as_view(), name="login"),
     path("logout/", auth.LogoutView.as_view(), name="logout"),
     path("events/", views.events, name="events"),
     path("services/", views.services, name="services"),

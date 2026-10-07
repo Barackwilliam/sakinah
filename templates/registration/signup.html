@@ -1,7 +1,10 @@
-{% extends "base.html" %}{% block title %}Join Free - {{ site.brand }}{% endblock %}
-{% block content %}<section class="authbox panel wide">
-  <h1>Join {{ site.brand }} free</h1><p class="sub">Create your account and start meeting verified, marriage-minded people.</p>
-  <form method="post" class="form two">{% csrf_token %}{% include "partials/form.html" %}<input type="hidden" name="next" value="{{ next }}">
-    <button class="btn btn-s block">Create Account</button></form>
-  <p class="alt">Already a member? <a href="{% url 'login' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Login</a></p>
+{% extends "base.html" %}{% block title %}Join Free - {{ site.brand }}{% endblock %}{% block bodyclass %}auth-page{% endblock %}
+{% block content %}<section class="auth">
+  {% include "partials/auth_art.html" with art_title="Anza safari yako" art_text="Create your free profile and meet verified people who are serious about marriage." %}
+  <div class="auth-card wide">
+    <div class="ac-head"><span class="eyebrow">Jisajili &middot; Join free</span><h1>Create your account</h1><p>It takes less than two minutes.</p></div>
+    <form method="post" class="form">{% csrf_token %}{% include "partials/signup_fields.html" %}<input type="hidden" name="next" value="{{ next }}">
+      <button class="btn btn-s btn-lg block">Create my account <svg><use href="#i-arrow"/></svg></button></form>
+    <p class="alt">Already a member? <a href="{% url 'login' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Login</a></p>
+  </div>
 </section>{% endblock %}
