@@ -1,9 +1,56 @@
-{% extends "base.html" %}{% block title %}Events - {{ site.brand }}{% endblock %}
-{% block content %}<div class="wrap page">
-  <div class="sec-h"><div><h2>Events &amp; Workshops</h2><p>Seminars, meetings and workshops to prepare for a blessed marriage.</p></div></div>
-  {% if upcoming %}<div class="cards">{% for e in upcoming %}<article class="card" id="e{{ e.pk }}">
-    <div class="card-img">{% if e.image %}<img src="{{ e.image.url }}" alt="" loading="lazy">{% endif %}<span class="date"><b>{{ e.date|date:"d" }}</b>{{ e.date|date:"M Y"|upper }}</span></div>
-    <div class="card-b"><h3>{{ e.title }}</h3><p>{{ e.description }}</p><span class="loc"><svg><use href="#i-pin"/></svg>{{ e.city }}</span></div></article>{% endfor %}</div>
-  {% else %}<p class="empty">No upcoming events right now. Check back soon.</p>{% endif %}
-  {% if past %}<h3 class="sub-h">Past events</h3><ul class="past">{% for e in past %}<li>{{ e.date|date:"d M Y" }} &middot; {{ e.title }} &middot; {{ e.city }}</li>{% endfor %}</ul>{% endif %}
+{% extends "base.html" %}{% load static %}{% block title %}Events - {{ site.brand }}{% endblock %}
+{% block content %}
+<section class="phero">
+  <div class="phero-img" style="--img:url('{% static "img/hero_events.jpg" %}')"></div>
+  <div class="phero-in"><div class="phero-txt">
+    <h1>Events</h1><h2>Meet, Learn and Connect</h2>
+    <p>Join our events, workshops and seminars designed to guide, support and bring people together for meaningful relationships and successful marriages.</p>
+    <ul class="phero-feats cards">{% for c in categories %}<li><svg><use href="#i-{% cycle 'people' 'book' 'people' 'heart-f' %}"/></svg><span><b>{{ c.name }}</b><small>{% cycle 'Expert guidance' 'Practical skills' 'Meet verified members' 'Build connections' %}</small></span></li>{% endfor %}</ul>
+  </div></div>
+  <blockquote class="phero-q"><span>&ldquo;Good events create better opportunities for righteous connections.&rdquo;</span><i></i></blockquote>
+</section>
+
+<div class="wrap page">
+  <div class="two-r">
+    <section>
+      <form class="fbar" method="get">
+        <div class="sel grow"><svg><use href="#i-search"/></svg><input name="q" value="{{ f.q }}" placeholder="Search events..."></div>
+        <div class="sel"><select name="cat"><option value="">All Categories</option>{% for c in categories %}<option value="{{ c.slug }}" {% if f.cat == c.slug %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div>
+        <div class="sel"><select name="city"><option value="">All Locations</option>{% for l in locations %}<option {% if f.city == l %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+        <div class="sel"><svg><use href="#i-cal-f"/></svg><select name="when"><option value="">Upcoming Events</option><option value="past" {% if f.when == 'past' %}selected{% endif %}>Past Events</option><option value="all" {% if f.when == 'all' %}selected{% endif %}>All Events</option></select></div>
+        <button class="btn btn-s"><svg><use href="#i-search"/></svg>Search Events</button>
+      </form>
+      <div class="sec-h sm"><div><h2><svg class="h-ic"><use href="#i-cal-f"/></svg>{% if f.when == 'past' %}Past Events{% else %}Upcoming Events{% endif %}</h2><p>Join our upcoming seminars, workshops and community events.</p></div>
+        {% if f.q or f.cat or f.city or f.when %}<a class="more" href="{% url 'events' %}">View All Events <svg><use href="#i-arrow"/></svg></a>{% endif %}</div>
+      {% if events %}<div class="ev-grid">
+        {% for e in events %}
+        <article class="evc" id="e{{ e.pk }}">
+          <div class="evc-img">{% if e.image %}<img src="{{ e.image.url }}" alt="" loading="lazy">{% endif %}<span class="evc-d"><b>{{ e.date|date:"d" }}</b>{{ e.date|date:"M"|upper }}<small>{{ e.date|date:"Y" }}</small></span></div>
+          <div class="evc-b"><h3>{{ e.title }}<svg><use href="#i-chev-r"/></svg></h3>
+            <ul><li><svg><use href="#i-pin"/></svg>{{ e.city }}</li>
+              {% if e.start_time %}<li><svg><use href="#i-clock"/></svg>{{ e.start_time|time:"g:i A" }}{% if e.end_time %} - {{ e.end_time|time:"g:i A" }}{% endif %}</li>{% endif %}
+              {% if e.category %}<li><svg><use href="#i-user"/></svg>{{ e.category.name }}</li>{% endif %}</ul>
+            <p>{{ e.description }}</p>
+            <div class="evc-f"><span><svg><use href="#i-user"/></svg>{% if e.going %}{{ e.going }} {% if e.going == 1 %}person{% else %}people{% endif %} going{% else %}Be the first to register{% endif %}</span>
+              {% if user.is_authenticated %}<form method="post" action="{% url 'event_register' e.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}#e{{ e.pk }}">
+                <button class="btn {% if e.pk in mine %}btn-o{% else %}btn-s{% endif %} xs">{% if e.pk in mine %}Registered &#10003;{% else %}Register{% endif %}</button></form>
+              {% else %}<a class="btn btn-s xs" href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" data-auth="{{ request.get_full_path }}">Register</a>{% endif %}</div>
+          </div>
+        </article>{% endfor %}</div>
+      {% else %}<div class="empty box"><p>No events match your search right now.</p></div>{% endif %}
+    </section>
+
+    <aside class="rcol">
+      <div class="box"><div class="box-h"><svg><use href="#i-cal-f"/></svg><h3>Event Calendar</h3></div>
+        <div class="box-b cal"><div class="cal-h"><a href="?month={{ prev_month }}" aria-label="Previous month"><svg><use href="#i-chev-l"/></svg></a><b>{{ cal_title|date:"F Y" }}</b><a href="?month={{ next_month }}" aria-label="Next month"><svg><use href="#i-chev-r"/></svg></a></div>
+          <table><thead><tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr></thead>
+            <tbody>{% for week in cal %}<tr>{% for d in week %}<td>{% if d %}<span class="{% if d in cal_days %}has-ev{% endif %}{% if d == cal_today %} today{% endif %}">{{ d }}</span>{% endif %}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div></div>
+      <div class="box"><div class="box-h"><svg><use href="#i-grid"/></svg><h3>Event Categories</h3></div>
+        <ul class="box-b catlist"><li><a href="{% url 'events' %}" class="{% if not f.cat %}on{% endif %}"><svg><use href="#i-cal-f"/></svg>All Events<i>{{ total }}</i></a></li>
+          {% for c in categories %}<li><a href="?cat={{ c.slug }}" class="{% if f.cat == c.slug %}on{% endif %}"><svg><use href="#i-{% cycle 'book' 'gear' 'people' 'heart-f' %}"/></svg>{{ c.name }}<i>{{ c.n }}</i></a></li>{% endfor %}</ul></div>
+      <div class="box host"><div class="box-h"><svg><use href="#i-mega"/></svg><h3>Host an Event</h3></div>
+        <div class="box-b"><p>Are you a vendor, expert or organization? You can host your marriage-related event on {{ site.brand }}.</p>
+          {% if site.contact_url %}<a class="btn btn-p block" href="{{ site.contact_url }}" target="_blank" rel="noopener">Submit Your Event <svg><use href="#i-arrow"/></svg></a>{% endif %}</div></div>
+    </aside>
+  </div>
 </div>{% endblock %}

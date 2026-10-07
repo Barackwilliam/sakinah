@@ -1,6 +1,14 @@
 {% extends "base.html" %}{% block title %}Edit Profile - {{ site.brand }}{% endblock %}
-{% block content %}<section class="authbox panel wide">
-  <h1>Your profile</h1><p class="sub">A complete profile with a clear photo gets far more interest.</p>
-  <form method="post" enctype="multipart/form-data" class="form two">{% csrf_token %}{% include "partials/form.html" %}
-    <button class="btn btn-s block">Save Profile</button></form>
-</section>{% endblock %}
+{% block content %}
+{% include "partials/crumbs.html" with c1="Find a Match" c1u="matches" here="Edit Profile" %}
+<div class="wrap page narrow">
+  <div class="sec-h"><div><h2>Your profile</h2><p>A complete profile with a clear photo gets far more interest. Everything except the basics is optional.</p></div></div>
+  <form method="post" enctype="multipart/form-data" class="form edit-form">{% csrf_token %}
+    {% if form.non_field_errors %}<div class="ferr">{{ form.non_field_errors }}</div>{% endif %}
+    {% for title, icon, fields in form.sections %}
+    <section class="box"><div class="box-h"><svg><use href="#i-{{ icon }}"/></svg><h3>{{ title }}</h3></div>
+      <div class="box-b fgrid">{% for f in fields %}{% include "partials/field.html" with icon="" %}{% endfor %}</div></section>
+    {% endfor %}
+    <div class="sticky-save"><button class="btn btn-s btn-lg">Save Profile</button></div>
+  </form>
+</div>{% endblock %}

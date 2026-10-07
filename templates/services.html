@@ -1,8 +1,22 @@
-{% extends "base.html" %}{% block title %}Marriage Services - {{ site.brand }}{% endblock %}
-{% block content %}<div class="wrap page">
-  <div class="sec-h"><div><h2>Marriage Services</h2><p>Trusted vendors for your Nikah and wedding.</p></div></div>
-  <div class="cards">{% for c in categories %}<article class="card" id="{{ c.slug }}">
-    <div class="card-img">{% if c.image %}<img src="{{ c.image.url }}" alt="{{ c.name }}" loading="lazy">{% endif %}</div>
-    <div class="card-b"><h3>{{ c.name }}</h3><p>{{ c.blurb }}</p></div></article>{% endfor %}</div>
-  <div class="adv cta"><div><h3>Advertise Your Marriage Service</h3><p>Reach thousands of members looking for trusted wedding services.</p></div></div>
+{% extends "base.html" %}{% load static %}{% block title %}Marriage Services - {{ site.brand }}{% endblock %}
+{% block content %}
+<section class="phero">
+  <div class="phero-img" style="--img:url('{% static "img/hero_events.jpg" %}')"></div>
+  <div class="phero-in"><div class="phero-txt">
+    <h1>Marriage Services</h1><h2>Trusted vendors for your Nikah &amp; Walima</h2>
+    <p>Venues, catering, decoration, photography and more from vendors who respect your values.</p>
+    <form class="phero-search" method="get"><div class="sel"><svg><use href="#i-search"/></svg><input name="q" value="{{ q }}" placeholder="Search venues, vendors or cities"></div>
+      {% if cat %}<input type="hidden" name="cat" value="{{ cat }}">{% endif %}<button class="btn btn-s">Search</button></form>
+  </div></div>
+  <blockquote class="phero-q"><span>&ldquo;The most blessed marriage is the one with the least burden.&rdquo;</span><i></i></blockquote>
+</section>
+<div class="wrap page">
+  <nav class="chips" aria-label="Categories"><a href="{% url 'services' %}" class="{% if not cat %}on{% endif %}">All</a>
+    {% for c in categories %}<a href="?cat={{ c.slug }}" class="{% if cat == c.slug %}on{% endif %}" id="{{ c.slug }}">{{ c.name }} <i>{{ c.n }}</i></a>{% endfor %}</nav>
+  <div class="sec-h"><div><h2>{% if vendor %}Adverts by {{ vendor.name }}{% elif cat %}{% for c in categories %}{% if c.slug == cat %}{{ c.name }}{% endif %}{% endfor %}{% else %}All adverts{% endif %}</h2>
+    <p>{{ ads|length }} advert{{ ads|length|pluralize }}{% if q %} matching &ldquo;{{ q }}&rdquo;{% endif %}</p></div></div>
+  {% if ads %}<div class="ad-grid">{% for a in ads %}{% include "partials/ad_card.html" %}{% endfor %}</div>
+  {% else %}<div class="empty box"><p>No adverts here yet.</p></div>{% endif %}
+  <div class="adv cta"><div class="adv-t"><h3>Advertise Your Marriage Service</h3><p>Reach members who are planning their Nikah. Contact our team to list your business.</p>
+    {% if site.contact_url %}<a class="btn btn-o xs" href="{{ site.contact_url }}" target="_blank" rel="noopener"><svg class="gold"><use href="#i-mega"/></svg>Advertise Now</a>{% endif %}</div></div>
 </div>{% endblock %}

@@ -1,9 +1,127 @@
 {% extends "base.html" %}{% block title %}{{ m.name }} - {{ site.brand }}{% endblock %}
-{% block content %}<div class="wrap page narrow">
-  <a class="more back" href="{% url 'matches' %}"><svg class="flip"><use href="#i-arrow"/></svg>Rudi kwenye Matches</a>
-  {% include "partials/profile_card.html" with full=1 %}
-  {% if gallery %}<div class="gallery" data-for="{{ m.pk }}">
-    {% if m.photo %}<button type="button" class="on" data-src="{{ m.photo.url }}" data-n="1"><img src="{{ m.photo.url }}" alt=""></button>{% endif %}
-    {% for p in gallery %}<button type="button" data-src="{{ p.image.url }}" data-n="{{ forloop.counter|add:1 }}"><img src="{{ p.image.url }}" alt="" loading="lazy"></button>{% endfor %}
-  </div>{% endif %}
-</div>{% endblock %}
+{% block content %}
+{% url 'member' m.pk as m_url %}
+{% include "partials/crumbs.html" with c1="Find a Match" c1u="matches" c2="Search Results" c2u="matches" here="View Profile" %}
+<div class="wrap pf">
+  <div class="pf-left">
+    <div class="pf-photo">{% if m.photo %}<img id="pc-main-{{ m.pk }}" src="{{ m.photo.url }}" alt="{{ m.name }}">{% endif %}
+      {% if m.verified %}<span class="vbadge"><svg><use href="#i-check-o"/></svg>Verified</span>{% endif %}
+      {% if not is_me %}<form method="post" action="{% url 'like' m.pk %}" class="pf-heart">{% csrf_token %}<input type="hidden" name="next" value="{{ m_url }}"><button aria-label="Send interest"><svg><use href="#i-heart{% if m.pk in liked %}-f{% endif %}"/></svg></button></form>{% endif %}
+      <span class="pc-cnt"><svg><use href="#i-camera-f"/></svg><span id="pc-n-{{ m.pk }}">1</span>/{{ m.photo_total }}</span></div>
+    {% if gallery %}<div class="gallery thumbs" data-for="{{ m.pk }}">
+      {% if m.photo %}<button type="button" class="on" data-src="{{ m.photo.url }}" data-n="1"><img src="{{ m.photo.url }}" alt=""></button>{% endif %}
+      {% for p in gallery %}<button type="button" data-src="{{ p.image.url }}" data-n="{{ forloop.counter|add:1 }}"><img src="{{ p.image.url }}" alt="" loading="lazy"></button>{% endfor %}</div>{% endif %}
+
+    <div class="box"><div class="box-h"><svg><use href="#i-user"/></svg><h3>Quick Info</h3></div>
+      <dl class="box-b irows icon-rows">
+        <div><dt><svg><use href="#i-user"/></svg>Age</dt><dd>{{ m.age }} years</dd></div>
+        <div><dt><svg><use href="#i-people"/></svg>Gender</dt><dd>{{ m.get_gender_display }}</dd></div>
+        <div><dt><svg><use href="#i-pin"/></svg>Location</dt><dd>{{ m.city }}, Tanzania</dd></div>
+        <div><dt><svg><use href="#i-moon"/></svg>Religion</dt><dd>{{ m.get_religion_display }}</dd></div>
+        <div><dt><svg><use href="#i-heart-f"/></svg>Marital Status</dt><dd>{{ m.get_marital_status_display }}</dd></div>
+        {% if m.height_cm %}<div><dt><svg><use href="#i-ruler"/></svg>Height</dt><dd>{{ m.height_cm }} cm</dd></div>{% endif %}
+        {% if m.body_type %}<div><dt><svg><use href="#i-user"/></svg>Body Type</dt><dd>{{ m.body_type }}</dd></div>{% endif %}
+        <div><dt><svg><use href="#i-flag"/></svg>Ethnicity</dt><dd>{{ m.origin }}</dd></div>
+        {% if m.languages %}<div><dt><svg><use href="#i-lang"/></svg>Language(s)</dt><dd>{{ m.languages }}</dd></div>{% endif %}
+        {% if m.education %}<div><dt><svg><use href="#i-cap"/></svg>Education</dt><dd>{{ m.education }}</dd></div>{% endif %}
+        <div><dt><svg><use href="#i-briefcase"/></svg>Occupation</dt><dd>{{ m.occupation }}</dd></div>
+        {% if m.income_range %}<div><dt><svg><use href="#i-chart"/></svg>Income Range</dt><dd>{{ m.income_range }}</dd></div>{% endif %}
+        <div><dt><svg><use href="#i-x-c"/></svg>Smokes</dt><dd>{{ m.smokes|yesno:"Yes,No" }}</dd></div>
+        <div><dt><svg><use href="#i-x-c"/></svg>Drinks</dt><dd>{{ m.drinks|yesno:"Yes,No" }}</dd></div>
+      </dl></div>
+  </div>
+
+  <div class="pf-main">
+    <div class="pf-head">
+      <div><h1>{{ m.name }}, {{ m.age }} {% if m.is_online %}<span class="pc-on">Online Now</span>{% endif %}</h1>
+        <ul class="pf-facts"><li><svg><use href="#i-pin"/></svg>{{ m.city }}, Tanzania</li><li><svg><use href="#i-heart-f"/></svg>Looking for: Marriage</li>
+          <li><svg><use href="#i-cal-f"/></svg>Member since: {{ m.joined|date:"M Y" }}</li></ul></div>
+      <div class="pf-tools">{% if m.whatsapp_url and not is_me %}<a class="ibtn wa" href="{{ m.whatsapp_url }}" target="_blank" rel="noopener" aria-label="WhatsApp {{ m.name }}"><svg><use href="#i-wa-f"/></svg></a>{% endif %}<button type="button" class="ibtn" data-share="{{ m.name }} on {{ site.brand }}" aria-label="Share"><svg><use href="#i-share"/></svg></button>
+        {% if not is_me %}<details class="menu"><summary class="ibtn" aria-label="More"><svg><use href="#i-dots"/></svg></summary>
+          <div class="menu-pop"><button type="button" data-open-dlg="report-dlg"><svg><use href="#i-flag"/></svg>Report profile</button></div></details>{% endif %}</div>
+    </div>
+    <div class="pf-act">
+      {% if is_me %}<a class="btn btn-s btn-lg" href="{% url 'profile_edit' %}"><svg><use href="#i-user"/></svg>Edit Profile</a>
+      {% else %}
+      <form method="post" action="{% url 'like' m.pk %}" class="likef">{% csrf_token %}<input type="hidden" name="next" value="{{ m_url }}">
+        <button class="btn btn-s btn-lg"><svg><use href="#i-heart-f"/></svg>{% if m.pk in liked %}Interest Sent{% else %}Send Interest{% endif %}</button></form>
+      <a class="btn btn-p btn-lg" href="{% url 'thread' m.pk %}"><svg><use href="#i-chat"/></svg>Send Message</a>
+      <form method="post" action="{% url 'shortlist' m.pk %}" class="likef">{% csrf_token %}<input type="hidden" name="next" value="{{ m_url }}">
+        <button class="btn btn-o btn-lg"><svg><use href="#i-bookmark{% if shortlisted %}-f{% endif %}"/></svg>{% if shortlisted %}Shortlisted{% else %}Add to Shortlist{% endif %}</button></form>
+      {% endif %}
+    </div>
+    <nav class="tabs"><a href="#about" class="on"><svg><use href="#i-user"/></svg>About</a><a href="#photos"><svg><use href="#i-camera-f"/></svg>Photos</a>
+      <a href="#lifestyle"><svg><use href="#i-run"/></svg>Lifestyle</a><a href="#values"><svg><use href="#i-shield-c"/></svg>Values</a>
+      <a href="#career"><svg><use href="#i-cap"/></svg>Education &amp; Career</a><a href="#family"><svg><use href="#i-people"/></svg>Family</a>
+      <a href="#prefs"><svg><use href="#i-heart"/></svg>Preferences</a></nav>
+
+    <div class="pf-grid">
+      <div class="pf-col">
+        <section class="box" id="about"><div class="box-h"><svg><use href="#i-user"/></svg><h3>About Me</h3></div>
+          <div class="box-b prose">{{ m.bio|default:"This member hasn't written an introduction yet."|linebreaks }}
+            <p class="goal"><b>Lengo:</b> {{ m.goal_text }}</p></div></section>
+        <div class="pf-pair">
+          <section class="box" id="career"><div class="box-h"><svg><use href="#i-cap"/></svg><h3>Education &amp; Career</h3></div>
+            <dl class="box-b irows sm-rows">
+              <div><dt><svg><use href="#i-cal"/></svg>Education</dt><dd>{{ m.education|default:"&mdash;" }}</dd></div>
+              <div><dt><svg><use href="#i-briefcase"/></svg>Occupation</dt><dd>{{ m.occupation }}</dd></div>
+              <div><dt><svg><use href="#i-home"/></svg>Workplace</dt><dd>{{ m.workplace|default:"&mdash;" }}</dd></div>
+              <div><dt><svg><use href="#i-chart"/></svg>Income Range</dt><dd>{{ m.income_range|default:"&mdash;" }}</dd></div></dl></section>
+          <section class="box" id="lifestyle"><div class="box-h"><svg><use href="#i-heart-f"/></svg><h3>Lifestyle</h3></div>
+            <dl class="box-b irows sm-rows">
+              <div><dt><svg><use href="#i-home"/></svg>Lives in</dt><dd>{{ m.city }}</dd></div>
+              <div><dt><svg><use href="#i-plane"/></svg>Willing to Relocate</dt><dd>{{ m.willing_to_relocate|default:"&mdash;" }}</dd></div>
+              <div><dt><svg><use href="#i-food"/></svg>Food Preference</dt><dd>{{ m.food_preference|default:"&mdash;" }}</dd></div>
+              <div><dt><svg><use href="#i-book"/></svg>Hobbies</dt><dd>{{ m.hobbies|default:"&mdash;" }}</dd></div>
+              <div><dt><svg><use href="#i-run"/></svg>Exercise</dt><dd>{{ m.exercise|default:"&mdash;" }}</dd></div></dl></section>
+          <section class="box" id="values"><div class="box-h"><svg><use href="#i-moon"/></svg><h3>Religion &amp; Values</h3></div>
+            <dl class="box-b irows sm-rows">
+              <div><dt><svg><use href="#i-moon"/></svg>Religion</dt><dd>{{ m.get_religion_display }}</dd></div>
+              <div><dt><svg><use href="#i-mosque"/></svg>Prayer</dt><dd>{{ m.prayer|default:"&mdash;" }}</dd></div>
+              <div><dt><svg><use href="#i-user"/></svg>{% if m.gender == 'F' %}Hijab{% else %}Dress{% endif %}</dt><dd>{{ m.hijab|default:"&mdash;" }}</dd></div>
+              <div><dt><svg><use href="#i-book"/></svg>{% if m.religion == 'Islam' %}Qur'an Reading{% else %}Bible Reading{% endif %}</dt><dd>{{ m.quran_reading|default:"&mdash;" }}</dd></div>
+              <div><dt><svg><use href="#i-heart-f"/></svg>Values</dt><dd>{{ m.values|default:"&mdash;" }}</dd></div></dl></section>
+          <section class="box" id="family"><div class="box-h"><svg><use href="#i-people"/></svg><h3>Family Background</h3></div>
+            <dl class="box-b irows sm-rows">
+              <div><dt><svg><use href="#i-user"/></svg>Father's Status</dt><dd>{{ m.father_status|default:"&mdash;" }}</dd></div>
+              <div><dt><svg><use href="#i-user"/></svg>Mother's Status</dt><dd>{{ m.mother_status|default:"&mdash;" }}</dd></div>
+              <div><dt><svg><use href="#i-people"/></svg>Number of Siblings</dt><dd>{{ m.siblings|default_if_none:"&mdash;" }}</dd></div>
+              <div><dt><svg><use href="#i-home"/></svg>Family Type</dt><dd>{{ m.family_type|default:"&mdash;" }}</dd></div>
+              <div><dt><svg><use href="#i-pin"/></svg>Family Location</dt><dd>{{ m.family_location|default:"&mdash;" }}</dd></div>
+              <div><dt><svg><use href="#i-heart-f"/></svg>About Family</dt><dd>{{ m.about_family|default:"&mdash;" }}</dd></div></dl></section>
+        </div>
+      </div>
+
+      <div class="pf-col side">
+        {% if not is_me %}<section class="box compat-box"><div class="box-h"><svg><use href="#i-heart-f"/></svg><h3>Compatibility</h3></div>
+          <div class="box-b cmp"><span class="cring" style="--p:{{ m.compatibility }}"><b>{{ m.compatibility }}%</b></span>
+            <div><h4>{% if m.compatibility >= 85 %}Great Match{% elif m.compatibility >= 70 %}Good Match{% else %}Possible Match{% endif %}</h4><p>Based on your preferences, values and lifestyle.</p></div></div>
+          <a class="btn btn-o block" href="#prefs">View Compatibility Details <svg><use href="#i-arrow"/></svg></a></section>{% endif %}
+        <section class="box" id="photos"><div class="box-h"><svg><use href="#i-camera-f"/></svg><h3>More Photos</h3><span class="more sm">{{ m.photo_total }} photo{{ m.photo_total|pluralize }}</span></div>
+          <div class="box-b mphotos gallery" data-for="{{ m.pk }}">
+            {% if m.photo %}<button type="button" data-src="{{ m.photo.url }}" data-n="1"><img src="{{ m.photo.url }}" alt="" loading="lazy"></button>{% endif %}
+            {% for p in gallery %}<button type="button" data-src="{{ p.image.url }}" data-n="{{ forloop.counter|add:1 }}"><img src="{{ p.image.url }}" alt="" loading="lazy"></button>{% endfor %}</div></section>
+        <section class="box" id="prefs"><div class="box-h"><svg><use href="#i-heart-f"/></svg><h3>{{ m.pronoun }} Preferences</h3></div>
+          <dl class="box-b irows sm-rows">
+            <div><dt><svg><use href="#i-user"/></svg>Age Range</dt><dd>{% if m.pref_age_min %}{{ m.pref_age_min }} - {{ m.pref_age_max|default:"" }} years{% else %}&mdash;{% endif %}</dd></div>
+            <div><dt><svg><use href="#i-heart-f"/></svg>Marital Status</dt><dd>{{ m.pref_marital|default:"&mdash;" }}</dd></div>
+            <div><dt><svg><use href="#i-pin"/></svg>Location</dt><dd>{{ m.pref_location|default:"&mdash;" }}</dd></div>
+            <div><dt><svg><use href="#i-cap"/></svg>Education</dt><dd>{{ m.pref_education|default:"&mdash;" }}</dd></div>
+            <div><dt><svg><use href="#i-briefcase"/></svg>Occupation</dt><dd>{{ m.pref_occupation|default:"&mdash;" }}</dd></div>
+            <div><dt><svg><use href="#i-moon"/></svg>Prayer</dt><dd>{{ m.pref_prayer|default:"&mdash;" }}</dd></div>
+            <div><dt><svg><use href="#i-heart-f"/></svg>Values</dt><dd>{{ m.pref_values|default:"&mdash;" }}</dd></div>
+            <div><dt><svg><use href="#i-plane"/></svg>Willing to Relocate</dt><dd>{{ m.pref_relocate|default:"&mdash;" }}</dd></div>
+            <div><dt><svg><use href="#i-search"/></svg>Additional Preferences</dt><dd>{{ m.pref_more|default:"&mdash;" }}</dd></div></dl></section>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="wrap pf-foot"><a class="btn btn-o" href="{% url 'matches' %}"><svg class="flip"><use href="#i-arrow"/></svg>Back to Results</a>
+  {% if not is_me %}<button type="button" class="btn btn-o" data-open-dlg="report-dlg"><svg><use href="#i-flag"/></svg>Report Profile</button>{% endif %}</div>
+
+{% if not is_me %}<dialog class="inq" id="report-dlg"><form method="post" action="{% url 'report' m.pk %}" class="form">{% csrf_token %}
+  <button type="button" class="am-x" data-close-dlg aria-label="Close">&times;</button>
+  <h2>Report {{ m.name }}</h2><p class="muted">Reports are private. Our team reviews every report.</p>
+  {% include "partials/field.html" with f=report_form.reason %}{% include "partials/field.html" with f=report_form.details %}
+  <button class="btn btn-s btn-lg block">Send Report</button></form></dialog>{% endif %}
+{% endblock %}

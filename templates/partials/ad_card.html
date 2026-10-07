@@ -1,0 +1,10 @@
+{% load humanize %}{% url 'advert' a.slug as a_url %}
+<article class="adc">
+  <a class="adc-img" href="{{ a_url }}">{% if a.image %}<img src="{{ a.image.url }}" alt="{{ a.title }}" loading="lazy">{% endif %}</a>
+  {% if user.is_authenticated %}<form method="post" action="{% url 'wishlist' a.slug %}" class="adc-heart">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}"><button aria-label="Wishlist"><svg><use href="#i-heart{% if a.pk in wished %}-f{% endif %}"/></svg></button></form>
+  {% else %}<a class="adc-heart hb" href="{% url 'login' %}?next={{ a_url|urlencode }}" data-auth="{{ a_url }}" aria-label="Wishlist"><svg><use href="#i-heart"/></svg></a>{% endif %}
+  <div class="adc-b"><h4><a href="{{ a_url }}">{{ a.title }}</a></h4><p><svg><use href="#i-pin"/></svg>{{ a.city }}</p>
+    <b class="adc-p">{{ site.currency }} {{ a.price|intcomma }}</b>
+    <p class="adc-r">{% if a.n_reviews %}{% include "partials/stars.html" with r=a.rating %}{{ a.rating|floatformat:1 }} ({{ a.n_reviews }}){% else %}<span class="muted">New</span>{% endif %}</p>
+    <a class="btn btn-o block sm" href="{{ a_url }}">View Advert</a></div>
+</article>

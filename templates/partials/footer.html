@@ -8,9 +8,9 @@
     <div class="f-brand"><div class="logo light">{% include "partials/logo.html" %}</div>
       <p>{{ site.brand }} helps Tanzanians find a righteous partner and plan a blessed Nikah, with verified profiles, respectful messaging and trusted wedding vendors.</p>
       <span class="soc"><a href="#" aria-label="Facebook"><svg><use href="#i-fb"/></svg></a><a href="#" aria-label="Instagram"><svg><use href="#i-ig"/></svg></a><a href="#" aria-label="YouTube"><svg><use href="#i-yt"/></svg></a><a href="#" aria-label="WhatsApp"><svg><use href="#i-wa-f"/></svg></a></span></div>
-    <div class="f-col"><h4>Explore</h4><a href="{% url 'matches' %}">Find a Match</a><a href="{% url 'services' %}">Marriage Services</a><a href="{% url 'events' %}">Events</a><a href="{% url 'premium' %}">Premium</a></div>
-    <div class="f-col"><h4>Company</h4><a href="#">About Us</a><a href="#">How It Works</a><a href="#">Success Stories</a><a href="#">Contact Us</a></div>
-    <div class="f-col"><h4>Help</h4><a href="#">Help Centre</a><a href="#">Safety Tips</a><a href="#">Terms</a><a href="#">Privacy</a></div>
+    <div class="f-col"><h4>Explore</h4><a href="{% url 'matches' %}">Find a Match</a><a href="{% url 'services' %}">Marriage Services</a><a href="{% url 'events' %}">Events</a><a href="{% url 'premium' %}">Premium</a><a href="{% url 'articles' %}">Articles</a></div>
+    <div class="f-col"><h4>Company</h4><a href="#">About Us</a><a href="#">How It Works</a><a href="{% url 'articles' %}?cat=success-stories">Success Stories</a></div>
+    <div class="f-col"><h4>Help</h4>{% if site.contact_url %}<a href="{{ site.contact_url }}" target="_blank" rel="noopener">Contact Us</a>{% endif %}<a href="#">Help Centre</a><a href="#">Safety Tips</a><a href="#">Terms</a><a href="#">Privacy</a></div>
   </div>
   <div class="foot-bot"><span>&copy; {% now "Y" %} {{ site.brand }} &middot; {{ site.tagline }}</span><span class="cur"><svg class="flag"><use href="#i-flag-tz"/></svg>Tanzania ({{ site.currency }})</span></div>
 </footer>

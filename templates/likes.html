@@ -1,6 +1,11 @@
 {% extends "base.html" %}{% block title %}My Likes - {{ site.brand }}{% endblock %}
-{% block content %}<div class="wrap page">
-  <div class="sec-h"><div><h2>My Likes</h2><p>Members you have shown interest in.</p></div><a class="more" href="{% url 'matches' %}">Find more <svg><use href="#i-arrow"/></svg></a></div>
+{% block content %}
+{% include "partials/crumbs.html" with c1="Find a Match" c1u="matches" here="My Likes & Shortlist" %}
+<div class="wrap page">
+  <div class="sec-h"><div><h2>My Likes</h2><p>Members you have sent interest to.</p></div><a class="more" href="{% url 'matches' %}">Find more <svg><use href="#i-arrow"/></svg></a></div>
   {% if members %}<div class="grid-m">{% for m in members %}{% include "partials/member_card.html" %}{% endfor %}</div>
-  {% else %}<p class="empty">You haven't liked anyone yet.</p>{% endif %}
+  {% else %}<p class="empty">You haven't sent interest to anyone yet.</p>{% endif %}
+  <div class="sec-h sect"><div><h2>My Shortlist</h2><p>Profiles you saved to look at again.</p></div></div>
+  {% if shortlisted %}<div class="grid-m">{% for m in shortlisted %}{% include "partials/member_card.html" %}{% endfor %}</div>
+  {% else %}<p class="empty">Your shortlist is empty.</p>{% endif %}
 </div>{% endblock %}

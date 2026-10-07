@@ -1,0 +1,93 @@
+{% extends "base.html" %}{% load humanize %}{% block title %}{{ ad.title }} - {{ site.brand }}{% endblock %}
+{% block content %}
+{% url 'advert' ad.slug as ad_url %}
+<nav class="crumbs" aria-label="Breadcrumb"><div class="crumbs-in"><ol>
+  <li><a href="{% url 'home' %}"><svg><use href="#i-home"/></svg>Home</a></li><li><a href="{% url 'services' %}">Marriage Services</a></li>
+  <li><a href="{% url 'services' %}?cat={{ ad.category.slug }}">{{ ad.category.name }}</a></li><li aria-current="page">View Advert</li></ol></div></nav>
+
+<div class="wrap ad-top">
+  <div class="ad-gal">
+    <div class="ad-main">{% if ad.image %}<img id="ad-img" src="{{ ad.image.url }}" alt="{{ ad.title }}">{% endif %}
+      {% if ad.featured %}<span class="ad-feat"><svg><use href="#i-crown"/></svg>Featured</span>{% endif %}
+      <span class="ad-cnt"><svg><use href="#i-camera-f"/></svg><span id="ad-n">1</span>/{{ photos|length|add:1 }}</span></div>
+    <div class="ad-thumbs" id="ad-thumbs">
+      {% if ad.image %}<button type="button" class="on" data-src="{{ ad.image.url }}" data-n="1"><img src="{{ ad.image.url }}" alt=""></button>{% endif %}
+      {% for p in photos %}<button type="button" data-src="{{ p.image.url }}" data-n="{{ forloop.counter|add:1 }}"><img src="{{ p.image.url }}" alt="" loading="lazy"></button>{% endfor %}
+    </div>
+  </div>
+
+  <div class="ad-info">
+    <div class="ad-tagrow"><span class="pill">{{ ad.category.name }}</span><button type="button" class="ibtn" data-share="{{ ad.title }}" aria-label="Share"><svg><use href="#i-share"/></svg></button></div>
+    <h1>{{ ad.title }}</h1>
+    <p class="ad-loc"><svg><use href="#i-pin"/></svg>{{ ad.city }}, Tanzania</p>
+    <div class="ad-meta">
+      {% if stats.n %}<span>{% include "partials/stars.html" with r=stats.avg %}<b>{{ stats.avg|floatformat:1 }}</b> ({{ stats.n }} review{{ stats.n|pluralize }})</span>{% else %}<span class="muted">New &middot; no reviews yet</span>{% endif %}
+      <span><svg><use href="#i-eye"/></svg>{{ views|intcomma }} view{{ views|pluralize }}</span>
+      {% if user.is_authenticated %}<form method="post" action="{% url 'wishlist' ad.slug %}" class="likef">{% csrf_token %}<button class="lnk-btn"><svg class="mag"><use href="#i-heart{% if ad.pk in wished %}-f{% endif %}"/></svg>{% if ad.pk in wished %}In Wishlist{% else %}Add to Wishlist{% endif %}</button></form>
+      {% else %}<a class="lnk-btn" href="{% url 'login' %}?next={{ ad_url|urlencode }}" data-auth="{{ ad_url }}"><svg class="mag"><use href="#i-heart"/></svg>Add to Wishlist</a>{% endif %}
+    </div>
+    <div class="ad-price"><div><b>{{ site.currency }} {{ ad.price|intcomma }}</b><small>{{ ad.price_unit }}</small></div>{% if ad.negotiable %}<span class="pill soft">Negotiable</span>{% endif %}</div>
+    {% if ad.highlight_list %}<ul class="ad-hl">{% for icon, text in ad.highlight_list %}<li><svg><use href="#i-{{ icon }}"/></svg>{{ text }}</li>{% endfor %}</ul>{% endif %}
+    <div class="ad-cta"><button type="button" class="btn btn-s btn-lg" data-inq="availability"><svg><use href="#i-cal-f"/></svg>Check Availability</button>
+      <button type="button" class="btn btn-p btn-lg" data-inq="inquiry">Inquire Now</button></div>
+  </div>
+
+  <aside class="ad-side">
+    <div class="box vendor">
+      <div class="vd-top"><span class="vd-logo">{% if ad.vendor.logo %}<img src="{{ ad.vendor.logo.url }}" alt="">{% else %}{{ ad.vendor.name|first }}{% endif %}</span>
+        <div><h3>{{ ad.vendor.name }}</h3>{% if ad.vendor.verified %}<p class="ok-t"><svg><use href="#i-check-c"/></svg>Verified Vendor</p>{% endif %}
+          <p><svg><use href="#i-pin"/></svg>{{ ad.vendor.city }}, Tanzania</p><p><svg><use href="#i-cal-f"/></svg>Member since: {{ ad.vendor.member_since|date:"M Y" }}</p>
+          {% if vstats.n %}<p>{% include "partials/stars.html" with r=vstats.avg %}{{ vstats.avg|floatformat:1 }} ({{ vstats.n }} reviews)</p>{% endif %}</div></div>
+      <a class="btn btn-o block" href="{% url 'services' %}?vendor={{ ad.vendor.slug }}">View All Adverts <svg><use href="#i-arrow"/></svg></a>
+    </div>
+    {% if ad.vendor.reasons %}<div class="box"><div class="box-h"><svg><use href="#i-heart-f"/></svg><h3>Why Choose This Vendor?</h3></div>
+      <ul class="box-b checks">{% for r in ad.vendor.reasons %}<li><svg><use href="#i-check-c"/></svg>{{ r }}</li>{% endfor %}</ul></div>{% endif %}
+  </aside>
+</div>
+
+<div class="wrap ad-body">
+  <div class="box ad-main-col">
+    <nav class="tabs"><a href="#overview" class="on"><svg><use href="#i-doc"/></svg>Overview</a><a href="#details"><svg><use href="#i-grid"/></svg>Details</a>
+      <a href="#location"><svg><use href="#i-pin"/></svg>Location</a><a href="#reviews"><svg><use href="#i-star8"/></svg>Reviews ({{ stats.n }})</a>
+      <a href="#photos"><svg><use href="#i-camera-f"/></svg>Photos</a><a href="#similar"><svg><use href="#i-plane"/></svg>Similar Ads</a></nav>
+    <section id="overview" class="ad-sec"><h2><svg><use href="#i-doc"/></svg>Description</h2><div class="prose">{{ ad.description|linebreaks }}</div></section>
+    <div class="ad-two">
+      {% if ad.include_list %}<section class="ad-sec"><h2><svg><use href="#i-check-sq-o"/></svg>Package Includes</h2><ul class="checks">{% for i in ad.include_list %}<li><svg><use href="#i-check-c"/></svg>{{ i }}</li>{% endfor %}</ul></section>{% endif %}
+      <div>{% if ad.extra_list %}<section class="ad-sec"><h2><svg><use href="#i-gear"/></svg>Additional Services (Optional)</h2><ul class="checks">{% for i in ad.extra_list %}<li><svg><use href="#i-check-c"/></svg>{{ i }}</li>{% endfor %}</ul></section>{% endif %}
+        {% if ad.availability %}<section class="ad-sec"><h2><svg><use href="#i-cal-f"/></svg>Availability</h2><p class="muted">{{ ad.availability }}</p></section>{% endif %}</div>
+    </div>
+    <section id="details" class="ad-sec"><h2><svg><use href="#i-grid"/></svg>Details</h2>
+      <dl class="irows"><div><dt>Category</dt><dd>{{ ad.category.name }}</dd></div><div><dt>Vendor</dt><dd>{{ ad.vendor.name }}</dd></div>
+        <div><dt>Location</dt><dd>{{ ad.city }}, Tanzania</dd></div><div><dt>Price</dt><dd>{{ site.currency }} {{ ad.price|intcomma }} &middot; {{ ad.price_unit }}{% if ad.negotiable %} (negotiable){% endif %}</dd></div>
+        {% for k, v in ad.detail_list %}<div><dt>{{ k }}</dt><dd>{{ v }}</dd></div>{% endfor %}</dl></section>
+    <section id="photos" class="ad-sec"><h2><svg><use href="#i-camera-f"/></svg>Photos</h2><div class="pgal">
+      {% if ad.image %}<img src="{{ ad.image.url }}" alt="" loading="lazy">{% endif %}{% for p in photos %}<img src="{{ p.image.url }}" alt="" loading="lazy">{% endfor %}</div></section>
+    <section id="reviews" class="ad-sec"><h2><svg><use href="#i-star8"/></svg>Reviews</h2>
+      {% for r in reviews %}<div class="rev"><b>{{ r.user.member.name|default:r.user.username }}</b> {% include "partials/stars.html" with r=r.rating %}<small>{{ r.created|date:"d M Y" }}</small>{% if r.comment %}<p>{{ r.comment }}</p>{% endif %}</div>
+      {% empty %}<p class="muted">No reviews yet. Have you used this service? Be the first to share your experience.</p>{% endfor %}
+      {% if user.is_authenticated and review_form %}<form method="post" action="{% url 'review' ad.slug %}" class="form rev-form">{% csrf_token %}
+        <div class="rate">{% for v in "54321" %}<input type="radio" name="rating" value="{{ v }}" id="rt{{ v }}" required><label for="rt{{ v }}" title="{{ v }} stars">&#9733;</label>{% endfor %}</div>
+        {{ review_form.comment }}<button class="btn btn-s">Post Review</button></form>
+      {% elif not user.is_authenticated %}<a class="btn btn-o xs" href="{% url 'login' %}?next={{ ad_url|urlencode }}" data-auth="{{ ad_url }}">Log in to write a review</a>{% endif %}
+    </section>
+  </div>
+
+  <aside class="ad-aside">
+    <div class="box" id="location"><div class="box-h"><svg><use href="#i-pin"/></svg><h3>Location</h3>
+      <a class="pill-btn" href="https://www.google.com/maps/search/?api=1&amp;query={{ ad.map_query|default:ad.city|urlencode }}" target="_blank" rel="noopener">View on Map <svg><use href="#i-arrow"/></svg></a></div>
+      <div class="map"><iframe title="Map of {{ ad.title }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        src="https://maps.google.com/maps?q={{ ad.map_query|default:ad.city|urlencode }}&amp;z=13&amp;output=embed"></iframe></div></div>
+    <div class="box" id="similar"><div class="box-h"><svg><use href="#i-doc"/></svg><h3>Related Adverts</h3><a class="more sm" href="{% url 'services' %}?cat={{ ad.category.slug }}">View More <svg><use href="#i-arrow"/></svg></a></div>
+      <div class="box-b rel-grid">{% for r in related %}{% include "partials/ad_card.html" with a=r %}{% empty %}<p class="muted">No similar adverts yet.</p>{% endfor %}</div></div>
+  </aside>
+</div>
+
+<dialog class="inq" id="inq"><form method="post" action="{% url 'inquire' ad.slug %}" class="form">{% csrf_token %}
+  <button type="button" class="am-x" data-close-dlg aria-label="Close">&times;</button>
+  <h2 id="inq-title">Contact {{ ad.vendor.name }}</h2><p class="muted">Your request goes to the vendor, who will call you back.</p>
+  {{ inquiry_form.kind }}
+  <div class="fgrid">{% include "partials/field.html" with f=inquiry_form.name icon="user" %}{% include "partials/field.html" with f=inquiry_form.phone icon="wa-f" %}
+    {% include "partials/field.html" with f=inquiry_form.event_date icon="cal" %}{% include "partials/field.html" with f=inquiry_form.guests icon="people" %}
+    {% include "partials/field.html" with f=inquiry_form.message wide=1 %}</div>
+  <button class="btn btn-s btn-lg block">Send Request</button></form></dialog>
+{% endblock %}

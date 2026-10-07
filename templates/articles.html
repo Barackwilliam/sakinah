@@ -1,0 +1,51 @@
+{% extends "base.html" %}{% load static humanize %}{% block title %}Articles & Advice - {{ site.brand }}{% endblock %}
+{% block content %}
+<section class="phero">
+  <div class="phero-img" style="--img:url('{% static "img/hero_articles.jpg" %}')"></div>
+  <div class="phero-in"><div class="phero-txt">
+    <h1>Articles &amp; Advice</h1><h2>Guidance for a Happier, Stronger Marriage</h2>
+    <p>Explore useful articles, expert advice and Islamic guidance on marriage, relationships, family life and personal growth.</p>
+    <ul class="phero-feats"><li><svg><use href="#i-book"/></svg>Islamic Guidance</li><li><svg><use href="#i-user"/></svg>Expert Advice</li>
+      <li><svg><use href="#i-bulb"/></svg>Practical Tips</li><li><svg><use href="#i-people"/></svg>Real Stories</li><li><svg><use href="#i-heart-f"/></svg>Healthy Relationships</li></ul>
+  </div></div>
+  <blockquote class="phero-q"><span>&ldquo;Knowledge today builds stronger families tomorrow.&rdquo;</span><i></i></blockquote>
+</section>
+
+<div class="wrap page">
+  <form class="fbar" method="get">
+    <div class="sel grow"><svg><use href="#i-search"/></svg><input name="q" value="{{ f.q }}" placeholder="Search articles..."></div>
+    <div class="sel"><select name="cat"><option value="">All Categories</option>{% for c in categories %}<option value="{{ c.slug }}" {% if f.cat == c.slug %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div>
+    <div class="sel"><select name="author"><option value="">All Authors</option>{% for a in authors %}<option {% if f.author == a %}selected{% endif %}>{{ a }}</option>{% endfor %}</select></div>
+    <div class="sel"><select name="sort"><option value="">Latest First</option><option value="popular" {% if f.sort == 'popular' %}selected{% endif %}>Most Read</option></select></div>
+    <button class="btn btn-s"><svg><use href="#i-search"/></svg>Search</button>
+  </form>
+
+  <div class="three">
+    <aside class="lcol">
+      <div class="box"><div class="box-h"><svg><use href="#i-mosque"/></svg><h3>Article Categories</h3></div>
+        <ul class="box-b catlist"><li><a href="{% url 'articles' %}" class="{% if not f.cat %}on{% endif %}"><svg><use href="#i-book"/></svg>All Articles<i>{{ total }}</i></a></li>
+          {% for c in categories %}<li><a href="?cat={{ c.slug }}" class="{% if f.cat == c.slug %}on{% endif %}"><svg><use href="#i-{{ c.icon }}"/></svg>{{ c.name }}<i>{{ c.n }}</i></a></li>{% endfor %}</ul></div>
+      {% if tags %}<div class="box"><div class="box-h"><svg><use href="#i-tag"/></svg><h3>Popular Tags</h3></div>
+        <div class="box-b tags">{% for t in tags %}<a href="?tag={{ t|urlencode }}" class="{% if f.tag == t %}on{% endif %}">{{ t }}</a>{% endfor %}</div></div>{% endif %}
+    </aside>
+
+    <section class="mcol">
+      <div class="sec-h sm"><h2>{% if f.q or f.cat or f.tag or f.author %}Search Results{% else %}Latest Articles{% endif %}</h2>{% if f.q or f.cat or f.tag or f.author %}<a class="more" href="{% url 'articles' %}">View All Articles <svg><use href="#i-arrow"/></svg></a>{% endif %}</div>
+      {% if page %}<div class="art-grid">{% for a in page %}{% include "partials/article_card.html" %}{% endfor %}</div>
+      {% if page.has_other_pages %}<nav class="pager">{% if page.has_previous %}<a class="btn btn-o xs" href="?{{ qs }}&page={{ page.previous_page_number }}">&lsaquo; Previous</a>{% endif %}
+        <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>{% if page.has_next %}<a class="btn btn-o xs" href="?{{ qs }}&page={{ page.next_page_number }}">Next &rsaquo;</a>{% endif %}</nav>{% endif %}
+      {% else %}<div class="empty box"><p>No articles found. Try another search.</p></div>{% endif %}
+    </section>
+
+    <aside class="rcol">
+      {% if featured %}<div class="box"><div class="box-h"><svg class="gold"><use href="#i-star8"/></svg><h3>Featured Article</h3></div>
+        <div class="box-b feat-art"><a href="{{ featured.get_absolute_url }}" class="fa-img">{% if featured.image %}<img src="{{ featured.image.url }}" alt="" loading="lazy">{% endif %}</a>
+          <h4><a href="{{ featured.get_absolute_url }}">{{ featured.title }}</a></h4><p>{{ featured.excerpt }}</p>
+          <div class="art-meta"><span><svg><use href="#i-cal-f"/></svg>{{ featured.published|date:"d M Y" }}</span><span><svg><use href="#i-eye"/></svg>{{ featured.views|intcomma }}</span><span><svg><use href="#i-comment"/></svg>{{ featured.n_comments }}</span></div>
+          <a class="btn btn-p block" href="{{ featured.get_absolute_url }}">Read Article <svg><use href="#i-arrow"/></svg></a></div></div>{% endif %}
+      <div class="box"><div class="box-h"><svg><use href="#i-doc"/></svg><h3>Recent Articles</h3></div>
+        <ul class="box-b recent">{% for r in recent %}<li><a href="{{ r.get_absolute_url }}"><span class="rc-img">{% if r.image %}<img src="{{ r.image.url }}" alt="" loading="lazy">{% endif %}</span>
+          <span><b>{{ r.title }}</b><small>{{ r.published|date:"d M Y" }}</small></span></a></li>{% endfor %}</ul></div>
+    </aside>
+  </div>
+</div>{% endblock %}

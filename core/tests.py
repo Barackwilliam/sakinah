@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
-from .models import Like, Member, Message
+from datetime import date, timedelta
+from .models import *
 
 class FlowTests(TestCase):
     def setUp(self):
@@ -136,3 +137,85 @@ class FlowTests(TestCase):
         r = self.client.get(reverse("login"))
         self.assertContains(r, "Sakinah")
         self.assertContains(r, "Karibu tena")
+
+
+class SiteSectionTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user("juma", "juma@example.com", "S3cure-pass-123")
+        self.me = Member.objects.create(user=self.user, name="Juma", age=30, gender="M", city="Arusha", occupation="Teacher")
+        self.zahra = Member.objects.create(name="Zahra", age=26, gender="F", city="Dar es Salaam", occupation="Teacher", prayer="Regularly")
+        self.amina = Member.objects.create(name="Amina", age=28, gender="F", city="Arusha", occupation="Nurse")
+        venues = ServiceCategory.objects.create(name="Wedding Venues", slug="wedding-venues", blurb="Halls")
+        vendor = Vendor.objects.create(name="Al-Noor Events", slug="al-noor", city="Dar es Salaam", why_choose="Trusted\nHalal")
+        self.ad = Advert.objects.create(category=venues, vendor=vendor, title="Al-Noor Wedding Hall", slug="al-noor-hall", city="Dar es Salaam",
+            price=1500000, includes="Chairs\nSound", highlights="people|Up to 300 Guests")
+        Advert.objects.create(category=venues, vendor=vendor, title="Baraka Gardens", slug="baraka", city="Dar es Salaam", price=1200000)
+        cat = ArticleCategory.objects.create(name="Relationships", slug="relationships")
+        self.article = Article.objects.create(title="Talk Kindly", slug="talk-kindly", category=cat, excerpt="Short", body="Long text", tags="Trust, Nikah")
+        self.event = Event.objects.create(title="Nikah Workshop", date=date.today() + timedelta(days=5), city="Arusha")
+        Event.objects.create(title="Old Seminar", date=date.today() - timedelta(days=5), city="Arusha")
+
+    def test_public_pages(self):
+        for url in [reverse("services"), reverse("advert", args=["al-noor-hall"]), reverse("articles"), self.article.get_absolute_url(),
+                    reverse("events"), reverse("premium")]:
+            self.assertEqual(self.client.get(url).status_code, 200, url)
+
+    def test_advert_page_and_views(self):
+        r = self.client.get(reverse("advert", args=["al-noor-hall"]))
+        self.assertContains(r, "Up to 300 Guests"); self.assertContains(r, "Baraka Gardens"); self.assertContains(r, "Trusted")
+        self.ad.refresh_from_db(); self.assertEqual(self.ad.views, 1)
+        r = self.client.get(reverse("services"), {"cat": "wedding-venues", "q": "baraka"})
+        self.assertContains(r, "Baraka Gardens"); self.assertNotContains(r, "Al-Noor Wedding Hall</a>")
+
+    def test_inquiry_works_without_login(self):
+        self.client.post(reverse("inquire", args=["al-noor-hall"]), {"kind": "availability", "name": "Asha", "phone": "0712000111"})
+        self.assertEqual(Inquiry.objects.get().kind, "availability")
+        self.client.post(reverse("inquire", args=["al-noor-hall"]), {"kind": "inquiry", "name": "", "phone": ""})
+        self.assertEqual(Inquiry.objects.count(), 1)
+
+    def test_wishlist_and_review_need_login(self):
+        url = reverse("wishlist", args=["al-noor-hall"])
+        self.assertRedirects(self.client.post(url), f"{reverse('login')}?next={url}")
+        self.client.force_login(self.user)
+        self.client.post(url); self.assertTrue(Wishlist.objects.exists())
+        self.client.post(url); self.assertFalse(Wishlist.objects.exists())
+        self.client.post(reverse("review", args=["al-noor-hall"]), {"rating": 5, "comment": "Great"})
+        self.client.post(reverse("review", args=["al-noor-hall"]), {"rating": 1, "comment": "Again"})
+        self.assertEqual(AdvertReview.objects.get().rating, 5)
+        self.assertContains(self.client.get(reverse("advert", args=["al-noor-hall"])), "5.0")
+
+    def test_profile_prev_next_shortlist_report(self):
+        self.client.force_login(self.user)
+        r = self.client.get(reverse("member", args=[self.zahra.pk]))
+        self.assertContains(r, "Regularly"); self.assertContains(r, "Her Preferences")
+        self.assertTrue(r.context["prev_id"] or r.context["next_id"])
+        self.client.post(reverse("shortlist", args=[self.zahra.pk]))
+        self.assertTrue(Shortlist.objects.filter(member=self.zahra).exists())
+        self.assertContains(self.client.get(reverse("my_likes")), "Zahra")
+        self.client.post(reverse("report", args=[self.zahra.pk]), {"reason": "fake", "details": "x"})
+        self.assertEqual(Report.objects.get().member, self.zahra)
+
+    def test_articles_filter_and_comments(self):
+        self.assertContains(self.client.get(reverse("articles"), {"tag": "Trust"}), "Talk Kindly")
+        self.assertNotContains(self.client.get(reverse("articles"), {"q": "nothing-like-this"}), "Talk Kindly</a>")
+        url = self.article.get_absolute_url()
+        self.assertRedirects(self.client.post(url, {"body": "Nice"}), f"{reverse('login')}?next={url}")
+        self.client.force_login(self.user)
+        self.client.post(url, {"body": "Nice"})
+        self.assertEqual(ArticleComment.objects.get().body, "Nice")
+
+    def test_events_upcoming_and_registration(self):
+        r = self.client.get(reverse("events"))
+        self.assertContains(r, "Nikah Workshop"); self.assertNotContains(r, "Old Seminar")
+        self.assertContains(self.client.get(reverse("events"), {"when": "past"}), "Old Seminar")
+        self.client.force_login(self.user)
+        url = reverse("event_register", args=[self.event.pk])
+        self.client.post(url); self.assertEqual(self.event.registrations.count(), 1)
+        self.assertContains(self.client.get(reverse("events")), "Registered")
+        self.client.post(url); self.assertEqual(self.event.registrations.count(), 0)
+
+    def test_plan_features(self):
+        p = Plan.objects.create(name="Gold", price=50000, features="Unlimited messages\n-Incognito mode", popular=True)
+        self.assertEqual(p.feature_list, [(True, "Unlimited messages"), (False, "Incognito mode")])
+        r = self.client.get(reverse("premium"))
+        self.assertContains(r, "Most Popular"); self.assertContains(r, "Incognito mode")
