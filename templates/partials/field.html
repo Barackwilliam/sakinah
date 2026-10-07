@@ -1,0 +1,6 @@
+<div class="fld{% if f.errors %} bad{% endif %}{% if wide %} wide{% endif %}">
+  <label for="{{ f.id_for_label }}">{{ f.label }}</label>
+  <div class="ctl{% if f.field.widget.input_type == 'password' %} pw{% endif %}">{% if icon %}<svg class="ctl-i"><use href="#i-{{ icon }}"/></svg>{% endif %}{{ f }}
+    {% if f.field.widget.input_type == 'password' %}<button type="button" class="eye" aria-label="Show password" data-eye><svg><use href="#i-eye"/></svg></button>{% endif %}</div>
+  {% if f.errors %}{{ f.errors }}{% elif f.help_text %}<small>{{ f.help_text|safe }}</small>{% endif %}
+</div>

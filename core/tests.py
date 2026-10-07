@@ -123,3 +123,16 @@ class FlowTests(TestCase):
         self.assertEqual((self.amina.seeking, self.amina.marital), ("Mume wa Ndoa", "Hajaolewa"))
         self.assertEqual((self.omar.seeking, self.omar.marital), ("Mke wa Ndoa", "Hajaoa"))
         self.assertIn("Kiislamu", self.omar.goal_text)
+
+    def test_login_with_email_or_username(self):
+        User.objects.create_user("zuhura", "Zuhura@Example.com", "S3cure-pass-123")
+        for name in ["zuhura", "zuhura@example.com"]:
+            self.assertRedirects(self.client.post(reverse("login"), {"username": name, "password": "S3cure-pass-123"}), reverse("home"))
+            self.client.logout()
+        r = self.client.post(reverse("login"), {"username": "zuhura@example.com", "password": "wrong"})
+        self.assertEqual(r.status_code, 200)
+
+    def test_login_page_uses_site_settings(self):
+        r = self.client.get(reverse("login"))
+        self.assertContains(r, "Sakinah")
+        self.assertContains(r, "Karibu tena")

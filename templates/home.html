@@ -3,64 +3,87 @@
 <section class="hero" {% if site.hero_image %}style="--hero:url('{{ site.hero_image.url }}')"{% endif %}>
   <div class="hero-in">
     <div class="hero-txt">
-      <h1>{{ site.hero_title_1 }}<br><span>{{ site.hero_title_2 }}</span></h1>
-      {% with w=site.hero_text.split %}<p><b>{{ w.0 }}</b> {{ w|slice:"1:"|join:" " }}</p>{% endwith %}
+      <span class="eyebrow"><svg><use href="#i-star8"/></svg>{{ site.tagline }}</span>
+      <h1>{{ site.hero_title_1 }} <em>{{ site.hero_title_2 }}</em></h1>
+      {% with w=site.hero_text.split %}<p class="lead"><b>{{ w.0 }}</b> {{ w|slice:"1:"|join:" " }}</p>{% endwith %}
       <form class="search" action="{% url 'matches' %}" method="get">
         <label>I am a<div class="sel"><svg><use href="#i-user"/></svg><select name="me"><option value="F">Woman</option><option value="M">Man</option></select></div></label>
-        <label>Looking for a<div class="sel"><svg><use href="#i-user"/></svg><select name="seek"><option value="M">Man</option><option value="F">Woman</option></select></div></label>
-        <label>Age<div class="sel"><select name="age"><option value="20-35">20 - 35</option><option value="25-40">25 - 40</option><option value="35+">35+</option><option value="">Any</option></select></div></label>
-        <label>Location<div class="sel"><svg><use href="#i-pin"/></svg><select name="city">{% for l in locations %}<option>{{ l }}</option>{% endfor %}<option value="">Anywhere</option></select></div></label>
-        <label>Religion<div class="sel"><svg><use href="#i-moon"/></svg><select name="religion"><option>Islam</option></select></div></label>
-        <button class="btn btn-s">Search</button>
+        <label>Looking for<div class="sel"><svg><use href="#i-heart"/></svg><select name="seek"><option value="M">Man</option><option value="F">Woman</option></select></div></label>
+        <label>Age<div class="sel"><svg><use href="#i-cal"/></svg><select name="age"><option value="20-35">20 - 35</option><option value="25-40">25 - 40</option><option value="35+">35+</option><option value="">Any</option></select></div></label>
+        <label>Location<div class="sel"><svg><use href="#i-pin"/></svg><select name="city"><option value="">Anywhere</option>{% for l in locations %}<option>{{ l }}</option>{% endfor %}</select></div></label>
+        <label>Religion<div class="sel"><svg><use href="#i-moon"/></svg><select name="religion"><option value="Islam">Islam</option><option value="Christian">Christian</option><option value="">Any</option></select></div></label>
+        <button class="btn btn-s"><svg><use href="#i-search"/></svg>Search</button>
       </form>
       <ul class="trust"><li><svg class="ok"><use href="#i-check-c"/></svg>Verified Profiles</li><li><svg class="mag"><use href="#i-heart-f"/></svg>Serious Intentions</li><li><svg class="gold"><use href="#i-shield-c"/></svg>Safe &amp; Secure</li><li><svg class="mag"><use href="#i-people"/></svg>Real People</li></ul>
     </div>
-    <blockquote class="hero-q">&ldquo;{{ site.hero_quote }}<i></i></blockquote>
+    <div class="hero-art" aria-hidden="true">
+      <div class="ring r1"></div><div class="ring r2"></div>
+      {% with a=faces.0 b=faces.1 %}
+      <div class="arch big">{% if a %}<img src="{{ a.photo.url }}" alt="">{% endif %}</div>
+      <div class="arch small">{% if b %}<img src="{{ b.photo.url }}" alt="">{% endif %}</div>
+      <div class="chip c1"><span class="ci ok"><svg><use href="#i-check-c"/></svg></span><div><b>Imethibitishwa</b><small>Verified members</small></div></div>
+      {% if a %}<div class="chip c2"><span class="ci mag"><svg><use href="#i-heart-f"/></svg></span><div><b>{{ a.compatibility }}% Match</b><small>{{ a.name }}, {{ a.age }} &middot; {{ a.city }}</small></div></div>{% endif %}
+      {% endwith %}
+      <blockquote class="hero-q">&ldquo;{{ site.hero_quote }}&rdquo;</blockquote>
+    </div>
   </div>
 </section>
 
-<section class="wrap panel pink">
-  <div class="sec-h"><div><h2>Everything You Need for Your Nikah &amp; Wedding</h2><p>Discover trusted vendors and services to make your special day perfect.</p></div><a class="more" href="{% url 'services' %}">View All Services <svg><use href="#i-arrow"/></svg></a></div>
-  <div class="svc-grid">
-    {% for c in categories %}
-    <article class="svc"><div class="svc-img">{% if c.image %}<img src="{{ c.image.url }}" alt="{{ c.name }}" loading="lazy">{% endif %}</div>
-      <h3>{{ c.name }}</h3><p>{{ c.blurb }}</p><a class="btn btn-p" href="{% url 'services' %}#{{ c.slug }}">{{ c.button_label }}</a></article>
-    {% endfor %}
+<section class="wrap steps reveal">
+  <div class="sec-h center"><span class="eyebrow">Jinsi inavyofanya kazi</span><h2>Four steps to your Nikah</h2></div>
+  <ol class="step-list">
+    <li><span class="st-ic"><svg><use href="#i-user"/></svg></span><b>Jisajili bure</b><small>Create your free profile in two minutes.</small></li>
+    <li><span class="st-ic"><svg><use href="#i-search"/></svg></span><b>Tafuta mwenza</b><small>Filter by age, city and faith to find your match.</small></li>
+    <li><span class="st-ic"><svg><use href="#i-chat"/></svg></span><b>Wasiliana kwa heshima</b><small>Talk privately and respectfully inside {{ site.brand }}.</small></li>
+    <li><span class="st-ic"><svg><use href="#i-ring2"/></svg></span><b>Fanya Nikah</b><small>Plan your wedding with trusted vendors.</small></li>
+  </ol>
+</section>
+
+<section class="wrap sect reveal">
+  <div class="sec-h"><div><span class="eyebrow">Featured matches</span><h2>Meet verified members</h2><p>Serious people looking for a blessed marriage.</p></div><a class="more" href="{% url 'matches' %}">View More Matches <svg><use href="#i-arrow"/></svg></a></div>
+  <div class="m-wrap"><button class="arr l" aria-label="Previous" data-dir="-1"><svg><use href="#i-chev-l"/></svg></button>
+    <div class="m-grid" id="mgrid">{% for m in matches %}{% include "partials/member_card.html" %}{% endfor %}</div>
+    <button class="arr r" aria-label="Next" data-dir="1"><svg><use href="#i-chev-r"/></svg></button></div>
+</section>
+
+<section class="svc-band reveal">
+  <div class="wrap sect">
+    <div class="sec-h"><div><span class="eyebrow">Nikah &amp; wedding</span><h2>Everything you need for your Nikah</h2><p>Discover trusted vendors and services to make your special day perfect.</p></div><a class="more" href="{% url 'services' %}">View All Services <svg><use href="#i-arrow"/></svg></a></div>
+    <div class="svc-grid">
+      {% for c in categories %}
+      <a class="svc" href="{% url 'services' %}#{{ c.slug }}"><div class="svc-img">{% if c.image %}<img src="{{ c.image.url }}" alt="" loading="lazy">{% endif %}</div>
+        <div class="svc-t"><h3>{{ c.name }}</h3><p>{{ c.blurb }}</p><span class="svc-go">{{ c.button_label }} <svg><use href="#i-arrow"/></svg></span></div></a>
+      {% endfor %}
+    </div>
   </div>
 </section>
 
-<div class="wrap trio">
-  <section class="panel fm">
-    <div class="sec-h"><div><h2>Featured Matches</h2><p>Meet verified members looking for serious relationships and marriage.</p></div><a class="more" href="{% url 'matches' %}">View More Matches <svg><use href="#i-arrow"/></svg></a></div>
-    <div class="m-wrap"><button class="arr l" aria-label="Previous" data-dir="-1"><svg><use href="#i-chev-l"/></svg></button><div class="m-grid" id="mgrid">
-      {% for m in matches %}{% include "partials/member_card.html" %}{% endfor %}
-    </div><button class="arr r" aria-label="Next" data-dir="1"><svg><use href="#i-chev-r"/></svg></button></div>
-  </section>
-
+<div class="wrap duo reveal">
   <div class="prem">
-    <h2><svg><use href="#i-crown"/></svg>GO PREMIUM</h2><p>Get more matches and powerful features.</p>
-    <ul>{% for p in perks %}<li><svg><use href="#i-check-sq"/></svg>{{ p.text }}</li>{% endfor %}</ul>
+    <div class="prem-txt">
+      <h2><svg><use href="#i-crown"/></svg>GO PREMIUM</h2><p>Get more matches and powerful features.</p>
+      <ul>{% for p in perks %}<li><svg><use href="#i-check-sq"/></svg>{{ p.text }}</li>{% endfor %}</ul>
+      <div class="price">From <b>{{ site.currency }} {{ from_price|floatformat:"0g" }}</b>/month</div>
+      <a class="btn btn-s btn-lg" href="{% url 'premium' %}">Upgrade Now <svg><use href="#i-arrow"/></svg></a>
+    </div>
     {% if site.premium_image %}<img class="prem-img" src="{{ site.premium_image.url }}" alt="" loading="lazy">{% endif %}
-    <div class="price">From {{ site.currency }} {{ from_price|floatformat:"0g" }}/month</div>
-    <a class="btn btn-s block" href="{% url 'premium' %}">Upgrade Now <svg><use href="#i-arrow"/></svg></a>
   </div>
-
   <aside class="side">
-    <div class="panel ev">
+    <div class="ev">
       <div class="sec-h sm"><h2>Upcoming Events</h2><a class="more" href="{% url 'events' %}">View All <svg><use href="#i-arrow"/></svg></a></div>
       {% for e in events %}
-      <div class="ev-row"><div class="ev-img">{% if e.image %}<img src="{{ e.image.url }}" alt="" loading="lazy">{% endif %}</div>
-        <div class="ev-d"><b>{{ e.date|date:"d" }}</b>{{ e.date|date:"M"|upper }}</div>
+      <div class="ev-row"><div class="ev-d"><b>{{ e.date|date:"d" }}</b>{{ e.date|date:"M"|upper }}</div>
         <div class="ev-t"><h4>{{ e.title }}</h4><p>{{ e.description }}</p><span><svg><use href="#i-pin"/></svg>{{ e.city }}</span></div>
-        <a class="btn btn-o xs" href="{% url 'events' %}#e{{ e.pk }}">Register</a></div>{% endfor %}
+        <a class="btn btn-o xs" href="{% url 'events' %}#e{{ e.pk }}">Register</a></div>
+      {% empty %}<p class="empty">New events coming soon.</p>{% endfor %}
     </div>
     <div class="adv"><div class="adv-t"><h3>Advertise Your Marriage Service</h3><p>Reach thousands of members looking for trusted wedding services.</p>
-      <div class="adv-a"><svg class="gold"><use href="#i-mega"/></svg><a class="btn btn-o xs" href="{% url 'services' %}">Advertise Now <svg><use href="#i-arrow"/></svg></a></div></div>
+      <a class="btn btn-o xs" href="{% url 'services' %}"><svg class="gold"><use href="#i-mega"/></svg>Advertise Now</a></div>
       {% if site.advert_image %}<img class="adv-img" src="{{ site.advert_image.url }}" alt="" loading="lazy">{% endif %}</div>
   </aside>
 </div>
 
-<section class="wrap strip">
-  {% for s in strip %}<div><span class="ic ic-{{ s.icon }}"><svg><use href="#i-{{ s.icon }}"/></svg></span><div><b>{{ s.title }}</b><small>{{ s.text }}</small></div></div>{% endfor %}
+<section class="wrap why reveal">
+  {% for s in strip %}<div class="why-i"><span class="ic ic-{{ s.icon }}"><svg><use href="#i-{{ s.icon }}"/></svg></span><b>{{ s.title }}</b><small>{{ s.text }}</small></div>{% endfor %}
 </section>
 {% endblock %}

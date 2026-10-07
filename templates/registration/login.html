@@ -1,7 +1,10 @@
-{% extends "base.html" %}{% block title %}Login - {{ site.brand }}{% endblock %}
-{% block content %}<section class="authbox panel">
-  <h1>Welcome back</h1><p class="sub">Log in to see your matches and likes.</p>
-  <form method="post" class="form">{% csrf_token %}{% include "partials/form.html" %}<input type="hidden" name="next" value="{{ next }}">
-    <button class="btn btn-s block">Login</button></form>
-  <p class="alt">New to {{ site.brand }}? <a href="{% url 'signup' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Join free</a></p>
+{% extends "base.html" %}{% block title %}Login - {{ site.brand }}{% endblock %}{% block bodyclass %}auth-page{% endblock %}
+{% block content %}<section class="auth">
+  {% include "partials/auth_art.html" with art_title="Karibu tena!" art_text="Welcome back. Log in to see your matches, likes and messages." %}
+  <div class="auth-card">
+    <div class="ac-head"><span class="eyebrow">Ingia &middot; Login</span><h1>Welcome back</h1><p>Log in with your username or email.</p></div>
+    <form method="post" class="form">{% csrf_token %}{% include "partials/login_fields.html" %}<input type="hidden" name="next" value="{{ next }}">
+      <button class="btn btn-s btn-lg block">Login <svg><use href="#i-arrow"/></svg></button></form>
+    <p class="alt">New to {{ site.brand }}? <a href="{% url 'signup' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Create a free account</a></p>
+  </div>
 </section>{% endblock %}
