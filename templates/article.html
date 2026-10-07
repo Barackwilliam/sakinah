@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% load humanize %}{% block title %}{{ a.title }} - {{ site.brand }}{% endblock %}
+{% block content %}
+{% include "partials/crumbs.html" with c1="Articles" c1u="articles" here=a.title %}
+<div class="wrap page art-page">
+  <article class="box art-full">
+    {% if a.image %}<div class="af-img"><img src="{{ a.image.url }}" alt="">{% if a.category %}<span class="art-cat">{{ a.category.name }}</span>{% endif %}</div>{% endif %}
+    <div class="box-b">
+      <h1>{{ a.title }}</h1>
+      <div class="art-meta lg"><span><svg><use href="#i-user"/></svg>{{ a.author }}</span><span><svg><use href="#i-cal-f"/></svg>{{ a.published|date:"d M Y" }}</span>
+        <span><svg><use href="#i-eye"/></svg>{{ views|intcomma }} view{{ views|pluralize }}</span><span><svg><use href="#i-comment"/></svg>{{ comments|length }}</span>
+        <button type="button" class="ibtn sm" data-share="{{ a.title }}" aria-label="Share"><svg><use href="#i-share"/></svg></button></div>
+      <p class="lead">{{ a.excerpt }}</p>
+      <div class="prose">{{ a.body|linebreaks }}</div>
+      {% if a.tag_list %}<div class="tags">{% for t in a.tag_list %}<a href="{% url 'articles' %}?tag={{ t|urlencode }}">{{ t }}</a>{% endfor %}</div>{% endif %}
+    </div>
+    <section class="box-b comments" id="comments"><h2>Comments ({{ comments|length }})</h2>
+      {% for c in comments %}<div class="rev"><b>{{ c.user.member.name|default:c.user.username }}</b><small>{{ c.created|date:"d M Y" }}</small><p>{{ c.body|linebreaksbr }}</p></div>
+      {% empty %}<p class="muted">No comments yet. Start the conversation.</p>{% endfor %}
+      {% if user.is_authenticated %}<form method="post" class="form">{% csrf_token %}{{ form.body }}<button class="btn btn-s">Post Comment</button></form>
+      {% else %}<a class="btn btn-o xs" href="{% url 'login' %}?next={{ a.get_absolute_url|urlencode }}" data-auth="{{ a.get_absolute_url }}">Log in to comment</a>{% endif %}
+    </section>
+  </article>
+  <aside class="rcol">
+    <div class="box"><div class="box-h"><svg><use href="#i-doc"/></svg><h3>Recent Articles</h3></div>
+      <ul class="box-b recent">{% for r in recent %}<li><a href="{{ r.get_absolute_url }}"><span class="rc-img">{% if r.image %}<img src="{{ r.image.url }}" alt="" loading="lazy">{% endif %}</span>
+        <span><b>{{ r.title }}</b><small>{{ r.published|date:"d M Y" }}</small></span></a></li>{% endfor %}</ul></div>
+    <a class="btn btn-o block" href="{% url 'articles' %}"><svg class="flip"><use href="#i-arrow"/></svg>All Articles</a>
+  </aside>
+</div>{% endblock %}

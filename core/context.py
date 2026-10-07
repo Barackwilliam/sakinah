@@ -7,6 +7,7 @@ def site(request):
     if user is None: return ctx
     if user.is_authenticated:
         ctx["unread"] = Message.objects.filter(to__user=user, read=False).count()
+        ctx["n_notes"] = user.notifications.filter(read=False).count()
     else:
         ctx["modal_login"], ctx["modal_signup"] = LoginForm(request, auto_id="li_%s"), SignupForm(auto_id="su_%s")
     return ctx

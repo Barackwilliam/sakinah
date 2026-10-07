@@ -1,5 +1,7 @@
 {% if user.is_authenticated %}
+{% if user.is_staff %}<a class="btn btn-o msgs-l" href="{% url 'dashboard' %}" aria-label="Admin dashboard" title="Admin dashboard"><svg><use href="#i-grid"/></svg><span class="t">Dashboard</span></a>{% endif %}
+<a class="btn btn-o msgs-l" href="{% url 'notifications' %}" aria-label="Notifications" title="Notifications"><svg><use href="#i-bell"/></svg><span class="t">Notifications</span>{% if n_notes %}<span class="badge">{{ n_notes }}</span>{% endif %}</a>
 <a class="btn btn-o msgs-l" href="{% url 'inbox' %}" aria-label="Ujumbe" title="Ujumbe"><svg><use href="#i-chat"/></svg><span class="t">Ujumbe</span>{% if unread %}<span class="badge">{{ unread }}</span>{% endif %}</a>
-<a class="btn btn-o" href="{% if user.member %}{% url 'member' user.member.pk %}{% else %}{% url 'profile_edit' %}{% endif %}">My Profile</a>
+<a class="btn btn-o me-l" href="{% if user.member %}{% url 'member' user.member.pk %}{% else %}{% url 'profile_edit' %}{% endif %}" aria-label="My Profile" title="My Profile">{% if user.member.photo %}<img src="{{ user.member.photo.url }}" alt="">{% else %}<svg><use href="#i-user"/></svg>{% endif %}<span class="t">My Profile</span></a>
 <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn btn-s">Logout</button></form>
 {% else %}<a class="btn btn-o" href="{% url 'login' %}">Login</a><a class="btn btn-s" href="{% url 'signup' %}">Join Free</a>{% endif %}

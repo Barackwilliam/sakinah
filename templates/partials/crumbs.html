@@ -1,0 +1,7 @@
+<nav class="crumbs" aria-label="Breadcrumb"><div class="crumbs-in">
+  <ol><li><a href="{% url 'home' %}"><svg><use href="#i-home"/></svg>Home</a></li>
+    {% if c1 %}<li><a href="{% if c1q %}{% url c1u %}?{{ c1q }}{% else %}{% url c1u %}{% endif %}">{{ c1 }}</a></li>{% endif %}
+    {% if c2 %}<li><a href="{% if c2q %}{% url c2u %}?{{ c2q }}{% else %}{% url c2u %}{% endif %}">{{ c2 }}</a></li>{% endif %}
+    <li aria-current="page">{{ here }}</li></ol>
+  {% block crumbs_right %}{% if prev_id or next_id %}<div class="pn">{% if prev_id %}<a href="{% url 'member' prev_id %}"><svg class="flip"><use href="#i-chev-r"/></svg>Previous Profile</a>{% endif %}{% if next_id %}<a href="{% url 'member' next_id %}">Next Profile<svg><use href="#i-chev-r"/></svg></a>{% endif %}</div>{% endif %}{% endblock %}
+</div></nav>

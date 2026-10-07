@@ -1,0 +1,63 @@
+{% load static %}<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex"><title>{% block title %}Dashboard{% endblock %} - {{ site.brand }} Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}"></head>
+<body>
+{% include "partials/icons.html" %}
+{% include "dashboard/icons.html" %}
+<aside class="sb" id="sb">
+  <a class="sb-logo" href="{% url 'dashboard' %}"><svg class="logo-mark" viewBox="0 0 48 44" aria-hidden="true"><circle cx="13" cy="6.500" r="5" fill="#fff"/><circle cx="35" cy="6.500" r="5" fill="#fff"/><path fill="#fff" d="M24 42C13 34 3.500 26.500 3.500 19.500 3.500 14.500 7 12 11 12c2.200 0 4.300.800 6 2.300-2.800.200-5 2.300-5 5.400 0 6.300 6.800 12.600 12 16.300z"/><path fill="#f6b7c9" d="M24 42c11-8 20.500-15.500 20.500-22.500 0-5-3.500-7.500-7.500-7.500-5.300 0-9.300 4.400-13 10.700-2.200-3.700-4.500-6.400-7.200-7.800 3.400.600 6.700 3.900 8.200 8.300 3.300-5.200 6.400-7.200 9-7.200 2.500 0 4 1.700 4 4.500 0 6.200-8 13.300-18 21.500z"/></svg>
+    <span><b>{{ site.brand }}</b><small>{{ site.tagline }}</small></span></a>
+  <nav class="sb-nav">
+    <a href="{% url 'dashboard' %}" class="{% if nav == 'dashboard' %}on{% endif %}"><svg><use href="#i-home"/></svg>Dashboard</a>
+    <a href="{% url 'dash_members' %}" class="{% if nav == 'members' %}on{% endif %}"><svg><use href="#i-user"/></svg>Members Management<i></i></a>
+    <a href="{% url 'admin:core_like_changelist' %}"><svg><use href="#i-heart-f"/></svg>Matches &amp; Activities<i></i></a>
+    <a href="{% url 'admin:core_advert_changelist' %}"><svg><use href="#i-doc"/></svg>Adverts Management<i></i></a>
+    <a href="{% url 'admin:core_vendor_changelist' %}"><svg><use href="#i-briefcase"/></svg>Services Management<i></i></a>
+    <a href="{% url 'admin:core_event_changelist' %}"><svg><use href="#i-cal-f"/></svg>Events Management<i></i></a>
+    <a href="{% url 'admin:core_article_changelist' %}"><svg><use href="#i-book"/></svg>Articles &amp; Content<i></i></a>
+    <a href="{% url 'dash_payments' %}" class="{% if nav == 'payments' %}on{% endif %}"><svg><use href="#i-coins"/></svg>Payments &amp; Finance<i></i></a>
+    {% if nav == 'payments' %}<div class="sb-sub"><a href="{% url 'dash_payments' %}" class="on">Overview</a><a href="{% url 'dash_payments' %}?new=1#record">Record Payment</a>
+      <a href="{% url 'dash_payments_csv' %}">Export Transactions</a><a href="{% url 'admin:core_payment_changelist' %}">All Transactions</a></div>{% endif %}
+    <a href="{% url 'admin:core_plan_changelist' %}"><svg><use href="#i-crown"/></svg>Premium Plans<i></i></a>
+    <a href="{% url 'dash_comms' %}" class="{% if nav == 'comms' %}on{% endif %}"><svg><use href="#i-mail"/></svg>Communications<i></i></a>
+    {% if nav == 'comms' %}<div class="sb-sub"><a href="{% url 'dash_comms' %}" class="on">Overview</a><a href="{% url 'dash_comms' %}?channel=email">Send Email</a>
+      <a href="{% url 'dash_comms' %}?channel=inapp">Send In-App Message</a><a href="{% url 'dash_comms' %}?channel=notification">Send Notification</a>
+      <a href="{% url 'admin:core_messagetemplate_changelist' %}">Templates</a><a href="{% url 'admin:core_broadcast_changelist' %}">Message History</a></div>{% endif %}
+    <a href="{% url 'dash_report' %}"><svg><use href="#i-chart"/></svg>Reports &amp; Analytics<i></i></a>
+    <a href="{% url 'admin:auth_user_changelist' %}"><svg><use href="#i-people"/></svg>User Management<i></i></a>
+    <a href="{% url 'admin:core_sitesetting_changelist' %}"><svg><use href="#i-gear"/></svg>Settings<i></i></a>
+    <a href="{% url 'admin:admin_logentry_changelist' %}"><svg><use href="#i-doc"/></svg>Audit Logs<i></i></a>
+  </nav>
+  <div class="sb-tools"><p>System Tools</p>
+    <a href="{% url 'admin:core_sitesetting_changelist' %}"><svg><use href="#i-gear"/></svg>Site Configuration</a>
+    <a href="{% url 'admin:auth_group_changelist' %}"><svg><use href="#i-shield-c"/></svg>Roles &amp; Permissions</a>
+    <a href="{% url 'admin:index' %}"><svg><use href="#i-grid"/></svg>Full Admin</a></div>
+</aside>
+<div class="scrim" id="sb-scrim" hidden></div>
+<div class="main">
+  <header class="top">
+    <button class="tb-burger" id="sb-toggle" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
+    <form class="tb-search" action="{% url 'dash_search' %}"><svg><use href="#i-search"/></svg><input name="q" value="{{ q|default:'' }}" placeholder="Search members, adverts, events, payments..."></form>
+    <a class="tb-site" href="{% url 'home' %}" target="_blank">View Website <svg><use href="#i-arrow"/></svg></a>
+    <a class="tb-ic" href="{% url 'dash_members' %}?f=reported" title="Reports and requests"><svg><use href="#i-bell"/></svg>{% if n_alerts %}<i>{{ n_alerts }}</i>{% endif %}</a>
+    <a class="tb-ic" href="{% url 'admin:core_inquiry_changelist' %}?handled__exact=0" title="Vendor inquiries"><svg><use href="#i-mail"/></svg>{% if n_inbox %}<i>{{ n_inbox }}</i>{% endif %}</a>
+    <a class="tb-ic" href="{% url 'admin:core_sitesetting_changelist' %}" title="Settings"><svg><use href="#i-gear"/></svg></a>
+    <details class="tb-user"><summary><span class="av">{{ user.get_username|first|upper }}</span><span class="who"><b>{{ user.get_full_name|default:user.get_username }}</b><small>{% if user.is_superuser %}Super Admin{% else %}Staff{% endif %}</small></span><svg><use href="#i-chev-d"/></svg></summary>
+      <div class="tb-menu"><a href="{% url 'home' %}">View website</a><a href="{% url 'admin:password_change' %}">Change password</a>
+        <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button>Logout</button></form></div></details>
+  </header>
+  {% if messages %}<div class="flash">{% for m in messages %}<p class="msg {{ m.tags }}">{{ m }}</p>{% endfor %}</div>{% endif %}
+  <main class="content">{% block content %}{% endblock %}</main>
+</div>
+<script>
+const sb=document.getElementById('sb'),sc=document.getElementById('sb-scrim');
+document.getElementById('sb-toggle').onclick=()=>{const o=!sb.classList.contains('open');sb.classList.toggle('open',o);sc.hidden=!o;document.body.classList.toggle('mini')};
+sc.onclick=()=>{sb.classList.remove('open');sc.hidden=true};
+document.querySelectorAll('[data-chan]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-chan]').forEach(x=>x.classList.toggle('on',x===b));document.getElementById('id_channel').value=b.dataset.chan}));
+document.querySelectorAll('[data-pick]').forEach(b=>b.addEventListener('click',()=>{const f=b.form;Object.entries(JSON.parse(b.dataset.pick)).forEach(([k,v])=>{const i=f.querySelector('[name='+k+']');if(i)i.value=v});document.querySelectorAll('[data-pick]').forEach(x=>x.classList.toggle('on',x===b))}));
+</script>
+{% block scripts %}{% endblock %}
+</body></html>

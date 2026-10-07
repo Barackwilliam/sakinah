@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
-from .forms import LOCATIONS, LoginForm, SignupForm, ProfileForm, MessageForm
+from .forms import LOCATIONS, LoginForm, SignupForm, ProfileForm, MessageForm, ReportForm
 from .models import *
 
 AGES = {"20-35": (20, 35), "25-40": (25, 40), "35+": (35, 99)}
@@ -27,7 +27,7 @@ def faces():
     return Member.objects.exclude(photo="").filter(verified=True).order_by("joined", "pk")[:5]
 
 def home(request):
-    gold = Plan.objects.order_by("price").first()
+    gold = Plan.objects.filter(price__gt=0).order_by("price").first()
     return render(request, "home.html", {
         "categories": ServiceCategory.objects.all()[:8],
         "matches": Member.objects.filter(featured=True).order_by("joined", "pk")[:4],
@@ -59,8 +59,32 @@ def matches(request):
 
 @login_required
 def member_detail(request, pk):
+    m, mine = get_object_or_404(Member, pk=pk), me(request)
+    # previous / next follow the Find a Match order for the same gender
+    ids = list(Member.objects.filter(gender=m.gender).exclude(pk=getattr(mine, "pk", None)).values_list("pk", flat=True))
+    i = ids.index(m.pk) if m.pk in ids else -1
+    return render(request, "member.html", {"m": m, "liked": liked_ids(request), "is_me": m == mine, "gallery": m.photos.all(),
+        "prev_id": ids[i - 1] if i > 0 else None, "next_id": ids[i + 1] if 0 <= i < len(ids) - 1 else None,
+        "shortlisted": Shortlist.objects.filter(user=request.user, member=m).exists(), "report_form": ReportForm()})
+
+@login_required
+@require_POST
+def shortlist(request, pk):
     m = get_object_or_404(Member, pk=pk)
-    return render(request, "member.html", {"m": m, "liked": liked_ids(request), "is_me": m == me(request), "gallery": m.photos.all()})
+    obj, created = Shortlist.objects.get_or_create(user=request.user, member=m)
+    if not created: obj.delete()
+    messages.success(request, f"{m.name} {'added to' if created else 'removed from'} your shortlist.")
+    return redirect(safe_next(request) or reverse("member", args=[pk]))
+
+@login_required
+@require_POST
+def report(request, pk):
+    m = get_object_or_404(Member, pk=pk)
+    form = ReportForm(request.POST)
+    if form.is_valid():
+        form.instance.member, form.instance.reporter = m, request.user; form.save()
+        messages.success(request, "Thank you. Our team will review this profile.")
+    return redirect(reverse("member", args=[pk]))
 
 @login_required
 @require_POST
@@ -77,7 +101,8 @@ def like(request, pk):
 @login_required
 def my_likes(request):
     members = Member.objects.filter(likes__user=request.user).order_by("-likes__created")
-    return render(request, "likes.html", {"members": members, "liked": liked_ids(request)})
+    shortlisted = Member.objects.filter(shortlisted_by__user=request.user).order_by("-shortlisted_by__created")
+    return render(request, "likes.html", {"members": members, "shortlisted": shortlisted, "liked": liked_ids(request)})
 
 class LoginView(auth_views.LoginView):
     """Django's LoginView puts the current Site object in the context as "site"; restore our SiteSetting."""
@@ -85,6 +110,10 @@ class LoginView(auth_views.LoginView):
     authentication_form = LoginForm
     def get_context_data(self, **kwargs):
         return {**super().get_context_data(**kwargs), "site": SiteSetting.load(), "faces": faces()}
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        if not self.request.POST.get("remember"): self.request.session.set_expiry(0)  # end session when the browser closes
+        return response
 
 def signup(request):
     if request.user.is_authenticated: return redirect("home")
@@ -103,16 +132,6 @@ def profile_edit(request):
         form.save(); messages.success(request, "Profile saved.")
         return redirect("member", pk=form.instance.pk)
     return render(request, "profile_edit.html", {"form": form})
-
-def events(request):
-    return render(request, "events.html", {"upcoming": Event.objects.filter(date__gte=date.today()),
-                                           "past": Event.objects.filter(date__lt=date.today()).order_by("-date")[:6]})
-
-def services(request):
-    return render(request, "services.html", {"categories": ServiceCategory.objects.all()})
-
-def premium(request):
-    return render(request, "premium.html", {"plans": Plan.objects.all(), "perks": PremiumPerk.objects.all()})
 
 def thread_qs(user, mine, other):
     q = Q(sender=user, to=other)
@@ -140,3 +159,10 @@ def inbox(request):
         c = convos.setdefault(other.pk, {"member": other, "last": msg, "unread": 0})
         if msg.to == mine and not msg.read: c["unread"] += 1
     return render(request, "inbox.html", {"convos": convos.values()})
+
+
+@login_required
+def notifications(request):
+    notes = list(request.user.notifications.all()[:50])
+    request.user.notifications.filter(read=False).update(read=True)
+    return render(request, "notifications.html", {"notes": notes})

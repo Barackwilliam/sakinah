@@ -1,0 +1,6 @@
+{% load humanize %}<article class="art">
+  <a class="art-img" href="{{ a.get_absolute_url }}">{% if a.image %}<img src="{{ a.image.url }}" alt="" loading="lazy">{% endif %}{% if a.category %}<span class="art-cat">{{ a.category.name }}</span>{% endif %}</a>
+  <div class="art-b"><h3><a href="{{ a.get_absolute_url }}">{{ a.title }}</a></h3><p>{{ a.excerpt }}</p>
+    <div class="art-meta"><span><svg><use href="#i-cal-f"/></svg>{{ a.published|date:"d M Y" }}</span><span><svg><use href="#i-eye"/></svg>{{ a.views|intcomma }}</span>{% if a.n_comments is not None %}<span><svg><use href="#i-comment"/></svg>{{ a.n_comments }}</span>{% endif %}</div>
+    <a class="btn btn-p block" href="{{ a.get_absolute_url }}">Read More <svg><use href="#i-arrow"/></svg></a></div>
+</article>

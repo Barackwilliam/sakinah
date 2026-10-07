@@ -51,7 +51,7 @@
     <div class="sec-h"><div><span class="eyebrow">Nikah &amp; wedding</span><h2>Everything you need for your Nikah</h2><p>Discover trusted vendors and services to make your special day perfect.</p></div><a class="more" href="{% url 'services' %}">View All Services <svg><use href="#i-arrow"/></svg></a></div>
     <div class="svc-grid">
       {% for c in categories %}
-      <a class="svc" href="{% url 'services' %}#{{ c.slug }}"><div class="svc-img">{% if c.image %}<img src="{{ c.image.url }}" alt="" loading="lazy">{% endif %}</div>
+      <a class="svc" href="{% url 'services' %}?cat={{ c.slug }}"><div class="svc-img">{% if c.image %}<img src="{{ c.image.url }}" alt="" loading="lazy">{% endif %}</div>
         <div class="svc-t"><h3>{{ c.name }}</h3><p>{{ c.blurb }}</p><span class="svc-go">{{ c.button_label }} <svg><use href="#i-arrow"/></svg></span></div></a>
       {% endfor %}
     </div>
