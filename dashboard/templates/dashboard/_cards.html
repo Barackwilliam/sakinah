@@ -1,0 +1,3 @@
+<div class="cards">{% for label, value, delta, note, icon, color in cards %}
+  <div class="card" style="--c:{{ color }}"><span class="ci"><svg><use href="#i-{{ icon }}"/></svg></span>
+    <div><small>{{ label }}</small><b>{{ value }}</b>{% if delta is not None %}<em class="{% if delta < 0 %}down{% endif %}">{% if delta < 0 %}&#9660;{% else %}&#9650;{% endif %} {{ delta }}%</em>{% endif %}<span class="note">{{ note }}</span></div></div>{% endfor %}</div>

@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+import calendar
 from datetime import timedelta
 from django.utils import timezone
 
@@ -76,6 +77,8 @@ class Member(models.Model):
     compatibility = models.PositiveSmallIntegerField(default=80)
     joined = models.DateTimeField(default=timezone.now)
     last_seen = models.DateTimeField(null=True, blank=True)
+    plan = models.ForeignKey("Plan", on_delete=models.SET_NULL, null=True, blank=True, related_name="members")
+    premium_until = models.DateField(null=True, blank=True)
     # quick info and lifestyle
     height_cm = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name="Height (cm)")
     body_type = models.CharField(max_length=40, blank=True)
@@ -136,6 +139,8 @@ class Member(models.Model):
 
     @property
     def pronoun(self): return "Her" if self.gender == "F" else "His"
+    @property
+    def is_premium(self): return bool(self.plan_id and self.premium_until and self.premium_until >= timezone.localdate())
 
 class MemberPhoto(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="photos")
@@ -341,3 +346,82 @@ class ArticleComment(models.Model):
     body = models.TextField(max_length=1000)
     created = models.DateTimeField(auto_now_add=True)
     class Meta: ordering = ["created"]
+
+
+# ----- payments, notifications and admin communications -----
+class Payment(models.Model):
+    KINDS = [("premium", "Premium plan"), ("advert", "Advert listing"), ("event", "Event registration"), ("membership", "Membership fee"), ("other", "Other")]
+    GATEWAYS = [("mpesa", "M-Pesa"), ("mixx", "Mixx by Yas"), ("airtel", "Airtel Money"), ("selcom", "Selcom"), ("pesapal", "Pesapal"),
+                ("dpo", "DPO"), ("card", "Visa / Mastercard"), ("paypal", "PayPal"), ("bank", "Bank transfer"), ("cash", "Cash")]
+    STATUS = [("pending", "Pending"), ("completed", "Completed"), ("failed", "Failed"), ("refunded", "Refunded")]
+    invoice_no = models.CharField(max_length=20, unique=True, editable=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="payments")
+    payer_name = models.CharField(max_length=100)
+    payer_phone = models.CharField(max_length=20, blank=True)
+    kind = models.CharField(max_length=12, choices=KINDS, default="premium")
+    plan = models.ForeignKey(Plan, on_delete=models.SET_NULL, null=True, blank=True)
+    months = models.PositiveSmallIntegerField(default=1)
+    description = models.CharField(max_length=160, blank=True)
+    amount = models.PositiveIntegerField()
+    gateway = models.CharField(max_length=10, choices=GATEWAYS, default="mpesa")
+    reference = models.CharField(max_length=60, blank=True, help_text="Transaction / receipt number from the gateway")
+    status = models.CharField(max_length=10, choices=STATUS, default="completed")
+    created = models.DateTimeField(default=timezone.now)
+    recorded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+")
+    class Meta: ordering = ["-created", "-pk"]
+    def __str__(self): return f"{self.invoice_no} {self.payer_name} {self.amount}"
+
+    def save(self, *args, **kwargs):
+        if not self.invoice_no:
+            year = self.created.year
+            last = Payment.objects.filter(invoice_no__startswith=f"INV-{year}-").order_by("-invoice_no").values_list("invoice_no", flat=True).first()
+            self.invoice_no = f"INV-{year}-{int(last.rsplit('-', 1)[1]) + 1 if last else 1:03d}"
+        super().save(*args, **kwargs)
+
+    def activate(self):
+        """Give the payer's member profile the paid plan, extending any time they still have."""
+        member = getattr(self.user, "member", None) if self.user_id else None
+        if self.status != "completed" or self.kind != "premium" or not self.plan_id or member is None: return False
+        start = max(member.premium_until or timezone.localdate(), timezone.localdate())
+        y, m = divmod(start.month - 1 + self.months, 12)
+        y, m = start.year + y, m + 1
+        end = start.replace(year=y, month=m, day=min(start.day, calendar.monthrange(y, m)[1]))
+        member.plan, member.premium_until = self.plan, end
+        member.save(update_fields=["plan", "premium_until"])
+        return True
+
+class Notification(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifications")
+    title = models.CharField(max_length=120)
+    body = models.TextField(max_length=2000, blank=True)
+    link = models.CharField(max_length=200, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+    class Meta: ordering = ["-created"]
+    def __str__(self): return self.title
+
+class MessageTemplate(models.Model):
+    name = models.CharField(max_length=80)
+    description = models.CharField(max_length=140, blank=True)
+    subject = models.CharField(max_length=150)
+    body = models.TextField(help_text="You can use {name} for the member's name.")
+    icon = models.CharField(max_length=30, default="mail")
+    color = models.CharField(max_length=10, default="#2546a8")
+    order = models.PositiveSmallIntegerField(default=0)
+    class Meta: ordering = ["order", "pk"]
+    def __str__(self): return self.name
+
+class Broadcast(models.Model):
+    CHANNELS = [("email", "Email"), ("inapp", "In-App Message"), ("notification", "Notification")]
+    STATUS = [("draft", "Draft"), ("sent", "Sent")]
+    channel = models.CharField(max_length=12, choices=CHANNELS)
+    subject = models.CharField(max_length=150)
+    body = models.TextField()
+    filters = models.JSONField(default=dict, blank=True)
+    recipients = models.PositiveIntegerField(default=0)
+    status = models.CharField(max_length=6, choices=STATUS, default="draft")
+    created = models.DateTimeField(auto_now_add=True)
+    sent_at = models.DateTimeField(null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="+")
+    class Meta: ordering = ["-created"]
+    def __str__(self): return self.subject

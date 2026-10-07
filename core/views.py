@@ -110,6 +110,10 @@ class LoginView(auth_views.LoginView):
     authentication_form = LoginForm
     def get_context_data(self, **kwargs):
         return {**super().get_context_data(**kwargs), "site": SiteSetting.load(), "faces": faces()}
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        if not self.request.POST.get("remember"): self.request.session.set_expiry(0)  # end session when the browser closes
+        return response
 
 def signup(request):
     if request.user.is_authenticated: return redirect("home")
@@ -155,3 +159,10 @@ def inbox(request):
         c = convos.setdefault(other.pk, {"member": other, "last": msg, "unread": 0})
         if msg.to == mine and not msg.read: c["unread"] += 1
     return render(request, "inbox.html", {"convos": convos.values()})
+
+
+@login_required
+def notifications(request):
+    notes = list(request.user.notifications.all()[:50])
+    request.user.notifications.filter(read=False).update(read=True)
+    return render(request, "notifications.html", {"notes": notes})

@@ -63,3 +63,7 @@ const adT=$('#ad-thumbs');if(adT)adT.addEventListener('click',e=>{const t=e.targ
 
 // in-page tabs: highlight the clicked tab
 $$('.tabs').forEach(tb=>tb.addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;$$('a',tb).forEach(x=>x.classList.toggle('on',x===a))}));
+
+// login page: member / admin tabs only change where you land after login
+$$('[data-lg]').forEach(t=>t.addEventListener('click',()=>{$$('[data-lg]').forEach(x=>x.classList.toggle('on',x===t));
+  $('#lg-next').value=t.dataset.next;$('#lg-title').textContent=t.dataset.lg==='admin'?'Admin Login':'Welcome Back'}));

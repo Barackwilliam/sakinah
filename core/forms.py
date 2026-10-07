@@ -77,9 +77,9 @@ class MessageForm(forms.Form):
 class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["username"].label = "Username or email"
-        self.fields["username"].widget.attrs["placeholder"] = "Username or email"
-        self.fields["password"].widget.attrs["placeholder"] = "Your password"
+        self.fields["username"].label = "Email address or username"
+        self.fields["username"].widget.attrs["placeholder"] = "Enter your email address"
+        self.fields["password"].widget.attrs["placeholder"] = "Enter your password"
 
 
 class InquiryForm(forms.ModelForm):

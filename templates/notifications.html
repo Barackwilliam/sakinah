@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}Notifications - {{ site.brand }}{% endblock %}
+{% block content %}
+{% include "partials/crumbs.html" with here="Notifications" %}
+<div class="wrap page narrow">
+  <div class="sec-h"><div><h2>Notifications</h2><p>Updates from the {{ site.brand }} team.</p></div></div>
+  {% if notes %}<ul class="box notes">{% for n in notes %}<li class="{% if not n.read %}new{% endif %}"><span class="ni"><svg><use href="#i-bell"/></svg></span>
+    <div><b>{{ n.title }}</b>{% if n.body %}<p>{{ n.body|linebreaksbr }}</p>{% endif %}<small>{{ n.created|timesince }} ago{% if n.link %} &middot; <a class="lnk" href="{{ n.link }}">Open</a>{% endif %}</small></div></li>{% endfor %}</ul>
+  {% else %}<p class="empty">No notifications yet.</p>{% endif %}
+</div>{% endblock %}

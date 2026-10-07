@@ -10,6 +10,7 @@ urlpatterns = [
     path("members/<int:pk>/report/", views.report, name="report"),
     path("likes/", views.my_likes, name="my_likes"),
     path("messages/", views.inbox, name="inbox"),
+    path("notifications/", views.notifications, name="notifications"),
     path("messages/<int:pk>/", views.thread, name="thread"),
     path("profile/edit/", views.profile_edit, name="profile_edit"),
     path("signup/", views.signup, name="signup"),

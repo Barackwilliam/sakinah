@@ -1,0 +1,7 @@
+<div class="legend">{% for l in c.lines %}<span><i style="background:{{ l.color }}"></i>{{ l.name }}</span>{% endfor %}</div>
+<svg class="chart" viewBox="0 0 {{ c.w }} {{ c.h }}" role="img" aria-label="{{ label }}">
+  {% for t in c.ticks %}<line x1="{{ c.left }}" x2="{{ c.right }}" y1="{{ t.y }}" y2="{{ t.y }}" class="grid"/><text x="{{ c.left|add:'-6' }}" y="{{ t.y }}" class="yl">{{ t.label }}</text>{% endfor %}
+  {% for x in c.xlabels %}<text x="{{ x.x }}" y="{{ c.h|add:'-6' }}" class="xl">{{ x.label }}</text>{% endfor %}
+  {% for l in c.lines %}<polygon points="{{ l.area }}" fill="{{ l.color }}" opacity=".08"/><polyline points="{{ l.line }}" fill="none" stroke="{{ l.color }}" stroke-width="2.200" stroke-linejoin="round"/>
+    {% for x, y in l.points %}<circle cx="{{ x }}" cy="{{ y }}" r="3" fill="{{ l.color }}"/>{% endfor %}{% endfor %}
+</svg>

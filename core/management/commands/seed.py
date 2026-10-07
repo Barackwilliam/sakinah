@@ -59,6 +59,8 @@ class Command(BaseCommand):
                 e.date, e.start_time, e.end_time, e.city, e.category, e.description = d, start, end, c, ecats[cat], desc
                 e.image = ""; e.save()
             attach(e, "image", IMG / "v3" / f"{img}.jpg")
+        for i, (n, d, subj, body, icon, color) in enumerate(MESSAGE_TEMPLATES):
+            MessageTemplate.objects.get_or_create(name=n, defaults=dict(description=d, subject=subj, body=body, icon=icon, color=color, order=i))
         self.seed_services(IMG, attach)
         self.seed_articles(IMG, attach)
         zahra = Member.objects.filter(name="Zahra").first()

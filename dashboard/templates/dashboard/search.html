@@ -1,0 +1,4 @@
+{% extends "dashboard/base.html" %}{% block title %}Search{% endblock %}
+{% block content %}<div class="ph"><div class="ph-t"><svg><use href="#i-search"/></svg><div><h1>Search</h1><p>{% if q %}Results for &ldquo;{{ q }}&rdquo;{% else %}Type in the search box above.{% endif %}</p></div></div></div>
+<div class="g2">{% for group, items in res.items %}<section class="panel"><div class="pn-h"><h2>{{ group }}</h2><small class="muted">{{ items|length }}</small></div>
+  <ul class="feed">{% for title, sub, url in items %}<li><a href="{{ url }}" target="_blank"><b>{{ title }}</b></a><small>{{ sub }}</small></li>{% empty %}<li class="muted">No matches.</li>{% endfor %}</ul></section>{% endfor %}</div>{% endblock %}

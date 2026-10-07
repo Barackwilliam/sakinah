@@ -1,0 +1,2 @@
+<div class="donut-w"><div class="donut" style="background:conic-gradient({{ d.gradient }})"><div><b>{{ center }}</b><small>{{ center_label }}</small></div></div>
+  <ul class="dl">{% for r in d.rows %}<li><i style="background:{{ r.color }}"></i><span>{{ r.label }}<b>{{ r.pct }}%</b> <small>({{ r.value|floatformat:"0g" }})</small></span></li>{% endfor %}</ul></div>

@@ -136,7 +136,8 @@ class FlowTests(TestCase):
     def test_login_page_uses_site_settings(self):
         r = self.client.get(reverse("login"))
         self.assertContains(r, "Sakinah")
-        self.assertContains(r, "Karibu tena")
+        self.assertContains(r, "Welcome Back")
+        self.assertContains(r, "Admin Login")
 
 
 class SiteSectionTests(TestCase):

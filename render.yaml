@@ -1,0 +1,41 @@
+# Render Blueprint: Dashboard > New > Blueprint > pick this repo.
+# Values marked "sync: false" are asked for when you create the Blueprint (paste them from Supabase).
+services:
+  - type: web
+    name: sakinah
+    runtime: python
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: gunicorn config.wsgi:application --workers 2 --timeout 60
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      # Supabase > Project Settings > Database > Connection string (Session pooler URI)
+      - key: DATABASE_URL
+        sync: false
+      # Supabase > Storage > S3 Connection; create the bucket and make it public
+      - key: SUPABASE_PROJECT_REF
+        sync: false
+      - key: SUPABASE_BUCKET
+        value: nusrah-media
+      - key: SUPABASE_S3_KEY
+        sync: false
+      - key: SUPABASE_S3_SECRET
+        sync: false
+      - key: SUPABASE_REGION
+        sync: false
+      # First super admin, created on the first deploy (log in at /login/ with "Admin Login")
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      # Your own domain(s), comma separated, e.g. sakinah.co.tz,www.sakinah.co.tz (the onrender.com address is added automatically)
+      - key: ALLOWED_HOSTS
+        sync: false
+      - key: CSRF_TRUSTED_ORIGINS
+        sync: false

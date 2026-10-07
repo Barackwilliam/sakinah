@@ -118,3 +118,20 @@ ZAHRA = dict(height_cm=165, body_type="Average", languages="Swahili, English", w
     pref_location="Tanzania (Any)", pref_education="Diploma or higher", pref_occupation="Any", pref_prayer="Practices regularly",
     pref_values="Islamic values, honesty, respect", pref_relocate="Open", pref_more="Serious, family-oriented, good character",
     bio="I am a kind, respectful and family-oriented woman who values Islam, honesty and mutual respect. I enjoy learning, community work, and spending time with family. I am looking for a serious and committed partner to build a happy and peaceful Islamic marriage, InshaAllah.")
+
+MESSAGE_TEMPLATES = [  # name, description, subject, body, icon, color
+    ("Welcome New Member", "Welcome message for new registrations.", "Karibu Sakinah, {name}!",
+     "Assalaam alaikum {name},\n\nWelcome to Sakinah. Complete your profile and add a clear photo so others can get to know you.\n\nMay Allah make it easy for you.", "heart-f", "#2546a8"),
+    ("Profile Verification", "Notify member about verification status.", "Your profile is verified",
+     "Hello {name}, your profile has been verified and now shows the Imethibitishwa badge.", "check-c", "#16a05a"),
+    ("Match Suggestion", "Notify members about new matches.", "New matches for you",
+     "Hello {name}, new members who match your preferences have joined. Visit Find a Match to see them.", "heart-f", "#e23d5a"),
+    ("Event Invitation", "Invite members to upcoming events.", "You're invited: upcoming Sakinah event",
+     "Hello {name}, join our next seminar and meet verified members in a respectful environment. Register on the Events page.", "cal-f", "#e23d5a"),
+    ("Premium Plan Promotion", "Promote premium membership plans.", "Get more matches with Premium",
+     "Hello {name}, upgrade to Premium to see who likes you, message without limits and get featured.", "crown", "#16a05a"),
+    ("Newsletter", "Monthly newsletter with latest updates.", "Sakinah monthly update",
+     "Hello {name}, here are this month's new articles, events and success stories from Sakinah.", "doc", "#e0a21a"),
+    ("Account Update", "Notify about account changes.", "Important update about your account",
+     "Hello {name}, we have updated our terms and privacy policy. Please take a moment to review them.", "gear", "#d4213d"),
+]
