@@ -44,7 +44,7 @@ class Command(BaseCommand):
             if blank: m.save(update_fields=blank)
             attach(m, "photo", IMG / f"{img}.jpg")
         for i, (n, price, period, tagline, popular, features) in enumerate(PLANS):
-            plan, _ = Plan.objects.get_or_create(name=n, defaults=dict(price=price, order=price))
+            plan, _ = Plan.objects.get_or_create(name=n, defaults=dict(price=price, order=i))
             if not plan.features:
                 plan.period, plan.tagline, plan.popular, plan.features = period, tagline, popular, features; plan.save()
             attach(plan, "icon", IMG / "v3" / f"plan_icon{i + 1}.jpg")
