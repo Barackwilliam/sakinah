@@ -220,3 +220,19 @@ class SiteSectionTests(TestCase):
         self.assertEqual(p.feature_list, [(True, "Unlimited messages"), (False, "Incognito mode")])
         r = self.client.get(reverse("premium"))
         self.assertContains(r, "Most Popular"); self.assertContains(r, "Incognito mode")
+
+
+class SeedTests(TestCase):
+    def test_seed_runs_twice_and_fits_postgres_smallint(self):
+        """SQLite ignores column sizes; PostgreSQL rejects values above 32767 in small integer fields."""
+        from django.apps import apps
+        from django.core.management import call_command
+        from django.db import models as dm
+        from io import StringIO
+        call_command("seed", stdout=StringIO()); call_command("seed", stdout=StringIO())
+        for model in apps.get_app_config("core").get_models():
+            for f in model._meta.fields:
+                if isinstance(f, (dm.PositiveSmallIntegerField, dm.SmallIntegerField)):
+                    top = model.objects.aggregate(m=dm.Max(f.name))["m"] or 0
+                    self.assertLessEqual(top, 32767, f"{model.__name__}.{f.name}")
+        self.assertEqual(Plan.objects.count(), 5)
