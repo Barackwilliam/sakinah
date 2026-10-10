@@ -1,0 +1,26 @@
+{% load member_tags %}{% url 'member' m.pk as m_url %}
+<article class="mc{% if locked %} blur{% endif %}">
+  <a class="mc-ph" href="{% if locked %}{% url 'm_membership' %}{% else %}{{ m_url }}{% endif %}">
+    {% if m.photo and m.can_see_photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" loading="lazy">{% endif %}
+    {% if mode == 'liked' %}<span class="st-pill liked"><svg><use href="#m-heart"/></svg>Liked your profile</span>
+    {% elif mode == 'views' %}{% if m.is_online %}<span class="st-pill">Online</span>{% elif m.viewed_at.date == now.date %}<span class="st-pill off">Today</span>{% else %}<span class="st-pill off">{{ m.viewed_at|ago }}</span>{% endif %}
+    {% else %}<span class="st-pill{% if not m.is_online %} off{% endif %}">{% if m.is_online %}Online{% else %}Offline{% endif %}</span>{% endif %}
+    {% if mode == 'views' and m.is_online %}<span class="ago">{{ m.viewed_at|ago }}</span>{% elif mode == 'liked' %}<span class="ago">{{ m.liked_at|ago }}</span>{% endif %}
+  </a>
+  {% if not locked %}<form method="post" action="{% url 'like' m.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}"><button class="hb" aria-label="Like"><svg><use href="#m-heart{% if not m.i_liked %}-o{% endif %}"/></svg></button></form>{% endif %}
+  <div class="mc-b">
+    <h3>{{ m.first_name }}{% if m.show_age %}, {{ m.age }}{% endif %}{% if m.verified and mode != 'match' and mode != 'views' %}<svg><use href="#m-check-c"/></svg>{% endif %}</h3>
+    <ul><li><svg><use href="#m-pin"/></svg>{{ m.city }}</li><li><svg><use href="#m-cap"/></svg>{{ m.occupation|default:"&mdash;" }}</li>
+      <li><svg><use href="#m-pray"/></svg>{{ m.practice_label }}</li>
+      {% if mode == 'match' %}<li class="mm"><svg><use href="#m-heart"/></svg>{% if m.is_mutual %}Mutual Match{% elif m.likes_me %}Likes You{% else %}You Liked{% endif %}</li>
+      {% elif mode != 'views' %}<li><svg><use href="#m-heart"/></svg>Seeking Marriage</li>{% endif %}</ul>
+    <div class="mc-a">
+      {% if locked %}<a class="btn block" style="grid-column:1/-1" href="{% url 'm_membership' %}"><svg><use href="#m-crown"/></svg>Upgrade to see</a>
+      {% elif mode == 'match' %}<a class="btn" href="{% url 'm_messages_with' m.pk %}"><svg><use href="#m-chat"/></svg>Message</a><a class="btn g" href="{{ m_url }}">View Profile</a>
+      {% elif mode == 'views' %}<a class="btn g" href="{{ m_url }}">View Profile</a><a class="btn" href="{% url 'm_messages_with' m.pk %}"><svg><use href="#m-chat-o"/></svg>Message</a>
+      {% else %}<a class="btn g" href="{{ m_url }}">View Profile</a>
+        <form method="post" action="{% url 'like' m.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <button class="btn"><svg><use href="#m-heart{% if not m.i_liked %}-o{% endif %}"/></svg>{% if mode == 'liked' %}{% if m.i_liked %}Liked{% else %}Like Back{% endif %}{% elif m.i_liked %}Liked{% else %}Like{% endif %}</button></form>{% endif %}
+    </div>
+  </div>
+</article>

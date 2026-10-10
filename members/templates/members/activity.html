@@ -1,0 +1,51 @@
+{% extends "members/base.html" %}{% load member_tags %}{% block title %}My Activities{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="cal" title="My Activities" sub="Track all your activities and interactions on Sakinah." quote="Na Mwenyezi Mungu aliwaumba kwa jozi." ref="Qur'an 78:8" art="lantern" %}
+<div class="acards">
+  {% for ic, label, n, pct, tone, color in cards %}
+  <div class="acard {{ tone }}"><svg style="color:{{ color }}"><use href="#m-{{ ic }}"/></svg><div><b>{{ n }}</b><span>{{ label }}</span>
+    {% if pct is not None %}<small class="{% if pct < 0 %}dn{% endif %}">{% if pct < 0 %}&darr;{% else %}&uarr;{% endif %} {{ pct|stringformat:"d"|cut:"-" }}% this week</small>{% else %}<small>&uarr; you both liked</small>{% endif %}</div></div>
+  {% endfor %}
+</div>
+<div class="page-g ag">
+  <div>
+    <nav class="ptabs">{% for k, label in tabs %}<a href="?tab={{ k }}" class="{% if tab == k %}on{% endif %}">{{ label }}</a>{% endfor %}</nav>
+    <section class="box afeed">
+      <h3 class="bh"><span class="bh-ic"><svg><use href="#m-cal"/></svg></span>Recent Activities</h3>
+      <ul class="tl">
+        {% for i in feed %}
+        <li style="--c:{{ i.color }}">
+          <time>{{ i.t|ago }}</time><svg class="tl-ic" style="color:{{ i.color }}"><use href="#m-{{ i.icon }}"/></svg>
+          {% if i.m %}<a class="cav sm" href="{% url 'member' i.m.pk %}">{% if i.m.photo %}<img src="{{ i.m.photo.url }}" alt="">{% else %}<b>{{ i.m.name|first }}</b>{% endif %}</a>
+          <div class="tl-t"><p>{% if i.pre %}{{ i.pre }} {% endif %}{% if i.kind == 'match' %}<b>mutual match</b> with <b>{{ i.m.name }}</b>{% elif i.kind == 'saved' %}<b>{{ i.m.name }}</b>&rsquo;s profile{% else %}<b>{{ i.m.name }}</b> {{ i.text }}{% endif %}</p>
+            <small>{% if i.quote %}&ldquo;{{ i.quote }}{% if i.quote|length >= 40 %}...{% endif %}&rdquo;{% else %}{{ i.m.city }}, {{ i.m.age }}{% endif %}</small></div>
+          {% if i.kind == 'message' %}<a class="btn g sm" href="{% url 'm_messages_with' i.m.pk %}">Reply</a>{% else %}<a class="btn g sm" href="{% url 'member' i.m.pk %}">View Profile</a>{% endif %}
+          <details class="cmenu"><summary class="dots" aria-label="More"><svg><use href="#m-dots-v"/></svg></summary><div class="mh-menu">
+            <a href="{% url 'member' i.m.pk %}">View profile</a><a href="{% url 'm_messages_with' i.m.pk %}">Send message</a>
+            <form method="post" action="{% url 'm_block' i.m.pk %}" data-confirm="Block {{ i.m.name }}?">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}"><button class="dang">Block member</button></form></div></details>
+          {% else %}
+          <span class="cav sm srch"><svg><use href="#m-search"/></svg></span>
+          <div class="tl-t"><p>You searched for <b>{{ i.text }}</b></p><small>{{ i.n }} result{{ i.n|pluralize }}</small></div>
+          <a class="btn g sm" href="{% url 'm_find' %}">Search again</a><span></span>
+          {% endif %}
+        </li>
+        {% empty %}<li class="tl-empty">No activity here yet. Start by visiting <a class="mag" href="{% url 'm_find' %}">Find a Match</a>.</li>{% endfor %}
+      </ul>
+      {% if feed.paginator.num_pages > 1 %}<nav class="apager">{% if feed.has_previous %}<a class="btn o sm" href="?tab={{ tab }}&amp;page={{ feed.previous_page_number }}"><svg><use href="#m-chev-l"/></svg>Newer</a>{% endif %}
+        <span>Page {{ feed.number }} of {{ feed.paginator.num_pages }}</span>{% if feed.has_next %}<a class="btn o sm" href="?tab={{ tab }}&amp;page={{ feed.next_page_number }}">Older<svg><use href="#m-chev-r"/></svg></a>{% endif %}</nav>{% endif %}
+    </section>
+  </div>
+  <aside>
+    <div class="box aside-b"><h3 class="bh pinkh"><svg class="mag"><use href="#m-chart"/></svg>Activity Summary (Last 30 Days)</h3>
+      <div class="bars"><div class="yax">{% for t in ticks %}<span>{{ t }}</span>{% endfor %}</div>
+        {% for b in bars %}<div class="abar"><b>{{ b.n }}</b><i style="height:{{ b.h }}%;background:{{ b.c }}"></i><span>{{ b.label }}</span></div>{% endfor %}</div></div>
+    <div class="box aside-b"><h3 class="bh yelh"><svg class="gold"><use href="#m-star"/></svg>Top Interactions<a class="ed" href="{% url 'm_views' %}">View All</a></h3>
+      <ol class="tops ti">{% for m in tops %}<li><a href="{% url 'member' m.pk %}"><em class="r{{ forloop.counter }}">{{ forloop.counter }}</em><span class="cav xs">{% if m.photo %}<img src="{{ m.photo.url }}" alt="">{% else %}<b>{{ m.name|first }}</b>{% endif %}</span>
+        <span><b>{{ m.name }}</b><small>{{ m.city }}, {{ m.age }}</small></span><span class="tis"><svg><use href="#m-{{ m.top_icon }}"/></svg>{{ m.top_text }}</span><svg><use href="#m-chev-r"/></svg></a></li>
+        {% empty %}<li class="muted">No interactions yet.</li>{% endfor %}</ol></div>
+    <div class="sumbox grn"><h3><svg class="ok"><use href="#m-bulb"/></svg>Tips to Increase Your Activity</h3>
+      <ul class="tlist"><li><svg><use href="#m-check-c"/></svg>Complete your profile to get more views</li><li><svg><use href="#m-check-c"/></svg>Add clear and recent photos</li>
+        <li><svg><use href="#m-check-c"/></svg>Be active and respond to messages</li><li><svg><use href="#m-check-c"/></svg>Search and like profiles that match your preferences</li></ul></div>
+  </aside>
+</div>
+{% endblock %}

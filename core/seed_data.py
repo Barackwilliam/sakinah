@@ -135,3 +135,45 @@ MESSAGE_TEMPLATES = [  # name, description, subject, body, icon, color
     ("Account Update", "Notify about account changes.", "Important update about your account",
      "Hello {name}, we have updated our terms and privacy policy. Please take a moment to review them.", "gear", "#d4213d"),
 ]
+
+# ----- member dashboard designs (seed_images/v4) -----
+MORE_MEMBERS = [  # name, age, gender, city, occupation, education, image, bio
+    ("Fatma", 29, "F", "Arusha", "Nurse", "Diploma in Nursing", "w_fatma",
+     "Ninapenda kuhudumia watu na ninathamini familia. Natafuta mume mcha Mungu, mwenye heshima na malengo ya kujenga familia."),
+    ("Zuhura", 31, "F", "Dodoma", "Business Lady", "Bachelor Degree", "w_zuhura",
+     "Mfanyabiashara mwenye bidii. Ninapenda dini yangu na familia; natafuta mwenza wa maisha kwa ndoa yenye utulivu."),
+    ("Hawa", 26, "F", "Zanzibar", "Accountant", "Bachelor of Accounting", "w_hawa",
+     "Ninaishi Zanzibar. Ninathamini uaminifu na mawasiliano mazuri. Natafuta mume anayemcha Mungu."),
+    ("Rehema", 28, "F", "Tanga", "Pharmacist", "Bachelor of Pharmacy", "w_rehema",
+     "Mfamasia mpenda watu na amani. Natafuta mwenza mwenye maadili, dini na malengo ya familia."),
+    ("Sadia", 32, "F", "Kilimanjaro", "Lecturer", "Master's Degree", "w_sadia",
+     "Mhadhiri ninayependa kujifunza na kufundisha. Natafuta ndoa yenye upendo, heshima na misingi ya Kiislamu."),
+    ("Aisha", 25, "F", "Morogoro", "Software Developer", "Bachelor of Computer Science", "w_aisha",
+     "Ninapenda teknolojia, kusoma na familia. Natafuta mume mwenye imani, mcheshi na mwenye malengo."),
+]
+MOHAMMED = dict(name="Mohammed Kapera", age=38, gender="M", city="Dar es Salaam", occupation="Business Owner", education="Bachelor Degree",
+    verified=True, height_cm=175, body_type="Average", origin="African (Tanzanian)", languages="Swahili, English",
+    income_range="TSh 2,000,000 - 5,000,000 per month", willing_to_relocate="Yes", workplace="Own business",
+    interests="Qur'an, Islamic Lectures, Coaching, Travel, Community Service, Family Life, Halal Business, Sports, Reading",
+    lifestyle="Healthy lifestyle, Prefer simple lifestyle, Open-minded", pref_age_min=25, pref_age_max=35, pref_marital="Never Married",
+    pref_location="Tanzania (Preferably Dar es Salaam)", pref_education="Any", pref_prayer="Practising Muslim", prayer="Regularly",
+    headline="Seeking a righteous life partner",
+    bio="Assalamu Alaikum. Mimi ni mtu mcha Mungu, ninayetaka kujenga familia ya kiislamu iliyojaa upendo, heshima na utulivu. "
+        "Ninapenda kusoma Qur'an, kushiriki katika shughuli za kijamii na kuendelea kujifunza. Ninataka mpenzi mwema, muaminifu na anayemcha Allah.")
+
+MEMBER_EVENT_CATEGORIES = [("Islamic Lectures", "islamic-lectures"), ("Marriage Seminars", "marriage-seminars"),
+    ("Counselling Sessions", "counselling-sessions"), ("Men's Programs", "mens-programs"), ("Women's Programs", "womens-programs")]
+MEMBER_EVENTS = [  # title, date, start, end, city, category slug, capacity, tags, description, image
+    ("Islamic Marriage Seminar", date(2026, 10, 15), time(14), time(17), "Dar es Salaam", "marriage-seminars", 80, "Seminar, Education",
+     "Learn the fundamentals of a blessed Islamic marriage and family life.", "event1"),
+    ("Qur'an and Family Life", date(2026, 10, 28), time(15), time(18), "Arusha", "islamic-lectures", 100, "Islamic Lecture, Spiritual",
+     "Guidance from the Qur'an and Sunnah for building a strong family.", "event2"),
+    ("Marriage Counselling Session", date(2026, 11, 12), time(10), time(13), "Dodoma", "counselling-sessions", 50, "Counselling, Community",
+     "Interactive session with qualified Islamic counsellors.", "event3"),
+    ("Sisters Forum: Building a Sakinah Home", date(2026, 11, 25), time(14), time(17), "Zanzibar", "womens-programs", 60, "Women, Discussion",
+     "A special forum for sisters on marriage, family life and personal growth.", "event4"),
+    ("Brothers Forum: Becoming a Better Husband", date(2026, 12, 5), time(14), time(17), "Mwanza", "mens-programs", 60, "Men, Development",
+     "Guidance, experience sharing and practical tips for responsible husbandhood.", "event5"),
+    ("Sakinah Community Iftar & Networking", date(2026, 12, 20), time(18), time(21), "Dar es Salaam", "community-events", 120, "Community, Networking",
+     "Meet and connect with like-minded Muslims in a peaceful environment.", "event6"),
+]

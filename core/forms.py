@@ -3,7 +3,9 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from .models import AdvertReview, ArticleComment, Inquiry, Member, Report
 
-LOCATIONS = ["Dar es Salaam", "Arusha", "Mwanza", "Dodoma", "Zanzibar"]
+LOCATIONS = ["Dar es Salaam", "Arusha", "Mwanza", "Dodoma", "Zanzibar", "Mbeya", "Morogoro", "Tanga", "Kilimanjaro", "Iringa", "Kagera",
+             "Mtwara", "Tabora", "Kigoma", "Shinyanga", "Singida", "Ruvuma", "Lindi", "Pwani", "Manyara", "Mara", "Rukwa", "Katavi",
+             "Njombe", "Simiyu", "Geita", "Songwe", "Pemba"]
 CITY = [(c, c) for c in LOCATIONS]
 
 class SignupForm(UserCreationForm):

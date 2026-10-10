@@ -1,0 +1,31 @@
+{% extends "members/base.html" %}{% block title %}My Matches{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="heart" title="My Matches" sub="People who match with your preferences and show mutual interest." quote="Na Miongoni mwa Aya zake ni kwamba amekuumbieni wake zenu mpate utulivu katikao." ref="Qur'an 30:21" art="lantern" %}
+<div class="page-g">
+  <div>
+    <nav class="tabs">{% for k, label, n in tabs %}<a href="?tab={{ k }}" class="{% if tab == k %}on{% endif %}">{{ label }} ({{ n }})</a>{% endfor %}</nav>
+    <form class="fbar" method="get"><input type="hidden" name="tab" value="{{ tab }}">
+      <div class="fsel"><select name="show" onchange="this.form.submit()"><option value="">All Matches</option><option value="online" {% if f.show == 'online' %}selected{% endif %}>Online Now</option><option value="verified" {% if f.show == 'verified' %}selected{% endif %}>Verified Only</option></select></div>
+      <div class="fsel"><select name="sort" onchange="this.form.submit()"><option value="">Newest First</option><option value="oldest" {% if f.sort == 'oldest' %}selected{% endif %}>Oldest First</option></select></div>
+      <div class="fsel"><select name="city" onchange="this.form.submit()"><option value="">All Locations</option>{% for l in locations %}<option {% if f.city == l %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+      <button class="btn-filter"><svg><use href="#m-filter"/></svg>Filter</button>
+      <div class="search"><input name="q" value="{{ f.q|default:'' }}" placeholder="Search in my matches..."><button aria-label="Search"><svg><use href="#m-search"/></svg></button></div>
+    </form>
+    {% if members %}<div class="mgrid">{% for m in members %}{% include "members/_card.html" with mode="match" %}{% endfor %}</div>
+    {% else %}<div class="box empty"><p>No members here yet. Like profiles in <a class="mag" href="{% url 'm_find' %}">Find a Match</a> to build your matches.</p></div>{% endif %}
+  </div>
+  <aside>
+    <div class="sumbox pink"><h3><svg class="mag"><use href="#m-heart"/></svg>Your Matches Summary</h3>
+      <div class="srow"><svg><use href="#m-check-c"/></svg>Total Matches<b>{{ n.all }}</b></div><div class="srow"><svg style="color:#16a34a"><use href="#m-people"/></svg>Mutual Matches<b class="ok">{{ n.mutual }}</b></div>
+      <div class="srow"><svg style="color:#e11d48"><use href="#m-heart"/></svg>People Who Liked You<b>{{ n.liked_you }}</b></div><div class="srow"><svg style="color:#2563eb"><use href="#m-check-c"/></svg>You Liked<b class="bl">{{ n.you_liked }}</b></div>
+      <div class="srow"><svg style="color:#7c3aed"><use href="#m-bookmark"/></svg>Shortlisted<b style="color:#7c3aed">{{ n.shortlisted }}</b></div></div>
+    <div class="sumbox yel"><h3><svg class="gold"><use href="#m-bulb"/></svg>Tips for Better Matches</h3>
+      <ol class="num-list"><li><b>1</b>Complete your profile fully</li><li><b>2</b>Add clear and recent photos</li><li><b>3</b>Be specific about your preferences</li><li><b>4</b>Respond to messages</li><li><b>5</b>Keep your profile active</li></ol></div>
+    <div class="sumbox grn"><h3><svg class="ok"><use href="#m-send"/></svg>Take Action</h3>
+      <ul class="links"><li><a href="{% url 'm_liked' %}"><svg><use href="#m-people"/></svg>View People Who Liked You<svg><use href="#m-chev-r"/></svg></a></li>
+        <li><a href="{% url 'm_find' %}"><svg><use href="#m-heart"/></svg>Find More Matches<svg><use href="#m-chev-r"/></svg></a></li>
+        <li><a href="{% url 'm_prefs' %}"><svg><use href="#m-gear"/></svg>Adjust Match Preferences<svg><use href="#m-chev-r"/></svg></a></li>
+        <li><a href="{% url 'm_membership' %}"><svg class="gold"><use href="#m-crown"/></svg>Upgrade to Premium<svg><use href="#m-chev-r"/></svg></a></li></ul></div>
+  </aside>
+</div>
+{% endblock %}

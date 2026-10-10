@@ -1,0 +1,34 @@
+{% extends "members/base.html" %}{% block title %}Events{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="cal" title="Events" sub="Join Islamic and community events to learn, connect and build a stronger future together." quote="Na katika kila kitu tumeumba kwa jozi." ref="Qur'an 51:49" art="lantern" %}
+<div class="page-g evg">
+  <div>
+    <nav class="ptabs">
+      <a href="?tab=all" class="{% if tab == 'all' %}on{% endif %}"><svg><use href="#m-gift"/></svg>All Events</a>
+      <a href="?tab=upcoming" class="{% if tab == 'upcoming' %}on{% endif %}"><svg><use href="#m-cal"/></svg>Upcoming Events</a>
+      <a href="?tab=mine" class="{% if tab == 'mine' %}on{% endif %}"><svg><use href="#m-ticket"/></svg>My Registrations</a>
+      <a href="?tab=past" class="{% if tab == 'past' %}on{% endif %}"><svg><use href="#m-clock"/></svg>Past Events</a>
+    </nav>
+    <form class="fbar evbar" method="get"><input type="hidden" name="tab" value="{{ tab }}">
+      <div class="search wide"><svg><use href="#m-search"/></svg><input name="q" value="{{ f.q|default:'' }}" placeholder="Search events by title, location, or topic..."><button aria-label="Search"><svg><use href="#m-filter"/></svg></button></div>
+      <div class="fsel"><select name="cat" onchange="this.form.submit()"><option value="">All Categories</option>{% for c in categories %}<option value="{{ c.slug }}" {% if f.cat == c.slug %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div>
+      <div class="fsel"><select name="city" onchange="this.form.submit()"><option value="">All Locations</option>{% for l in locations %}<option {% if f.city == l %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+      <div class="fsel"><select name="type" onchange="this.form.submit()"><option value="">All Event Types</option>{% for t in types %}<option {% if f.type == t %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
+    </form>
+    {% if events %}<div class="evgrid">{% for e in events %}{% include "members/_evcard.html" %}{% endfor %}</div>
+    {% else %}<div class="box empty"><p>{% if tab == 'mine' %}You have not registered for any events yet.{% else %}No events found{% if f.q or f.cat or f.city or f.type %} for this search{% endif %}.{% endif %} <a class="mag" href="?tab=all">See all upcoming events</a></p></div>{% endif %}
+  </div>
+  <aside>
+    <div class="box aside-b"><h3 class="bh pinkh"><svg class="mag"><use href="#m-cal"/></svg>Event Calendar</h3>
+      <div class="calh"><a href="?tab={{ tab }}&amp;month={{ prev_month }}" aria-label="Previous month"><svg><use href="#m-chev-l"/></svg></a><b>{{ cal_title|date:"F Y" }}</b><a href="?tab={{ tab }}&amp;month={{ next_month }}" aria-label="Next month"><svg><use href="#m-chev-r"/></svg></a></div>
+      <table class="cal"><thead><tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr></thead><tbody>
+        {% for week in cal %}<tr>{% for d in week %}<td>{% if d %}<span class="{% for k, v in cal_days.items %}{% if k == d %}{{ v }}{% endif %}{% endfor %}{% if d == today %} today{% endif %}">{{ d }}</span>{% endif %}</td>{% endfor %}</tr>{% endfor %}
+      </tbody></table>
+      <p class="calk"><span class="ev"></span>Event <span class="mine"></span>Registered</p></div>
+    <div class="box aside-b"><h3 class="bh pinkh"><svg class="mag"><use href="#m-cal-o"/></svg>Event Categories</h3>
+      <ul class="links evcats">{% for c in categories %}<li><a href="?tab=all&amp;cat={{ c.slug }}"><svg style="color:{% cycle '#a0123c' '#d61f45' '#2b4fb8' '#c81e3a' '#1d4ed8' '#d61f45' %}"><use href="#m-{% cycle 'book' 'heart' 'people' 'people' 'user' 'user' %}"/></svg>{{ c.name }} ({{ c.n }})<svg><use href="#m-chev-r"/></svg></a></li>{% endfor %}</ul></div>
+    <div class="box aside-b"><h3 class="bh grnh"><svg class="ok"><use href="#m-shield"/></svg>My Event Registrations<a class="ed" href="?tab=mine">View All</a></h3>
+      <ul class="myregs">{% for r in my_regs %}<li><a href="{% url 'm_event' r.event.pk %}">{% if r.event.image %}<img src="{{ r.event.image.url }}" alt="">{% endif %}<span><b>{{ r.event.title }}</b><small><svg><use href="#m-cal"/></svg>{{ r.event.date|date:"j M Y" }}</small><small><svg><use href="#m-pin"/></svg>{{ r.event.city }}{% if r.event.date < today_date %}<em class="past">Attended</em>{% else %}<em>Registered</em>{% endif %}</small></span></a></li>{% empty %}<li class="muted">No registrations yet.</li>{% endfor %}</ul></div>
+  </aside>
+</div>
+{% endblock %}

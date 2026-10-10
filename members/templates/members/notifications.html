@@ -1,0 +1,15 @@
+{% extends "members/base.html" %}{% load member_tags %}{% block title %}Notifications{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="bell" title="Notifications" sub="Updates about your likes, matches, messages, events and membership." quote="Na katika kila kitu tumeumba kwa jozi." ref="Qur'an 51:49" art="lantern" %}
+<div class="page-g">
+  <section class="box afeed">
+    <h3 class="bh"><span class="bh-ic"><svg><use href="#m-bell"/></svg></span>All Notifications<a class="ed" href="{% url 'm_settings' %}#notify">Notification settings</a></h3>
+    <ul class="nlist">{% for n in notes %}<li class="{% if not n.read %}new{% endif %}">{% if n.link %}<a href="{{ n.link }}">{% else %}<div>{% endif %}<span class="fi" style="--c:#a0123c"><svg><use href="#m-bell"/></svg></span>
+      <span><b>{{ n.title }}</b>{% if n.body %}<small>{{ n.body }}</small>{% endif %}</span><time>{{ n.created|ago }}</time>{% if n.link %}</a>{% else %}</div>{% endif %}</li>
+    {% empty %}<li class="empty">You have no notifications yet.</li>{% endfor %}</ul>
+  </section>
+  <aside><div class="sumbox pink"><h3><svg class="mag"><use href="#m-heart"/></svg>Quick links</h3>
+    <ul class="links"><li><a href="{% url 'm_liked' %}"><svg><use href="#m-heart"/></svg>Who Liked Me<svg><use href="#m-chev-r"/></svg></a></li><li><a href="{% url 'm_messages' %}"><svg><use href="#m-chat"/></svg>Messages<svg><use href="#m-chev-r"/></svg></a></li>
+      <li><a href="{% url 'm_matches' %}"><svg><use href="#m-people"/></svg>My Matches<svg><use href="#m-chev-r"/></svg></a></li><li><a href="{% url 'm_events' %}"><svg><use href="#m-cal"/></svg>Events<svg><use href="#m-chev-r"/></svg></a></li></ul></div></aside>
+</div>
+{% endblock %}

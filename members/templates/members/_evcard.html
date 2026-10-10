@@ -1,0 +1,20 @@
+<article class="evc">
+  <a class="evc-ph" href="{% url 'm_event' e.pk %}">{% if e.image %}<img src="{{ e.image.url }}" alt="" loading="lazy">{% endif %}
+    <span class="evd"><b>{{ e.date|date:"d" }}</b>{{ e.date|date:"M"|upper }}<br>{{ e.date|date:"Y" }}</span></a>
+  <form method="post" action="{% url 'm_event_save' e.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}"><button class="hb" aria-label="Save event"><svg><use href="#m-heart{% if e.pk not in saved %}-o{% endif %}"/></svg></button></form>
+  <div class="evc-b">
+    <h3><a href="{% url 'm_event' e.pk %}">{{ e.title }}</a></h3>
+    <div class="evtags">{% for t in e.tag_list|slice:":2" %}<span class="{% cycle 'cp' 'cg' %}">{{ t }}</span>{% endfor %}</div>
+    <ul>{% if e.start_time %}<li><svg><use href="#m-clock"/></svg>{{ e.start_time|time:"g:i A" }}{% if e.end_time %} &ndash; {{ e.end_time|time:"g:i A" }}{% endif %}</li>{% endif %}
+      <li><svg><use href="#m-pin"/></svg>{{ e.city }}</li>
+      <li><svg><use href="#m-people"/></svg>{% if e.capacity %}{% if e.seats_left %}{{ e.seats_left }} seats left{% else %}Fully booked{% endif %}{% else %}Open seating{% endif %}</li></ul>
+    <p>{{ e.description }}</p>
+    <div class="evc-a">
+      {% if e.pk in mine %}<form method="post" action="{% url 'event_register' e.pk %}" data-confirm="Cancel your registration for {{ e.title }}?">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}"><button class="btn gf"><svg><use href="#m-check-c"/></svg>Registered</button></form>
+      {% elif e.date < today_date %}<span class="btn o dis">Event ended</span>
+      {% elif e.capacity and not e.seats_left %}<span class="btn o dis">Fully booked</span>
+      {% else %}<form method="post" action="{% url 'event_register' e.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}"><button class="btn">Register Now</button></form>{% endif %}
+      <a class="btn o" href="{% url 'm_event' e.pk %}">View Details</a>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,51 @@
+{% extends "members/base.html" %}{% load static %}{% block title %}Find a Match{% endblock %}
+{% block content %}
+<div class="fm">
+  <form class="fpanel box" method="get" id="ff">
+    <div class="fp-h"><svg><use href="#m-sliders"/></svg><h2>Search Filters</h2><a href="{% url 'm_find' %}"><svg><use href="#m-reset"/></svg>Reset</a></div>
+    <div class="fp-b">
+      <p class="fl">I am looking for</p>
+      <div class="radios"><label><input type="radio" name="seek" value="F" {% if seek == 'F' %}checked{% endif %}><span></span>Female</label><label><input type="radio" name="seek" value="M" {% if seek == 'M' %}checked{% endif %}><span></span>Male</label></div>
+      <p class="fl">Age Range</p>
+      <div class="range2" data-min="18" data-max="60"><div class="r2-track"><i></i></div>
+        <input type="range" name="age_min" min="18" max="60" value="{{ a_min }}" aria-label="Minimum age"><input type="range" name="age_max" min="18" max="60" value="{{ a_max }}" aria-label="Maximum age">
+        <output><span class="r2-lo">{{ a_min }}</span> &nbsp;-&nbsp; <span class="r2-hi">{% if a_max >= 60 %}60+{% else %}{{ a_max }}{% endif %}</span></output></div>
+      <p class="fl">Location</p><div class="fsel ic"><svg><use href="#m-pin"/></svg><select name="city"><option value="">All Regions</option>{% for l in locations %}<option {% if f.city == l %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+      <p class="fl">Marital Status</p><div class="fsel"><select name="marital"><option value="">Any</option>{% for v, l in marital %}<option value="{{ v }}" {% if f.marital == v %}selected{% endif %}>{% if v == 'single' %}Never Married{% else %}{{ l }}{% endif %}</option>{% endfor %}</select></div>
+      <p class="fl">Education Level</p><div class="fsel"><select name="education"><option value="">Any</option>{% for e in educations %}<option {% if f.education == e %}selected{% endif %}>{{ e }}</option>{% endfor %}</select></div>
+      <p class="fl">Profession</p><div class="fsel"><select name="profession"><option value="">Any</option>{% for p in professions %}<option {% if f.profession == p %}selected{% endif %}>{{ p }}</option>{% endfor %}</select></div>
+      <p class="fl">Religiosity</p><div class="fsel"><select name="practice"><option value="">Any</option>{% for v, l in practice %}<option value="{{ v }}" {% if f.practice == v %}selected{% endif %}>{{ l }} {% if me.religion == 'Christian' %}Christian{% else %}Muslim{% endif %}</option>{% endfor %}</select></div>
+      <p class="fl">Appearance</p><div class="fsel"><select name="body"><option value="">Any</option>{% for b in bodies %}<option {% if f.body == b %}selected{% endif %}>{{ b }}</option>{% endfor %}</select></div>
+      <label class="tg">With Photo<span class="sw"><input type="checkbox" name="photo" value="1" {% if f.photo == '1' or not f %}checked{% endif %}><span></span></span></label>
+      <label class="tg">Verified Members Only<span class="sw"><input type="checkbox" name="verified" value="1" {% if f.verified == '1' or not f %}checked{% endif %}><span></span></span></label>
+      <label class="tg">Online Now<span class="sw"><input type="checkbox" name="online" value="1" {% if f.online == '1' %}checked{% endif %}><span></span></span></label>
+      <input type="hidden" name="sort" value="{{ sort }}"><input type="hidden" name="view" value="{{ view }}">
+      <button class="btn lg block fp-go"><svg><use href="#m-search"/></svg>Search Members</button>
+    </div>
+  </form>
+  <div class="fmain">
+    <section class="fban"><span class="pban-ic"><svg><use href="#m-search"/></svg></span>
+      <div class="pban-t"><h1>Find a Match</h1><p>Search and connect with genuine members for a serious and halal relationship.</p></div>
+      <div class="pban-q"><blockquote>&ldquo;Na katika kila kitu tumeumba kwa jozi.&rdquo;<cite>(Qur'an 51:49)</cite></blockquote><img src="{% static 'img/member/banner_mosque.jpg' %}" alt=""></div></section>
+    <div class="ftop">
+      <form class="fq" method="get">{% for k, v in f.items %}{% if k != 'q' and k != 'page' %}<input type="hidden" name="{{ k }}" value="{{ v }}">{% endif %}{% endfor %}
+        <div class="fq-in"><svg><use href="#m-search"/></svg><input name="q" value="{{ f.q|default:'' }}" placeholder="Search by name, keyword, or location..."></div><button class="btn lg">Search</button></form>
+      <div class="fsort"><span>Sort by:</span><div class="fsel"><select form="ff" name="sort" onchange="this.form.submit()">
+        <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest Members</option><option value="active" {% if sort == 'active' %}selected{% endif %}>Recently Active</option>
+        <option value="compat" {% if sort == 'compat' %}selected{% endif %}>Best Match</option><option value="age" {% if sort == 'age' %}selected{% endif %}>Youngest First</option></select></div>
+        <a class="vw{% if view != 'list' %} on{% endif %}" href="?{{ qs }}&amp;view=grid"><svg><use href="#m-grid"/></svg>Grid</a><a class="vw{% if view == 'list' %} on{% endif %}" href="?{{ qs }}&amp;view=list"><svg><use href="#m-list"/></svg>List</a></div>
+    </div>
+    <div class="fcount"><span>{{ page.paginator.count }} member{{ page.paginator.count|pluralize }} found</span>
+      {% if page.has_other_pages %}<nav class="pager">{% if page.has_previous %}<a href="?{{ qs }}&amp;page={{ page.previous_page_number }}" aria-label="Previous"><svg><use href="#m-chev-l"/></svg></a>{% endif %}
+        {% for n in pages %}{% if n == page.number %}<span class="on">{{ n }}</span>{% elif n == page.paginator.ELLIPSIS %}<span>&hellip;</span>{% else %}<a href="?{{ qs }}&amp;page={{ n }}">{{ n }}</a>{% endif %}{% endfor %}
+        {% if page.has_next %}<a href="?{{ qs }}&amp;page={{ page.next_page_number }}" aria-label="Next"><svg><use href="#m-chev-r"/></svg></a>{% endif %}</nav>{% endif %}</div>
+    {% if members %}<div class="mgrid{% if view == 'list' %} as-list{% endif %}">{% for m in members %}{% include "members/_card.html" with mode="find" %}{% endfor %}</div>
+    {% else %}<div class="box empty"><p>No members match these filters. Try widening the age range or location.</p></div>{% endif %}
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script>
+document.querySelectorAll('.range2').forEach(r=>{const [a,b]=r.querySelectorAll('input'),bar=r.querySelector('.r2-track i'),lo=r.querySelector('.r2-lo'),hi=r.querySelector('.r2-hi'),mn=+r.dataset.min,mx=+r.dataset.max;
+  const upd=e=>{if(+a.value>+b.value){if(e&&e.target===a)a.value=b.value;else b.value=a.value}lo.textContent=a.value;hi.textContent=+b.value>=mx?mx+'+':b.value;
+    bar.style.left=(a.value-mn)*100/(mx-mn)+'%';bar.style.right=(mx-b.value)*100/(mx-mn)+'%'};[a,b].forEach(i=>i.addEventListener('input',upd));upd()});
+</script>{% endblock %}

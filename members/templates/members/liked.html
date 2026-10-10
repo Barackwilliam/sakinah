@@ -1,0 +1,33 @@
+{% extends "members/base.html" %}{% block title %}Who Liked Me{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="heart" title="Who Liked Me" sub="Members who have shown interest in you by liking your profile." quote="Na katika kila kitu tumeumba kwa jozi." ref="Qur'an 51:49" art="mosque" %}
+<div class="page-g">
+  <div>
+    <nav class="ptabs">
+      <a href="?tab=all" class="{% if tab == 'all' %}on{% endif %}">All Likes ({{ n.all }})</a>
+      <a href="?tab=new" class="{% if tab == 'new' %}on{% endif %}">New Likes ({{ n.new }}){% if n.new %}<i class="rdot"></i>{% endif %}</a>
+      <a href="?tab=week" class="{% if tab == 'week' %}on{% endif %}">This Week ({{ n.week }})</a>
+      <a href="?tab=month" class="{% if tab == 'month' %}on{% endif %}">This Month ({{ n.month }})</a>
+    </nav>
+    <form class="fbar" method="get"><input type="hidden" name="tab" value="{{ tab }}">
+      {% include "members/_agefilters.html" %}
+      <div class="fsel push"><select name="sort" onchange="this.form.submit()"><option value="">Newest First</option><option value="oldest" {% if f.sort == 'oldest' %}selected{% endif %}>Oldest First</option></select></div>
+      <noscript><button class="btn-filter">Filter</button></noscript>
+    </form>
+    {% if locked and members %}<div class="lockbar"><svg class="gold"><use href="#m-crown"/></svg><p><b>{{ n.all }} member{{ n.all|pluralize }} liked you.</b> Upgrade to Premium to see who they are and like them back.</p><a class="btn" href="{% url 'm_membership' %}">Upgrade Now</a></div>{% endif %}
+    {% if members %}<div class="mgrid">{% for m in members %}{% include "members/_card.html" with mode="liked" %}{% endfor %}</div>
+    {% else %}<div class="box empty"><p>No likes {% if tab != 'all' or f.show or f.city or f.age %}for this filter{% else %}yet{% endif %}. Keep your profile active and complete to get noticed. <a class="mag" href="{% url 'm_find' %}">Find a Match</a></p></div>{% endif %}
+  </div>
+  <aside>
+    <div class="sumbox pink"><h3><svg class="mag"><use href="#m-heart"/></svg>Likes Summary</h3>
+      <div class="srow"><svg class="mag"><use href="#m-heart"/></svg>Total Likes<b>{{ n.all }}</b></div><div class="srow"><svg class="mag"><use href="#m-check-c"/></svg>New Likes<b class="ok">{{ n.new }}</b></div>
+      <div class="srow"><svg class="mag"><use href="#m-cal"/></svg>This Week<b class="ok">{{ n.week }}</b></div><div class="srow"><svg class="mag"><use href="#m-cal"/></svg>This Month<b>{{ n.month }}</b></div></div>
+    <div class="sumbox yel"><h3><svg class="gold"><use href="#m-crown"/></svg>{% if me.is_premium %}Your Premium Benefits{% else %}Upgrade to Premium{% endif %}</h3>
+      <ul class="tlist gk">{% for p in perks %}<li><svg><use href="#m-check-c"/></svg>{{ p }}</li>{% endfor %}</ul>
+      <a class="btn block lg" href="{% url 'm_membership' %}">{% if me.is_premium %}Manage Membership{% else %}Upgrade Now{% endif %}</a></div>
+    <div class="sumbox grn"><h3><svg class="ok"><use href="#m-bulb"/></svg>Tips to Get More Likes</h3>
+      <ul class="tlist"><li><svg><use href="#m-check-c"/></svg>Complete your profile fully</li><li><svg><use href="#m-check-c"/></svg>Add clear and recent photos</li><li><svg><use href="#m-check-c"/></svg>Write an interesting bio</li>
+        <li><svg><use href="#m-check-c"/></svg>Be active and respond to messages</li><li><svg><use href="#m-check-c"/></svg>Verify your profile</li><li><svg><use href="#m-check-c"/></svg>Upgrade to Premium for more visibility</li></ul></div>
+  </aside>
+</div>
+{% endblock %}

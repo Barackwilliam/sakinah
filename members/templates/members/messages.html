@@ -1,0 +1,87 @@
+{% extends "members/base.html" %}{% block title %}Messages{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="chat" title="Messages" sub="Chat and get to know your potential partner in a respectful and halal way." quote="Na katika kila kitu tumeumba kwa jozi." ref="Qur'an 51:49" art="quran" %}
+<div class="chat{% if other and request.resolver_match.kwargs.pk %} open{% endif %}">
+  <section class="clist">
+    <nav class="ctabs">
+      <a href="?tab=all" class="{% if tab == 'all' %}on{% endif %}">All Messages{% if n_all %}<i>{{ n_all }}</i>{% endif %}</a>
+      <a href="?tab=unread" class="{% if tab == 'unread' %}on{% endif %}">Unread{% if n_unread %}<i>{{ n_unread }}</i>{% endif %}</a>
+      <a href="?tab=favorites" class="{% if tab == 'favorites' %}on{% endif %}">Favorites</a>
+      <a href="?tab=archived" class="{% if tab == 'archived' %}on{% endif %}">Archived</a>
+    </nav>
+    <form class="csearch" method="get"><input type="hidden" name="tab" value="{{ tab }}">
+      <label><svg><use href="#m-search"/></svg><input name="q" value="{{ f.q|default:'' }}" placeholder="Search messages..."></label>
+      <button aria-label="Filter"><svg><use href="#m-filter"/></svg></button></form>
+    <ul class="crows">
+      {% for c in convos %}{% with m=c.member %}
+      <li><a href="{% url 'm_messages_with' m.pk %}?tab={{ tab }}" class="{% if other and other.pk == m.pk %}on{% endif %}">
+        <span class="cav">{% if m.photo %}<img src="{{ m.photo.url }}" alt="">{% else %}<b>{{ m.name|first }}</b>{% endif %}{% if m.is_online %}<em></em>{% endif %}</span>
+        <span class="ctx"><b>{{ m.name }}</b><small>{{ c.last.body|default:"📷 Photo"|truncatechars:62 }}</small></span>
+        <span class="cmeta"><time>{% if c.last.created|date:"Ymd" == today|date:"Ymd" %}{{ c.last.created|time:"H:i" }}{% elif c.last.created|date:"Ymd" == yesterday|date:"Ymd" %}Yesterday{% else %}{{ c.last.created|date:"j M" }}{% endif %}</time>{% if c.unread %}<i>{{ c.unread }}</i>{% endif %}</span>
+        <svg class="cgo"><use href="#m-chev-r"/></svg></a></li>
+      {% endwith %}{% empty %}
+      <li class="cempty"><svg><use href="#m-chat-o"/></svg><p>{% if f.q %}No conversations match &ldquo;{{ f.q }}&rdquo;.{% else %}No conversations here yet.{% endif %}</p><a class="btn" href="{% url 'm_find' %}">Find a Match</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+  <section class="cpane">
+    {% if other %}
+    <header class="chead">
+      <a class="cback" href="{% url 'm_messages' %}?tab={{ tab }}" aria-label="Back"><svg><use href="#m-chev-l"/></svg></a>
+      <a class="cav lg" href="{% url 'member' other.pk %}">{% if other.photo %}<img src="{{ other.photo.url }}" alt="">{% else %}<b>{{ other.name|first }}</b>{% endif %}{% if other.verified %}<span class="vtick"><svg><use href="#m-tick2"/></svg></span>{% endif %}</a>
+      <div class="cwho"><h2>{{ other.name }}{% if other.is_online %}<span class="pill-on"><i></i>Online</span>{% endif %}</h2>
+        <p>{{ other.age }} &middot; {{ other.location_text }}{% if other.profession %} &middot; {{ other.profession }}{% endif %}</p>
+        <p>{{ other.practice_label }} &middot; Seeking Marriage</p></div>
+      <div class="cact">
+        <button class="ibtn" type="button" title="Video calls are coming soon" disabled><svg><use href="#m-video"/></svg></button>
+        <button class="ibtn" type="button" title="Voice calls are coming soon" disabled><svg><use href="#m-phone"/></svg></button>
+        <details class="cmenu"><summary class="ibtn" aria-label="More"><svg><use href="#m-dots-v"/></svg></summary>
+          <div class="mh-menu">
+            <a href="{% url 'member' other.pk %}">View profile</a>
+            <form method="post" action="{% url 'm_convo_action' other.pk %}">{% csrf_token %}<input type="hidden" name="act" value="fav"><button>{% if state.favorite %}Remove from favorites{% else %}Add to favorites{% endif %}</button></form>
+            <form method="post" action="{% url 'm_convo_action' other.pk %}">{% csrf_token %}<input type="hidden" name="act" value="archive"><button>{% if state.archived %}Unarchive chat{% else %}Archive chat{% endif %}</button></form>
+            <form method="post" action="{% url 'm_block' other.pk %}" data-confirm="Block {{ other.name }}? They will no longer see or message you.">{% csrf_token %}<button class="dang">Block member</button></form>
+            <a href="{% url 'm_help' %}?kind=report&amp;subject=Report: {{ other.name|urlencode }}">Report member</a>
+          </div></details>
+      </div>
+    </header>
+    <div class="cbody" id="cbody">
+      {% for msg in thread %}
+      {% ifchanged msg.created|date:"Ymd" %}<div class="cday"><span>{% if msg.created|date:"Ymd" == today|date:"Ymd" %}Today, {% elif msg.created|date:"Ymd" == yesterday|date:"Ymd" %}Yesterday, {% endif %}{{ msg.created|date:"j M Y" }}</span></div>{% endifchanged %}
+      {% if msg.sender_id == user.id %}
+      <div class="bub me"><div><p>{% if msg.image %}<img src="{{ msg.image.url }}" alt="">{% endif %}{{ msg.body|linebreaksbr }}<time>{{ msg.created|time:"H:i" }}<svg class="{% if msg.read %}seen{% endif %}"><use href="#m-tick2"/></svg></time></p></div></div>
+      {% else %}
+      <div class="bub them">{% ifchanged msg.sender_id %}<span class="cav sm">{% if other.photo %}<img src="{{ other.photo.url }}" alt="">{% endif %}</span>{% else %}<span class="cav sm ghost"></span>{% endifchanged %}
+        <div><p>{% if msg.image %}<img src="{{ msg.image.url }}" alt="">{% endif %}{{ msg.body|linebreaksbr }}</p><time>{{ msg.created|time:"H:i" }}</time></div></div>
+      {% endif %}
+      {% empty %}
+      <div class="cstart"><svg><use href="#m-chat-o"/></svg><p>Say <b>Assalamu Alaikum</b> to {{ other.first_name }} and start a respectful conversation.</p></div>
+      {% endfor %}
+    </div>
+    {% if can_send %}
+    <form class="cform" method="post" enctype="multipart/form-data">{% csrf_token %}
+      <details class="cemo"><summary aria-label="Emoji"><svg><use href="#m-smile"/></svg></summary><div>{% for e in emoji %}<button type="button" data-emo="{{ e }}">{{ e }}</button>{% endfor %}</div></details>
+      <textarea name="body" rows="1" placeholder="Andika ujumbe wako hapa..." id="cbox"></textarea>
+      <label class="cfile" title="Attach a photo"><svg><use href="#m-clip"/></svg><input type="file" name="image" accept="image/*" hidden></label>
+      <label class="cfile" title="Send an image"><svg><use href="#m-image"/></svg><input type="file" name="image" accept="image/*" hidden></label>
+      <button class="csend" aria-label="Send"><svg><use href="#m-send"/></svg></button>
+    </form>
+    {% else %}
+    <p class="cnote"><svg><use href="#m-lock"/></svg>{% if other.pk in blocked_ids %}You blocked this member.{% else %}{{ other.first_name }} only accepts messages from {{ other.get_allow_messages_from_display|lower }}.{% endif %}</p>
+    {% endif %}
+    {% else %}
+    <div class="cstart big"><svg><use href="#m-chat-o"/></svg><h3>Your conversations</h3><p>Pick a conversation or find someone to talk to.</p><a class="btn" href="{% url 'm_find' %}">Find a Match</a></div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}<script>
+(function(){var b=document.getElementById('cbody');function end(){if(b)b.scrollTop=b.scrollHeight}end();window.addEventListener('load',end);
+var t=document.getElementById('cbox');if(!t)return;
+function fit(){t.style.height='auto';t.style.height=Math.min(t.scrollHeight,120)+'px'}t.addEventListener('input',fit);
+t.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey&&window.innerWidth>760){e.preventDefault();if(t.value.trim()||t.form.querySelector('input[type=file]:not([value=""])'))t.form.submit()}});
+document.querySelectorAll('[data-emo]').forEach(function(x){x.onclick=function(){t.value+=x.dataset.emo;t.focus();fit()}});
+document.querySelectorAll('.cfile input').forEach(function(i){i.onchange=function(){document.querySelectorAll('.cfile input').forEach(function(o){if(o!==i)o.value=''});
+  i.parentNode.classList.toggle('has',!!i.files.length);if(i.files.length&&!t.value)t.placeholder=i.files[0].name+' - add a caption or press send'}});
+t.form.addEventListener('submit',function(e){var f=[].some.call(t.form.querySelectorAll('.cfile input'),function(i){return i.files.length});if(!t.value.trim()&&!f){e.preventDefault();t.focus()}});
+})();</script>{% endblock %}

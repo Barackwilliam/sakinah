@@ -1,0 +1,31 @@
+{% extends "members/base.html" %}{% block title %}{{ e.title }}{% endblock %}
+{% block content %}
+<a class="backl" href="{% url 'm_events' %}"><svg><use href="#m-chev-l"/></svg>Back to Events</a>
+<div class="page-g evg">
+  <article class="box evd-main">
+    <div class="evd-hero">{% if e.image %}<img src="{{ e.image.url }}" alt="">{% endif %}<span class="evd"><b>{{ e.date|date:"d" }}</b>{{ e.date|date:"M"|upper }}<br>{{ e.date|date:"Y" }}</span></div>
+    <div class="evd-b">
+      <div class="evtags">{% if e.category %}<span class="cp">{{ e.category.name }}</span>{% endif %}{% for t in e.tag_list %}<span class="cg">{{ t }}</span>{% endfor %}</div>
+      <h1>{{ e.title }}</h1>
+      <ul class="evfacts">
+        <li><svg><use href="#m-cal"/></svg><span><small>Date</small>{{ e.date|date:"l, j F Y" }}</span></li>
+        <li><svg><use href="#m-clock"/></svg><span><small>Time</small>{% if e.start_time %}{{ e.start_time|time:"g:i A" }}{% if e.end_time %} &ndash; {{ e.end_time|time:"g:i A" }}{% endif %}{% else %}To be announced{% endif %}</span></li>
+        <li><svg><use href="#m-pin"/></svg><span><small>Location</small>{{ e.city }}, Tanzania</span></li>
+        <li><svg><use href="#m-people"/></svg><span><small>Seats</small>{% if e.capacity %}{{ e.seats_left }} of {{ e.capacity }} left{% else %}Open seating{% endif %} &middot; {{ e.going }} going</span></li>
+      </ul>
+      <h3>About this event</h3><p>{{ e.description|default:"Details will be shared soon." }}</p>
+      <div class="evc-a big">
+        {% if registered %}<form method="post" action="{% url 'event_register' e.pk %}" data-confirm="Cancel your registration?">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><button class="btn gf lg"><svg><use href="#m-check-c"/></svg>You are registered &middot; Cancel</button></form>
+        {% elif past %}<span class="btn o lg dis">This event has ended</span>
+        {% elif e.capacity and not e.seats_left %}<span class="btn o lg dis">Fully booked</span>
+        {% else %}<form method="post" action="{% url 'event_register' e.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><button class="btn lg">Register Now</button></form>{% endif %}
+        <form method="post" action="{% url 'm_event_save' e.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><button class="btn o lg"><svg><use href="#m-heart{% if not saved %}-o{% endif %}"/></svg>{% if saved %}Saved{% else %}Save{% endif %}</button></form>
+      </div>
+    </div>
+  </article>
+  <aside>
+    <div class="sumbox grn"><h3><svg class="ok"><use href="#m-shield"/></svg>Event etiquette</h3>
+      <ul class="tlist"><li><svg><use href="#m-check-c"/></svg>Arrive on time</li><li><svg><use href="#m-check-c"/></svg>Dress modestly</li><li><svg><use href="#m-check-c"/></svg>Respect separate seating where arranged</li><li><svg><use href="#m-check-c"/></svg>Bring your registration name</li></ul></div>
+  </aside>
+</div>
+{% endblock %}
