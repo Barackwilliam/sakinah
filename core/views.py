@@ -1,10 +1,12 @@
-from datetime import date
+from datetime import date, timedelta
 from django.contrib import messages
 from django.contrib.auth import login, views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Count, Q
+from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
@@ -60,6 +62,10 @@ def matches(request):
 @login_required
 def member_detail(request, pk):
     m, mine = get_object_or_404(Member, pk=pk), me(request)
+    if mine and m.user_id and Block.objects.filter(user=m.user, member=mine).exists(): raise Http404
+    if request.user.is_authenticated and m != mine and not ProfileView.objects.filter(
+            viewer=request.user, member=m, created__gte=timezone.now() - timedelta(minutes=30)).exists():
+        ProfileView.objects.create(viewer=request.user, member=m)
     # previous / next follow the Find a Match order for the same gender
     ids = list(Member.objects.filter(gender=m.gender).exclude(pk=getattr(mine, "pk", None)).values_list("pk", flat=True))
     i = ids.index(m.pk) if m.pk in ids else -1
@@ -86,6 +92,17 @@ def report(request, pk):
         messages.success(request, "Thank you. Our team will review this profile.")
     return redirect(reverse("member", args=[pk]))
 
+def notify_like(user, liker, m):
+    """Tell the liked member (and both people when the like makes a mutual match), respecting their notification settings."""
+    if liker is None: return
+    mutual = Like.objects.filter(user=m.user, member=liker).exists()
+    if mutual:
+        for to, other in ((m, liker), (liker, m)):
+            if to.user_id and to.notify_matches:
+                Notification.objects.create(user=to.user, title=f"It's a match! You and {other.name} like each other", link=reverse("m_messages_with", args=[other.pk]))
+    elif m.notify_likes:
+        Notification.objects.create(user=m.user, title=f"{liker.name} liked your profile", link=reverse("m_liked"))
+
 @login_required
 @require_POST
 def like(request, pk):
@@ -95,6 +112,8 @@ def like(request, pk):
     else:
         obj, created = Like.objects.get_or_create(user=request.user, member=m)
         if not created: obj.delete()
+        elif m.user_id:
+            notify_like(request.user, me(request), m)
         messages.success(request, f"You liked {m.name}." if created else f"Like removed for {m.name}.")
     return redirect(safe_next(request) or reverse("member", args=[pk]))
 
@@ -114,6 +133,9 @@ class LoginView(auth_views.LoginView):
         response = super().form_valid(form)
         if not self.request.POST.get("remember"): self.request.session.set_expiry(0)  # end session when the browser closes
         return response
+    def get_default_redirect_url(self):
+        # members land on their own dashboard, staff on the admin dashboard
+        return reverse("dashboard" if self.request.user.is_staff else "m_dashboard")
 
 def signup(request):
     if request.user.is_authenticated: return redirect("home")

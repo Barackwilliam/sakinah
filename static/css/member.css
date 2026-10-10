@@ -447,3 +447,7 @@ body{padding-bottom:70px}.mmain{padding:10px}.pban{padding:12px 14px;gap:14px;mi
 .hours dt,.hours dd{white-space:nowrap}
 .nlist li>a,.nlist li>div{display:flex;align-items:center;gap:12px;padding:10px 6px;border-bottom:1px solid var(--line)}.nlist li.new>a,.nlist li.new>div{background:#fdf4f6}[data-theme=dark] .nlist li.new>*{background:var(--m-l)}
 .nlist li>*>span:nth-child(2){flex:1;min-width:0}.nlist b{display:block;font-size:13px;font-weight:600}.nlist small{display:block;font-size:12px;color:var(--mut)}.nlist time{font-size:11.5px;color:var(--mut);white-space:nowrap}.nlist .fi{width:38px;height:38px}.nlist .fi svg{width:18px;height:18px}
+.page-g>*,.fm>*,.hp-g>*,.hp-r>*,.sf2>*,.ben-g>*,.st-g>*,.pgrid>*,.pgrid2>*,.dgrid>*,.chat>*,.mine-g>*,.pay-g>*{min-width:0}
+@media(max-width:760px){.bh{white-space:normal;flex-wrap:wrap}.fq .btn{padding:0 16px}.fq-in{min-width:0}.fq{min-width:0}}
+@media(max-width:1000px) and (min-width:761px){.mh-user .who,.mh-user summary>svg{display:none}.mh-user{padding-left:12px}.mh-nav a{min-width:58px;padding:6px 4px}}
+@media(max-width:760px){.ptabs a,.ag .ptabs a,.st-tabs a,.page-g>div>.ptabs a{flex:none!important;min-width:0!important;padding:0 14px!important;white-space:nowrap}.ptabs{width:100%!important}}

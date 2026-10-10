@@ -128,7 +128,7 @@ class FlowTests(TestCase):
     def test_login_with_email_or_username(self):
         User.objects.create_user("zuhura", "Zuhura@Example.com", "S3cure-pass-123")
         for name in ["zuhura", "zuhura@example.com"]:
-            self.assertRedirects(self.client.post(reverse("login"), {"username": name, "password": "S3cure-pass-123"}), reverse("home"))
+            self.assertRedirects(self.client.post(reverse("login"), {"username": name, "password": "S3cure-pass-123"}), reverse("m_dashboard"))
             self.client.logout()
         r = self.client.post(reverse("login"), {"username": "zuhura@example.com", "password": "wrong"})
         self.assertEqual(r.status_code, 200)

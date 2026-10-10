@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from core.models import (Advert, Article, Broadcast, Event, EventRegistration, Inquiry, Like, Member, Message, MessageTemplate,
+from core.models import (Advert, SupportTicket, Article, Broadcast, Event, EventRegistration, Inquiry, Like, Member, Message, MessageTemplate,
                          Notification, Payment, Plan, Report, SiteSetting)
 from .charts import bar_chart, donut, line_chart
 from .forms import BroadcastForm, PaymentForm
@@ -65,7 +65,8 @@ def stat(qs, field, is_datetime=True):
     return change(qs.filter(**{f"{f}__gte": this}).count(), qs.filter(**{f"{f}__gte": last, f"{f}__lt": this}).count())
 
 def badge_counts():
-    return {"n_alerts": Report.objects.filter(resolved=False).count() + Inquiry.objects.filter(handled=False).count(),
+    return {"n_alerts": Report.objects.filter(resolved=False).count() + Inquiry.objects.filter(handled=False).count()
+                        + SupportTicket.objects.filter(status="open").count(),
             "n_inbox": Inquiry.objects.filter(handled=False).count()}
 
 def page(request, template, ctx):
