@@ -19,7 +19,7 @@ if os.getenv("RENDER_EXTERNAL_HOSTNAME"):  # the *.onrender.com address
 INSTALLED_APPS = [
     "django.contrib.admin", "django.contrib.auth", "django.contrib.contenttypes",
     "django.contrib.sessions", "django.contrib.messages", "django.contrib.staticfiles", "django.contrib.humanize",
-    "storages", "core", "dashboard",
+    "storages", "core", "dashboard", "members",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

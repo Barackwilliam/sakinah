@@ -75,6 +75,11 @@ def events(request):
 @require_POST
 def event_register(request, pk):
     e = get_object_or_404(Event, pk=pk)
+    mine = EventRegistration.objects.filter(event=e, user=request.user).exists()
+    if not mine and e.date < date.today():
+        messages.error(request, f"{e.title} has already taken place."); return redirect(safe_next(request) or reverse("events"))
+    if not mine and e.seats_left == 0:
+        messages.error(request, f"Sorry, {e.title} is fully booked."); return redirect(safe_next(request) or reverse("events"))
     reg, created = EventRegistration.objects.get_or_create(event=e, user=request.user)
     if not created: reg.delete()
     messages.success(request, f"You are registered for {e.title}. See you there!" if created else f"Your registration for {e.title} was cancelled.")

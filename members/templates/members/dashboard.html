@@ -1,0 +1,48 @@
+{% extends "members/base.html" %}{% load static %}{% block title %}Dashboard{% endblock %}
+{% block content %}
+<section class="dhero">
+  <div class="dh-l">
+    <a class="dh-av" href="{% url 'm_photos' %}">{% if me.photo %}<img src="{{ me.photo.url }}" alt="">{% else %}<span>{{ me.name|first }}</span>{% endif %}<i><svg><use href="#m-edit"/></svg></i></a>
+    <div class="dh-t"><em>Assalamu Alaikum,</em><h1>{{ me.first_name }} <span class="wave">&#128075;</span></h1>
+      <p>Karibu Sakinah. Endelea kuboresha wasifu wako ili kupata mwenza anayekufaa.</p></div>
+    <div class="dh-prog"><div><b>Ukamili wa Wasifu</b><span class="bar"><i style="width:{{ comp.pct }}%"></i></span><em>{{ comp.pct }}%</em></div>
+      <a class="btn lg" href="{% url 'm_profile_edit' %}">Complete Profile <svg><use href="#m-arrow"/></svg></a></div>
+  </div>
+  <img class="dh-art" src="{% static 'img/member/hero_art.jpg' %}" alt="Ndoa ni Ibadah, Utulivu na Baraka">
+</section>
+<div class="dtiles">
+  <a class="dt pink" href="{% url 'm_matches' %}"><span class="dt-ic" style="background:#a0123c"><svg><use href="#m-heart"/></svg></span><div><b>{{ n_matches }}</b><h3>Matches</h3><small>People matched with you</small></div><svg class="chev"><use href="#m-chev-r"/></svg></a>
+  <a class="dt grn" href="{% url 'm_find' %}"><span class="dt-ic" style="background:#16883f"><svg><use href="#m-search"/></svg></span><div><h3>Find a Match</h3><small>Search members by your preference</small></div><svg class="chev"><use href="#m-chev-r"/></svg></a>
+  <a class="dt blu" href="{% url 'm_messages' %}"><span class="dt-ic" style="background:#3b82d6"><svg><use href="#m-chat"/></svg></span><div><b>{{ unread }}</b><h3>Messages</h3><small>Unread messages</small></div><svg class="chev"><use href="#m-chev-r"/></svg></a>
+  <a class="dt yel" href="{% url 'm_profile' %}"><span class="dt-ic" style="background:#c8902f"><svg><use href="#m-user"/></svg></span><div><h3>My Profile</h3><small>{{ comp.pct }}% Complete</small><small>Update your profile</small></div><svg class="chev"><use href="#m-chev-r"/></svg></a>
+</div>
+<div class="dgrid">
+ <div class="dleft">
+  <section class="box dsug"><div class="box-h"><svg><use href="#m-heart"/></svg><h2>Suggested Matches For You</h2><a class="va" href="{% url 'm_find' %}">View All <svg><use href="#m-chev-r"/></svg></a></div>
+    <div class="box-b"><div class="dsug-w"><div class="dsug-g" id="sug">{% for m in suggested %}{% include "members/_card.html" with mode="dash" %}{% empty %}<p class="empty">No suggestions yet. Update your partner preferences to see matches.</p>{% endfor %}</div>
+      {% if suggested|length > 4 %}<button class="sug-arr" type="button" aria-label="More" onclick="document.getElementById('sug').scrollBy({left:document.getElementById('sug').clientWidth,behavior:'smooth'})"><svg><use href="#m-chev-r"/></svg></button>{% endif %}</div></div></section>
+  <div class="dpair">
+  <section class="box dev"><div class="box-h"><svg><use href="#m-cal"/></svg><h2>Sakinah Events</h2><a class="va" href="{% url 'm_events' %}">View All</a></div>
+    <ul class="box-b">{% for e in events %}<li><a href="{% url 'm_event' e.pk %}">{% if forloop.first and e.image %}<img src="{{ e.image.url }}" alt="">{% else %}<span class="dev-ic"><svg><use href="#m-cal"/></svg></span>{% endif %}
+      <div><b>{{ e.title }}</b><small><svg><use href="#m-cal-o"/></svg>{{ e.date|date:"d M Y" }}</small><small><svg class="mag"><use href="#m-pin"/></svg>{{ e.city }}</small></div></a></li>{% empty %}<li class="empty">No upcoming events.</li>{% endfor %}</ul></section>
+  <section class="box dsafe"><div class="box-h"><svg><use href="#m-shield"/></svg><h2>Safety &amp; Privacy</h2></div>
+    <ul class="box-b">
+      <li><a href="{% url 'm_verify' %}"><span class="ok"><svg><use href="#m-check-c"/></svg></span>Profile Verification<svg class="chev"><use href="#m-chev-r"/></svg></a></li>
+      <li><a href="{% url 'm_safety' %}?tab=privacy"><span><svg><use href="#m-lock"/></svg></span>Privacy Settings<svg class="chev"><use href="#m-chev-r"/></svg></a></li>
+      <li><a href="{% url 'm_safety' %}?tab=blocked"><span class="mag"><svg><use href="#m-ban"/></svg></span>Blocked Members<svg class="chev"><use href="#m-chev-r"/></svg></a></li>
+      <li><a href="{% url 'm_safety' %}?tab=report"><span class="mag"><svg><use href="#m-flag"/></svg></span>Report a Member<svg class="chev"><use href="#m-chev-r"/></svg></a></li>
+      <li><a href="{% url 'm_safety' %}?tab=features"><span><svg><use href="#m-shield"/></svg></span>Safety Centre<svg class="chev"><use href="#m-chev-r"/></svg></a></li></ul></section>
+  </div>
+ </div>
+  <aside class="dside">
+    <section class="box"><div class="box-h"><svg><use href="#m-heart"/></svg><h2>My Activities</h2><a class="va" href="{% url 'm_activity' %}">View All</a></div>
+      <ul class="box-b dacts">{% for icon, label, n, url in acts %}<li><a href="{% url url %}"><svg class="{% if icon == 'heart' %}mag{% endif %}"><use href="#m-{{ icon }}"/></svg>{{ label }}<b>{{ n }}</b></a></li>{% endfor %}</ul></section>
+    <section class="box dmem"><div class="box-h"><svg class="gold"><use href="#m-crown"/></svg><h2>Membership Status</h2></div>
+      <div class="box-b"><div class="dmem-s"><svg><use href="#m-crown"/></svg><b>{% if me.is_premium %}{{ me.plan.name }} Member{% else %}Free Member{% endif %}</b><a href="{% url 'm_membership' %}">{% if me.is_premium %}Renew{% else %}Upgrade{% endif %}</a></div>
+        <ul class="chk-list">{% for p in perks %}<li class="{% if not me.is_premium %}x{% endif %}"><svg><use href="#m-{% if me.is_premium %}check-c{% else %}x-c{% endif %}"/></svg>{{ p.text }}</li>{% endfor %}</ul>
+        {% if me.is_premium %}<p class="muted sm">Active until {{ me.premium_until|date:"d M Y" }}</p>{% endif %}</div></section>
+  <a class="dpromo" href="{% url 'm_find' %}"><img src="{% static 'img/member/promo_card.jpg' %}" alt="Pata Mwenza, Pata Utulivu. Tunakuunganisha na watu waaminifu kwa ajili ya ndoa yenye baraka."></a>
+  </aside>
+
+</div>
+{% endblock %}

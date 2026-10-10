@@ -1,0 +1,97 @@
+{% extends "members/base.html" %}{% block title %}Safety &amp; Privacy{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="shield" title="Safety & Privacy" sub="Your safety, privacy and trust are our priority." quote="Na Mwenyezi Mungu aliwaumba kwa jozi." ref="Qur'an 78:8" art="mosque" %}
+<div class="page-g sf-g">
+  <div>
+    <nav class="ptabs">
+      <a href="?tab=overview" class="{% if tab == 'overview' %}on{% endif %}"><svg><use href="#m-shield"/></svg>Overview</a>
+      <a href="?tab=privacy" class="{% if tab == 'privacy' %}on{% endif %}"><svg><use href="#m-lock"/></svg>Privacy Settings</a>
+      <a href="?tab=features" class="{% if tab == 'features' %}on{% endif %}"><svg><use href="#m-shield"/></svg>Safety Features</a>
+      <a href="?tab=verification" class="{% if tab == 'verification' %}on{% endif %}"><svg><use href="#m-idcard"/></svg>Verification</a>
+      <a href="?tab=blocked" class="{% if tab == 'blocked' %}on{% endif %}"><svg><use href="#m-ban"/></svg>Blocked Users{% if blocked %} ({{ blocked|length }}){% endif %}</a>
+      <a href="?tab=report" class="{% if tab == 'report' %}on{% endif %}"><svg><use href="#m-flag"/></svg>Report &amp; Support</a>
+    </nav>
+
+    {% if tab == 'overview' %}
+    <div class="sf4">
+      <div class="grn"><svg><use href="#m-shield"/></svg><span><b>Verified Members</b><small>Real people, safer connections</small></span></div>
+      <div class="pink"><svg><use href="#m-lock"/></svg><span><b>Your Privacy Matters</b><small>You control your information</small></span></div>
+      <div class="blu"><svg><use href="#m-people"/></svg><span><b>Safe Community</b><small>Moderated and Islamic values based</small></span></div>
+      <div class="yel"><svg><use href="#m-headset"/></svg><span><b>We're Here to Help</b><small>Report, block or get support anytime</small></span></div>
+    </div>
+    {% endif %}
+
+    {% if tab == 'overview' or tab == 'privacy' or tab == 'features' %}
+    <div class="sf2{% if tab != 'overview' %} one{% endif %}">
+      {% if tab != 'features' %}
+      <form class="box prv" method="post" action="?tab={{ tab }}">{% csrf_token %}
+        <h3 class="bh"><svg class="mag"><use href="#m-gear"/></svg>Privacy Settings</h3><p class="bsub">Control who can see your information and how you interact.</p>
+        {% if form.errors %}<p class="ferr">Please check the highlighted settings.</p>{% endif %}
+        <div class="prow"><svg><use href="#m-eye"/></svg><span><b>Profile Visibility</b><small>Choose who can view your profile.</small></span>{{ form.profile_visibility }}</div>
+        <div class="prow"><svg><use href="#m-image"/></svg><span><b>Show My Photos</b><small>Control who can see your photos.</small></span>{{ form.photo_visibility }}</div>
+        <label class="prow"><svg class="ok"><use href="#m-circle"/></svg><span><b>Show My Online Status</b><small>Let others see when you are online.</small></span>{{ form.show_online }}<i class="sw"></i></label>
+        <label class="prow"><svg><use href="#m-cal"/></svg><span><b>Show My Age</b><small>Display or hide your age.</small></span>{{ form.show_age }}<i class="sw"></i></label>
+        <div class="prow"><svg><use href="#m-pin"/></svg><span><b>Show My Location</b><small>Display city/region only (not exact location).</small></span>{{ form.location_display }}</div>
+        <div class="prow"><svg><use href="#m-chat"/></svg><span><b>Allow Messages</b><small>Choose who can send you messages.</small></span>{{ form.allow_messages_from }}</div>
+        <label class="prow"><svg><use href="#m-search"/></svg><span><b>Allow Profile in Search</b><small>Appear in search results.</small></span>{{ form.show_in_search }}<i class="sw"></i></label>
+        <div class="fbtns"><button class="btn lg"><svg><use href="#m-lock"/></svg>Save Privacy Settings</button></div>
+      </form>
+      {% endif %}
+      {% if tab != 'privacy' %}
+      <section class="box sfeat" id="rules">
+        <h3 class="bh"><svg class="ok"><use href="#m-shield"/></svg>Safety Features</h3><p class="bsub">We use multiple layers of protection to keep our community safe.</p>
+        <ul>
+          <li><a href="{% url 'm_verify' %}"><span class="fi" style="--c:#c81e3a"><svg><use href="#m-shield"/></svg></span><span><b>Profile Verification</b><small>Identity and photo verification to ensure real members.</small></span><svg><use href="#m-chev-r"/></svg></a></li>
+          <li><a href="{% url 'm_photos' %}"><span class="fi" style="--c:#15803d"><svg><use href="#m-eye"/></svg></span><span><b>Photo Moderation</b><small>All photos are reviewed to prevent inappropriate content.</small></span><svg><use href="#m-chev-r"/></svg></a></li>
+          <li><a href="?tab=report"><span class="fi" style="--c:#2563eb"><svg><use href="#m-people"/></svg></span><span><b>Report &amp; Block</b><small>Report suspicious behaviour and block unwanted users.</small></span><svg><use href="#m-chev-r"/></svg></a></li>
+          <li><a href="{% url 'm_help' %}"><span class="fi" style="--c:#7e22ce"><svg><use href="#m-doc"/></svg></span><span><b>Content Monitoring</b><small>Our team moderates reports for safe conversations.</small></span><svg><use href="#m-chev-r"/></svg></a></li>
+          <li><a href="{% url 'm_settings' %}#data"><span class="fi" style="--c:#b7791f"><svg><use href="#m-lock"/></svg></span><span><b>Secure Data</b><small>Your personal data is protected and kept confidential.</small></span><svg><use href="#m-chev-r"/></svg></a></li>
+          <li><a href="?tab=report"><span class="fi" style="--c:#c81e3a"><svg><use href="#m-people"/></svg></span><span><b>Zero Tolerance</b><small>Harassment, fake profiles and inappropriate behaviour are not allowed.</small></span><svg><use href="#m-chev-r"/></svg></a></li>
+        </ul>
+      </section>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if tab == 'overview' %}
+    <div class="sf4 low">
+      <div class="grn"><svg><use href="#m-lock"/></svg><span><b>Your Data is Secure</b><small>Passwords are encrypted and your data is protected.</small></span></div>
+      <div class="pink"><svg><use href="#m-eye"/></svg><span><b>Your Privacy is Our Priority</b><small>We never share your personal data with third parties.</small></span></div>
+      <div class="yel"><svg><use href="#m-flag"/></svg><span><b>Report Anytime</b><small>Help us keep {{ site.brand }} safe by reporting concerns.</small></span></div>
+      <div class="blu"><svg><use href="#m-people"/></svg><span><b>Trusted Community</b><small>Building sincere and respectful connections within Islamic values.</small></span></div>
+    </div>
+    {% endif %}
+
+    {% if tab == 'verification' %}
+    <section class="box fsec"><h3 class="bh"><svg class="ok"><use href="#m-idcard"/></svg>Verification</h3>
+      {% if me.verified %}<div class="vstate ok"><svg><use href="#m-check-c"/></svg><div><b>Your profile is verified</b><p>Members see the green verified badge on your profile.</p></div></div>
+      {% else %}<div class="vstate wait"><svg><use href="#m-idcard"/></svg><div><b>Your profile is not verified yet</b><p>Verified members get more trust and more responses. It only takes a minute.</p><a class="btn gf sm" style="margin-top:8px" href="{% url 'm_verify' %}">Verify my profile</a></div></div>{% endif %}
+    </section>
+    {% endif %}
+
+    {% if tab == 'blocked' %}
+    <section class="box fsec"><h3 class="bh"><svg class="mag"><use href="#m-ban"/></svg>Blocked Users</h3><p class="bsub">Blocked members cannot see your profile or message you, and you will not see them.</p>
+      <ul class="blist">{% for b in blocked %}<li><span class="cav xs">{% if b.member.photo %}<img src="{{ b.member.photo.url }}" alt="">{% else %}<b>{{ b.member.name|first }}</b>{% endif %}</span><span><b>{{ b.member.name }}</b><small>{{ b.member.city }} &middot; blocked {{ b.created|date:"j M Y" }}</small></span>
+        <form method="post" action="{% url 'm_block' b.member.pk %}">{% csrf_token %}<input type="hidden" name="next" value="?tab=blocked"><button class="btn o sm">Unblock</button></form></li>
+      {% empty %}<li class="empty">You have not blocked anyone.</li>{% endfor %}</ul></section>
+    {% endif %}
+
+    {% if tab == 'report' %}
+    <section class="box fsec"><h3 class="bh"><svg class="mag"><use href="#m-flag"/></svg>Report a Member or Problem</h3><p class="bsub">Reports are private. Our team reviews every report and takes action.</p>
+      <form method="post" action="{% url 'm_help' %}" enctype="multipart/form-data" class="fform">{% csrf_token %}<input type="hidden" name="kind" value="report">
+        <div class="fgrid two">{% for f in report %}{% include "members/_field.html" %}{% endfor %}</div>
+        <div class="fbtns"><button class="btn">Send Report<svg><use href="#m-send"/></svg></button></div></form></section>
+    {% endif %}
+  </div>
+  <aside>
+    <div class="sumbox grn"><h3><svg class="ok"><use href="#m-bulb"/></svg>Safety Tips</h3>
+      <ul class="tlist"><li><svg><use href="#m-check-c"/></svg>Complete your profile fully and honestly</li><li><svg><use href="#m-check-c"/></svg>Verify your identity and photos</li><li><svg><use href="#m-check-c"/></svg>Keep personal information private</li>
+        <li><svg><use href="#m-check-c"/></svg>Communicate only within the platform</li><li><svg><use href="#m-check-c"/></svg>Report suspicious or inappropriate behaviour</li><li><svg><use href="#m-check-c"/></svg>Meet in public places if you decide to meet</li><li><svg><use href="#m-check-c"/></svg>Trust your instincts</li></ul></div>
+    <div class="sumbox pink"><h3><svg class="mag"><use href="#m-ban"/></svg>What We Do Not Allow</h3>
+      <ul class="tlist no"><li><svg><use href="#m-x-c"/></svg>Fake profiles or impersonation</li><li><svg><use href="#m-x-c"/></svg>Inappropriate photos or content</li><li><svg><use href="#m-x-c"/></svg>Harassment, abuse or hate speech</li>
+        <li><svg><use href="#m-x-c"/></svg>Requests for money or financial help</li><li><svg><use href="#m-x-c"/></svg>Sharing personal contact details early</li><li><svg><use href="#m-x-c"/></svg>Any illegal activities</li></ul></div>
+    <div class="sumbox blu"><h3><svg style="color:#1d4ed8"><use href="#m-headset"/></svg>Need Help?</h3><p class="fnote" style="margin:0 0 10px;color:inherit">Our support team is here to help you stay safe and have a positive experience.</p>
+      <a class="btn block" href="{% url 'm_help' %}">Contact Support</a></div>
+  </aside>
+</div>
+{% endblock %}

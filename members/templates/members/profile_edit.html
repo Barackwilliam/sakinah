@@ -1,0 +1,15 @@
+{% extends "members/base.html" %}{% block title %}Edit Profile{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="user" title="My Profile" sub="Manage your profile information to get better matches." quote="Na Mwenyezi Mungu aliwaumba kwa jozi." ref="Qur'an 78:8" art="mosque" %}
+{% include "members/_ptabs.html" %}
+<form method="post" class="fform">{% csrf_token %}
+  {% if form.non_field_errors %}<p class="ferr">{{ form.non_field_errors|join:" " }}</p>{% endif %}
+  {% for title, icon, fields in form.sections %}
+  <section class="box fsec" id="{% if forloop.counter == 2 %}about{% elif forloop.counter == 3 %}interests{% else %}s{{ forloop.counter }}{% endif %}">
+    <h3 class="bh"><svg class="mag"><use href="#m-{{ icon }}"/></svg>{{ title }}</h3>
+    <div class="fgrid">{% for f in fields %}{% include "members/_field.html" %}{% endfor %}</div>
+  </section>
+  {% endfor %}
+  <div class="fbtns"><a class="btn o" href="{% url 'm_profile' %}">Cancel</a><button class="btn">Save Profile<svg><use href="#m-arrow"/></svg></button></div>
+</form>
+{% endblock %}

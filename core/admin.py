@@ -67,6 +67,20 @@ for m in [models.SiteSetting, models.Plan, models.PremiumPerk, models.ServiceCat
     admin.site.register(m)
 
 
+@admin.register(models.SupportTicket)
+class SupportTicketAdmin(admin.ModelAdmin):
+    list_display = ["subject", "kind", "user", "status", "created"]
+    list_filter = ["kind", "status"]
+    search_fields = ["subject", "message", "user__username", "user__email"]
+    list_editable = ["status"]
+
+@admin.register(models.ProfileView)
+class ProfileViewAdmin(admin.ModelAdmin):
+    list_display = ["viewer", "member", "created"]
+
+for m in [models.Block, models.ConversationState, models.EventSave, models.SearchLog]:
+    admin.site.register(m)
+
 @admin.register(models.Payment)
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ["invoice_no", "created", "payer_name", "kind", "plan", "gateway", "amount", "status"]

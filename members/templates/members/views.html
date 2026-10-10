@@ -1,0 +1,25 @@
+{% extends "members/base.html" %}{% block title %}Profile Views{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="eye" title="Profile Views" sub="People who have viewed your profile." quote="Na Mwenyezi Mungu aliwaumba kwa jozi." ref="Qur'an 78:8" art="mosque" %}
+<div class="page-g">
+  <div>
+    <nav class="ptabs">{% for k, label, n, ic in tabs %}<a href="?tab={{ k }}" class="{% if tab == k %}on{% endif %}"><svg><use href="#m-{{ ic }}"/></svg>{{ label }} ({{ n }})</a>{% endfor %}</nav>
+    <form class="fbar" method="get"><input type="hidden" name="tab" value="{{ tab }}">
+      {% include "members/_agefilters.html" with with_premium=True %}
+      <button class="btn-filter"><svg><use href="#m-filter"/></svg>Filter</button>
+    </form>
+    {% if members %}<div class="mgrid">{% for m in members %}{% include "members/_card.html" with mode="views" %}{% endfor %}</div>
+    {% else %}<div class="box empty"><p>No profile views {% if tab != 'all' or f.show or f.city or f.age %}for this filter{% else %}yet{% endif %}. A complete profile with clear photos gets more views. <a class="mag" href="{% url 'm_profile_edit' %}">Complete your profile</a></p></div>{% endif %}
+  </div>
+  <aside>
+    <div class="sumbox pink"><h3><svg class="mag"><use href="#m-eye"/></svg>Profile Views Summary</h3>
+      {% for ic, label, n in summary %}<div class="srow"><svg class="mag"><use href="#m-{{ ic }}"/></svg>{{ label }}<b>{{ n }}</b></div>{% endfor %}</div>
+    <div class="sumbox yel"><h3><svg class="gold"><use href="#m-star"/></svg>Top Viewers</h3>
+      <ul class="tops">{% for m in top %}<li><a href="{% url 'member' m.pk %}"><span class="cav xs">{% if m.photo and m.can_see_photo|default_if_none:True %}<img src="{{ m.photo.url }}" alt="">{% else %}<b>{{ m.name|first }}</b>{% endif %}</span>
+        <span><b>{{ m.first_name }}, {{ m.age }}</b><small>Viewed {{ m.view_count }} time{{ m.view_count|pluralize }}</small></span><svg><use href="#m-chev-r"/></svg></a></li>{% empty %}<li class="muted">No viewers yet.</li>{% endfor %}</ul></div>
+    <div class="sumbox grn"><h3><svg class="ok"><use href="#m-bulb"/></svg>Tips to Get More Views</h3>
+      <ul class="tlist"><li><svg><use href="#m-check-c"/></svg>Complete your profile fully</li><li><svg><use href="#m-check-c"/></svg>Add clear and recent photos</li><li><svg><use href="#m-check-c"/></svg>Write an interesting bio</li>
+        <li><svg><use href="#m-check-c"/></svg>Be active and respond to messages</li><li><svg><use href="#m-check-c"/></svg>Upgrade to Premium for more visibility</li></ul></div>
+  </aside>
+</div>
+{% endblock %}

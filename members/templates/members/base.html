@@ -1,0 +1,67 @@
+{% load static %}<!doctype html>
+<html lang="{% if me.ui_language == 'sw' %}sw{% else %}en{% endif %}" data-theme="{{ me.ui_theme|default:'light' }}"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0d4a31">
+<title>{% block title %}{{ title|default:"Dashboard" }}{% endblock %} - {{ site.brand }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/member.css' %}"></head>
+<body class="{% if no_sidebar %}no-sb{% endif %}">
+{% include "members/icons.html" %}
+<header class="mh">
+  <button class="mh-burger" id="sb-open" aria-label="Menu"><span></span><span></span><span></span></button>
+  <a class="mh-logo" href="{% url 'm_dashboard' %}">
+    <svg viewBox="0 0 48 44" aria-hidden="true"><circle cx="13" cy="6.500" r="5" fill="#a0123c"/><circle cx="35" cy="6.500" r="5" fill="#0f5a39"/>
+      <path fill="#a0123c" d="M24 42C13 34 3.500 26.500 3.500 19.500 3.500 14.500 7 12 11 12c2.200 0 4.300.800 6 2.300-2.800.200-5 2.300-5 5.400 0 6.300 6.800 12.600 12 16.300z"/>
+      <path fill="#0f5a39" d="M24 42c11-8 20.500-15.500 20.500-22.500 0-5-3.500-7.500-7.500-7.500-5.300 0-9.300 4.400-13 10.700-2.200-3.700-4.500-6.400-7.200-7.800 3.400.600 6.700 3.900 8.200 8.300 3.300-5.200 6.400-7.200 9-7.200 2.500 0 4 1.700 4 4.500 0 6.200-8 13.300-18 21.500z"/>
+      <path fill="#e2a83a" d="M24 20c1.500-2.300 3.300-3.800 5-4.300-1.400 1.300-2.700 3.300-3.600 6z"/></svg>
+    <span><b>{{ site.brand }}</b><small>Pata Mwenza, Pata Utulivu</small></span></a>
+  {% if not no_search %}<form class="mh-search" action="{% url 'm_find' %}" method="get"><input name="q" placeholder="{{ search_hint|default:'Search members by name, location, age...' }}" value="{{ request.GET.q|default:'' }}"><button aria-label="Search"><svg><use href="#m-search"/></svg></button></form>{% endif %}
+  <nav class="mh-nav">
+    {% if header_nav == 'notify' %}
+    <a href="{% url 'm_notifications' %}" class="{% if nav == 'notifications' %}on{% endif %}"><span class="ni"><svg><use href="#m-bell"/></svg>{% if n_notes %}<i>{{ n_notes }}</i>{% endif %}</span>Notifications</a>
+    {% else %}
+    <a href="{% url 'home' %}"><span class="ni"><svg><use href="#m-home"/></svg></span>Home</a>
+    <a href="{% url 'm_find' %}" class="{% if nav == 'find' %}on{% endif %}"><span class="ni"><svg><use href="#m-search"/></svg></span>Find a Match</a>
+    {% endif %}
+    <a href="{% url 'm_messages' %}" class="{% if nav == 'messages' %}on{% endif %}"><span class="ni"><svg><use href="#m-chat-o"/></svg>{% if unread %}<i>{{ unread }}</i>{% endif %}</span>Messages</a>
+    <a href="{% url 'm_matches' %}" class="{% if nav == 'matches' %}on{% endif %}"><span class="ni"><svg><use href="#m-heart-line"/></svg>{% if n_matches %}<i>{{ n_matches }}</i>{% endif %}</span>Matches</a>
+    {% if not hide_events_nav %}<a href="{% url 'm_events' %}" class="{% if nav == 'events' %}on{% endif %}"><span class="ni"><svg><use href="#m-cal"/></svg></span>Events</a>{% endif %}
+    {% if no_sidebar %}<a href="{% url 'm_dashboard' %}"><span class="ni"><svg><use href="#m-more"/></svg></span>More</a>{% endif %}
+  </nav>
+  <details class="mh-user"><summary><span class="av">{% if me.photo %}<img src="{{ me.photo.url }}" alt="">{% else %}{{ me.name|default:user.get_username|first|upper }}{% endif %}</span>
+    <span class="who"><b>{{ me.first_name|default:user.get_username }}</b><small>{% if me.is_premium %}Premium Member{% else %}Member{% endif %}</small></span><svg><use href="#m-chev-d"/></svg></summary>
+    <div class="mh-menu"><a href="{% url 'm_profile' %}">My Profile</a><a href="{% url 'm_settings' %}">Settings</a><a href="{% url 'home' %}">Main website</a>{% if user.is_staff %}<a href="{% url 'dashboard' %}">Admin dashboard</a>{% endif %}
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button>Logout</button></form></div></details>
+</header>
+<div class="mwrap">
+  {% if not no_sidebar %}
+  <aside class="msb" id="msb">
+    <nav>
+      <a href="{% url 'm_dashboard' %}" class="{% if nav == 'dashboard' %}on{% endif %}"><svg><use href="#m-home"/></svg>Dashboard</a>
+      <a href="{% url 'm_find' %}" class="{% if nav == 'find' %}on{% endif %}"><svg><use href="#m-search"/></svg>Find a Match</a>
+      <a href="{% url 'm_matches' %}" class="{% if nav == 'matches' %}on{% endif %}"><svg><use href="#m-heart"/></svg>My Matches</a>
+      <a href="{% url 'm_messages' %}" class="{% if nav == 'messages' %}on{% endif %}"><svg><use href="#m-chat"/></svg>Messages{% if unread %}<i>{{ unread }}</i>{% endif %}</a>
+      <a href="{% url 'm_profile' %}" class="{% if nav == 'profile' %}on{% endif %}"><svg><use href="#m-user"/></svg>My Profile</a>
+      <a href="{% url 'm_views' %}" class="{% if nav == 'views' %}on{% endif %}"><svg><use href="#m-eye"/></svg>Profile Views</a>
+      <a href="{% url 'm_liked' %}" class="{% if nav == 'liked' %}on{% endif %}"><svg class="hot"><use href="#m-heart"/></svg>Who Liked Me{% if new_likes %}<i>{{ new_likes }}</i>{% endif %}</a>
+      <a href="{% url 'm_activity' %}" class="{% if nav == 'activity' %}on{% endif %}"><svg><use href="#m-cal"/></svg>My Activities</a>
+      <a href="{% url 'm_events' %}" class="{% if nav == 'events' %}on{% endif %}"><svg><use href="#m-cal-o"/></svg>Events</a>
+      <a href="{% url 'm_membership' %}" class="{% if nav == 'membership' %}on{% endif %}"><svg class="gold"><use href="#m-crown"/></svg>Membership</a>
+      <a href="{% url 'm_safety' %}" class="{% if nav == 'safety' %}on{% endif %}"><svg><use href="#m-shield"/></svg>Safety &amp; Privacy</a>
+      <a href="{% url 'm_settings' %}" class="{% if nav == 'settings' %}on{% endif %}"><svg><use href="#m-gear"/></svg>Settings</a>
+      <a href="{% url 'm_help' %}" class="{% if nav == 'help' %}on{% endif %}"><svg><use href="#m-help"/></svg>Help &amp; Support</a>
+    </nav>
+    <div class="msb-art"><img src="{% static 'img/member/side_art.jpg' %}" alt="">
+      <p>{% if nav == 'dashboard' %}&ldquo;Na katika Ishara Zake ni kuwa Amekuumbieni wake zenu kutokana na nafsi zenu ili mpate utulivu kwao...&rdquo;<span>(Qur'an 30:21)</span>
+      {% else %}&ldquo;Na katika kila kitu tumeumba kwa jozi.&rdquo;<span>(Qur'an 51:49)</span>{% endif %}</p></div>
+  </aside>
+  <div class="mscrim" id="sb-scrim" hidden></div>
+  {% endif %}
+  <main class="mmain">
+    {% if messages %}<div class="mflash">{% for m in messages %}<p class="{{ m.tags }}">{{ m }}</p>{% endfor %}</div>{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+<script src="{% static 'js/member.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body></html>

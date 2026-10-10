@@ -19,6 +19,8 @@ class SiteSetting(models.Model):
     advert_image = models.ImageField(upload_to="site/", blank=True, help_text="Photo on the Advertise Your Marriage Service card")
     currency = models.CharField(max_length=10, default="TSh")
     offer_text = models.CharField(max_length=160, blank=True, help_text="Premium page special offer. Leave blank to hide the offer.")
+    payment_instructions = models.TextField(blank=True, default="Lipa kwa M-Pesa, Mixx by Yas au Airtel Money, kisha weka namba ya muamala (transaction reference) hapa chini. Tutathibitisha malipo na kuwasha mpango wako.",
+        help_text="Shown to members on the Membership page when they upgrade, e.g. your Lipa Namba / till number.")
     contact_email = models.EmailField(blank=True)
     contact_whatsapp = models.CharField(max_length=20, blank=True, help_text="WhatsApp number with country code, e.g. 255712345678")
     @property
@@ -78,6 +80,34 @@ class Member(models.Model):
     joined = models.DateTimeField(default=timezone.now)
     last_seen = models.DateTimeField(null=True, blank=True)
     plan = models.ForeignKey("Plan", on_delete=models.SET_NULL, null=True, blank=True, related_name="members")
+    PRACTICE = [("practising", "Practising"), ("moderate", "Moderately practising"), ("learning", "Learning / revert")]
+    practice = models.CharField(max_length=12, choices=PRACTICE, default="practising", verbose_name="Religiosity")
+    headline = models.CharField(max_length=120, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    interests = models.CharField(max_length=250, blank=True, help_text="Comma separated, e.g. Qur'an, Travel, Reading")
+    lifestyle = models.CharField(max_length=250, blank=True, help_text="Comma separated, e.g. Healthy lifestyle, Open-minded")
+    # privacy (Safety & Privacy page)
+    VISIBILITY = [("all", "All Members"), ("verified", "Verified Members Only"), ("premium", "Premium Members Only"), ("hidden", "Hidden")]
+    MESSAGES_FROM = [("all", "All Members"), ("verified", "Verified Members Only"), ("matched", "Matched Members Only")]
+    LOCATION_SHOW = [("city", "City/Region Only"), ("country", "Country Only")]
+    profile_visibility = models.CharField(max_length=10, choices=VISIBILITY, default="all")
+    photo_visibility = models.CharField(max_length=10, choices=VISIBILITY[:3], default="all")
+    show_online = models.BooleanField(default=True)
+    show_age = models.BooleanField(default=True)
+    location_display = models.CharField(max_length=10, choices=LOCATION_SHOW, default="city")
+    allow_messages_from = models.CharField(max_length=10, choices=MESSAGES_FROM, default="all")
+    show_in_search = models.BooleanField(default=True)
+    # notification preferences (Settings page)
+    notify_messages = models.BooleanField(default=True)
+    notify_likes = models.BooleanField(default=True)
+    notify_matches = models.BooleanField(default=True)
+    notify_events = models.BooleanField(default=True)
+    notify_system = models.BooleanField(default=True)
+    LANGUAGES = [("en", "English"), ("sw", "Kiswahili")]
+    THEMES = [("light", "Light Mode"), ("dark", "Dark Mode")]
+    ui_language = models.CharField(max_length=2, choices=LANGUAGES, default="en", verbose_name="Language")
+    ui_theme = models.CharField(max_length=5, choices=THEMES, default="light", verbose_name="Theme")
+    likes_seen_at = models.DateTimeField(null=True, blank=True)
     premium_until = models.DateField(null=True, blank=True)
     # quick info and lifestyle
     height_cm = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name="Height (cm)")
@@ -127,7 +157,7 @@ class Member(models.Model):
     def goal_text(self):
         return self.goal or f"Ndoa yenye utulivu, upendo, heshima na misingi ya {'Kiislamu' if self.religion == 'Islam' else 'Kikristo'}."
     @property
-    def is_online(self): return bool(self.last_seen and timezone.now() - self.last_seen < timedelta(minutes=5))
+    def is_online(self): return bool(self.show_online and self.last_seen and timezone.now() - self.last_seen < timedelta(minutes=5))
     @property
     def photo_total(self):
         extra = getattr(self, "extra_photos", None)
@@ -139,6 +169,37 @@ class Member(models.Model):
 
     @property
     def pronoun(self): return "Her" if self.gender == "F" else "His"
+    @property
+    def first_name(self): return (self.name.split() or [""])[0]
+    @property
+    def practice_label(self):
+        faith = "Muslim" if self.religion == "Islam" else "Christian"
+        return {"practising": f"Practising {faith}", "moderate": f"Moderately practising {faith}", "learning": f"Learning {faith}"}[self.practice]
+    @property
+    def interest_list(self): return [t.strip() for t in self.interests.split(",") if t.strip()]
+    @property
+    def lifestyle_list(self): return [t.strip() for t in self.lifestyle.split(",") if t.strip()]
+    @property
+    def location_text(self): return f"{self.city}, Tanzania" if self.location_display == "city" else "Tanzania"
+    def visible_to(self, viewer_member):
+        """Profile visibility setting, as seen by another member (or None for staff / anonymous checks)."""
+        v = self.profile_visibility
+        if v == "all": return True
+        if viewer_member is None: return False
+        if v == "verified": return viewer_member.verified
+        if v == "premium": return viewer_member.is_premium
+        return False
+    def can_message(self, sender_member):
+        rule = self.allow_messages_from
+        if rule == "all": return True
+        if sender_member is None: return False
+        if rule == "verified": return sender_member.verified
+        return Like.objects.filter(user=self.user, member=sender_member).exists() if self.user_id else False
+    def save(self, *args, **kwargs):
+        if self.birth_date:
+            t = timezone.localdate(); b = self.birth_date
+            self.age = t.year - b.year - ((t.month, t.day) < (b.month, b.day))
+        super().save(*args, **kwargs)
     @property
     def is_premium(self): return bool(self.plan_id and self.premium_until and self.premium_until >= timezone.localdate())
 
@@ -182,6 +243,12 @@ class Event(models.Model):
     description = models.CharField(max_length=200, blank=True)
     image = models.ImageField(upload_to="events/", blank=True)
     attendees = models.PositiveIntegerField(default=0, help_text="People already going before online registration (e.g. walk-ins).")
+    capacity = models.PositiveIntegerField(null=True, blank=True, help_text="Number of seats. Leave blank for no limit.")
+    tags = models.CharField(max_length=120, blank=True, help_text="Comma separated, e.g. Seminar, Education")
+    @property
+    def tag_list(self): return [t.strip() for t in self.tags.split(",") if t.strip()]
+    @property
+    def seats_left(self): return None if self.capacity is None else max(self.capacity - self.going, 0)
     class Meta: ordering = ["date"]
     def __str__(self): return self.title
     @property
@@ -200,7 +267,8 @@ class FeatureStrip(models.Model):
 class Message(models.Model):
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="sent_messages")
     to = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="inbox")
-    body = models.TextField(max_length=1000)
+    body = models.TextField(max_length=1000, blank=True)
+    image = models.ImageField(upload_to="messages/", blank=True)
     created = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
     class Meta: ordering = ["created"]
@@ -425,3 +493,50 @@ class Broadcast(models.Model):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="+")
     class Meta: ordering = ["-created"]
     def __str__(self): return self.subject
+
+
+# ----- member area -----
+class ProfileView(models.Model):
+    viewer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile_views_made")
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="profile_views")
+    created = models.DateTimeField(default=timezone.now)
+    class Meta: ordering = ["-created"]
+
+class Block(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="blocks")
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="blocked_by")
+    created = models.DateTimeField(auto_now_add=True)
+    class Meta: constraints = [models.UniqueConstraint(fields=["user", "member"], name="unique_block")]
+
+class ConversationState(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="conversation_states")
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="+")
+    favorite = models.BooleanField(default=False)
+    archived = models.BooleanField(default=False)
+    class Meta: constraints = [models.UniqueConstraint(fields=["user", "member"], name="unique_conversation_state")]
+
+class EventSave(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="saved_events")
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="saves")
+    class Meta: constraints = [models.UniqueConstraint(fields=["user", "event"], name="unique_event_save")]
+
+class SearchLog(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="searches")
+    summary = models.CharField(max_length=200)
+    results = models.PositiveIntegerField(default=0)
+    created = models.DateTimeField(auto_now_add=True)
+    class Meta: ordering = ["-created"]
+
+class SupportTicket(models.Model):
+    KINDS = [("contact", "Message to support"), ("ticket", "Technical ticket"), ("report", "Report an issue"), ("verification", "Verification request"),
+             ("feedback", "Feedback"), ("discount", "Discount code"), ("chat", "Live chat request")]
+    STATUS = [("open", "Open"), ("closed", "Closed")]
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="tickets")
+    kind = models.CharField(max_length=12, choices=KINDS, default="contact")
+    subject = models.CharField(max_length=150)
+    message = models.TextField(max_length=3000)
+    attachment = models.FileField(upload_to="support/", blank=True)
+    status = models.CharField(max_length=6, choices=STATUS, default="open")
+    created = models.DateTimeField(auto_now_add=True)
+    class Meta: ordering = ["-created"]
+    def __str__(self): return f"{self.get_kind_display()}: {self.subject}"

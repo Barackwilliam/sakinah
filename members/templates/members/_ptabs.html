@@ -1,0 +1,8 @@
+<nav class="ptabs">
+  <a href="{% url 'm_profile' %}" class="{% if tab == 'overview' %}on{% endif %}"><svg><use href="#m-user"/></svg>Overview</a>
+  <a href="{% url 'm_profile_edit' %}" class="{% if tab == 'edit' %}on{% endif %}"><svg><use href="#m-edit"/></svg>Edit Profile</a>
+  <a href="{% url 'm_photos' %}" class="{% if tab == 'photos' %}on{% endif %}"><svg><use href="#m-image"/></svg>Photos</a>
+  <a href="{% url 'm_prefs' %}" class="{% if tab == 'prefs' %}on{% endif %}"><svg><use href="#m-heart-o"/></svg>Preferences</a>
+  <a href="{% url 'm_verify' %}" class="{% if tab == 'verify' %}on{% endif %}"><svg><use href="#m-shield"/></svg>Verification</a>
+  <a href="{% url 'm_safety' %}"><svg><use href="#m-lock"/></svg>Privacy Settings</a>
+</nav>

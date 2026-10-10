@@ -1,0 +1,100 @@
+{% extends "members/base.html" %}{% block title %}My Profile{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="user" title="My Profile" sub="Manage your profile information to get better matches." quote="Na Mwenyezi Mungu aliwaumba kwa jozi." ref="Qur'an 78:8" art="mosque" %}
+{% include "members/_ptabs.html" %}
+<div class="pgrid">
+  <section class="box pcard">
+    <div class="pc-ph">{% if me.photo %}<img src="{{ me.photo.url }}" alt="">{% else %}<b>{{ me.name|first }}</b>{% endif %}<a href="{% url 'm_photos' %}" aria-label="Change photo"><svg><use href="#m-camera"/></svg></a></div>
+    <div class="pc-b">
+      <div class="pc-h"><h2>{{ me.name }}{% if me.verified %}<svg class="ok"><use href="#m-check-c"/></svg>{% endif %}</h2><a class="btn o sm" href="{% url 'm_profile_edit' %}">Edit Profile</a></div>
+      {% if me.is_premium %}<span class="prem"><svg><use href="#m-crown"/></svg>Premium Member</span>{% else %}<a class="prem free" href="{% url 'm_membership' %}">Free Member &middot; Upgrade</a>{% endif %}
+      <ul class="ilist">
+        <li><svg><use href="#m-user"/></svg>{{ me.age }} years old</li>
+        <li><svg><use href="#m-pin"/></svg>{{ me.location_text }}</li>
+        <li><svg><use href="#m-briefcase"/></svg>{{ me.occupation }}</li>
+        <li><svg><use href="#m-pray"/></svg>{{ me.practice_label }}</li>
+        <li><svg><use href="#m-x-c"/></svg>{% if me.marital_status == 'single' %}Never Married{% else %}{{ me.get_marital_status_display }}{% endif %}</li>
+        <li><svg><use href="#m-heart"/></svg>Seeking Marriage</li>
+      </ul>
+    </div>
+  </section>
+  <section class="box pcomp">
+    <h3 class="bh"><svg class="mag"><use href="#m-user"/></svg>Profile Completion</h3>
+    <div class="pc-row">
+      <div class="ring" style="--p:{{ comp.pct }}"><b>{{ comp.pct }}%</b></div>
+      <div><ul class="chk">{% for s in comp.sections %}<li class="{% if s.done %}y{% endif %}"><svg><use href="#m-{% if s.done %}check-c{% else %}circle{% endif %}"/></svg>{{ s.name }}</li>{% endfor %}</ul>
+        <a class="btn" href="{% if comp.pct < 100 %}{% url 'm_profile_edit' %}{% else %}{% url 'm_verify' %}{% endif %}">Complete Profile<svg><use href="#m-arrow"/></svg></a></div>
+    </div>
+  </section>
+  <section class="sumbox grn qact">
+    <h3><svg class="ok"><use href="#m-people"/></svg>Quick Actions</h3>
+    <ul class="links">
+      <li><a href="{% url 'm_profile_edit' %}"><svg><use href="#m-edit"/></svg>Edit Profile<svg><use href="#m-chev-r"/></svg></a></li>
+      <li><a href="{% url 'm_photos' %}"><svg><use href="#m-image"/></svg>Manage Photos<svg><use href="#m-chev-r"/></svg></a></li>
+      <li><a href="{% url 'm_prefs' %}"><svg class="mag"><use href="#m-heart"/></svg>Update Preferences<svg><use href="#m-chev-r"/></svg></a></li>
+      <li><a href="{% url 'm_verify' %}"><svg class="ok"><use href="#m-shield"/></svg>Verify Account<svg><use href="#m-chev-r"/></svg></a></li>
+      <li><a href="{% url 'm_safety' %}"><svg class="ok"><use href="#m-lock"/></svg>Privacy Settings<svg><use href="#m-chev-r"/></svg></a></li>
+    </ul>
+  </section>
+  <section class="box pabout">
+    <h3 class="bh"><svg class="mag"><use href="#m-user"/></svg>About Me<a class="ed" href="{% url 'm_profile_edit' %}#about"><svg><use href="#m-edit"/></svg>Edit</a></h3>
+    <p class="bio">{{ me.bio|default:"Tell other members about yourself, your values and what you are looking for." }}</p>
+    <dl class="facts">
+      <div><dt><svg><use href="#m-user"/></svg>Height</dt><dd>{% if me.height_cm %}{{ me.height_cm }} cm{% else %}&mdash;{% endif %}</dd></div>
+      <div><dt><svg><use href="#m-user"/></svg>Body Type</dt><dd>{{ me.body_type|default:"&mdash;" }}</dd></div>
+      <div><dt><svg><use href="#m-people"/></svg>Ethnicity</dt><dd>{{ me.origin|default:"&mdash;" }}</dd></div>
+      <div><dt><svg><use href="#m-globe"/></svg>Language</dt><dd>{{ me.languages|default:"&mdash;" }}</dd></div>
+      <div><dt><svg><use href="#m-cap"/></svg>Education</dt><dd>{{ me.education|default:"&mdash;" }}</dd></div>
+      <div><dt><svg><use href="#m-briefcase"/></svg>Profession</dt><dd>{{ me.occupation|default:"&mdash;" }}</dd></div>
+      <div><dt><svg><use href="#m-card"/></svg>Income Range</dt><dd>{{ me.income_range|default:"&mdash;" }}</dd></div>
+      <div><dt><svg><use href="#m-pin"/></svg>Residence</dt><dd>{{ me.city }}, Tanzania</dd></div>
+      <div><dt><svg><use href="#m-send"/></svg>Willing to Relocate</dt><dd>{{ me.willing_to_relocate|default:"&mdash;" }}</dd></div>
+    </dl>
+  </section>
+  <section class="box pphotos">
+    <h3 class="bh"><svg class="mag"><use href="#m-camera"/></svg>My Photos ({{ n_photos }}/6)<a class="ed" href="{% url 'm_photos' %}"><svg><use href="#m-edit"/></svg>Edit Photos</a></h3>
+    <div class="phgrid">
+      {% if me.photo %}<figure><img src="{{ me.photo.url }}" alt=""><form method="post" action="{% url 'm_photo_main' %}" data-confirm="Remove your main photo?">{% csrf_token %}<input type="hidden" name="act" value="delete"><input type="hidden" name="next" value="{{ request.path }}"><button aria-label="Remove"><svg><use href="#m-close"/></svg></button></form></figure>{% endif %}
+      {% for p in photos %}<figure><img src="{{ p.image.url }}" alt=""><form method="post" action="{% url 'm_photo_action' p.pk %}" data-confirm="Remove this photo?">{% csrf_token %}<input type="hidden" name="act" value="delete"><input type="hidden" name="next" value="{{ request.path }}"><button aria-label="Remove"><svg><use href="#m-close"/></svg></button></form></figure>{% endfor %}
+      {% for i in empty_slots %}<a class="phadd" href="{% url 'm_photos' %}"><svg><use href="#m-camera"/></svg>Add Photo<small>(Optional)</small></a>{% endfor %}
+    </div>
+  </section>
+  <section class="box pstat">
+    <h3 class="bh"><svg class="mag"><use href="#m-shield"/></svg>Account Status</h3>
+    <ul class="stl">
+      <li><a href="{% url 'm_settings' %}"><svg class="{% if user.email %}ok{% else %}muted{% endif %}"><use href="#m-{% if user.email %}check-c{% else %}circle{% endif %}"/></svg>{% if user.email %}Email Verified{% else %}Add your email{% endif %}<svg><use href="#m-chev-r"/></svg></a></li>
+      <li><a href="{% url 'm_verify' %}"><svg class="{% if me.verified %}ok{% else %}muted{% endif %}"><use href="#m-{% if me.verified %}check-c{% else %}circle{% endif %}"/></svg>{% if me.verified %}Profile Verified{% else %}Not Verified Yet{% endif %}<svg><use href="#m-chev-r"/></svg></a></li>
+      <li class="pm"><a href="{% url 'm_membership' %}"><svg class="gold"><use href="#m-crown"/></svg>{% if me.is_premium %}Premium Member{% else %}Free Member{% endif %}<svg><use href="#m-chev-r"/></svg></a></li>
+      <li><span><i class="dot {% if me.profile_visibility == 'hidden' %}off{% endif %}"></i>{% if me.profile_visibility == 'hidden' %}Hidden{% else %}Active{% endif %}</span></li>
+    </ul>
+  </section>
+</div>
+<div class="pgrid2">
+  <section class="box">
+    <h3 class="bh"><svg class="mag"><use href="#m-heart"/></svg>Partner Preferences<a class="ed" href="{% url 'm_prefs' %}"><svg><use href="#m-edit"/></svg>Edit</a></h3>
+    <dl class="facts">
+      <div><dt><svg><use href="#m-user"/></svg>Looking for</dt><dd>{% if me.gender == 'M' %}Female{% else %}Male{% endif %}</dd></div>
+      <div><dt><svg><use href="#m-cal"/></svg>Age Range</dt><dd>{% if me.pref_age_min %}{{ me.pref_age_min }} &ndash; {{ me.pref_age_max }} years{% else %}Any{% endif %}</dd></div>
+      <div><dt><svg><use href="#m-people"/></svg>Marital Status</dt><dd>{{ me.pref_marital|default:"Any" }}</dd></div>
+      <div><dt><svg><use href="#m-cap"/></svg>Education</dt><dd>{{ me.pref_education|default:"Any" }}</dd></div>
+      <div><dt><svg><use href="#m-pin"/></svg>Location</dt><dd>{{ me.pref_location|default:"Any" }}</dd></div>
+      <div><dt><svg><use href="#m-pray"/></svg>Religiosity</dt><dd>{{ me.pref_prayer|default:"Any" }}{% if me.pref_more %}<small>{{ me.pref_more }}</small>{% else %}<small>Open to discussion</small>{% endif %}</dd></div>
+    </dl>
+  </section>
+  <section class="box">
+    <h3 class="bh"><svg class="mag"><use href="#m-people"/></svg>Interests &amp; Lifestyle<a class="ed" href="{% url 'm_profile_edit' %}#interests"><svg><use href="#m-edit"/></svg>Edit</a></h3>
+    <div class="chips">{% for i in me.interest_list %}<span class="{% cycle 'cg' 'cg' 'cp' 'cp' 'cg' 'cp' 'cg' 'cp' 'cg' %}">{{ i }}</span>{% empty %}<p class="muted">Add your interests so others know you better.</p>{% endfor %}</div>
+    <ul class="life">
+      {% if not me.smokes %}<li><svg><use href="#m-ban"/></svg>Non-smoker</li>{% endif %}
+      {% if not me.drinks %}<li><svg><use href="#m-ban"/></svg>No alcohol</li>{% endif %}
+      {% for l in me.lifestyle_list %}<li><svg><use href="#m-{% cycle 'heart-o' 'home' 'people' 'star' %}"/></svg>{{ l }}</li>{% endfor %}
+    </ul>
+  </section>
+  <section class="box">
+    <h3 class="bh"><svg class="mag"><use href="#m-eye"/></svg>Profile Visibility<a class="ed" href="{% url 'm_safety' %}"><svg><use href="#m-edit"/></svg>Edit</a></h3>
+    <form class="vradios" method="post" action="{% url 'm_visibility' %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}">
+      {% for v, label in visibility_choices %}<label><input type="radio" name="profile_visibility" value="{{ v }}" {% if me.profile_visibility == v %}checked{% endif %} onchange="this.form.submit()"><span></span>{{ label }}</label>{% endfor %}
+      <noscript><button class="btn sm">Save</button></noscript></form>
+  </section>
+</div>
+{% endblock %}

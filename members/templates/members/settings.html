@@ -1,0 +1,97 @@
+{% extends "members/base.html" %}{% block title %}Settings{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="gear" title="Settings" sub="Manage your account, preferences and privacy to get the best experience on Sakinah." quote="Na Mwenyezi Mungu aliwaumba kwa jozi." ref="Qur'an 78:8" art="mosque" %}
+<nav class="ptabs st-tabs">
+  <a href="#account" class="on"><svg><use href="#m-user"/></svg>Account Settings</a>
+  <a href="#profile"><svg><use href="#m-edit"/></svg>Profile Settings</a>
+  <a href="{% url 'm_safety' %}?tab=privacy"><svg><use href="#m-shield"/></svg>Privacy Settings</a>
+  <a href="#notify"><svg><use href="#m-bell"/></svg>Notification Settings</a>
+  <a href="#prefs"><svg><use href="#m-sliders"/></svg>Preferences</a>
+  <a href="{% url 'm_safety' %}?tab=blocked"><svg><use href="#m-ban"/></svg>Blocked Users</a>
+  <a href="#look"><svg><use href="#m-globe"/></svg>Language</a>
+</nav>
+<div class="st-g">
+  {% with f=forms.account %}
+  <form class="box stc" id="account" method="post" enctype="multipart/form-data">{% csrf_token %}<input type="hidden" name="section" value="account">
+    <header class="sth grn"><svg class="ok"><use href="#m-user"/></svg><div><h3>Account Information</h3><p>Update your basic account details.</p></div></header>
+    <div class="acc">
+      <label class="acc-ph">{% if me.photo %}<img src="{{ me.photo.url }}" alt="" id="acc-img">{% else %}<b id="acc-img">{{ me.name|first }}</b>{% endif %}<span><svg><use href="#m-camera"/></svg></span>
+        <input type="file" name="account-photo" accept="image/*" hidden onchange="var r=new FileReader(),i=document.getElementById('acc-img');r.onload=function(){if(i.tagName=='IMG')i.src=r.result};r.readAsDataURL(this.files[0])"></label>
+      <div class="acc-f">
+        <label class="ff"><span>{{ f.name.label }}</span>{{ f.name }}{% for e in f.name.errors %}<em>{{ e }}</em>{% endfor %}</label>
+        <label class="ff"><span>Email Address</span>{{ f.email }}{% for e in f.email.errors %}<em>{{ e }}</em>{% endfor %}</label>
+      </div>
+    </div>
+    {% include "members/_hfield.html" with f=f.birth_date %}{% include "members/_hfield.html" with f=f.gender %}{% include "members/_hfield.html" with f=f.city %}
+    {% for e in f.photo.errors %}<p class="ferr">{{ e }}</p>{% endfor %}
+    <div class="stb"><button class="btn">Save Changes</button></div>
+  </form>
+  {% endwith %}
+
+  {% with f=forms.profile %}
+  <form class="box stc" id="profile" method="post">{% csrf_token %}<input type="hidden" name="section" value="profile">
+    <header class="sth pink"><svg class="mag"><use href="#m-edit"/></svg><div><h3>Profile Settings</h3><p>Manage how your profile appears to others.</p></div></header>
+    {% for x in f %}{% include "members/_hfield.html" with f=x %}{% endfor %}
+    <div class="stb"><button class="btn">Save Changes</button></div>
+  </form>
+  {% endwith %}
+
+  <section class="box stc sec">
+    <header class="sth grn"><svg class="ok"><use href="#m-lock"/></svg><div><h3>Security Settings</h3><p>Keep your account safe and secure.</p></div></header>
+    <ul class="stl2">
+      <li><a href="{% url 'm_password' %}"><svg><use href="#m-key"/></svg><span><b>Change Password</b><small>Update your password regularly</small></span><svg class="chev"><use href="#m-chev-r"/></svg></a></li>
+      <li><div title="Coming soon"><svg><use href="#m-shield"/></svg><span><b>Two-Factor Authentication</b><small>Coming soon &ndash; extra layer of security</small></span><i class="sw off"></i></div></li>
+      <li><form method="post" action="{% url 'm_sessions' %}" {% if other_sessions %}data-confirm="Log out of {{ other_sessions }} other session{{ other_sessions|pluralize }}?"{% endif %}>{% csrf_token %}<button {% if not other_sessions %}type="button"{% endif %}><svg><use href="#m-monitor"/></svg><span><b>Login Sessions</b><small>{% if other_sessions %}{{ other_sessions }} other active session{{ other_sessions|pluralize }} &middot; log out{% else %}Only this device is logged in{% endif %}</small></span>{% if other_sessions %}<svg class="chev"><use href="#m-chev-r"/></svg>{% endif %}</button></form></li>
+      <li><a href="#account"><svg><use href="#m-mail"/></svg><span><b>Email Verification</b><small>{% if user.email %}{{ user.email }}{% else %}Add your email address{% endif %}</small></span>{% if user.email %}<em class="vf"><svg><use href="#m-check-c"/></svg>Added</em>{% endif %}</a></li>
+      <li><a href="{% url 'm_verify' %}"><svg><use href="#m-doc"/></svg><span><b>Identity Verification</b><small>Verify your identity for more trust</small></span>{% if me.verified %}<em class="vf"><svg><use href="#m-check-c"/></svg>Verified</em>{% else %}<svg class="chev"><use href="#m-chev-r"/></svg>{% endif %}</a></li>
+    </ul>
+  </section>
+
+  {% with f=forms.notify %}
+  <form class="box stc" id="notify" method="post">{% csrf_token %}<input type="hidden" name="section" value="notify">
+    <header class="sth pink"><svg class="mag"><use href="#m-bell"/></svg><div><h3>Notification Settings</h3><p>Choose what notifications you want to receive.</p></div></header>
+    <label class="prow"><svg><use href="#m-chat"/></svg><span><b>New Messages</b><small>Get notified when you receive a message</small></span>{{ f.notify_messages }}<i class="sw"></i></label>
+    <label class="prow"><svg><use href="#m-heart"/></svg><span><b>Likes and Profile Views</b><small>Get notified when someone likes your profile</small></span>{{ f.notify_likes }}<i class="sw"></i></label>
+    <label class="prow"><svg><use href="#m-people"/></svg><span><b>Match Suggestions</b><small>New mutual matches</small></span>{{ f.notify_matches }}<i class="sw"></i></label>
+    <label class="prow"><svg><use href="#m-cal"/></svg><span><b>Events and Activities</b><small>Updates about events and activities</small></span>{{ f.notify_events }}<i class="sw"></i></label>
+    <label class="prow"><svg><use href="#m-bolt"/></svg><span><b>System Updates</b><small>Important announcements</small></span>{{ f.notify_system }}<i class="sw"></i></label>
+    <div class="stb"><button class="btn">Save Changes</button></div>
+  </form>
+  {% endwith %}
+
+  {% with f=forms.prefs %}
+  <form class="box stc" id="prefs" method="post">{% csrf_token %}<input type="hidden" name="section" value="prefs">
+    <header class="sth pink"><svg class="mag"><use href="#m-sliders"/></svg><div><h3>Preferences</h3><p>Customize your matching preferences.</p></div></header>
+    <div class="hf"><span><svg><use href="#m-people"/></svg>Preferred Age Range</span><span class="hfi ages">{{ f.pref_age_min }}<i>to</i>{{ f.pref_age_max }}<i>yrs</i>{% for e in f.pref_age_max.errors %}<em>{{ e }}</em>{% endfor %}</span></div>
+    <label class="hf"><span><svg><use href="#m-pin"/></svg>Preferred Location</span><span class="hfi">{{ f.pref_location }}</span></label>
+    <label class="hf"><span><svg><use href="#m-cap"/></svg>Preferred Education Level</span><span class="hfi">{{ f.pref_education }}</span></label>
+    <label class="hf"><span><svg><use href="#m-heart"/></svg>Preferred Marital Status</span><span class="hfi">{{ f.pref_marital }}</span></label>
+    <label class="hf"><span><svg><use href="#m-pray"/></svg>Religious Practice</span><span class="hfi">{{ f.pref_prayer }}</span></label>
+    <div class="stb"><a class="mag sm-l" href="{% url 'm_prefs' %}">All preferences</a><button class="btn">Save Changes</button></div>
+  </form>
+  {% endwith %}
+
+  <div class="st-col">
+    {% with f=forms.look %}
+    <form class="box stc" id="look" method="post">{% csrf_token %}<input type="hidden" name="section" value="look">
+      <header class="sth blu"><svg style="color:#1d4ed8"><use href="#m-globe"/></svg><div><h3>Language &amp; Appearance</h3><p>Set your language and theme preference.</p></div></header>
+      <label class="hf"><span>Language</span><span class="hfi">{{ f.ui_language }}</span></label>
+      <label class="hf"><span>Theme</span><span class="hfi">{{ f.ui_theme }}</span></label>
+      <div class="stb"><button class="btn">Save</button></div>
+    </form>
+    {% endwith %}
+    <section class="box stc" id="data">
+      <header class="sth pink"><svg class="mag"><use href="#m-gear"/></svg><div><h3>Account Actions</h3></div></header>
+      <ul class="stl2" id="actions">
+        <li><a href="{% url 'm_export' %}"><svg class="mag"><use href="#m-download"/></svg><span><b>Download My Data</b><small>Get a copy of your data</small></span><svg class="chev"><use href="#m-chev-r"/></svg></a></li>
+        <li><form method="post" action="{% url 'm_deactivate' %}" data-confirm="{% if me.profile_visibility == 'hidden' %}Reactivate your account and show your profile again?{% else %}Deactivate your account? Your profile will be hidden until you reactivate it.{% endif %}">{% csrf_token %}<button><svg class="mag"><use href="#m-pause"/></svg><span><b>{% if me.profile_visibility == 'hidden' %}Reactivate Account{% else %}Deactivate Account{% endif %}</b><small>{% if me.profile_visibility == 'hidden' %}Your profile is hidden now{% else %}Temporarily hide your account{% endif %}</small></span><svg class="chev"><use href="#m-chev-r"/></svg></button></form></li>
+        <li><details class="del"><summary><svg class="mag"><use href="#m-trash"/></svg><span><b>Delete Account</b><small>Permanently delete your account</small></span><svg class="chev"><use href="#m-chev-r"/></svg></summary>
+          <form method="post" action="{% url 'm_delete' %}" data-confirm="This permanently deletes your account, profile, messages and likes. Continue?">{% csrf_token %}<p>Enter your password to confirm. This cannot be undone.</p><input type="password" name="password" required autocomplete="current-password" placeholder="Your password"><button class="btn sm">Delete my account</button></form></details></li>
+      </ul>
+    </section>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script>
+(function(){var tabs=document.querySelectorAll('.st-tabs a[href^="#"]');tabs.forEach(function(a){a.addEventListener('click',function(){document.querySelectorAll('.st-tabs a').forEach(function(x){x.classList.remove('on')});a.classList.add('on')})});
+var h=location.hash&&document.querySelector('.st-tabs a[href="'+location.hash+'"]');if(h){document.querySelectorAll('.st-tabs a').forEach(function(x){x.classList.remove('on')});h.classList.add('on')}})();</script>{% endblock %}

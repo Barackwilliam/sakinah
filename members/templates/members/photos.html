@@ -1,0 +1,28 @@
+{% extends "members/base.html" %}{% block title %}My Photos{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="user" title="My Profile" sub="Manage your profile information to get better matches." quote="Na Mwenyezi Mungu aliwaumba kwa jozi." ref="Qur'an 78:8" art="mosque" %}
+{% include "members/_ptabs.html" %}
+<div class="page-g">
+  <section class="box fsec">
+    <h3 class="bh"><svg class="mag"><use href="#m-camera"/></svg>My Photos ({{ n_photos }}/6)</h3>
+    <div class="phgrid big">
+      {% if me.photo %}<figure><img src="{{ me.photo.url }}" alt=""><span class="phmain">Main photo</span>
+        <form method="post" action="{% url 'm_photo_main' %}" data-confirm="Remove your main photo?">{% csrf_token %}<input type="hidden" name="act" value="delete"><button aria-label="Remove"><svg><use href="#m-close"/></svg></button></form></figure>{% endif %}
+      {% for p in photos %}<figure><img src="{{ p.image.url }}" alt="">
+        <form method="post" action="{% url 'm_photo_action' p.pk %}" data-confirm="Remove this photo?">{% csrf_token %}<input type="hidden" name="act" value="delete"><button aria-label="Remove"><svg><use href="#m-close"/></svg></button></form>
+        <form class="mkmain" method="post" action="{% url 'm_photo_action' p.pk %}">{% csrf_token %}<input type="hidden" name="act" value="main"><button class="btn sm lt">Make main</button></form></figure>{% endfor %}
+      {% if n_photos < 6 %}
+      <form class="phadd up" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <label><svg><use href="#m-camera"/></svg>Add Photo<small>JPG or PNG</small><input type="file" name="image" accept="image/*" onchange="this.form.submit()" hidden></label></form>
+      {% endif %}
+    </div>
+    {% for e in form.image.errors %}<p class="ferr">{{ e }}</p>{% endfor %}
+  </section>
+  <aside>
+    <div class="sumbox pink"><h3><svg class="mag"><use href="#m-image"/></svg>Photo Guidelines</h3>
+      <ul class="tick-list"><li>Use clear, recent photos of yourself</li><li>Modest dress that reflects Islamic values</li><li>No group photos as your main photo</li><li>No filters that change how you look</li><li>Up to 6 photos</li></ul></div>
+    <div class="sumbox grn"><h3><svg class="ok"><use href="#m-lock"/></svg>Who can see my photos?</h3>
+      <p class="fnote">Currently: <b>{{ me.get_photo_visibility_display }}</b>.</p><a class="btn g sm" href="{% url 'm_safety' %}">Change in Privacy Settings</a></div>
+  </aside>
+</div>
+{% endblock %}

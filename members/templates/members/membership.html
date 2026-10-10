@@ -1,0 +1,108 @@
+{% extends "members/base.html" %}{% load static humanize %}{% block title %}Membership{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="crown" title="Membership" sub="Choose a membership plan to unlock more features and find your life partner easily." quote="Na Mwenyezi Mungu aliwaumba kwa jozi." ref="Qur'an 78:8" art="mosque" %}
+<div class="page-g msg-g">
+  <div>
+    <nav class="ptabs">
+      <a href="?tab=plans" class="{% if tab == 'plans' %}on{% endif %}"><svg><use href="#m-crown"/></svg>Membership Plans</a>
+      <a href="?tab=compare" class="{% if tab == 'compare' %}on{% endif %}"><svg><use href="#m-cycle"/></svg>Compare Plans</a>
+      <a href="?tab=mine" class="{% if tab == 'mine' %}on{% endif %}"><svg><use href="#m-user"/></svg>My Membership</a>
+      <a href="?tab=history" class="{% if tab == 'history' %}on{% endif %}"><svg><use href="#m-card"/></svg>Payment History</a>
+      <a href="?tab=benefits" class="{% if tab == 'benefits' %}on{% endif %}"><svg><use href="#m-gift"/></svg>Benefits</a>
+      <a href="?tab=faq" class="{% if tab == 'faq' %}on{% endif %}"><svg><use href="#m-help"/></svg>FAQ</a>
+    </nav>
+
+    {% if show_pay %}
+    <section class="box paybox" id="pay">
+      <h3 class="bh"><svg class="mag"><use href="#m-card"/></svg>Upgrade your plan<a class="ed" href="?tab={{ tab }}">Close</a></h3>
+      <div class="pay-g">
+        <div class="pay-how"><b>How to pay</b><p>{{ site.payment_instructions|linebreaksbr }}</p>
+          <ol><li>Pay the amount for your plan by mobile money or bank.</li><li>Enter the phone number and the transaction reference below.</li><li>Our team confirms the payment and activates your plan.</li></ol></div>
+        <form method="post" class="fform">{% csrf_token %}
+          {% if form.non_field_errors %}<p class="ferr">{{ form.non_field_errors|join:" " }}</p>{% endif %}
+          <div class="fgrid two">{% for f in form %}{% include "members/_field.html" %}{% endfor %}</div>
+          <p class="paytotal">Total: <b id="paytotal">&mdash;</b></p>
+          <div class="fbtns"><button class="btn lg">Submit Payment Details<svg><use href="#m-arrow"/></svg></button></div>
+        </form>
+      </div>
+    </section>
+    {% endif %}
+
+    {% if tab == 'plans' %}
+    <div class="plans">
+      {% for p in plans %}
+      <article class="plan {{ p.style }}{% if p.popular %} pop{% endif %}{% if p.pk == current.pk %} cur{% endif %}">
+        {% if p.popular %}<span class="pop-tag">Most Popular</span>{% endif %}
+        {% if p.icon %}<img src="{{ p.icon.url }}" alt="">{% else %}<img src="{% static 'img/member/plan' %}{{ p.icon_n }}.jpg" alt="">{% endif %}
+        <h3>{{ p.name }}</h3><small>{{ p.tagline|default:"&nbsp;" }}</small>
+        <div class="pp"><b>TSh {{ p.price|intcomma }}</b><span>{{ p.period }}</span></div>
+        <ul class="tlist">{% for ok, t in p.feature_list %}{% if ok %}<li><svg><use href="#m-check-c"/></svg>{{ t }}</li>{% endif %}{% endfor %}</ul>
+        {% if p.pk == current.pk %}<span class="btn pbtn curb">Current Plan</span>
+        {% elif not p.price %}<span class="btn pbtn curb">Free Plan</span>
+        {% else %}<a class="btn pbtn" href="?tab=plans&amp;pay={{ p.pk }}#pay">{% if me.is_premium and p.price < current.price %}Switch Plan{% else %}Upgrade Now{% endif %}</a>{% endif %}
+      </article>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if tab == 'plans' or tab == 'benefits' %}
+    <div class="ben-g">
+      <section class="box benefits"><h3 class="bh"><svg class="mag"><use href="#m-gift"/></svg>Membership Benefits</h3>
+        <div class="ben">{% for ic, t, d, tone in benefits %}<div class="{{ tone }}"><svg><use href="#m-{{ ic }}"/></svg><span><b>{{ t }}</b><small>{{ d }}</small></span></div>{% endfor %}</div></section>
+      <section class="box why"><h3 class="bh"><svg class="mag"><use href="#m-heart"/></svg>Why Upgrade?</h3>
+        <ul class="tlist"><li><svg><use href="#m-check-c"/></svg>Get more profile views</li><li><svg><use href="#m-check-c"/></svg>Find better matches faster</li><li><svg><use href="#m-check-c"/></svg>Access advanced search filters</li>
+          <li><svg><use href="#m-check-c"/></svg>Join exclusive events</li><li><svg><use href="#m-check-c"/></svg>Build trust with verified profile</li><li><svg><use href="#m-check-c"/></svg>Increase your chances of marriage</li></ul></section>
+    </div>
+    {% endif %}
+
+    {% if tab == 'compare' %}
+    <section class="box tbl-wrap"><table class="ctable"><thead><tr><th>Feature</th>{% for p in plans %}<th class="{{ p.style }}">{{ p.name }}<small>TSh {{ p.price|intcomma }}</small></th>{% endfor %}</tr></thead>
+      <tbody>{% for t, row in compare %}<tr><td>{{ t }}</td>{% for ok in row %}<td>{% if ok %}<svg class="ok"><use href="#m-check-c"/></svg>{% else %}<svg class="muted"><use href="#m-x-c"/></svg>{% endif %}</td>{% endfor %}</tr>{% endfor %}
+      <tr><td></td>{% for p in plans %}<td>{% if p.pk == current.pk %}<span class="muted">Current</span>{% elif p.price %}<a class="btn sm" href="?tab=compare&amp;pay={{ p.pk }}#pay">Choose</a>{% endif %}</td>{% endfor %}</tr></tbody></table></section>
+    {% endif %}
+
+    {% if tab == 'mine' %}
+    <section class="box fsec">
+      <h3 class="bh"><svg class="gold"><use href="#m-crown"/></svg>My Membership</h3>
+      <div class="mine-g">
+        <div class="plan {{ current.style }} mini">{% if current.icon %}<img src="{{ current.icon.url }}" alt="">{% else %}<img src="{% static 'img/member/plan' %}{{ current.icon_n }}.jpg" alt="">{% endif %}<h3>{{ current.name }}</h3><div class="pp"><b>TSh {{ current.price|intcomma }}</b><span>{{ current.period }}</span></div></div>
+        <div><dl class="facts"><div><dt>Plan</dt><dd>{{ current.name }}</dd></div><div><dt>Status</dt><dd>{% if me.is_premium %}<span class="okt">Active</span>{% else %}Free member{% endif %}</dd></div>
+          {% if me.premium_until %}<div><dt>Valid until</dt><dd>{{ me.premium_until|date:"j M Y" }}{% if me.is_premium %} ({{ me.premium_until|timeuntil }} left){% else %} (expired){% endif %}</dd></div>{% endif %}
+          <div><dt>Auto-renewal</dt><dd>Off &ndash; you renew manually</dd></div>{% if pending %}<div><dt>Pending payment</dt><dd>{{ pending.plan.name }} &middot; TSh {{ pending.amount|intcomma }} (waiting for confirmation)</dd></div>{% endif %}</dl>
+          <p class="fnote" style="margin-top:12px">Your plan includes:</p>
+          <ul class="tlist cols">{% for ok, t in current.feature_list %}{% if ok %}<li><svg><use href="#m-check-c"/></svg>{{ t }}</li>{% endif %}{% endfor %}</ul>
+          <div class="fbtns" style="justify-content:flex-start"><a class="btn" href="?tab=plans">{% if me.is_premium %}Renew or change plan{% else %}Upgrade now{% endif %}</a></div></div>
+      </div>
+    </section>
+    {% endif %}
+
+    {% if tab == 'history' %}
+    <section class="box tbl-wrap"><table class="ctable hist"><thead><tr><th>Invoice</th><th>Date</th><th>Plan</th><th>Amount</th><th>Paid with</th><th>Status</th><th></th></tr></thead>
+      <tbody>{% for p in history %}<tr><td>{{ p.invoice_no }}</td><td>{{ p.created|date:"j M Y" }}</td><td>{{ p.plan.name|default:p.get_kind_display }}{% if p.months %} &middot; {{ p.months }} mo{% endif %}</td><td>TSh {{ p.amount|intcomma }}</td>
+        <td>{{ p.get_gateway_display }}</td><td><span class="stt {{ p.status }}">{{ p.get_status_display }}</span></td><td>{% if p.status == 'completed' %}<a class="mag" href="{% url 'm_receipt' p.pk %}" target="_blank">Receipt</a>{% endif %}</td></tr>
+      {% empty %}<tr><td colspan="7" class="empty">No payments yet.</td></tr>{% endfor %}</tbody></table></section>
+    {% endif %}
+
+    {% if tab == 'faq' %}
+    <section class="box fsec faq">{% for q, a in faq %}<details {% if forloop.first %}open{% endif %}><summary>{{ q }}<svg><use href="#m-chev-d"/></svg></summary><p>{{ a|linebreaksbr }}</p></details>{% endfor %}</section>
+    {% endif %}
+  </div>
+  <aside>
+    <div class="box aside-b"><h3 class="bh yelh sm14"><svg class="gold"><use href="#m-crown"/></svg>My Membership Status</h3>
+      <div class="mst"><span class="av">{% if me.photo %}<img src="{{ me.photo.url }}" alt="">{% else %}{{ me.name|first }}{% endif %}</span><div><b>{{ me.name }}</b>{% if me.is_premium %}<span class="prem"><svg><use href="#m-crown"/></svg>Premium Member</span>{% else %}<span class="prem free">Free Member</span>{% endif %}</div></div>
+      <dl class="mstl"><div><dt><svg><use href="#m-people"/></svg>Plan:</dt><dd>{{ current.name }}</dd></div>
+        <div><dt><svg><use href="#m-cal"/></svg>Valid Until:</dt><dd>{% if me.is_premium %}{{ me.premium_until|date:"j M Y" }}{% else %}&mdash;{% endif %}</dd></div>
+        <div><dt><svg><use href="#m-user"/></svg>Status:</dt><dd>{% if me.is_premium %}<i class="dot"></i>Active{% else %}<i class="dot off"></i>Free{% endif %}</dd></div></dl>
+      <a class="btn g block" href="?tab=mine">Manage Membership</a></div>
+    <div class="box aside-b"><h3 class="bh pinkh"><svg class="mag"><use href="#m-bolt"/></svg>Quick Actions</h3>
+      <ul class="links"><li><a href="?tab=plans"><svg><use href="#m-crown"/></svg>Upgrade Plan<svg><use href="#m-chev-r"/></svg></a></li><li><a href="?tab=history"><svg><use href="#m-card"/></svg>Payment History<svg><use href="#m-chev-r"/></svg></a></li>
+        <li><a href="?tab=faq"><svg><use href="#m-cycle"/></svg>Manage Auto-Renewal<svg><use href="#m-chev-r"/></svg></a></li><li><a href="?tab=benefits"><svg><use href="#m-gift"/></svg>View Benefits<svg><use href="#m-chev-r"/></svg></a></li>
+        <li><a href="{% url 'm_help' %}?kind=discount#ticket"><svg><use href="#m-tag"/></svg>Apply Discount Code<svg><use href="#m-chev-r"/></svg></a></li></ul></div>
+  </aside>
+</div>
+{% endblock %}
+{% block scripts %}{{ prices|json_script:"plan-prices" }}<script>
+(function(){var f=document.querySelector('.paybox form');if(!f)return;var prices=JSON.parse(document.getElementById('plan-prices').textContent);
+var pl=f.querySelector('[name=plan]'),mo=f.querySelector('[name=months]'),out=document.getElementById('paytotal');
+function upd(){var v=(prices[pl.value]||0)*(+mo.value||1);out.textContent=v?'TSh '+v.toLocaleString('en-US'):'—'}pl.onchange=mo.onchange=upd;upd();
+var b=document.getElementById('pay');if(b)b.scrollIntoView({block:'start'});})();</script>{% endblock %}

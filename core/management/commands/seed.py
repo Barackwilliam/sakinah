@@ -61,6 +61,7 @@ class Command(BaseCommand):
             attach(e, "image", IMG / "v3" / f"{img}.jpg")
         for i, (n, d, subj, body, icon, color) in enumerate(MESSAGE_TEMPLATES):
             MessageTemplate.objects.get_or_create(name=n, defaults=dict(description=d, subject=subj, body=body, icon=icon, color=color, order=i))
+        self.seed_member_area(IMG, attach)
         self.seed_services(IMG, attach)
         self.seed_articles(IMG, attach)
         zahra = Member.objects.filter(name="Zahra").first()
@@ -104,3 +105,26 @@ class Command(BaseCommand):
             a, _ = Article.objects.get_or_create(slug=slugify(title), defaults=dict(title=title, category=cats[cat], published=published,
                 featured=featured, tags=tags, excerpt=excerpt, body=body))
             attach(a, "image", IMG / "v3" / f"{img}.jpg")
+
+    def seed_member_area(self, IMG, attach):
+        V4 = IMG / "v4"
+        for n, age, g, city, occ, edu, img, bio in MORE_MEMBERS:
+            m, _ = Member.objects.get_or_create(name=n, age=age, defaults=dict(gender=g, city=city, occupation=occ, education=edu, bio=bio,
+                verified=True, compatibility=80 + age % 12, prayer="Regularly"))
+            attach(m, "photo", V4 / f"{img}.jpg")
+        mo, created = Member.objects.get_or_create(name=MOHAMMED["name"], defaults=MOHAMMED)
+        attach(mo, "photo", V4 / "m_mohammed1.jpg")
+        if created:
+            for i in range(2, 6):
+                p = V4 / f"m_mohammed{i}.jpg"
+                photo = MemberPhoto(member=mo, order=i)
+                with open(p, "rb") as fh: photo.image.save(p.name, File(fh), save=True)
+        last = EventCategory.objects.count()
+        cats = {slug: EventCategory.objects.get_or_create(slug=slug, defaults=dict(name=n, order=last + i))[0]
+                for i, (n, slug) in enumerate(MEMBER_EVENT_CATEGORIES)}
+        cats["community-events"] = EventCategory.objects.filter(slug="community-events").first() or \
+            EventCategory.objects.create(slug="community-events", name="Community Events", order=last + 9)
+        for t, d, start, end, city, cat, cap, tags, desc, img in MEMBER_EVENTS:
+            e, _ = Event.objects.get_or_create(title=t, defaults=dict(date=d, start_time=start, end_time=end, city=city, category=cats[cat],
+                capacity=cap, tags=tags, description=desc))
+            attach(e, "image", V4 / f"{img}.jpg")

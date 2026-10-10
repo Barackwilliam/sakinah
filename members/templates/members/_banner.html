@@ -1,0 +1,4 @@
+{% load static %}<section class="pban"><span class="pban-ic"><svg><use href="#m-{{ icon }}"/></svg></span>
+  <div class="pban-t"><h1>{{ title }}</h1><p>{{ sub }}</p></div>
+  <div class="pban-q"><blockquote>&ldquo;{{ quote }}&rdquo;<cite>({{ ref }})</cite></blockquote><img src="{% static 'img/member/banner_'|add:art|add:'.jpg' %}" alt=""></div>
+</section>
