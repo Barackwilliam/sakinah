@@ -138,16 +138,17 @@ class LoginView(auth_views.LoginView):
         return reverse("dashboard" if self.request.user.is_staff else "m_dashboard")
 
 def signup(request):
-    if request.user.is_authenticated: return redirect("home")
+    if request.user.is_authenticated: return redirect("dashboard" if request.user.is_staff else "m_dashboard")
     form = SignupForm(request.POST or None)
     if form.is_valid():
         user = form.save(); login(request, user)
         messages.success(request, "Karibu Sakinah! Complete your profile so others can get to know you.")
-        return redirect(safe_next(request) or "profile_edit")
+        return redirect(safe_next(request) or "m_profile_edit")
     return render(request, "registration/signup.html", {"form": form, "next": safe_next(request) or "", "faces": faces()})
 
 @login_required
 def profile_edit(request):
+    if me(request) and not request.user.is_staff: return redirect("m_profile_edit")   # members edit inside their dashboard
     m = me(request) or Member(user=request.user, name=request.user.get_full_name() or request.user.username, age=18)
     form = ProfileForm(request.POST or None, request.FILES or None, instance=m)
     if form.is_valid():
