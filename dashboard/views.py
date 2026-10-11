@@ -19,6 +19,23 @@ from .forms import BroadcastForm, PaymentForm
 
 PALETTE = ["#2f6fe4", "#22a052", "#f0a020", "#8b5cf6", "#e23d5a", "#14a3b8", "#c2410c", "#64748b"]
 
+OWNER_GROUP = "Super Admins"
+
+def is_owner(user):
+    """The client's Super Admin (and the developer). Only they manage staff accounts, site settings and the audit log."""
+    return user.is_superuser or user.groups.filter(name=OWNER_GROUP).exists()
+
+def owner_required(view):
+    @wraps(view)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated or not request.user.is_staff:
+            return redirect(f"{reverse('login')}?next={reverse('dashboard')}")
+        if not is_owner(request.user):
+            messages.error(request, "Only the Super Admin can open that page.")
+            return redirect("dashboard")
+        return view(request, *args, **kwargs)
+    return wrapper
+
 def staff_required(view):
     @wraps(view)
     def wrapper(request, *args, **kwargs):
@@ -72,7 +89,8 @@ def badge_counts():
             "n_msgs": Message.objects.filter(created__date=timezone.localdate()).count()}
 
 def page(request, template, ctx):
-    return render(request, template, {**badge_counts(), "site": SiteSetting.load(), "now_local": timezone.localtime(), **ctx})
+    return render(request, template, {**badge_counts(), "site": SiteSetting.load(), "now_local": timezone.localtime(),
+                                      "is_owner": is_owner(request.user), **ctx})
 
 AGE_GROUPS = [("18–25", 18, 25, "#3b82f6"), ("26–35", 26, 35, "#16a34a"), ("36–45", 36, 45, "#e2557a"), ("46–55", 46, 55, "#f5b31b"), ("56+", 56, 200, "#8b5cf6")]
 
@@ -149,7 +167,7 @@ def overview(request):
     ]
     reg = per_month(members.filter(joined__date__gte=start), "joined", months)
     prem = per_month(prem_pay.filter(created__date__gte=start), "created", months)
-    trend = line_chart([m.strftime("%b") for m in months], [("New Members" if request.user.is_superuser else "All Members", "#16824f", reg),
+    trend = line_chart([m.strftime("%b") for m in months], [("New Members" if is_owner(request.user) else "All Members", "#16824f", reg),
                                                             ("Premium Members", "#d61f5a", prem)], width=420, height=210, pad_l=34)
     trend["tip"] = {"label": months[-1].strftime("%b %Y"), "new": reg[-1], "prem": prem[-1]}
     males, females = members.filter(gender="M").count(), members.filter(gender="F").count()
@@ -168,7 +186,7 @@ def overview(request):
     actives = list(members.filter(last_seen__gte=now - timedelta(days=7)).order_by("-last_seen")[:5])
     for m in actives: m.seen_text, m.online = last_active(m)
     return page(request, "dashboard/overview.html", {
-        "nav": "dashboard", "cards": cards, "trend": trend, "span": span, "tinted": not request.user.is_superuser,
+        "nav": "dashboard", "cards": cards, "trend": trend, "span": span, "tinted": not is_owner(request.user),
         "gender": {"m": males, "f": females, "mp": mp, "fp": round(100 - mp, 1) if total else 0, "total": total},
         "ages": ages, "latest": latest, "matches": matches, "actives": actives,
         "payments": recent_payments()})

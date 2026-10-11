@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views, views_manage as vm
 urlpatterns = [
     path("", views.overview, name="dashboard"),
     path("report.csv", views.report_csv, name="dash_report"),
@@ -15,4 +15,15 @@ urlpatterns = [
     path("payments/<int:pk>/action/", views.payment_action, name="dash_payment_action"),
     path("payments/<int:pk>/receipt/", views.receipt, name="dash_receipt"),
     path("search/", views.search, name="dash_search"),
+    path("manage/<slug:key>/", vm.manage_list, name="dash_manage"),
+    path("manage/<slug:key>/add/", vm.manage_add, name="dash_manage_add"),
+    path("manage/<slug:key>/<int:pk>/", vm.manage_edit, name="dash_manage_edit"),
+    path("manage/<slug:key>/<int:pk>/delete/", vm.manage_delete, name="dash_manage_delete"),
+    path("manage/<slug:key>/<int:pk>/action/", vm.manage_action, name="dash_manage_action"),
+    path("staff/", vm.staff_list, name="dash_staff"),
+    path("staff/add/", vm.staff_edit, name="dash_staff_add"),
+    path("staff/<int:pk>/", vm.staff_edit, name="dash_staff_edit"),
+    path("staff/<int:pk>/delete/", vm.staff_delete, name="dash_staff_delete"),
+    path("settings/", vm.site_settings, name="dash_settings"),
+    path("password/", vm.password, name="dash_password"),
 ]

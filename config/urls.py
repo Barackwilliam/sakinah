@@ -11,7 +11,7 @@ password_reset = [
     path("reset/<uidb64>/<token>/", auth.PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
     path("reset/done/", auth.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
 ]
-urlpatterns = [path("admin/", admin.site.urls), path("dashboard/", include("dashboard.urls")),
+urlpatterns = [path(settings.ADMIN_URL, admin.site.urls), path("dashboard/", include("dashboard.urls")),
                path("account/", include(password_reset)), path("account/", include("members.urls")), path("", include("core.urls"))]
 if hasattr(settings, "MEDIA_ROOT"):  # local disk media; with Supabase Storage files are served by Supabase
     if settings.DEBUG:

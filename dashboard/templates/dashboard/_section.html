@@ -1,0 +1,1 @@
+{% if section|length > 1 %}<nav class="mtabs sect">{% for k, label in section %}<a href="{% url 'dash_manage' k %}" class="{% if sub == k %}on{% endif %}">{{ label }}</a>{% endfor %}</nav>{% endif %}

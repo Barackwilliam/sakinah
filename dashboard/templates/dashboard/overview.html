@@ -1,6 +1,6 @@
-{% extends "dashboard/base.html" %}{% load humanize %}{% block title %}{% if user.is_superuser %}Super Admin Dashboard{% else %}Admin Dashboard{% endif %}{% endblock %}
+{% extends "dashboard/base.html" %}{% load humanize %}{% block title %}{% if is_owner %}Super Admin Dashboard{% else %}Admin Dashboard{% endif %}{% endblock %}
 {% block content %}
-{% if user.is_superuser %}
+{% if is_owner %}
 {% include "dashboard/_banner.html" with icon="m-user" title="Welcome, Super Admin" sub="Manage Sakinah platform, members, content, payments and all activities." %}
 {% else %}
 {% include "dashboard/_banner.html" with icon="m-chart" title="Admin Dashboard" sub="Monitor, manage and grow the Sakinah platform." %}
@@ -10,7 +10,7 @@
   <section class="apanel trendp"><div class="aph"><svg><use href="#m-chart"/></svg><h2>Member Registration Trend</h2>
     <form method="get"><select name="range" onchange="this.form.submit()" aria-label="Period"><option value="12">Last 12 Months</option><option value="6" {% if span == 6 %}selected{% endif %}>Last 6 Months</option></select></form></div>
     {% include "dashboard/_trend.html" with c=trend %}</section>
-  <section class="apanel"><div class="aph"><svg><use href="#m-heart"/></svg><h2>{% if user.is_superuser %}Member Distribution by Gender{% else %}Members by Gender{% endif %}</h2></div>
+  <section class="apanel"><div class="aph"><svg><use href="#m-heart"/></svg><h2>{% if is_owner %}Member Distribution by Gender{% else %}Members by Gender{% endif %}</h2></div>
     <div class="gender"><div class="m"><svg><use href="#m-user"/></svg><span class="lb">Male</span><b>{{ gender.m|intcomma }}</b><small>{{ gender.mp }}%</small></div>
       <div class="ring2" style="background:conic-gradient(#3b82f6 0 {{ gender.mp }}%,#e2557a {{ gender.mp }}% 100%)"><div><b>{{ gender.total|intcomma }}</b><small>Members</small></div></div>
       <div class="f"><svg><use href="#m-user"/></svg><span class="lb">Female</span><b>{{ gender.f|intcomma }}</b><small>{{ gender.fp }}%</small></div></div>
@@ -19,7 +19,7 @@
     <div class="ages">{% for a in ages %}<div><b>{{ a.n|intcomma }}</b><i style="height:{{ a.h }}%;background:{{ a.color }}"></i><span>{{ a.label }}</span><small>{{ a.pct }}%</small></div>{% endfor %}</div></section>
 </div>
 <div class="ag3 tables">
-  {% if user.is_superuser %}
+  {% if is_owner %}
   <section class="apanel"><div class="aph"><svg><use href="#m-people"/></svg><h2>Active Members (Last 7 Days)</h2><a class="va" href="{% url 'dash_members' %}">View All</a></div>
     <div class="atw"><table class="atab"><thead><tr><th class="n">#</th><th>Name</th><th class="g">Gender</th><th>Location</th><th class="la">Last Active</th></tr></thead><tbody>
     {% for m in actives %}<tr><td>{{ forloop.counter }}</td><td class="nw el">{{ m.name }}</td><td>{% include "dashboard/_gender.html" %}</td><td class="nw el">{{ m.city }}</td><td><span class="dotc{% if m.online %} on{% endif %}"><i></i>{{ m.seen_text }}</span></td></tr>
@@ -41,32 +41,32 @@
     {% empty %}<tr><td colspan="5" class="muted">No mutual matches yet.</td></tr>{% endfor %}</tbody></table></div></section>
   {% endif %}
   <section class="apanel"><div class="aph"><svg><use href="#i-coins"/></svg><h2>Recent Payments</h2><a class="va" href="{% url 'dash_payments' %}">View All</a></div>
-    <div class="atw"><table class="atab"><thead><tr>{% if not user.is_superuser %}<th class="n">#</th>{% endif %}<th>{% if user.is_superuser %}Name{% else %}Member{% endif %}</th><th>Plan</th><th class="am">Amount</th><th class="d">Date</th><th class="s">Status</th></tr></thead><tbody>
-    {% for p in payments %}<tr>{% if not user.is_superuser %}<td>{{ forloop.counter }}</td>{% endif %}<td class="nw el">{% if user.is_superuser %}{{ p.who }}{% else %}{{ p.who_short }}{% endif %}</td>
+    <div class="atw"><table class="atab"><thead><tr>{% if not is_owner %}<th class="n">#</th>{% endif %}<th>{% if is_owner %}Name{% else %}Member{% endif %}</th><th>Plan</th><th class="am">Amount</th><th class="d">Date</th><th class="s">Status</th></tr></thead><tbody>
+    {% for p in payments %}<tr>{% if not is_owner %}<td>{{ forloop.counter }}</td>{% endif %}<td class="nw el">{% if is_owner %}{{ p.who }}{% else %}{{ p.who_short }}{% endif %}</td>
       <td class="nw el">{{ p.plan.name|default:p.get_kind_display }}</td><td class="nw">{{ site.currency }} {{ p.amount|intcomma }}</td><td class="nw">{{ p.created|date:"j M y" }}</td>
       <td><span class="pill {% if p.status == 'completed' %}ok{% elif p.status == 'pending' %}warn{% else %}bad{% endif %}">{% if p.status == 'completed' %}Paid{% else %}{{ p.get_status_display }}{% endif %}</span></td></tr>
     {% empty %}<tr><td colspan="6" class="muted">No payments yet.</td></tr>{% endfor %}</tbody></table></div></section>
 </div>
-{% if user.is_superuser %}
+{% if is_owner %}
 <div class="qlinks seven">
   <div class="ql"><svg style="--c:#a0123c"><use href="#m-people"/></svg><b>Manage Members</b><small>View, approve or suspend members</small><a href="{% url 'dash_members' %}">Open</a></div>
   <div class="ql"><svg style="--c:#a0123c"><use href="#m-heart"/></svg><b>Manage Matches</b><small>Monitor matches and reports</small><a href="{% url 'dash_matches' %}">Open</a></div>
-  <div class="ql"><svg style="--c:#a0123c"><use href="#m-cal"/></svg><b>Manage Events</b><small>Create and manage events</small><a href="{% url 'admin:core_event_changelist' %}">Open</a></div>
+  <div class="ql"><svg style="--c:#a0123c"><use href="#m-cal"/></svg><b>Manage Events</b><small>Create and manage events</small><a href="{% url 'dash_manage' 'events' %}">Open</a></div>
   <div class="ql"><svg style="--c:#d4950f"><use href="#i-coins"/></svg><b>Payments &amp; Finance</b><small>View payments and reports</small><a href="{% url 'dash_payments' %}">Open</a></div>
   <div class="ql"><svg style="--c:#1d4ed8"><use href="#m-send"/></svg><b>Communication</b><small>Send emails and notifications</small><a href="{% url 'dash_comms' %}">Open</a></div>
-  <div class="ql"><svg style="--c:#1d4ed8"><use href="#m-doc"/></svg><b>Content Management</b><small>Manage pages, articles and media</small><a href="{% url 'admin:core_article_changelist' %}">Open</a></div>
+  <div class="ql"><svg style="--c:#1d4ed8"><use href="#m-doc"/></svg><b>Content Management</b><small>Manage pages, articles and media</small><a href="{% url 'dash_manage' 'articles' %}">Open</a></div>
   <div class="ql"><svg style="--c:#a0123c"><use href="#m-chart"/></svg><b>Reports &amp; Analytics</b><small>Detailed reports and platform insights</small><a href="{% url 'dash_report' %}">Open</a></div>
 </div>
 {% else %}
 <div class="qlinks">
   <div class="ql t" style="--bgc:#fdf0f3"><svg style="--c:#a0123c"><use href="#m-people"/></svg><b>Manage Members</b><small>View, approve or suspend members</small><a href="{% url 'dash_members' %}">Open</a></div>
   <div class="ql t" style="--bgc:#fdf0f3"><svg style="--c:#a0123c"><use href="#m-heart"/></svg><b>Manage Matches</b><small>Monitor matches and reports</small><a href="{% url 'dash_matches' %}">Open</a></div>
-  <div class="ql t" style="--bgc:#fdf0f3"><svg style="--c:#a0123c"><use href="#m-cal"/></svg><b>Manage Events</b><small>Create and manage events</small><a href="{% url 'admin:core_event_changelist' %}">Open</a></div>
+  <div class="ql t" style="--bgc:#fdf0f3"><svg style="--c:#a0123c"><use href="#m-cal"/></svg><b>Manage Events</b><small>Create and manage events</small><a href="{% url 'dash_manage' 'events' %}">Open</a></div>
   <div class="ql t" style="--bgc:#fdf6e6"><svg style="--c:#d4950f"><use href="#i-coins"/></svg><b>Payments &amp; Finance</b><small>View payments and reports</small><a href="{% url 'dash_payments' %}">Open</a></div>
-  <div class="ql t" style="--bgc:#edf3fd"><svg style="--c:#1d4ed8"><use href="#m-doc"/></svg><b>Content Management</b><small>Manage pages, articles and media</small><a href="{% url 'admin:core_article_changelist' %}">Open</a></div>
+  <div class="ql t" style="--bgc:#edf3fd"><svg style="--c:#1d4ed8"><use href="#m-doc"/></svg><b>Content Management</b><small>Manage pages, articles and media</small><a href="{% url 'dash_manage' 'articles' %}">Open</a></div>
   <div class="ql t" style="--bgc:#edf3fd"><svg style="--c:#1d4ed8"><use href="#m-send"/></svg><b>Communications</b><small>Send emails and notifications</small><a href="{% url 'dash_comms' %}">Open</a></div>
   <div class="ql t" style="--bgc:#fdf0f3"><svg style="--c:#a0123c"><use href="#m-chart"/></svg><b>Reports &amp; Analytics</b><small>Detailed reports and platform insights</small><a href="{% url 'dash_report' %}">Open</a></div>
-  <div class="ql t" style="--bgc:#edf3fd"><svg style="--c:#1e3a8a"><use href="#m-gear"/></svg><b>User Management</b><small>Manage admin and staff accounts</small><a href="{% url 'admin:auth_user_changelist' %}">Open</a></div>
+  {% if is_owner %}<div class="ql t" style="--bgc:#edf3fd"><svg style="--c:#1e3a8a"><use href="#m-gear"/></svg><b>User Management</b><small>Manage admin and staff accounts</small><a href="{% url 'dash_staff' %}">Open</a></div>{% else %}<div class="ql t" style="--bgc:#edf3fd"><svg style="--c:#1e3a8a"><use href="#m-headset"/></svg><b>Support Tickets</b><small>Answer member questions and reports</small><a href="{% url 'dash_manage' 'tickets' %}">Open</a></div>{% endif %}
 </div>
 {% endif %}
 {% endblock %}

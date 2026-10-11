@@ -18,7 +18,7 @@
         <b class="nm">{{ x.a.name }} <span>&harr;</span> {{ x.b.name }}</b><span class="pill ok">{{ x.score }}% Match</span><span class="dt">{{ x.t|date:"j M Y" }}</span>
         <a class="ab o sm" href="?tab=messages&amp;a={{ x.a.pk }}&amp;b={{ x.b.pk }}"><svg><use href="#m-chat"/></svg>Message</a></li>
       {% empty %}<li class="muted">No mutual matches yet. They appear here when two members like each other.</li>{% endfor %}</ul></section>
-    <section class="apanel" id="activities"><div class="aph"><svg><use href="#m-chart"/></svg><h2>Member Activities</h2><a class="va" href="{% url 'admin:admin_logentry_changelist' %}">View All</a></div>
+    <section class="apanel" id="activities"><div class="aph"><svg><use href="#m-chart"/></svg><h2>Member Activities</h2><a class="va" href="{% url 'dash_matches' %}?tab=all">View All</a></div>
       <ul class="afeed2">{% for t, m, text, kind, ic, color in feed %}<li><span class="av sm2">{% if m.photo %}<img src="{{ m.photo.url }}" alt="">{% else %}{{ m.name|first }}{% endif %}</span>
         <p><b>{{ m.name }}</b> {{ text }}</p><time>{{ t|ago }}</time><span class="kind" style="--c:{{ color }}"><svg><use href="#{{ ic }}"/></svg>{{ kind }}</span></li>
       {% empty %}<li class="muted">No activity yet.</li>{% endfor %}</ul></section>
@@ -31,11 +31,11 @@
           <a class="ab o sm" href="{% url 'member' m.pk %}" target="_blank">View Profile</a></article>
         {% empty %}<p class="muted">No members match this search.</p>{% endfor %}</div>
         <button type="button" class="sgo r" data-dir="1" aria-label="Next"><svg><use href="#m-chev-r"/></svg></button></div></section>
-    <section class="apanel"><div class="aph"><svg><use href="#m-cal"/></svg><h2>Upcoming Events</h2><a class="va" href="{% url 'admin:core_event_changelist' %}">View All</a></div>
+    <section class="apanel"><div class="aph"><svg><use href="#m-cal"/></svg><h2>Upcoming Events</h2><a class="va" href="{% url 'dash_manage' 'events' %}">View All</a></div>
       <ul class="uev">{% for e in events %}<li>{% if e.image %}<img src="{{ e.image.url }}" alt="">{% else %}<span class="noimg"></span>{% endif %}
         <span class="uev-t"><b>{{ e.title }}</b><small><svg><use href="#m-cal"/></svg>{{ e.date|date:"j M Y" }}<svg><use href="#m-pin"/></svg>{{ e.city }}</small></span>
         {% if e.capacity and not e.seats_left %}<span class="pill bad">Full</span>{% elif e.reg_count %}<span class="pill ok">{{ e.reg_count }} Registered</span>{% else %}<span class="pill warn">Open</span>{% endif %}
-        <a class="ab o sm" href="{% url 'admin:core_event_change' e.pk %}">View Details</a></li>{% empty %}<li class="muted">No upcoming events.</li>{% endfor %}</ul></section>
+        <a class="ab o sm" href="{% url 'dash_manage_edit' 'events' e.pk %}">View Details</a></li>{% empty %}<li class="muted">No upcoming events.</li>{% endfor %}</ul></section>
     <section class="apanel"><div class="aph"><svg><use href="#m-chart"/></svg><h2>Match Statistics</h2><span class="muted sm-r">Last 12 Months</span></div>
       <div class="lgd">{% for n, c in chart.legend %}<span><i style="background:{{ c }}"></i>{{ n }}</span>{% endfor %}</div>
       <svg class="lchart" viewBox="0 0 {{ chart.w }} {{ chart.h }}" role="img" aria-label="Match statistics">

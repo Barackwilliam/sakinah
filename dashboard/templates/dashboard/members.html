@@ -1,6 +1,6 @@
 {% extends "dashboard/base.html" %}{% load humanize %}{% block title %}Members Management{% endblock %}
 {% block content %}
-{% url 'admin:core_member_add' as add_url %}
+{% url 'dash_manage_add' 'members' as add_url %}
 {% include "dashboard/_banner.html" with icon="m-people" title="Members Management" sub="View, manage and monitor all members of Sakinah platform." action_url=add_url action_label="Add New Member" %}
 {% include "dashboard/_acards.html" with five=True tinted=True %}
 
@@ -31,7 +31,7 @@
     <td><input type="checkbox" name="ids" value="{{ m.pk }}" form="bulk" class="rowck" aria-label="Select {{ m.name }}"></td>
     <td>{{ pg.start_index|add:forloop.counter0 }}</td>
     <td><span class="av mav">{% if m.photo %}<img src="{{ m.photo.url }}" alt="">{% else %}{{ m.name|first }}{% endif %}</span></td>
-    <td class="nw"><b class="mn">{{ m.name }}</b><small class="mc">{{ m.code }}</small>{% if m.n_reports %}<a class="pill bad" href="{% url 'admin:core_report_changelist' %}?member__id__exact={{ m.pk }}">{{ m.n_reports }} report{{ m.n_reports|pluralize }}</a>{% endif %}</td>
+    <td class="nw"><b class="mn">{{ m.name }}</b><small class="mc">{{ m.code }}</small>{% if m.n_reports %}<a class="pill bad" href="{% url 'dash_manage' 'reports' %}?q={{ m.name|urlencode }}">{{ m.n_reports }} report{{ m.n_reports|pluralize }}</a>{% endif %}</td>
     <td>{% include "dashboard/_gender.html" %}</td>
     <td>{{ m.age }}</td>
     <td class="nw"><span class="loc"><svg><use href="#m-pin"/></svg>{{ m.city }}</span></td>
@@ -41,7 +41,7 @@
     <td class="nw"><span class="dotc{% if m.online %} on{% endif %}">{% if m.online %}<i></i>{% endif %}{{ m.seen_text }}</span></td>
     <td class="nw c"><div class="racts">
       <a class="ib" href="{% url 'member' m.pk %}" target="_blank" title="View profile"><svg><use href="#m-eye"/></svg></a>
-      <a class="ib" href="{% url 'admin:core_member_change' m.pk %}" title="Edit"><svg><use href="#m-edit"/></svg></a>
+      <a class="ib" href="{% url 'dash_manage_edit' 'members' m.pk %}?back={{ request.get_full_path|urlencode }}" title="Edit"><svg><use href="#m-edit"/></svg></a>
       <button type="button" class="ib" title="Send message" data-msg="{{ m.pk }}"><svg><use href="#m-chat"/></svg></button>
       <details class="rmenu"><summary class="ib" title="More actions"><svg><use href="#m-dots-v"/></svg></summary>
         <form class="ah-menu" method="post" action="{% url 'dash_member_action' m.pk %}">{% csrf_token %}<input type="hidden" name="back" value="{{ request.get_full_path }}">
@@ -91,7 +91,7 @@
   <form class="af msgf" method="post" action="{% url 'dash_members_import' %}" enctype="multipart/form-data">{% csrf_token %}<input type="file" name="file" accept=".csv,text/csv" required><button class="ab g">Import</button></form>
 </section>
 {% if reports %}
-<section class="apanel subpanel"><div class="aph"><svg><use href="#m-flag"/></svg><h2>Open Reports</h2><a class="va" href="{% url 'admin:core_report_changelist' %}?resolved__exact=0">View All</a></div>
+<section class="apanel subpanel"><div class="aph"><svg><use href="#m-flag"/></svg><h2>Open Reports</h2><a class="va" href="{% url 'dash_manage' 'reports' %}?resolved=0">View All</a></div>
   <ul class="rlist">{% for r in reports %}<li><a href="{% url 'member' r.member.pk %}" target="_blank"><b>{{ r.member.name }}</b></a> &middot; {{ r.get_reason_display }} <small class="muted">by {{ r.reporter.get_username }}, {{ r.created|timesince }} ago</small>{% if r.details %}<p>{{ r.details|truncatechars:140 }}</p>{% endif %}</li>{% endfor %}</ul></section>
 {% endif %}
 {% endblock %}

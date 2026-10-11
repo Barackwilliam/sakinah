@@ -1,0 +1,11 @@
+{% extends "dashboard/base.html" %}{% block title %}Staff Accounts{% endblock %}
+{% block content %}
+{% url 'dash_staff_add' as add_url %}{% include "dashboard/_banner.html" with icon="m-user" title="Staff Accounts" sub="People who can sign in to this dashboard." action_url=add_url action_label="Add Staff Member" %}
+<section class="apanel"><div class="atw"><table class="atab rtable"><thead><tr><th>Name</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Last sign in</th><th class="c">Actions</th></tr></thead><tbody>
+{% for u in rows %}<tr><td><b class="mn">{{ u.get_full_name|default:u.username }}</b>{% if u == user %}<small class="mc">You</small>{% endif %}</td><td>{{ u.username }}</td><td>{{ u.email }}</td>
+  <td><span class="pill {% if u.role == 'Super Admin' %}info{% else %}mut{% endif %}">{{ u.role }}</span></td><td>{% if u.is_active %}<span class="pill ok">Active</span>{% else %}<span class="pill bad">Blocked</span>{% endif %}</td>
+  <td>{{ u.last_login|date:"j M Y H:i"|default:"Never" }}</td>
+  <td class="nw c"><div class="racts"><a class="ib" href="{% url 'dash_staff_edit' u.pk %}" title="Edit"><svg><use href="#m-edit"/></svg></a>
+    {% if u != user %}<form method="post" action="{% url 'dash_staff_delete' u.pk %}" data-confirm="Delete {{ u.username }}? They will no longer be able to sign in.">{% csrf_token %}<button class="ib" title="Delete"><svg><use href="#m-trash"/></svg></button></form>{% endif %}</div></td></tr>
+{% empty %}<tr><td colspan="7" class="muted c" style="padding:30px">No staff accounts yet.</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}

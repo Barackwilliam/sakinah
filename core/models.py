@@ -550,5 +550,7 @@ class SupportTicket(models.Model):
     attachment = models.FileField(upload_to="support/", blank=True)
     status = models.CharField(max_length=6, choices=STATUS, default="open")
     created = models.DateTimeField(auto_now_add=True)
+    reply = models.TextField(blank=True, help_text="Answer from the support team; the member sees it as a notification.")
+    replied_at = models.DateTimeField(null=True, blank=True)
     class Meta: ordering = ["-created"]
     def __str__(self): return f"{self.get_kind_display()}: {self.subject}"
