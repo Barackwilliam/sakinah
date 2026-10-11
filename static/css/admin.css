@@ -166,3 +166,9 @@ body{background:var(--bg);font-size:13.5px}
 .bulkbar>*{min-width:0}.bulkbar .ab{padding:0 8px}
 @media(max-width:760px){.acard b.sm{font-size:14px}.acard small{white-space:normal}}
 .sum b,.donut b{font-family:var(--sans)}
+.ag3.tables td.el{max-width:96px;overflow:hidden;text-overflow:ellipsis}.ag3.tables .dotc{font-size:10.5px}
+.aph{min-width:0}.aph h2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.aph .va{white-space:nowrap;flex:none}
+@media(max-width:700px){.ph-a{width:100%}.range{width:100%;flex-wrap:wrap;height:auto;padding:6px 8px}.range input{flex:1;min-width:0;width:auto}.ph-a .btn{width:100%}}
+.ag3.tables .atab{table-layout:fixed}.ag3.tables .atab th,.ag3.tables .atab td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ag3.tables th.n{width:20px}.ag3.tables th.g{width:54px}.ag3.tables th.s{width:76px}.ag3.tables th.la{width:86px}.ag3.tables th.d{width:64px}.ag3.tables th.am{width:70px}
+.ag3.tables td.el{max-width:none}

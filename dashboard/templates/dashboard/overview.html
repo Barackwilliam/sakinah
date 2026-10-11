@@ -21,29 +21,29 @@
 <div class="ag3 tables">
   {% if user.is_superuser %}
   <section class="apanel"><div class="aph"><svg><use href="#m-people"/></svg><h2>Active Members (Last 7 Days)</h2><a class="va" href="{% url 'dash_members' %}">View All</a></div>
-    <div class="atw"><table class="atab"><thead><tr><th>#</th><th>Name</th><th>Gender</th><th>Location</th><th>Last Active</th></tr></thead><tbody>
-    {% for m in actives %}<tr><td>{{ forloop.counter }}</td><td class="nw">{{ m.name }}</td><td>{% include "dashboard/_gender.html" %}</td><td class="nw">{{ m.city }}</td><td><span class="dotc{% if m.online %} on{% endif %}"><i></i>{{ m.seen_text }}</span></td></tr>
+    <div class="atw"><table class="atab"><thead><tr><th class="n">#</th><th>Name</th><th class="g">Gender</th><th>Location</th><th class="la">Last Active</th></tr></thead><tbody>
+    {% for m in actives %}<tr><td>{{ forloop.counter }}</td><td class="nw el">{{ m.name }}</td><td>{% include "dashboard/_gender.html" %}</td><td class="nw el">{{ m.city }}</td><td><span class="dotc{% if m.online %} on{% endif %}"><i></i>{{ m.seen_text }}</span></td></tr>
     {% empty %}<tr><td colspan="5" class="muted">Nobody was active this week.</td></tr>{% endfor %}</tbody></table></div></section>
   <section class="apanel"><div class="aph"><svg><use href="#m-cal"/></svg><h2>Latest Registrations</h2><a class="va" href="{% url 'dash_members' %}">View All</a></div>
-    <div class="atw"><table class="atab"><thead><tr><th>Name</th><th>Gender</th><th>Location</th><th>Date</th></tr></thead><tbody>
-    {% for m in latest %}<tr><td class="nw">{{ m.name }}</td><td>{% include "dashboard/_gender.html" %}</td><td class="nw">{{ m.city }}</td><td class="nw">{{ m.joined|date:"j M Y" }}</td></tr>
+    <div class="atw"><table class="atab"><thead><tr><th>Name</th><th class="g">Gender</th><th>Location</th><th class="d">Date</th></tr></thead><tbody>
+    {% for m in latest %}<tr><td class="nw el">{{ m.name }}</td><td>{% include "dashboard/_gender.html" %}</td><td class="nw el">{{ m.city }}</td><td class="nw">{{ m.joined|date:"j M y" }}</td></tr>
     {% empty %}<tr><td colspan="4" class="muted">No members yet.</td></tr>{% endfor %}</tbody></table></div></section>
   {% else %}
   <section class="apanel"><div class="aph"><svg><use href="#m-people"/></svg><h2>Latest Members</h2><a class="va" href="{% url 'dash_members' %}">View All</a></div>
-    <div class="atw"><table class="atab"><thead><tr><th>#</th><th>Name</th><th>Gender</th><th>Location</th><th>Date</th><th>Status</th></tr></thead><tbody>
-    {% for m in latest %}<tr><td>{{ forloop.counter }}</td><td class="nw">{{ m.name }}</td><td>{% include "dashboard/_gender.html" %}</td><td class="nw">{{ m.city }}</td><td class="nw">{{ m.joined|date:"j M Y" }}</td>
+    <div class="atw"><table class="atab"><thead><tr><th class="n">#</th><th>Name</th><th class="g">Gender</th><th>Location</th><th class="d">Date</th><th class="s">Status</th></tr></thead><tbody>
+    {% for m in latest %}<tr><td>{{ forloop.counter }}</td><td class="nw el">{{ m.name }}</td><td>{% include "dashboard/_gender.html" %}</td><td class="nw el">{{ m.city }}</td><td class="nw">{{ m.joined|date:"j M y" }}</td>
       <td><span class="pill {% if m.state.1 == 'ok' %}ok{% elif m.state.1 == 'warn' %}warn{% else %}bad{% endif %}">{% if m.state.0 == 'Verified' %}Active{% else %}{{ m.state.0 }}{% endif %}</span></td></tr>
     {% empty %}<tr><td colspan="6" class="muted">No members yet.</td></tr>{% endfor %}</tbody></table></div></section>
   <section class="apanel"><div class="aph"><svg><use href="#m-heart"/></svg><h2>Latest Matches</h2><a class="va" href="{% url 'dash_matches' %}?tab=all">View All</a></div>
-    <div class="atw"><table class="atab"><thead><tr><th>#</th><th>Member</th><th>Match</th><th>Date</th><th>Status</th></tr></thead><tbody>
-    {% for x in matches %}<tr><td>{{ forloop.counter }}</td><td class="nw">{{ x.a.short_name }}</td><td><span class="pair"><svg><use href="#m-heart-o"/></svg>{{ x.b.short_name }}</span></td><td class="nw">{{ x.t|date:"j M Y" }}</td>
+    <div class="atw"><table class="atab"><thead><tr><th class="n">#</th><th>Member</th><th>Match</th><th class="d">Date</th><th class="s">Status</th></tr></thead><tbody>
+    {% for x in matches %}<tr><td>{{ forloop.counter }}</td><td class="nw">{{ x.a.short_name }}</td><td><span class="pair"><svg><use href="#m-heart-o"/></svg>{{ x.b.short_name }}</span></td><td class="nw">{{ x.t|date:"j M y" }}</td>
       <td><a class="pill {% if x.contacted %}info{% else %}ok{% endif %}" href="{% url 'dash_matches' %}?tab=messages&amp;a={{ x.a.pk }}&amp;b={{ x.b.pk }}">{% if x.contacted %}Contacted{% else %}New{% endif %}</a></td></tr>
     {% empty %}<tr><td colspan="5" class="muted">No mutual matches yet.</td></tr>{% endfor %}</tbody></table></div></section>
   {% endif %}
   <section class="apanel"><div class="aph"><svg><use href="#i-coins"/></svg><h2>Recent Payments</h2><a class="va" href="{% url 'dash_payments' %}">View All</a></div>
-    <div class="atw"><table class="atab"><thead><tr>{% if not user.is_superuser %}<th>#</th>{% endif %}<th>{% if user.is_superuser %}Name{% else %}Member{% endif %}</th><th>Plan</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead><tbody>
-    {% for p in payments %}<tr>{% if not user.is_superuser %}<td>{{ forloop.counter }}</td>{% endif %}<td class="nw">{% if user.is_superuser %}{{ p.who }}{% else %}{{ p.who_short }}{% endif %}</td>
-      <td>{{ p.plan.name|default:p.get_kind_display }}</td><td class="nw">{{ site.currency }} {{ p.amount|intcomma }}</td><td class="nw">{{ p.created|date:"j M Y" }}</td>
+    <div class="atw"><table class="atab"><thead><tr>{% if not user.is_superuser %}<th class="n">#</th>{% endif %}<th>{% if user.is_superuser %}Name{% else %}Member{% endif %}</th><th>Plan</th><th class="am">Amount</th><th class="d">Date</th><th class="s">Status</th></tr></thead><tbody>
+    {% for p in payments %}<tr>{% if not user.is_superuser %}<td>{{ forloop.counter }}</td>{% endif %}<td class="nw el">{% if user.is_superuser %}{{ p.who }}{% else %}{{ p.who_short }}{% endif %}</td>
+      <td class="nw el">{{ p.plan.name|default:p.get_kind_display }}</td><td class="nw">{{ site.currency }} {{ p.amount|intcomma }}</td><td class="nw">{{ p.created|date:"j M y" }}</td>
       <td><span class="pill {% if p.status == 'completed' %}ok{% elif p.status == 'pending' %}warn{% else %}bad{% endif %}">{% if p.status == 'completed' %}Paid{% else %}{{ p.get_status_display }}{% endif %}</span></td></tr>
     {% empty %}<tr><td colspan="6" class="muted">No payments yet.</td></tr>{% endfor %}</tbody></table></div></section>
 </div>
