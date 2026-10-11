@@ -1,0 +1,18 @@
+{% extends "dashboard/base.html" %}{% block title %}{% if created %}Add{% else %}Edit{% endif %} {{ r.title }}{% endblock %}
+{% block content %}
+{% if created %}{% include "dashboard/_banner.html" with icon=r.icon title="Add "|add:r.title sub="Fill in the details and save." %}
+{% else %}{% include "dashboard/_banner.html" with icon=r.icon title=obj sub=r.title %}{% endif %}
+{% include "dashboard/_section.html" %}
+{% include detail %}
+<form method="post" enctype="multipart/form-data" class="apanel rform">{% csrf_token %}<input type="hidden" name="back" value="{{ back }}">
+  {% if form.non_field_errors %}<p class="ferr2">{{ form.non_field_errors|join:" " }}</p>{% endif %}
+  <div class="fg2">{% for f in form %}{% include "dashboard/_afield.html" %}{% endfor %}</div>
+  {% if r.key == 'tickets' and obj.kind == 'verification' and obj.user.member and not obj.user.member.verified %}<label class="af2 chk wide"><input type="checkbox" name="verify_member" value="1"><span>Verify {{ obj.user.member.name }} when I save<small>Adds the verified badge to their profile.</small></span></label>{% endif %}
+  <div class="rbtns">
+    <a class="ab lt" href="{% if back %}{{ back }}{% elif r.key == 'members' %}{% url 'dash_members' %}{% else %}{% url 'dash_manage' r.key %}{% endif %}">Cancel</a>
+    {% if created %}<button class="ab o" name="another" value="1">Save and add another</button>{% endif %}
+    <button class="ab">{% if r.key == 'tickets' %}Send reply &amp; save{% else %}Save{% endif %}</button>
+  </div>
+</form>
+{% if not created and r.can_delete %}<form method="post" action="{% url 'dash_manage_delete' r.key obj.pk %}" class="rdel" data-confirm="Delete {{ obj|escapejs }} permanently?">{% csrf_token %}<button class="ab pl"><svg><use href="#m-trash"/></svg>Delete</button></form>{% endif %}
+{% endblock %}

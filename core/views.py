@@ -26,13 +26,13 @@ def me(request):
     return getattr(request.user, "member", None) if request.user.is_authenticated else None
 
 def faces():
-    return Member.objects.exclude(photo="").filter(verified=True).order_by("joined", "pk")[:5]
+    return Member.objects.exclude(photo="").filter(verified=True, status="active").order_by("joined", "pk")[:5]
 
 def home(request):
     gold = Plan.objects.filter(price__gt=0).order_by("price").first()
     return render(request, "home.html", {
         "categories": ServiceCategory.objects.all()[:8],
-        "matches": Member.objects.filter(featured=True).order_by("joined", "pk")[:4],
+        "matches": Member.objects.filter(featured=True, status="active").order_by("joined", "pk")[:4],
         "faces": faces(),
         "events": Event.objects.filter(date__gte=date.today())[:3],
         "perks": PremiumPerk.objects.all(),
@@ -45,7 +45,7 @@ def home(request):
 def matches(request):
     q, mine = request.GET, me(request)
     seek = q.get("seek") or ({"F": "M", "M": "F"}.get(mine.gender) if mine else "")
-    qs = Member.objects.all()
+    qs = Member.objects.filter(status="active")
     if mine: qs = qs.exclude(pk=mine.pk)
     if seek in ("F", "M"): qs = qs.filter(gender=seek)
     if q.get("age") in AGES:
@@ -63,6 +63,7 @@ def matches(request):
 def member_detail(request, pk):
     m, mine = get_object_or_404(Member, pk=pk), me(request)
     if mine and m.user_id and Block.objects.filter(user=m.user, member=mine).exists(): raise Http404
+    if m.status != "active" and m != mine and not request.user.is_staff: raise Http404
     if request.user.is_authenticated and m != mine and not ProfileView.objects.filter(
             viewer=request.user, member=m, created__gte=timezone.now() - timedelta(minutes=30)).exists():
         ProfileView.objects.create(viewer=request.user, member=m)
@@ -138,17 +139,19 @@ class LoginView(auth_views.LoginView):
         return reverse("dashboard" if self.request.user.is_staff else "m_dashboard")
 
 def signup(request):
-    if request.user.is_authenticated: return redirect("home")
+    if request.user.is_authenticated: return redirect("dashboard" if request.user.is_staff else "m_dashboard")
     form = SignupForm(request.POST or None)
     if form.is_valid():
         user = form.save(); login(request, user)
         messages.success(request, "Karibu Sakinah! Complete your profile so others can get to know you.")
-        return redirect(safe_next(request) or "profile_edit")
+        return redirect(safe_next(request) or "m_profile_edit")
     return render(request, "registration/signup.html", {"form": form, "next": safe_next(request) or "", "faces": faces()})
 
 @login_required
 def profile_edit(request):
-    m = me(request) or Member(user=request.user, name=request.user.get_full_name() or request.user.username, age=18)
+    if me(request) and not request.user.is_staff: return redirect("m_profile_edit")   # members edit inside their dashboard
+    # user_id (not user=) so request.user.member stays unset until the profile is saved
+    m = me(request) or Member(user_id=request.user.pk, name=request.user.get_full_name() or request.user.username, age=18)
     form = ProfileForm(request.POST or None, request.FILES or None, instance=m)
     if form.is_valid():
         form.save(); messages.success(request, "Profile saved.")

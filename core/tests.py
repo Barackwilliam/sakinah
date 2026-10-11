@@ -22,7 +22,8 @@ class FlowTests(TestCase):
 
     def test_signup_creates_member_and_logs_in(self):
         r = self.signup()
-        self.assertRedirects(r, reverse("profile_edit"))
+        self.assertRedirects(r, reverse("m_profile_edit"))
+        self.assertEqual(self.client.get(reverse("signup")).status_code, 302)
         m = Member.objects.get(user__username="juma")
         self.assertEqual((m.name, m.gender, m.city), ("Juma Ali", "M", "Arusha"))
         self.assertContains(self.client.get(reverse("home")), "Logout")
@@ -67,10 +68,11 @@ class FlowTests(TestCase):
 
     def test_profile_edit(self):
         self.signup()
-        r = self.client.post(reverse("profile_edit"), dict(name="Juma A.", age=31, gender="M", city="Mwanza", occupation="Teacher",
-                                                           religion="Islam", marital_status="single", origin="Mtanzania", bio="Hello"))
+        self.assertRedirects(self.client.get(reverse("profile_edit")), reverse("m_profile_edit"))
+        r = self.client.post(reverse("m_profile_edit"), dict(name="Juma A.", age=31, gender="M", city="Mwanza", occupation="Teacher",
+                                                             religion="Islam", practice="practising", marital_status="single", origin="Mtanzania", bio="Hello"))
         me = Member.objects.get(user__username="juma")
-        self.assertRedirects(r, reverse("member", args=[me.pk]))
+        self.assertRedirects(r, reverse("m_profile"))
         self.assertEqual((me.city, me.bio), ("Mwanza", "Hello"))
 
     def test_logout(self):
@@ -90,7 +92,7 @@ class FlowTests(TestCase):
     def test_signup_returns_to_next(self):
         url = reverse("thread", args=[self.amina.pk])
         self.assertRedirects(self.signup(next=url), url)
-        self.assertRedirects(self.signup_external(), reverse("profile_edit"))
+        self.assertRedirects(self.signup_external(), reverse("m_profile_edit"))
 
     def signup_external(self):
         self.client.logout()

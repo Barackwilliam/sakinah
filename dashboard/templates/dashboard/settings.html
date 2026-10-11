@@ -1,0 +1,9 @@
+{% extends "dashboard/base.html" %}{% block title %}Site Settings{% endblock %}
+{% block content %}
+{% include "dashboard/_banner.html" with icon="m-gear" title="Site Settings" sub="Business details, payment instructions and home page content." %}
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+  {% for title, fields in sections %}<section class="apanel rform"><div class="aph"><svg><use href="#m-gear"/></svg><h2>{{ title }}</h2></div>
+    <div class="fg2">{% for f in fields %}{% include "dashboard/_afield.html" %}{% endfor %}</div></section>{% endfor %}
+  <div class="rbtns"><button class="ab">Save Settings</button></div>
+</form>
+{% endblock %}

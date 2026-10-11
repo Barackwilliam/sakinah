@@ -1,0 +1,14 @@
+{% extends "dashboard/base.html" %}{% block title %}Messages Monitoring{% endblock %}
+{% block content %}
+{% include "dashboard/_banner.html" with icon="m-chat" title="Messages Monitoring" sub="Review member conversations to keep the community safe and respectful." %}
+<section class="apanel"><div class="aph"><svg><use href="#m-chat"/></svg><h2>{% if pair %}Conversation: {{ pair.0.name }} &harr; {{ pair.1.name }}{% else %}Latest Member Messages{% endif %}</h2>
+  {% if pair %}<a class="va" href="?tab=messages">All messages</a>{% else %}<a class="va" href="{% url 'dash_matches' %}">Back to overview</a>{% endif %}</div>
+  {% if not pair %}<form class="af msearch2" method="get"><input type="hidden" name="tab" value="messages"><span class="mi"><input name="q" value="{{ f.q|default:'' }}" placeholder="Search messages, sender or recipient..."><svg><use href="#m-search"/></svg></span><button class="ab g">Search</button></form>{% endif %}
+  <div class="atw"><table class="atab"><thead><tr><th>From</th><th>To</th><th>Message</th><th>Sent</th><th>Read</th>{% if not pair %}<th></th>{% endif %}</tr></thead><tbody>
+  {% for msg in pg %}<tr><td class="nw">{{ msg.sender.member.name|default:msg.sender.get_username }}</td><td class="nw">{{ msg.to.name }}</td>
+    <td>{% if msg.image %}<a class="pill info" href="{{ msg.image.url }}" target="_blank">Photo</a> {% endif %}{{ msg.body|truncatechars:140 }}</td><td class="nw">{{ msg.created|date:"j M Y H:i" }}</td>
+    <td>{% if msg.read %}<span class="pill ok">Read</span>{% else %}<span class="pill mut">Unread</span>{% endif %}</td>
+    {% if not pair %}<td>{% if msg.sender.member %}<a class="ab o sm" href="?tab=messages&amp;a={{ msg.sender.member.pk }}&amp;b={{ msg.to.pk }}">Conversation</a>{% endif %}</td>{% endif %}</tr>
+  {% empty %}<tr><td colspan="6" class="muted">No messages found.</td></tr>{% endfor %}</tbody></table></div>
+  {% include "dashboard/_pager.html" %}</section>
+{% endblock %}

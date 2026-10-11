@@ -1,63 +1,81 @@
 {% load static %}<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="robots" content="noindex"><title>{% block title %}Dashboard{% endblock %} - {{ site.brand }} Admin</title>
+<meta name="robots" content="noindex"><meta name="theme-color" content="#0d4a31"><title>{% block title %}Dashboard{% endblock %} - {{ site.brand }} Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}"></head>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}"><link rel="stylesheet" href="{% static 'css/admin.css' %}"></head>
 <body>
-{% include "partials/icons.html" %}
-{% include "dashboard/icons.html" %}
-<aside class="sb" id="sb">
-  <a class="sb-logo" href="{% url 'dashboard' %}"><svg class="logo-mark" viewBox="0 0 48 44" aria-hidden="true"><circle cx="13" cy="6.500" r="5" fill="#fff"/><circle cx="35" cy="6.500" r="5" fill="#fff"/><path fill="#fff" d="M24 42C13 34 3.500 26.500 3.500 19.500 3.500 14.500 7 12 11 12c2.200 0 4.300.800 6 2.300-2.800.200-5 2.300-5 5.400 0 6.300 6.800 12.600 12 16.300z"/><path fill="#f6b7c9" d="M24 42c11-8 20.500-15.500 20.500-22.500 0-5-3.500-7.500-7.500-7.500-5.300 0-9.300 4.400-13 10.700-2.200-3.700-4.500-6.400-7.200-7.800 3.400.600 6.700 3.900 8.200 8.300 3.300-5.200 6.400-7.200 9-7.200 2.500 0 4 1.700 4 4.500 0 6.200-8 13.300-18 21.500z"/></svg>
-    <span><b>{{ site.brand }}</b><small>{{ site.tagline }}</small></span></a>
-  <nav class="sb-nav">
-    <a href="{% url 'dashboard' %}" class="{% if nav == 'dashboard' %}on{% endif %}"><svg><use href="#i-home"/></svg>Dashboard</a>
-    <a href="{% url 'dash_members' %}" class="{% if nav == 'members' %}on{% endif %}"><svg><use href="#i-user"/></svg>Members Management<i></i></a>
-    <a href="{% url 'admin:core_like_changelist' %}"><svg><use href="#i-heart-f"/></svg>Matches &amp; Activities<i></i></a>
-    <a href="{% url 'admin:core_advert_changelist' %}"><svg><use href="#i-doc"/></svg>Adverts Management<i></i></a>
-    <a href="{% url 'admin:core_vendor_changelist' %}"><svg><use href="#i-briefcase"/></svg>Services Management<i></i></a>
-    <a href="{% url 'admin:core_event_changelist' %}"><svg><use href="#i-cal-f"/></svg>Events Management<i></i></a>
-    <a href="{% url 'admin:core_article_changelist' %}"><svg><use href="#i-book"/></svg>Articles &amp; Content<i></i></a>
-    <a href="{% url 'dash_payments' %}" class="{% if nav == 'payments' %}on{% endif %}"><svg><use href="#i-coins"/></svg>Payments &amp; Finance<i></i></a>
-    {% if nav == 'payments' %}<div class="sb-sub"><a href="{% url 'dash_payments' %}" class="on">Overview</a><a href="{% url 'dash_payments' %}?new=1#record">Record Payment</a>
-      <a href="{% url 'dash_payments_csv' %}">Export Transactions</a><a href="{% url 'admin:core_payment_changelist' %}">All Transactions</a></div>{% endif %}
-    <a href="{% url 'admin:core_plan_changelist' %}"><svg><use href="#i-crown"/></svg>Premium Plans<i></i></a>
-    <a href="{% url 'dash_comms' %}" class="{% if nav == 'comms' %}on{% endif %}"><svg><use href="#i-mail"/></svg>Communications<i></i></a>
-    {% if nav == 'comms' %}<div class="sb-sub"><a href="{% url 'dash_comms' %}" class="on">Overview</a><a href="{% url 'dash_comms' %}?channel=email">Send Email</a>
-      <a href="{% url 'dash_comms' %}?channel=inapp">Send In-App Message</a><a href="{% url 'dash_comms' %}?channel=notification">Send Notification</a>
-      <a href="{% url 'admin:core_messagetemplate_changelist' %}">Templates</a><a href="{% url 'admin:core_broadcast_changelist' %}">Message History</a></div>{% endif %}
-    <a href="{% url 'dash_report' %}"><svg><use href="#i-chart"/></svg>Reports &amp; Analytics<i></i></a>
-    <a href="{% url 'admin:auth_user_changelist' %}"><svg><use href="#i-people"/></svg>User Management<i></i></a>
-    <a href="{% url 'admin:core_sitesetting_changelist' %}"><svg><use href="#i-gear"/></svg>Settings<i></i></a>
-    <a href="{% url 'admin:admin_logentry_changelist' %}"><svg><use href="#i-doc"/></svg>Audit Logs<i></i></a>
-  </nav>
-  <div class="sb-tools"><p>System Tools</p>
-    <a href="{% url 'admin:core_sitesetting_changelist' %}"><svg><use href="#i-gear"/></svg>Site Configuration</a>
-    <a href="{% url 'admin:auth_group_changelist' %}"><svg><use href="#i-shield-c"/></svg>Roles &amp; Permissions</a>
-    <a href="{% url 'admin:index' %}"><svg><use href="#i-grid"/></svg>Full Admin</a></div>
-</aside>
-<div class="scrim" id="sb-scrim" hidden></div>
-<div class="main">
-  <header class="top">
-    <button class="tb-burger" id="sb-toggle" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
-    <form class="tb-search" action="{% url 'dash_search' %}"><svg><use href="#i-search"/></svg><input name="q" value="{{ q|default:'' }}" placeholder="Search members, adverts, events, payments..."></form>
-    <a class="tb-site" href="{% url 'home' %}" target="_blank">View Website <svg><use href="#i-arrow"/></svg></a>
-    <a class="tb-ic" href="{% url 'dash_members' %}?f=reported" title="Reports and requests"><svg><use href="#i-bell"/></svg>{% if n_alerts %}<i>{{ n_alerts }}</i>{% endif %}</a>
-    <a class="tb-ic" href="{% url 'admin:core_inquiry_changelist' %}?handled__exact=0" title="Vendor inquiries"><svg><use href="#i-mail"/></svg>{% if n_inbox %}<i>{{ n_inbox }}</i>{% endif %}</a>
-    <a class="tb-ic" href="{% url 'admin:core_sitesetting_changelist' %}" title="Settings"><svg><use href="#i-gear"/></svg></a>
-    <details class="tb-user"><summary><span class="av">{{ user.get_username|first|upper }}</span><span class="who"><b>{{ user.get_full_name|default:user.get_username }}</b><small>{% if user.is_superuser %}Super Admin{% else %}Staff{% endif %}</small></span><svg><use href="#i-chev-d"/></svg></summary>
-      <div class="tb-menu"><a href="{% url 'home' %}">View website</a><a href="{% url 'admin:password_change' %}">Change password</a>
-        <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button>Logout</button></form></div></details>
-  </header>
-  {% if messages %}<div class="flash">{% for m in messages %}<p class="msg {{ m.tags }}">{{ m }}</p>{% endfor %}</div>{% endif %}
-  <main class="content">{% block content %}{% endblock %}</main>
+{% include "partials/icons.html" %}{% include "dashboard/icons.html" %}{% include "members/icons.html" %}
+<header class="ah">
+  <button class="ah-burger" id="sb-open" aria-label="Menu"><span></span><span></span><span></span></button>
+  <a class="ah-logo" href="{% url 'dashboard' %}">
+    <svg viewBox="0 0 48 44" aria-hidden="true"><circle cx="13" cy="6.500" r="5" fill="#a0123c"/><circle cx="35" cy="6.500" r="5" fill="#0f5a39"/>
+      <path fill="#a0123c" d="M24 42C13 34 3.500 26.500 3.500 19.500 3.500 14.500 7 12 11 12c2.200 0 4.300.800 6 2.300-2.800.200-5 2.300-5 5.400 0 6.300 6.800 12.600 12 16.300z"/>
+      <path fill="#0f5a39" d="M24 42c11-8 20.500-15.500 20.500-22.500 0-5-3.500-7.500-7.500-7.500-5.300 0-9.300 4.400-13 10.700-2.200-3.700-4.500-6.400-7.200-7.800 3.400.600 6.700 3.900 8.200 8.300 3.300-5.200 6.400-7.200 9-7.200 2.500 0 4 1.700 4 4.500 0 6.200-8 13.300-18 21.500z"/>
+      <path fill="#e2a83a" d="M24 20c1.500-2.300 3.300-3.800 5-4.300-1.400 1.300-2.700 3.300-3.600 6z"/></svg>
+    <span><b>{{ site.brand }}</b><small>Pata Mwenza, Pata Utulivu</small></span></a>
+  <form class="ah-search" action="{% url 'dash_search' %}"><input name="q" value="{{ q|default:'' }}" placeholder="{{ search_hint|default:'Search members, matches, messages, events, payments...' }}"><button aria-label="Search"><svg><use href="#m-search"/></svg></button></form>
+  <div class="ah-icons">
+    <a class="ah-ic" href="{% url 'dash_manage' 'tickets' %}?status=open" title="Open support tickets and reports"><svg><use href="#m-bell"/></svg>{% if n_alerts %}<i>{{ n_alerts }}</i>{% endif %}</a>
+    <a class="ah-ic" href="{% url 'dash_matches' %}?tab=messages" title="Member messages today"><svg><use href="#m-mail"/></svg>{% if n_msgs %}<i>{{ n_msgs }}</i>{% endif %}</a>
+    {% if is_owner %}<a class="ah-ic" href="{% url 'dash_settings' %}" title="Site settings"><svg><use href="#m-gear"/></svg></a>
+    {% else %}<a class="ah-ic" href="{% url 'dash_manage' 'events' %}" title="Events"><svg><use href="#m-cal"/></svg></a>{% endif %}
+  </div>
+  <details class="ah-user"><summary><span class="av">{% if user.member.photo %}<img src="{{ user.member.photo.url }}" alt="">{% else %}{{ user.get_username|first|upper }}{% endif %}</span>
+    <span class="who"><b>{{ user.member.name|default:user.get_full_name|default:user.get_username }}</b><small>{% if is_owner %}Super Admin{% else %}Administrator{% endif %}</small></span><svg><use href="#m-chev-d"/></svg></summary>
+    <div class="ah-menu"><a href="{% url 'home' %}" target="_blank">View website</a><a href="{% url 'dash_password' %}">Change password</a>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button>Logout</button></form></div></details>
+</header>
+<div class="awrap">
+  <aside class="asb" id="msb">
+    <nav>
+      <a class="top {% if nav == 'dashboard' %}on{% endif %}" href="{% url 'dashboard' %}"><svg><use href="#m-home"/></svg>{% if is_owner %}Super Admin Dashboard{% else %}Dashboard{% endif %}</a>
+      <details {% if nav == 'members' %}open{% endif %}><summary class="{% if nav == 'members' %}on{% endif %}"><svg><use href="#m-people"/></svg>Members Management</summary>
+        <div class="sub"><a href="{% url 'dash_members' %}" class="{% if nav == 'members' and not sub %}on{% endif %}">All Members</a><a href="{% url 'dash_members' %}?f=pending" class="{% if sub == 'pending' %}on{% endif %}">Pending Approval</a>
+          <a href="{% url 'dash_members' %}?f=verified" class="{% if sub == 'verified' %}on{% endif %}">Verified Members</a><a href="{% url 'dash_members' %}?f=rejected" class="{% if sub == 'rejected' %}on{% endif %}">Rejected Members</a>
+          <a href="{% url 'dash_members' %}?f=suspended" class="{% if sub == 'suspended' %}on{% endif %}">Inactive / Suspended</a><a href="{% url 'dash_members' %}?f=reported" class="{% if sub == 'reported' %}on{% endif %}">Reported Members</a>
+          <a href="{% url 'dash_manage_add' 'members' %}" class="{% if sub == 'members' %}on{% endif %}">Add Member</a><a href="{% url 'dash_members' %}?import=1#import">Import Members</a><a href="{% url 'dash_members_csv' %}">Export Members</a></div></details>
+      <details {% if nav == 'matches' %}open{% endif %}><summary class="{% if nav == 'matches' %}on{% endif %}"><svg><use href="#m-heart"/></svg>Match and Activities</summary>
+        <div class="sub"><a href="{% url 'dash_matches' %}" class="{% if nav == 'matches' and not sub %}on{% endif %}">Matches Overview</a><a href="{% url 'dash_matches' %}?tab=all" class="{% if sub == 'all' %}on{% endif %}">Manage Matches</a>
+          <a href="{% url 'dash_matches' %}#suggest">Match Suggestions</a><a href="{% url 'dash_matches' %}?tab=messages" class="{% if sub == 'messages' %}on{% endif %}">Messages Monitoring</a>
+          <a href="{% url 'dash_matches' %}#activities">Activities Overview</a></div></details>
+      <details {% if nav == 'events' %}open{% endif %}><summary class="{% if nav == 'events' %}on{% endif %}"><svg><use href="#m-cal"/></svg>Events</summary>
+        <div class="sub"><a href="{% url 'dash_manage' 'events' %}" class="{% if sub == 'events' %}on{% endif %}">All Events</a><a href="{% url 'dash_manage_add' 'events' %}">Add Event</a><a href="{% url 'dash_manage' 'event-categories' %}" class="{% if sub == 'event-categories' %}on{% endif %}">Event Categories</a><a href="{% url 'dash_manage' 'registrations' %}" class="{% if sub == 'registrations' %}on{% endif %}">Registrations</a></div></details>
+      <details {% if nav == 'payments' %}open{% endif %}><summary class="{% if nav == 'payments' %}on{% endif %}"><svg><use href="#i-coins"/></svg>Payments &amp; Finance</summary>
+        <div class="sub"><a href="{% url 'dash_payments' %}" class="{% if nav == 'payments' and not sub %}on{% endif %}">Overview</a><a href="{% url 'dash_payments' %}?new=1#record">Record Payment</a>
+          <a href="{% url 'dash_manage' 'payments' %}?status=pending">Pending Payments</a><a href="{% url 'dash_manage' 'payments' %}" class="{% if sub == 'payments' %}on{% endif %}">All Transactions</a><a href="{% url 'dash_payments_csv' %}">Export Transactions</a></div></details>
+      <details {% if nav == 'plans' %}open{% endif %}><summary class="{% if nav == 'plans' %}on{% endif %}"><svg><use href="#m-crown"/></svg>Membership Plans</summary>
+        <div class="sub"><a href="{% url 'dash_manage' 'plans' %}" class="{% if sub == 'plans' %}on{% endif %}">Plans</a><a href="{% url 'dash_manage' 'perks' %}" class="{% if sub == 'perks' %}on{% endif %}">Premium Perks</a></div></details>
+      <details {% if nav == 'content' %}open{% endif %}><summary class="{% if nav == 'content' %}on{% endif %}"><svg><use href="#m-doc"/></svg>Content Management</summary>
+        <div class="sub"><a href="{% url 'dash_manage' 'articles' %}" class="{% if sub == 'articles' %}on{% endif %}">Articles</a><a href="{% url 'dash_manage' 'article-categories' %}" class="{% if sub == 'article-categories' %}on{% endif %}">Article Categories</a><a href="{% url 'dash_manage' 'home-strips' %}" class="{% if sub == 'home-strips' %}on{% endif %}">Home Page Highlights</a></div></details>
+      <details {% if nav == 'comms' %}open{% endif %}><summary class="{% if nav == 'comms' %}on{% endif %}"><svg><use href="#i-mega"/></svg>Communication</summary>
+        <div class="sub"><a href="{% url 'dash_comms' %}" class="{% if nav == 'comms' and not sub %}on{% endif %}">Overview</a><a href="{% url 'dash_comms' %}?channel=email">Send Email</a><a href="{% url 'dash_comms' %}?channel=notification">Send Notification</a>
+          <a href="{% url 'dash_manage' 'templates' %}" class="{% if sub == 'templates' %}on{% endif %}">Templates</a><a href="{% url 'dash_manage' 'broadcasts' %}" class="{% if sub == 'broadcasts' %}on{% endif %}">Message History</a></div></details>
+      <details><summary><svg><use href="#m-chart"/></svg>Reports &amp; Analytics</summary>
+        <div class="sub"><a href="{% url 'dash_report' %}">Download Report (CSV)</a><a href="{% url 'dash_members_csv' %}">Members (CSV)</a><a href="{% url 'dash_payments_csv' %}">Payments (CSV)</a></div></details>
+      {% if is_owner %}<a class="top {% if nav == 'users' %}on{% endif %}" href="{% url 'dash_staff' %}"><svg><use href="#m-user"/></svg>User Management</a>
+      <a class="top {% if nav == 'settings' %}on{% endif %}" href="{% url 'dash_settings' %}"><svg><use href="#m-gear"/></svg>System Settings</a>
+      <a class="top {% if nav == 'audit' %}on{% endif %}" href="{% url 'dash_manage' 'audit' %}"><svg><use href="#m-doc"/></svg>Audit Logs</a>{% endif %}
+      <details {% if nav == 'support' %}open{% endif %}><summary class="{% if nav == 'support' %}on{% endif %}"><svg><use href="#m-headset"/></svg>Support &amp; Tickets{% if n_tickets %}<i>{{ n_tickets }}</i>{% endif %}</summary>
+        <div class="sub"><a href="{% url 'dash_manage' 'tickets' %}?status=open">Open Tickets</a><a href="{% url 'dash_manage' 'tickets' %}" class="{% if sub == 'tickets' %}on{% endif %}">All Tickets</a><a href="{% url 'dash_manage' 'reports' %}" class="{% if sub == 'reports' %}on{% endif %}">Member Reports</a><a href="{% url 'dash_manage' 'inquiries' %}" class="{% if sub == 'inquiries' %}on{% endif %}">Vendor Inquiries</a></div></details>
+      <details {% if nav == 'marketing' %}open{% endif %}><summary class="{% if nav == 'marketing' %}on{% endif %}"><svg><use href="#i-mega"/></svg>Marketing &amp; Ads</summary>
+        <div class="sub"><a href="{% url 'dash_manage' 'adverts' %}" class="{% if sub == 'adverts' %}on{% endif %}">Adverts</a><a href="{% url 'dash_manage' 'vendors' %}" class="{% if sub == 'vendors' %}on{% endif %}">Vendors</a><a href="{% url 'dash_manage' 'service-categories' %}" class="{% if sub == 'service-categories' %}on{% endif %}">Service Categories</a></div></details>
+    </nav>
+    <div class="asb-art"><img src="{% static 'img/member/side_art.jpg' %}" alt=""><p>&ldquo;Na Mwenyezi Mungu aliuumba kwa jozi.&rdquo;<span>(Qur'an 78:8)</span></p></div>
+  </aside>
+  <div class="ascrim" id="sb-scrim" hidden></div>
+  <main class="amain">
+    {% if messages %}<div class="flash">{% for m in messages %}<p class="msg {{ m.tags }}">{{ m }}</p>{% endfor %}</div>{% endif %}
+    {% block content %}{% endblock %}
+  </main>
 </div>
 <script>
-const sb=document.getElementById('sb'),sc=document.getElementById('sb-scrim');
-document.getElementById('sb-toggle').onclick=()=>{const o=!sb.classList.contains('open');sb.classList.toggle('open',o);sc.hidden=!o;document.body.classList.toggle('mini')};
-sc.onclick=()=>{sb.classList.remove('open');sc.hidden=true};
-document.querySelectorAll('[data-chan]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-chan]').forEach(x=>x.classList.toggle('on',x===b));document.getElementById('id_channel').value=b.dataset.chan}));
-document.querySelectorAll('[data-pick]').forEach(b=>b.addEventListener('click',()=>{const f=b.form;Object.entries(JSON.parse(b.dataset.pick)).forEach(([k,v])=>{const i=f.querySelector('[name='+k+']');if(i)i.value=v});document.querySelectorAll('[data-pick]').forEach(x=>x.classList.toggle('on',x===b))}));
-</script>
+(function(){var sb=document.getElementById('msb'),sc=document.getElementById('sb-scrim');
+function set(o){sb.classList.toggle('open',o);sc.hidden=!o;document.body.classList.toggle('sb-lock',o)}
+document.getElementById('sb-open').onclick=function(){set(!sb.classList.contains('open'))};sc.onclick=function(){set(false)};
+document.querySelectorAll('[data-confirm]').forEach(function(f){f.addEventListener('submit',function(e){if(!confirm(f.dataset.confirm))e.preventDefault()})});
+document.querySelectorAll('[data-chan]').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('[data-chan]').forEach(function(x){x.classList.toggle('on',x===b)});document.getElementById('id_channel').value=b.dataset.chan})});
+document.querySelectorAll('[data-pick]').forEach(function(b){b.addEventListener('click',function(){var f=b.form;Object.entries(JSON.parse(b.dataset.pick)).forEach(function(kv){var i=f.querySelector('[name='+kv[0]+']');if(i)i.value=kv[1]});document.querySelectorAll('[data-pick]').forEach(function(x){x.classList.toggle('on',x===b)})})});
+})();</script>
 {% block scripts %}{% endblock %}
 </body></html>

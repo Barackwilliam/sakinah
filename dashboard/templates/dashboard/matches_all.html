@@ -1,0 +1,12 @@
+{% extends "dashboard/base.html" %}{% block title %}Manage Matches{% endblock %}
+{% block content %}
+{% include "dashboard/_banner.html" with icon="m-heart" title="Manage Matches" sub="Every mutual match on the platform: two members who liked each other." %}
+<section class="apanel"><div class="aph"><svg><use href="#m-heart"/></svg><h2>All Matches ({{ total }})</h2><a class="va" href="{% url 'dash_matches' %}">Back to overview</a></div>
+  <div class="atw"><table class="atab"><thead><tr><th>Member</th><th>Match</th><th>Score</th><th>Matched On</th><th>Messages</th><th></th></tr></thead><tbody>
+  {% for x in pg %}<tr><td class="nw"><a href="{% url 'member' x.a.pk %}" target="_blank">{{ x.a.name }}</a> <small class="muted">{{ x.a.age }}, {{ x.a.city }}</small></td>
+    <td class="nw"><span class="pair"><svg><use href="#m-heart"/></svg><a href="{% url 'member' x.b.pk %}" target="_blank">{{ x.b.name }}</a></span> <small class="muted">{{ x.b.age }}, {{ x.b.city }}</small></td>
+    <td><span class="pill ok">{{ x.score }}%</span></td><td class="nw">{{ x.t|date:"j M Y H:i" }}</td><td>{% if x.n %}<span class="pill info">{{ x.n }} message{{ x.n|pluralize }}</span>{% else %}<span class="pill mut">Not contacted</span>{% endif %}</td>
+    <td><a class="ab o sm" href="?tab=messages&amp;a={{ x.a.pk }}&amp;b={{ x.b.pk }}">View messages</a></td></tr>
+  {% empty %}<tr><td colspan="6" class="muted">No mutual matches yet.</td></tr>{% endfor %}</tbody></table></div>
+  {% include "dashboard/_pager.html" with base="?tab=all" %}</section>
+{% endblock %}

@@ -29,7 +29,10 @@ services:
         sync: false
       - key: SUPABASE_REGION
         sync: false
-      # First super admin, created on the first deploy (log in at /login/ with "Admin Login")
+      # Secret path of the developer-only Django admin (everyone except superusers gets 404 there)
+      - key: DJANGO_ADMIN_URL
+        sync: false
+      # The client's Super Admin, created on the first deploy (log in at /login/ with "Admin Login")
       - key: ADMIN_EMAIL
         sync: false
       - key: ADMIN_PASSWORD

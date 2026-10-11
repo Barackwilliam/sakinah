@@ -1,0 +1,5 @@
+<div class="acards{% if five %} five{% endif %}">{% for c in cards %}
+  <div class="acard{% if tinted %} t{% endif %}" style="--c:{{ c.5 }}"><span class="ci"><svg><use href="#{{ c.4 }}"/></svg></span>
+    <div><small>{{ c.0 }}</small><b class="{% if c.1|length > 8 %}sm{% endif %}">{{ c.1 }}</b>
+      {% if c.2 is not None %}<em class="{% if c.2 < 0 %}dn{% elif c.7 == 'am' %}am{% elif c.7 == 'dn' %}dn{% endif %}">{% if c.2 < 0 %}&darr;{% else %}&uarr;{% endif %} {% if c.2 > 0 %}+{% endif %}{{ c.2 }}%</em>{% endif %}
+      <span class="note">{% if c.6 == 'online' %}<i></i>{% endif %}{{ c.3 }}</span></div></div>{% endfor %}</div>

@@ -14,12 +14,23 @@ Mradi una `render.yaml` (Render Blueprint) na `build.sh`. Database na picha zina
    |---|---|
    | `DATABASE_URL` | URI ya Supabase (hatua 1.1) |
    | `SUPABASE_PROJECT_REF`, `SUPABASE_S3_KEY`, `SUPABASE_S3_SECRET`, `SUPABASE_REGION` | kutoka hatua 1.3 |
-   | `ADMIN_EMAIL`, `ADMIN_PASSWORD` | akaunti ya Super Admin itakayoundwa kwenye deploy ya kwanza |
+   | `ADMIN_EMAIL`, `ADMIN_PASSWORD` | akaunti ya **Super Admin wa mteja** itakayoundwa kwenye deploy ya kwanza (inasimamia kila kitu kupitia `/dashboard/`) |
+   | `DJANGO_ADMIN_URL` | anwani ya siri ya Django admin yako wewe developer, mfano `sk-dev-7f3k2/` (usiitaje kwa mteja) |
    | `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS` | domain yako, mfano `sakinah.co.tz,www.sakinah.co.tz` (acha tupu kama utatumia anwani ya `onrender.com` tu) |
 3. Bofya **Apply**. Build inaendesha `build.sh`: inasakinisha packages, `collectstatic`, `migrate`, inaunda admin, na `seed` (maudhui ya mwanzo pamoja na picha).
 4. Ikimaliza, fungua `https://<jina>.onrender.com`. Ingia `/login/` → **Admin Login** kwa `ADMIN_EMAIL` na `ADMIN_PASSWORD` → utapelekwa `/dashboard/`.
 
 `SECRET_KEY` inatengenezwa na Render yenyewe. Usiiweke kwenye GitHub.
+
+## 2b. Django admin ni yako wewe developer tu
+- Mteja (Super Admin na Administrators) anasimamia kila kitu kupitia `/dashboard/`; hakuna kiungo chochote kinachoelekea Django admin.
+- Django admin iko kwenye `DJANGO_ADMIN_URL` (kwa default `devadmin/`). Mtu yeyote asiye **superuser** anapata 404 hata akiijua anwani, kama vile ukurasa haupo.
+- Unda akaunti yako ya developer (superuser) kwa command, kwenye Render Shell au kwenye kompyuta yako huku `DATABASE_URL` ikielekeza Supabase:
+  ```bash
+  python manage.py createsuperuser
+  ```
+  Kisha ingia kupitia `/login/` na ufungue `https://<domain>/<DJANGO_ADMIN_URL>`.
+- Usimpe mteja akaunti ya superuser. Staff wapya wanaongezwa na Super Admin kupitia **Dashboard → User Management**.
 
 ## 3. Domain yako (hiari)
 Render → service → **Settings** → **Custom Domains** → ongeza domain, kisha weka DNS records unazopewa. Ongeza domain hiyo kwenye `ALLOWED_HOSTS` na `CSRF_TRUSTED_ORIGINS`.

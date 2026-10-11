@@ -1,0 +1,51 @@
+{% extends "dashboard/base.html" %}{% load humanize member_tags %}{% block title %}Match and Activities{% endblock %}
+{% block content %}
+{% include "dashboard/_banner.html" with icon="m-heart" title="Match and Activities" sub="Manage member matches, activities and events to build meaningful connections." %}
+{% include "dashboard/_acards.html" with five=True tinted=True %}
+<div class="mx-g">
+  <div class="mx-l">
+    <section class="apanel"><div class="aph"><svg><use href="#m-people"/></svg><h2>Find Potential Matches</h2><a class="va adv-l" href="{% url 'dash_members' %}"><svg><use href="#m-filter"/></svg>Advanced Filters</a></div>
+      <form class="af pfind" method="get" action="#suggest">
+        <label>Gender<select name="gender"><option value="F" {% if gender == 'F' %}selected{% endif %}>Female</option><option value="M" {% if gender == 'M' %}selected{% endif %}>Male</option><option value="any" {% if gender == 'any' %}selected{% endif %}>Any</option></select></label>
+        <label>Age Range<select name="age"><option value="">Any age</option>{% for k in ages %}<option {% if f.age == k %}selected{% endif %}>{{ k }}</option>{% endfor %}</select></label>
+        <label>Location<select name="city"><option value="">Within Tanzania</option>{% for l in locations %}<option {% if f.city == l %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
+        <label>Profile Type<select name="type"><option value="">All</option><option value="verified" {% if f.type == 'verified' %}selected{% endif %}>Verified</option><option value="premium" {% if f.type == 'premium' %}selected{% endif %}>Premium</option></select></label>
+        <div class="pf-b"><button class="ab g">Search</button><a class="ab lt" href="{% url 'dash_matches' %}">Reset</a></div>
+      </form></section>
+    <section class="apanel"><div class="aph"><svg><use href="#m-heart"/></svg><h2>Recent Matches</h2><a class="va" href="?tab=all">View All</a></div>
+      <ul class="rmatch">{% for x in recent %}<li>
+        <span class="duo"><span class="av sm2">{% if x.a.photo %}<img src="{{ x.a.photo.url }}" alt="">{% else %}{{ x.a.name|first }}{% endif %}</span><span class="av sm2">{% if x.b.photo %}<img src="{{ x.b.photo.url }}" alt="">{% else %}{{ x.b.name|first }}{% endif %}</span></span>
+        <b class="nm">{{ x.a.name }} <span>&harr;</span> {{ x.b.name }}</b><span class="pill ok">{{ x.score }}% Match</span><span class="dt">{{ x.t|date:"j M Y" }}</span>
+        <a class="ab o sm" href="?tab=messages&amp;a={{ x.a.pk }}&amp;b={{ x.b.pk }}"><svg><use href="#m-chat"/></svg>Message</a></li>
+      {% empty %}<li class="muted">No mutual matches yet. They appear here when two members like each other.</li>{% endfor %}</ul></section>
+    <section class="apanel" id="activities"><div class="aph"><svg><use href="#m-chart"/></svg><h2>Member Activities</h2><a class="va" href="{% url 'dash_matches' %}?tab=all">View All</a></div>
+      <ul class="afeed2">{% for t, m, text, kind, ic, color in feed %}<li><span class="av sm2">{% if m.photo %}<img src="{{ m.photo.url }}" alt="">{% else %}{{ m.name|first }}{% endif %}</span>
+        <p><b>{{ m.name }}</b> {{ text }}</p><time>{{ t|ago }}</time><span class="kind" style="--c:{{ color }}"><svg><use href="#{{ ic }}"/></svg>{{ kind }}</span></li>
+      {% empty %}<li class="muted">No activity yet.</li>{% endfor %}</ul></section>
+  </div>
+  <div class="mx-r">
+    <section class="apanel" id="suggest"><div class="aph"><svg><use href="#m-heart"/></svg><h2>Match Suggestions</h2><a class="va" href="{% url 'dash_members' %}?gender={% if gender != 'any' %}{{ gender }}{% endif %}">View All</a></div>
+      <div class="sugw"><button type="button" class="sgo l" data-dir="-1" aria-label="Previous"><svg><use href="#m-chev-l"/></svg></button>
+        <div class="sug" id="sug">{% for m in suggestions %}<article class="sc"><div class="sc-ph">{% if m.photo %}<img src="{{ m.photo.url }}" alt="">{% endif %}<span>{{ m.compatibility }}% Match</span></div>
+          <b>{{ m.name }}</b><small><svg><use href="#m-user"/></svg>{{ m.age }}, {{ m.city }}</small><small class="int"><svg><use href="#m-heart"/></svg>{{ m.interest_list|slice:":3"|join:", "|default:m.occupation }}</small>
+          <a class="ab o sm" href="{% url 'member' m.pk %}" target="_blank">View Profile</a></article>
+        {% empty %}<p class="muted">No members match this search.</p>{% endfor %}</div>
+        <button type="button" class="sgo r" data-dir="1" aria-label="Next"><svg><use href="#m-chev-r"/></svg></button></div></section>
+    <section class="apanel"><div class="aph"><svg><use href="#m-cal"/></svg><h2>Upcoming Events</h2><a class="va" href="{% url 'dash_manage' 'events' %}">View All</a></div>
+      <ul class="uev">{% for e in events %}<li>{% if e.image %}<img src="{{ e.image.url }}" alt="">{% else %}<span class="noimg"></span>{% endif %}
+        <span class="uev-t"><b>{{ e.title }}</b><small><svg><use href="#m-cal"/></svg>{{ e.date|date:"j M Y" }}<svg><use href="#m-pin"/></svg>{{ e.city }}</small></span>
+        {% if e.capacity and not e.seats_left %}<span class="pill bad">Full</span>{% elif e.reg_count %}<span class="pill ok">{{ e.reg_count }} Registered</span>{% else %}<span class="pill warn">Open</span>{% endif %}
+        <a class="ab o sm" href="{% url 'dash_manage_edit' 'events' e.pk %}">View Details</a></li>{% empty %}<li class="muted">No upcoming events.</li>{% endfor %}</ul></section>
+    <section class="apanel"><div class="aph"><svg><use href="#m-chart"/></svg><h2>Match Statistics</h2><span class="muted sm-r">Last 12 Months</span></div>
+      <div class="lgd">{% for n, c in chart.legend %}<span><i style="background:{{ c }}"></i>{{ n }}</span>{% endfor %}</div>
+      <svg class="lchart" viewBox="0 0 {{ chart.w }} {{ chart.h }}" role="img" aria-label="Match statistics">
+        {% for t in chart.ticks %}<line x1="{{ chart.left }}" x2="{{ chart.right }}" y1="{{ t.y }}" y2="{{ t.y }}" class="grid"/><text x="{{ chart.left|add:'-6' }}" y="{{ t.y }}" class="yl">{{ t.label }}</text>{% endfor %}
+        {% for x in chart.xlabels %}<text x="{{ x.x }}" y="{{ chart.h|add:'-6' }}" class="xl">{{ x.label }}</text>{% endfor %}
+        {% for b in chart.bars %}<rect x="{{ b.x }}" y="{{ b.y }}" width="{{ b.w }}" height="{{ b.h }}" fill="{{ b.color }}" rx="1"><title>{{ b.title }}</title></rect>{% endfor %}
+      </svg></section>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script>
+document.querySelectorAll('.sgo').forEach(function(b){b.onclick=function(){var s=document.getElementById('sug');s.scrollBy({left:+b.dataset.dir*s.clientWidth*.9,behavior:'smooth'})}});
+</script>{% endblock %}

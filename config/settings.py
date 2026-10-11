@@ -31,8 +31,12 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.middleware.LastSeenMiddleware",
+    "core.middleware.HideDjangoAdminMiddleware",
 ]
 ROOT_URLCONF = "config.urls"
+# Django's built-in admin is for the developer only: it lives at a secret path and answers 404 to everyone
+# who is not a superuser. Set DJANGO_ADMIN_URL on the server to your own hard-to-guess value.
+ADMIN_URL = (os.getenv("DJANGO_ADMIN_URL", "").strip().strip("/") or "devadmin") + "/"   # never empty: that would take over the home page
 TEMPLATES = [{
     "BACKEND": "django.template.backends.django.DjangoTemplates",
     "DIRS": [BASE_DIR / "templates"], "APP_DIRS": True,

@@ -1,0 +1,6 @@
+{% load static %}<div class="aban-row"><section class="aban"><span class="aban-ic"><svg><use href="#{{ icon }}"/></svg></span>
+  <div class="aban-t"><h1>{{ title }}</h1><p>{{ sub }}</p></div>
+  <div class="aban-q"><img src="{% static 'img/member/banner_mosque.jpg' %}" alt=""><blockquote>&ldquo;Na Mwenyezi Mungu aliuumba kwa jozi.&rdquo;<cite>(Qur'an 78:8)</cite></blockquote></div></section>
+  {% if action_url %}<a class="aban-btn" href="{{ action_url }}"><svg><use href="#m-plus"/></svg>{{ action_label }}</a>
+  {% else %}<div class="adate"><svg><use href="#m-cal"/></svg><div><small>{{ now_local|date:"l" }}</small><b>{{ now_local|date:"j M Y" }}</b><small>{{ now_local|date:"H:i" }} EAT</small></div></div>{% endif %}
+</div>

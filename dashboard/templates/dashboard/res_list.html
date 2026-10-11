@@ -1,0 +1,28 @@
+{% extends "dashboard/base.html" %}{% load dash_tags %}{% block title %}{{ r.title }}{% endblock %}
+{% block content %}
+{% if r.can_add %}{% url 'dash_manage_add' r.key as add_url %}{% with label="Add "|add:r.title %}{% include "dashboard/_banner.html" with icon=r.icon title=r.title sub=r.note|default:"Search, add, edit and remove items." action_url=add_url action_label="Add New" %}{% endwith %}
+{% else %}{% include "dashboard/_banner.html" with icon=r.icon title=r.title sub=r.note|default:"Search and manage records." %}{% endif %}
+{% include "dashboard/_section.html" %}
+<section class="apanel">
+  <form class="af rbar" method="get">
+    {% if r.search %}<span class="mi"><input name="q" value="{{ f.q|default:'' }}" placeholder="Search {{ r.title|lower }}..."><svg><use href="#m-search"/></svg></span>{% endif %}
+    {% for key, label, choices in filters %}<select name="{{ key }}" onchange="this.form.submit()" aria-label="{{ label }}"><option value="">{{ label }}</option>{% for v, l in choices %}<option value="{{ v }}" {% if f|get_item:key == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>{% endfor %}
+    {% if r.search or filters %}<button class="ab g">Filter</button>{% if f %}<a class="ab lt" href="{% url 'dash_manage' r.key %}">Reset</a>{% endif %}{% endif %}
+    <span class="rcount muted">{{ pg.paginator.count }} result{{ pg.paginator.count|pluralize }}</span>
+  </form>
+  <div class="atw"><table class="atab rtable"><thead><tr>{% for label, fn in r.columns %}<th>{{ label }}</th>{% endfor %}{% if r.can_edit or r.can_delete or r.actions %}<th class="c">Actions</th>{% endif %}</tr></thead><tbody>
+  {% for row in rows %}<tr>{% for c in row.cells %}<td>{% if forloop.first and row.link %}<a href="{{ row.link }}" target="_blank">{{ c }}</a>{% else %}{{ c }}{% endif %}</td>{% endfor %}
+    {% if r.can_edit or r.can_delete or r.actions %}<td class="nw c"><div class="racts">
+      {% if r.can_edit %}<a class="ib" href="{% url 'dash_manage_edit' r.key row.obj.pk %}?back={{ request.get_full_path|urlencode }}" title="{% if r.key == 'tickets' %}Open and reply{% else %}Edit{% endif %}"><svg><use href="#m-{% if r.key == 'tickets' %}chat{% else %}edit{% endif %}"/></svg></a>{% endif %}
+      {% if r.actions or r.can_delete %}<details class="rmenu"><summary class="ib" title="More actions"><svg><use href="#m-dots-v"/></svg></summary>
+        <div class="ah-menu">{% for name, a in r.actions.items %}<form method="post" action="{% url 'dash_manage_action' r.key row.obj.pk %}">{% csrf_token %}<input type="hidden" name="back" value="{{ request.get_full_path }}"><button name="act" value="{{ name }}" class="{{ a.1 }}">{{ a.0 }}</button></form>{% endfor %}
+          {% if r.can_delete %}<form method="post" action="{% url 'dash_manage_delete' r.key row.obj.pk %}" data-confirm="Delete this item permanently?">{% csrf_token %}<input type="hidden" name="back" value="{{ request.get_full_path }}"><button class="dang">Delete</button></form>{% endif %}</div></details>{% endif %}
+    </div></td>{% endif %}</tr>
+  {% empty %}<tr><td colspan="{{ r.columns|length|add:1 }}" class="muted c" style="padding:30px">Nothing here yet.{% if r.can_add %} <a class="va" href="{% url 'dash_manage_add' r.key %}">Add the first one</a>{% endif %}</td></tr>{% endfor %}
+  </tbody></table></div>
+  {% if pg.paginator.num_pages > 1 %}<div class="mpager"><span class="muted">Showing {{ pg.start_index }} to {{ pg.end_index }} of {{ pg.paginator.count }}</span><nav class="pgn">
+    {% if pg.has_previous %}<a href="?{{ qs }}&amp;page={{ pg.previous_page_number }}">&laquo;</a>{% else %}<span class="dis">&laquo;</span>{% endif %}
+    {% for n in page_range %}{% if n == pg.paginator.ELLIPSIS %}<span>&hellip;</span>{% elif n == pg.number %}<span class="on">{{ n }}</span>{% else %}<a href="?{{ qs }}&amp;page={{ n }}">{{ n }}</a>{% endif %}{% endfor %}
+    {% if pg.has_next %}<a href="?{{ qs }}&amp;page={{ pg.next_page_number }}">&raquo;</a>{% else %}<span class="dis">&raquo;</span>{% endif %}</nav></div>{% endif %}
+</section>
+{% endblock %}
