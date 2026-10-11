@@ -26,13 +26,13 @@ def me(request):
     return getattr(request.user, "member", None) if request.user.is_authenticated else None
 
 def faces():
-    return Member.objects.exclude(photo="").filter(verified=True).order_by("joined", "pk")[:5]
+    return Member.objects.exclude(photo="").filter(verified=True, status="active").order_by("joined", "pk")[:5]
 
 def home(request):
     gold = Plan.objects.filter(price__gt=0).order_by("price").first()
     return render(request, "home.html", {
         "categories": ServiceCategory.objects.all()[:8],
-        "matches": Member.objects.filter(featured=True).order_by("joined", "pk")[:4],
+        "matches": Member.objects.filter(featured=True, status="active").order_by("joined", "pk")[:4],
         "faces": faces(),
         "events": Event.objects.filter(date__gte=date.today())[:3],
         "perks": PremiumPerk.objects.all(),
@@ -45,7 +45,7 @@ def home(request):
 def matches(request):
     q, mine = request.GET, me(request)
     seek = q.get("seek") or ({"F": "M", "M": "F"}.get(mine.gender) if mine else "")
-    qs = Member.objects.all()
+    qs = Member.objects.filter(status="active")
     if mine: qs = qs.exclude(pk=mine.pk)
     if seek in ("F", "M"): qs = qs.filter(gender=seek)
     if q.get("age") in AGES:
@@ -63,6 +63,7 @@ def matches(request):
 def member_detail(request, pk):
     m, mine = get_object_or_404(Member, pk=pk), me(request)
     if mine and m.user_id and Block.objects.filter(user=m.user, member=mine).exists(): raise Http404
+    if m.status != "active" and m != mine and not request.user.is_staff: raise Http404
     if request.user.is_authenticated and m != mine and not ProfileView.objects.filter(
             viewer=request.user, member=m, created__gte=timezone.now() - timedelta(minutes=30)).exists():
         ProfileView.objects.create(viewer=request.user, member=m)

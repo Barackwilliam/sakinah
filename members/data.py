@@ -62,7 +62,7 @@ def completion(member):
 
 def suggestions(user, member, limit=8):
     qs = Member.objects.exclude(pk=getattr(member, "pk", None)).exclude(pk__in=blocked_ids(user)).exclude(profile_visibility="hidden")
-    qs = qs.filter(show_in_search=True)
+    qs = qs.filter(show_in_search=True, status="active")
     if member:
         qs = qs.filter(gender="M" if member.gender == "F" else "F", religion=member.religion).exclude(pk__in=i_liked(user).values("pk"))
         if member.pref_age_min: qs = qs.filter(age__gte=member.pref_age_min)

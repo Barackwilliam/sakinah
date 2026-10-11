@@ -109,6 +109,9 @@ class Member(models.Model):
     ui_theme = models.CharField(max_length=5, choices=THEMES, default="light", verbose_name="Theme")
     likes_seen_at = models.DateTimeField(null=True, blank=True)
     premium_until = models.DateField(null=True, blank=True)
+    STATUS = [("active", "Active"), ("rejected", "Rejected"), ("suspended", "Suspended")]
+    status = models.CharField(max_length=10, choices=STATUS, default="active", db_index=True,
+                              help_text="Rejected and suspended members are hidden from everyone and cannot use the member area.")
     # quick info and lifestyle
     height_cm = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name="Height (cm)")
     body_type = models.CharField(max_length=40, blank=True)
@@ -189,7 +192,16 @@ class Member(models.Model):
         if v == "verified": return viewer_member.verified
         if v == "premium": return viewer_member.is_premium
         return False
+    @property
+    def code(self): return f"SKN-{self.joined:%Y}-{self.pk:04d}"
+    @property
+    def short_name(self):
+        parts = self.name.split()
+        return f"{parts[0]} {parts[1][0]}." if len(parts) > 1 else self.name
+    @property
+    def is_active_member(self): return self.status == "active"
     def can_message(self, sender_member):
+        if self.status != "active": return False
         rule = self.allow_messages_from
         if rule == "all": return True
         if sender_member is None: return False

@@ -31,6 +31,8 @@ def me_or_create(request):
 
 def page(request, template, ctx, nav, **opts):
     me = ctx.get("me") or me_or_create(request)
+    if me.status != "active" and nav not in ("help", "settings"):   # suspended / rejected accounts only reach support and settings
+        template, ctx, nav = "members/blocked_account.html", {"me": me}, "blocked"
     base = {"site": SiteSetting.load(), "me": me, "nav": nav, "header_nav": opts.get("header", "main"), **data.counts(request.user, me)}
     base.update({k: v for k, v in opts.items() if k != "header"})
     return render(request, template, {**base, **ctx})
@@ -48,7 +50,7 @@ def decorate(members, request, me):
     return members
 
 def visible(qs, request, me):
-    qs = qs.exclude(pk=me.pk).exclude(pk__in=data.blocked_ids(request.user)).exclude(profile_visibility="hidden")
+    qs = qs.filter(status="active").exclude(pk=me.pk).exclude(pk__in=data.blocked_ids(request.user)).exclude(profile_visibility="hidden")
     if me.user_id: qs = qs.exclude(user__blocks__member=me)        # people who blocked me
     if not me.verified: qs = qs.exclude(profile_visibility="verified")
     if not me.is_premium: qs = qs.exclude(profile_visibility="premium")

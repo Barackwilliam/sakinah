@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from core.models import (Advert, SupportTicket, Article, Broadcast, Event, EventRegistration, Inquiry, Like, Member, Message, MessageTemplate,
+from core.models import (Advert, ProfileView, SupportTicket, Article, Broadcast, Event, EventRegistration, Inquiry, Like, Member, Message, MessageTemplate,
                          Notification, Payment, Plan, Report, SiteSetting)
 from .charts import bar_chart, donut, line_chart
 from .forms import BroadcastForm, PaymentForm
@@ -67,75 +67,346 @@ def stat(qs, field, is_datetime=True):
 def badge_counts():
     return {"n_alerts": Report.objects.filter(resolved=False).count() + Inquiry.objects.filter(handled=False).count()
                         + SupportTicket.objects.filter(status="open").count(),
-            "n_inbox": Inquiry.objects.filter(handled=False).count()}
+            "n_inbox": Inquiry.objects.filter(handled=False).count(),
+            "n_tickets": SupportTicket.objects.filter(status="open").count(),
+            "n_msgs": Message.objects.filter(created__date=timezone.localdate()).count()}
 
 def page(request, template, ctx):
-    return render(request, template, {**badge_counts(), "site": SiteSetting.load(), **ctx})
+    return render(request, template, {**badge_counts(), "site": SiteSetting.load(), "now_local": timezone.localtime(), **ctx})
+
+AGE_GROUPS = [("18–25", 18, 25, "#3b82f6"), ("26–35", 26, 35, "#16a34a"), ("36–45", 36, 45, "#e2557a"), ("46–55", 46, 55, "#f5b31b"), ("56+", 56, 200, "#8b5cf6")]
+
+def mutual_pairs():
+    """Every mutual match as (member_a, member_b, matched_on), newest first. A match happens when the second like arrives."""
+    likes = {}
+    for liker, liked, created in Like.objects.filter(user__member__isnull=False).values_list("user__member__id", "member_id", "created"):
+        likes[(liker, liked)] = created
+    pairs = {}
+    for (a, b), t in likes.items():
+        back = likes.get((b, a))
+        if back and a < b: pairs[(a, b)] = max(t, back)
+    members = Member.objects.in_bulk({pk for pair in pairs for pk in pair})
+    out = [(members[a], members[b], t) for (a, b), t in pairs.items() if a in members and b in members]
+    return sorted(out, key=lambda r: r[2], reverse=True)
+
+def mutual_likes():
+    return len(mutual_pairs())
+
+def pair_score(a, b):
+    """Simple compatibility estimate shown to admins: shared religion, practice and city, and each other's preferred ages."""
+    score = 70 + 8 * (a.religion == b.religion) + 6 * (a.practice == b.practice) + 6 * (a.city == b.city)
+    for x, y in ((a, b), (b, a)):
+        if x.pref_age_min and x.pref_age_max: score += 5 if x.pref_age_min <= y.age <= x.pref_age_max else -5
+    return max(50, min(99, score))
+
+def pair_messages(a, b):
+    q = Q(pk__in=[])
+    if a.user_id: q |= Q(sender=a.user, to=b)
+    if b.user_id: q |= Q(sender=b.user, to=a)
+    return Message.objects.filter(q)
+
+def last_active(m):
+    if not m.last_seen: return ("Never", False)
+    delta = timezone.now() - m.last_seen
+    if delta < timedelta(minutes=5): return ("Online", True)
+    if delta < timedelta(hours=1): return (f"{int(delta.total_seconds() // 60)} mins ago", False)
+    t = timezone.localtime(m.last_seen); today = timezone.localdate()
+    if t.date() == today: return (f"Today {t:%H:%M}", False)
+    if t.date() == today - timedelta(days=1): return (f"Yesterday {t:%H:%M}", False)
+    return (f"{t:%d %b %Y}", False)
+
+def member_state(m):
+    if m.status == "suspended": return ("Suspended", "bad")
+    if m.status == "rejected": return ("Rejected", "bad")
+    return ("Verified", "ok") if m.verified else ("Pending", "warn")
 
 # ---------- overview ----------
 @staff_required
 def overview(request):
-    start, end = period(request)
-    months = months_between(start, end); labels = [m.strftime("%b") for m in months]
-    today = timezone.localdate()
-    paid = Payment.objects.filter(status="completed")
-    revenue_total = paid.filter(created__date__range=(start, end)).aggregate(s=Sum("amount"))["s"] or 0
+    today = timezone.localdate(); now = timezone.now()
+    span = 6 if request.GET.get("range") == "6" else 12
+    end = today; start = (today.replace(day=1) - timedelta(days=31 * (span - 1))).replace(day=1)
+    months = months_between(start, end)[-span:]
     this, last = month_window()
+    members = Member.objects.all(); total = members.count()
+    new_this = members.filter(joined__date__gte=this).count()
+    active = members.filter(last_seen__gte=now - timedelta(days=30))
+    active_prev = members.filter(last_seen__gte=now - timedelta(days=60), last_seen__lt=now - timedelta(days=30)).count()
+    premium = members.filter(premium_until__gte=today, plan__isnull=False)
+    prem_pay = Payment.objects.filter(kind="premium", status="completed")
+    paid = Payment.objects.filter(status="completed")
     rev_this = paid.filter(created__date__gte=this).aggregate(s=Sum("amount"))["s"] or 0
     rev_last = paid.filter(created__date__gte=last, created__date__lt=this).aggregate(s=Sum("amount"))["s"] or 0
-    mutual = mutual_likes()
+    upcoming = Event.objects.filter(date__gte=today)
     cards = [
-        ("Total Members", Member.objects.count(), stat(Member.objects, "joined"), "This month", "people", "#e23d5a"),
-        ("Active Matches", mutual, None, "Mutual likes", "heart-f", "#2f6fe4"),
-        ("Active Adverts", Advert.objects.filter(active=True).count(), stat(Advert.objects, "created"), "This month", "doc", "#22a052"),
-        ("Upcoming Events", Event.objects.filter(date__gte=today, date__lte=today + timedelta(days=92)).count(), None, "Next 3 months", "cal-f", "#e0a21a"),
-        ("Published Articles", Article.objects.count(), stat(Article.objects, "published", is_datetime=False), "This month", "book", "#8b5cf6"),
-        ("Total Revenue", f"{SiteSetting.load().currency} {revenue_total:,}", change(rev_this, rev_last), "Selected period", "chart", "#ec4f84"),
+        ("Total Members", f"{total:,}", stat(members, "joined"), f"New this month: {new_this:,}", "m-people", "#0f6b43", ""),
+        ("Active Members", f"{active.count():,}", change(active.count(), active_prev), f"Online now: {members.filter(last_seen__gte=now - timedelta(minutes=5)).count():,}", "m-heart", "#a0123c", "online"),
+        ("Premium Members", f"{premium.count():,}", stat(prem_pay, "created"), f"{round(premium.count() * 100 / (total or 1), 1)}% of total", "i-crown", "#d4950f", ""),
+        ("Total Messages", f"{Message.objects.count():,}", stat(Message.objects, "created"), f"Today: {Message.objects.filter(created__date=today).count():,}", "m-chat", "#1d63d8", ""),
+        ("Upcoming Events", f"{upcoming.count():,}", change(Event.objects.filter(date__gte=this, date__lte=today.replace(day=28) + timedelta(days=4)).count(),
+                                                       Event.objects.filter(date__gte=last, date__lt=this).count()), "This month", "m-cal", "#9b1a4d", ""),
+        ("Total Revenue", f"{SiteSetting.load().currency} {rev_this:,}", change(rev_this, rev_last), "This month", "i-coins", "#c58a12", ""),
     ]
-    growth = line_chart(labels, [
-        ("Members", "#e23d5a", per_month(Member.objects.filter(joined__date__range=(start, end)), "joined", months)),
-        ("Adverts", "#2f6fe4", per_month(Advert.objects.filter(created__date__range=(start, end)), "created", months)),
-        ("Events", "#22a052", per_month(Event.objects.filter(date__range=(start, end)), "date", months)),
-        ("Payments", "#f0a020", per_month(paid.filter(created__date__range=(start, end)), "created", months)),
-    ])
-    plans = [("Free", "#e23d5a", Member.objects.filter(Q(plan=None) | Q(premium_until__lt=today) | Q(premium_until=None)).count())]
-    for i, p in enumerate(Plan.objects.filter(price__gt=0)):
-        plans.append((p.name, PALETTE[i % len(PALETTE)], Member.objects.filter(plan=p, premium_until__gte=today).count()))
-    total_m = Member.objects.count() or 1
-    cities = list(Member.objects.values("city").annotate(n=Count("pk")).order_by("-n")[:10])
-    for c in cities: c["pct"] = round(c["n"] * 100 / total_m)
-    gateways = list(paid.filter(created__date__range=(start, end)).values("gateway").annotate(n=Count("pk"), s=Sum("amount")).order_by("-s"))
-    gw_names = dict(Payment.GATEWAYS)
-    for g in gateways: g["name"] = gw_names.get(g["gateway"], g["gateway"])
+    reg = per_month(members.filter(joined__date__gte=start), "joined", months)
+    prem = per_month(prem_pay.filter(created__date__gte=start), "created", months)
+    trend = line_chart([m.strftime("%b") for m in months], [("New Members" if request.user.is_superuser else "All Members", "#16824f", reg),
+                                                            ("Premium Members", "#d61f5a", prem)], width=420, height=210, pad_l=34)
+    trend["tip"] = {"label": months[-1].strftime("%b %Y"), "new": reg[-1], "prem": prem[-1]}
+    males, females = members.filter(gender="M").count(), members.filter(gender="F").count()
+    mp = round(males * 100 / (total or 1), 1)
+    ages = []
+    for label, lo, hi, color in AGE_GROUPS:
+        n = members.filter(age__gte=lo, age__lte=hi).count()
+        ages.append({"label": label, "n": n, "color": color, "pct": round(n * 100 / (total or 1), 1)})
+    top = max([a["n"] for a in ages] + [1])
+    for a in ages: a["h"] = round(a["n"] * 100 / top)
+    latest = list(members.select_related("plan").order_by("-joined")[:5])
+    for m in latest: m.state = member_state(m)
+    matches = []
+    for a, b, t in mutual_pairs()[:5]:
+        matches.append({"a": a, "b": b, "t": t, "contacted": pair_messages(a, b).exists()})
+    actives = list(members.filter(last_seen__gte=now - timedelta(days=7)).order_by("-last_seen")[:5])
+    for m in actives: m.seen_text, m.online = last_active(m)
     return page(request, "dashboard/overview.html", {
-        "nav": "dashboard", "start": start, "end": end, "cards": cards, "growth": growth,
-        "plans": donut(plans), "total_members": Member.objects.count(), "cities": cities,
-        "recent_members": Member.objects.order_by("-joined")[:5],
-        "events": Event.objects.filter(date__gte=today).annotate(n=Count("registrations")).order_by("date")[:5],
-        "adverts": Advert.objects.select_related("category").order_by("-created")[:5],
-        "gateways": gateways, "gw_total": (sum(g["n"] for g in gateways), sum(g["s"] for g in gateways)),
-        "system": system_status()})
+        "nav": "dashboard", "cards": cards, "trend": trend, "span": span, "tinted": not request.user.is_superuser,
+        "gender": {"m": males, "f": females, "mp": mp, "fp": round(100 - mp, 1) if total else 0, "total": total},
+        "ages": ages, "latest": latest, "matches": matches, "actives": actives,
+        "payments": recent_payments()})
 
-def mutual_likes():
-    """Pairs of members who liked each other."""
-    pairs = set()
-    for user_id, member_user in Like.objects.filter(member__user__isnull=False).values_list("user_id", "member__user_id"):
-        pairs.add((user_id, member_user))
-    return sum(1 for a, b in pairs if (b, a) in pairs) // 2
+def recent_payments(n=5):
+    rows = list(Payment.objects.select_related("plan", "user__member").order_by("-created")[:n])
+    for p in rows:
+        m = getattr(p.user, "member", None) if p.user_id else None
+        p.who = m.name if m else p.payer_name
+        parts = p.who.split(); p.who_short = f"{parts[0]} {parts[1][0]}." if len(parts) > 1 else p.who
+    return rows
 
-def system_status():
-    try:
-        with connection.cursor() as c: c.execute("SELECT 1")
-        db = True
-    except Exception: db = False
-    storage = "Supabase Storage" if getattr(settings, "AWS_STORAGE_BUCKET_NAME", None) else "Local disk"
-    email = settings.EMAIL_BACKEND.rsplit(".", 2)[-2]
-    since = timezone.now() - timedelta(days=1)
-    return [("Website Status", "Online", True), ("Database", "Healthy" if db else "Unreachable", db),
-            ("Database engine", connection.vendor.title(), True), ("Media storage", storage, True),
-            ("Email Service", "SMTP" if email == "smtp" else "Console (not sending)", email == "smtp"),
-            ("Active Users (24h)", Member.objects.filter(last_seen__gte=since).count(), True),
-            ("Open reports", Report.objects.filter(resolved=False).count(), not Report.objects.filter(resolved=False).exists())]
+# ---------- members ----------
+MEMBER_FILTERS = {"pending": Q(status="active", verified=False), "verified": Q(status="active", verified=True),
+                  "rejected": Q(status="rejected"), "suspended": Q(status="suspended")}
+AGE_FILTERS = {"18-25": (18, 25), "26-35": (26, 35), "36-45": (36, 45), "46-55": (46, 55), "56+": (56, 200)}
+
+def filtered_members(g):
+    qs = Member.objects.select_related("user", "plan").annotate(n_reports=Count("reports", filter=Q(reports__resolved=False)))
+    f = g.get("f", "")
+    if f in MEMBER_FILTERS: qs = qs.filter(MEMBER_FILTERS[f])
+    elif f == "reported": qs = qs.filter(n_reports__gt=0)
+    elif f == "premium": qs = qs.filter(premium_until__gte=timezone.localdate())
+    q = g.get("q", "").strip()
+    if q: qs = qs.filter(Q(name__icontains=q) | Q(city__icontains=q) | Q(user__email__icontains=q) | Q(user__username__icontains=q) | Q(phone__icontains=q))
+    if g.get("gender") in ("M", "F"): qs = qs.filter(gender=g["gender"])
+    if g.get("age") in AGE_FILTERS: lo, hi = AGE_FILTERS[g["age"]]; qs = qs.filter(age__gte=lo, age__lte=hi)
+    if g.get("city"): qs = qs.filter(city=g["city"])
+    plan = g.get("plan", "")
+    if plan == "free": qs = qs.exclude(premium_until__gte=timezone.localdate(), plan__isnull=False)
+    elif plan.isdigit(): qs = qs.filter(plan_id=int(plan), premium_until__gte=timezone.localdate())
+    if g.get("status") in MEMBER_FILTERS: qs = qs.filter(MEMBER_FILTERS[g["status"]])
+    if g.get("featured"): qs = qs.filter(featured=True)
+    if g.get("photo"): qs = qs.exclude(photo="")
+    return qs.order_by("-joined", "-pk")
+
+@staff_required
+def members(request):
+    from django.core.paginator import Paginator
+    from core.forms import LOCATIONS
+    g = request.GET
+    qs = filtered_members(g)
+    per = int(g["per"]) if g.get("per") in ("10", "25", "50", "100") else 10
+    pg = Paginator(qs, per).get_page(g.get("page"))
+    rows = list(pg.object_list)
+    for m in rows: m.state = member_state(m); m.seen_text, m.online = last_active(m)
+    all_m = Member.objects.all(); total = all_m.count()
+    this, last = month_window()
+    def mc(q):
+        qs2 = all_m.filter(q); return qs2.count(), stat(qs2, "joined")
+    pend, ver, rej, sus = (mc(MEMBER_FILTERS[k]) for k in ("pending", "verified", "rejected", "suspended"))
+    cards = [("Total Members", f"{total:,}", stat(all_m, "joined"), f"New this month: {all_m.filter(joined__date__gte=this).count():,}", "m-people", "#0f6b43", "", "up"),
+             ("Pending Approval", f"{pend[0]:,}", pend[1], "Awaiting verification", "m-clock", "#e2a83a", "", "am"),
+             ("Verified Members", f"{ver[0]:,}", None, f"{round(ver[0] * 100 / (total or 1), 1)}% active and verified", "a-check", "#16a34a", "", "up"),
+             ("Rejected Members", f"{rej[0]:,}", rej[1], "Did not meet criteria", "a-user-x", "#d61f5a", "", "dn"),
+             ("Suspended Members", f"{sus[0]:,}", sus[1], "Temporarily suspended", "a-pause", "#1d63d8", "", "up")]
+    params = g.copy(); params.pop("page", None)
+    keep = params.copy(); keep.pop("f", None)
+    return page(request, "dashboard/members.html", {"nav": "members", "sub": g.get("f", ""), "pg": pg, "rows": rows, "f": g, "cards": cards,
+        "tabs": [("", "All Members", total), ("pending", "Pending", pend[0]), ("verified", "Verified", ver[0]), ("rejected", "Rejected", rej[0]), ("suspended", "Suspended", sus[0])],
+        "qs": params.urlencode(), "keep": keep.urlencode(), "per": per, "locations": LOCATIONS, "plans": Plan.objects.filter(price__gt=0), "ages": AGE_FILTERS,
+        "page_range": pg.paginator.get_elided_page_range(pg.number, on_each_side=2, on_ends=1), "show_import": "import" in g,
+        "search_hint": "Search members by name, email, phone, location...",
+        "reports": Report.objects.filter(resolved=False).select_related("member", "reporter")[:6]})
+
+def apply_member_action(m, act, request):
+    """One place for single and bulk member actions. Returns a short past-tense label or None."""
+    if act == "verify":
+        m.verified = True; m.status = "active"; m.save(update_fields=["verified", "status"])
+        if m.user_id: Notification.objects.create(user=m.user, title="Your profile is verified", body="Your profile now shows the verified badge.", link=reverse("m_profile"))
+        return "verified"
+    if act == "unverify": m.verified = False; m.save(update_fields=["verified"]); return "unverified"
+    if act == "feature": m.featured = not m.featured; m.save(update_fields=["featured"]); return "featured" if m.featured else "unfeatured"
+    if act in ("activate", "suspend", "reject"):
+        m.status = {"activate": "active", "suspend": "suspended", "reject": "rejected"}[act]; m.save(update_fields=["status"])
+        if m.user_id and act != "activate":
+            Notification.objects.create(user=m.user, title=f"Your account was {m.get_status_display().lower()}", body="Contact support if you think this is a mistake.", link=reverse("m_help"))
+        return {"activate": "activated", "suspend": "suspended", "reject": "rejected"}[act]
+    if act == "resolve": m.reports.update(resolved=True); return "reports resolved"
+    if act == "delete":
+        if m.user_id and (m.user.is_staff or m.user == request.user): return None   # never delete staff from here
+        if m.user_id: m.user.delete()
+        else: m.delete()
+        return "deleted"
+    return None
+
+@staff_required
+@require_POST
+def member_action(request, pk):
+    m = get_object_or_404(Member, pk=pk)
+    name, done = m.name, apply_member_action(m, request.POST.get("act"), request)
+    if done: messages.success(request, f"{name} {done}.")
+    else: messages.error(request, "That action is not allowed for this member.")
+    back = request.POST.get("back") or reverse("dash_members")
+    return redirect(back if back.startswith("/") else reverse("dash_members"))
+
+@staff_required
+@require_POST
+def members_bulk(request):
+    ids = [int(i) for i in request.POST.getlist("ids") if i.isdigit()]
+    act = request.POST.get("act")
+    back = request.POST.get("back") or reverse("dash_members")
+    back = back if back.startswith("/") else reverse("dash_members")
+    if act == "export":
+        return members_csv(request, ids=ids)
+    if not ids:
+        messages.error(request, "Select at least one member first."); return redirect(back)
+    chosen = Member.objects.filter(pk__in=ids).select_related("user")
+    if act == "message":
+        title, body = request.POST.get("subject", "").strip(), request.POST.get("body", "").strip()
+        if not title:
+            messages.error(request, "Write a subject for the message."); return redirect(back)
+        sent = [Notification(user=m.user, title=title[:120], body=body.replace("{name}", m.first_name)) for m in chosen if m.user_id]
+        Notification.objects.bulk_create(sent)
+        skipped = len(ids) - len(sent)
+        messages.success(request, f"Message sent to {len(sent)} member{'s' if len(sent) != 1 else ''}." + (f" {skipped} without a login account were skipped." if skipped else ""))
+        return redirect(back)
+    done = [apply_member_action(m, act, request) for m in chosen]
+    n = sum(1 for d in done if d)
+    if n: messages.success(request, f"{n} member{'s' if n != 1 else ''} {next(d for d in done if d)}.")
+    if n < len(done): messages.error(request, f"{len(done) - n} member{'s' if len(done) - n != 1 else ''} skipped (staff accounts cannot be changed here).")
+    return redirect(back)
+
+@staff_required
+def members_csv(request, ids=None):
+    qs = Member.objects.filter(pk__in=ids).select_related("user", "plan") if ids else filtered_members(request.GET)
+    resp = HttpResponse(content_type="text/csv")
+    resp["Content-Disposition"] = f'attachment; filename="sakinah-members-{timezone.localdate()}.csv"'
+    w = csv.writer(resp)
+    w.writerow(["Member ID", "Name", "Email", "Phone", "Gender", "Age", "City", "Occupation", "Plan", "Premium until", "Verified", "Status", "Joined", "Last active"])
+    for m in qs:
+        w.writerow([m.code, m.name, m.user.email if m.user_id else "", m.phone, m.get_gender_display(), m.age, m.city, m.occupation,
+                    m.plan.name if m.is_premium else "Free", m.premium_until or "", "yes" if m.verified else "no", m.get_status_display(),
+                    f"{m.joined:%Y-%m-%d}", f"{m.last_seen:%Y-%m-%d %H:%M}" if m.last_seen else ""])
+    return resp
+
+@staff_required
+@require_POST
+def members_import(request):
+    """CSV with a header row: name, age, gender (M/F), city, occupation; optional phone, education, bio."""
+    f = request.FILES.get("file")
+    if not f or not f.name.lower().endswith(".csv"):
+        messages.error(request, "Choose a .csv file to import."); return redirect(reverse("dash_members") + "?import=1#import")
+    try: rows = list(csv.DictReader(f.read().decode("utf-8-sig").splitlines()))
+    except UnicodeDecodeError:
+        messages.error(request, "The file must be saved as UTF-8 CSV."); return redirect(reverse("dash_members") + "?import=1#import")
+    created, errors = 0, []
+    for n, r in enumerate(rows, start=2):
+        r = {(k or "").strip().lower(): (v or "").strip() for k, v in r.items()}
+        gender = {"m": "M", "male": "M", "f": "F", "female": "F"}.get(r.get("gender", "").lower())
+        age = r.get("age", "")
+        if not r.get("name") or not gender or not age.isdigit() or not 18 <= int(age) <= 99 or not r.get("city"):
+            errors.append(n); continue
+        Member.objects.create(name=r["name"][:80], age=int(age), gender=gender, city=r["city"][:60], occupation=r.get("occupation", "")[:80],
+                              phone=r.get("phone", "")[:20], education=r.get("education", "")[:80], bio=r.get("bio", "")[:600])
+        created += 1
+    if created: messages.success(request, f"Imported {created} member{'s' if created != 1 else ''}.")
+    if errors: messages.error(request, f"Skipped {len(errors)} row{'s' if len(errors) != 1 else ''} with missing or invalid name, age, gender or city (rows {', '.join(map(str, errors[:10]))}{'...' if len(errors) > 10 else ''}).")
+    return redirect("dash_members")
+
+# ---------- match and activities ----------
+@staff_required
+def matches(request):
+    from django.core.paginator import Paginator
+    from core.forms import LOCATIONS
+    g, today, now = request.GET, timezone.localdate(), timezone.now()
+    tab = g.get("tab", "")
+    this, last = month_window()
+    pairs = mutual_pairs()
+    members = Member.objects.all()
+    if tab == "messages":
+        msgs = Message.objects.select_related("sender__member", "to").order_by("-created")
+        pair = None
+        if g.get("a", "").isdigit() and g.get("b", "").isdigit():
+            a, b = Member.objects.filter(pk=g["a"]).first(), Member.objects.filter(pk=g["b"]).first()
+            if a and b: msgs, pair = pair_messages(a, b).select_related("sender__member", "to").order_by("-created"), (a, b)
+        if g.get("q"): msgs = msgs.filter(Q(body__icontains=g["q"]) | Q(to__name__icontains=g["q"]) | Q(sender__member__name__icontains=g["q"]))
+        pg = Paginator(msgs, 25).get_page(g.get("page"))
+        from urllib.parse import urlencode
+        base = "?" + urlencode({"tab": "messages", **({"a": g["a"], "b": g["b"]} if pair else {"q": g.get("q", "")})})
+        return page(request, "dashboard/matches_messages.html", {"nav": "matches", "sub": "messages", "pg": pg, "pair": pair, "f": g, "base": base})
+    if tab == "all":
+        rows = [{"a": a, "b": b, "t": t, "score": pair_score(a, b), "n": pair_messages(a, b).count()} for a, b, t in pairs]
+        pg = Paginator(rows, 20).get_page(g.get("page"))
+        return page(request, "dashboard/matches_all.html", {"nav": "matches", "sub": "all", "pg": pg, "total": len(rows)})
+    likes_m = Like.objects.filter(created__date__gte=this).count()
+    views_m = ProfileView.objects.filter(created__date__gte=this).count()
+    regs_m = EventRegistration.objects.filter(created__date__gte=this).count()
+    acts_this = likes_m + views_m + regs_m
+    acts_last = (Like.objects.filter(created__date__gte=last, created__date__lt=this).count() + ProfileView.objects.filter(created__date__gte=last, created__date__lt=this).count()
+                 + EventRegistration.objects.filter(created__date__gte=last, created__date__lt=this).count())
+    new_matches = sum(1 for *_, t in pairs if timezone.localtime(t).date() >= this)
+    old_matches = sum(1 for *_, t in pairs if last <= timezone.localtime(t).date() < this)
+    msg_this = Message.objects.filter(created__date__gte=this).count()
+    cards = [("Total Members", f"{members.count():,}", stat(members, "joined"), f"New this month: {members.filter(joined__date__gte=this).count():,}", "m-people", "#a0123c"),
+             ("Total Matches", f"{len(pairs):,}", change(new_matches, old_matches), "New matches this month", "m-heart", "#e11d63"),
+             ("Messages Exchanged", f"{msg_this:,}", stat(Message.objects, "created"), "This month", "m-chat", "#a0123c"),
+             ("Upcoming Events", f"{Event.objects.filter(date__gte=today).count():,}", None, "Scheduled", "m-cal", "#a0123c"),
+             ("Total Activities", f"{acts_this:,}", change(acts_this, acts_last), "This month", "m-people", "#16824f")]
+    # find potential matches
+    sq = members.filter(status="active")
+    gender = g.get("gender", "F")
+    if gender in ("M", "F"): sq = sq.filter(gender=gender)
+    age = g.get("age", "")
+    if age in AGE_FILTERS: lo, hi = AGE_FILTERS[age]; sq = sq.filter(age__gte=lo, age__lte=hi)
+    if g.get("city"): sq = sq.filter(city=g["city"])
+    if g.get("type") == "verified": sq = sq.filter(verified=True)
+    elif g.get("type") == "premium": sq = sq.filter(premium_until__gte=today, plan__isnull=False)
+    suggestions = list(sq.exclude(photo="").order_by("-compatibility", "-verified", "-joined")[:12])
+    recent = [{"a": a, "b": b, "t": t, "score": pair_score(a, b)} for a, b, t in pairs[:5]]
+    # activity feed
+    feed = []
+    for lk in Like.objects.select_related("user__member", "member").order_by("-created")[:8]:
+        m = getattr(lk.user, "member", None)
+        if m: feed.append((lk.created, m, "liked a profile", "Like", "m-heart", "#d61f45"))
+    for r in EventRegistration.objects.select_related("user__member", "event").order_by("-created")[:6]:
+        m = getattr(r.user, "member", None)
+        if m: feed.append((r.created, m, f"joined an event: {r.event.title}", "Event Registration", "m-cal", "#16824f"))
+    for msg in Message.objects.select_related("sender__member").order_by("-created")[:6]:
+        m = getattr(msg.sender, "member", None)
+        if m: feed.append((msg.created, m, "sent a message", "Message", "m-chat", "#7c3aed"))
+    for a, b, t in pairs[:4]:
+        feed.append((t, b, "received a new match", "New Match", "m-heart", "#d61f45"))
+    for m in members.order_by("-joined")[:4]:
+        feed.append((m.joined, m, "joined Sakinah", "New Member", "m-user", "#1d63d8"))
+    feed = sorted(feed, key=lambda r: r[0], reverse=True)[:6]
+    events = list(Event.objects.filter(date__gte=today).annotate(reg_count=Count("registrations")).order_by("date")[:4])
+    # match statistics
+    start = (today.replace(day=1) - timedelta(days=31 * 11)).replace(day=1); months = months_between(start, today)[-12:]
+    match_months = [sum(1 for *_, t in pairs if (timezone.localtime(t).year, timezone.localtime(t).month) == (mo.year, mo.month)) for mo in months]
+    chart = bar_chart([mo.strftime("%b") for mo in months], [
+        ("New Members", "#16824f", per_month(members.filter(joined__date__gte=start), "joined", months)),
+        ("Matches", "#e2557a", match_months),
+        ("Messages", "#3b82f6", per_month(Message.objects.filter(created__date__gte=start), "created", months)),
+        ("Event Participants", "#f5b31b", per_month(EventRegistration.objects.filter(created__date__gte=start), "created", months))], width=460, height=170)
+    return page(request, "dashboard/matches.html", {"nav": "matches", "sub": "", "cards": cards, "f": g, "gender": gender, "suggestions": suggestions,
+        "recent": recent, "feed": feed, "events": events, "chart": chart, "locations": LOCATIONS, "ages": AGE_FILTERS,
+        "search_hint": "Search members by name, email, location..."})
 
 @staff_required
 def report_csv(request):
@@ -153,34 +424,6 @@ def report_csv(request):
         w.writerow([label, value])
     return resp
 
-# ---------- members ----------
-@staff_required
-def members(request):
-    q, f = request.GET.get("q", ""), request.GET.get("f", "")
-    qs = Member.objects.select_related("user", "plan").annotate(n_reports=Count("reports", filter=Q(reports__resolved=False))).order_by("-joined")
-    if q: qs = qs.filter(Q(name__icontains=q) | Q(city__icontains=q) | Q(user__email__icontains=q) | Q(user__username__icontains=q))
-    if f == "pending": qs = qs.filter(verified=False)
-    elif f == "verified": qs = qs.filter(verified=True)
-    elif f == "reported": qs = qs.filter(n_reports__gt=0)
-    elif f == "premium": qs = qs.filter(premium_until__gte=timezone.localdate())
-    return page(request, "dashboard/members.html", {"nav": "members", "rows": qs[:200], "q": q, "f": f,
-        "counts": {"all": Member.objects.count(), "pending": Member.objects.filter(verified=False).count(),
-                   "reported": Member.objects.filter(reports__resolved=False).distinct().count()},
-        "reports": Report.objects.filter(resolved=False).select_related("member", "reporter")[:10]})
-
-@staff_required
-@require_POST
-def member_action(request, pk):
-    m = get_object_or_404(Member, pk=pk)
-    act = request.POST.get("act")
-    if act == "verify": m.verified = not m.verified; m.save(update_fields=["verified"])
-    elif act == "feature": m.featured = not m.featured; m.save(update_fields=["featured"])
-    elif act == "resolve": m.reports.update(resolved=True)
-    if act == "verify" and m.verified and m.user_id:
-        Notification.objects.create(user=m.user, title="Your profile is verified", body="Your profile now shows the Imethibitishwa badge.",
-                                    link=reverse("member", args=[m.pk]))
-    messages.success(request, f"{m.name} updated.")
-    return redirect(request.POST.get("back") or reverse("dash_members"))
 
 # ---------- communications ----------
 def recipients(filters):

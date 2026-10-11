@@ -1,0 +1,9 @@
+<div class="lgd">{% for l in c.lines %}<span><i style="background:{{ l.color }}"></i>{{ l.name }}</span>{% endfor %}</div>
+<svg class="lchart" viewBox="0 0 {{ c.w }} {{ c.h }}" role="img" aria-label="Member registration trend">
+  <defs>{% for l in c.lines %}<linearGradient id="g{{ forloop.counter }}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="{{ l.color }}" stop-opacity=".28"/><stop offset="1" stop-color="{{ l.color }}" stop-opacity=".02"/></linearGradient>{% endfor %}</defs>
+  {% for t in c.ticks %}<line x1="{{ c.left }}" x2="{{ c.right }}" y1="{{ t.y }}" y2="{{ t.y }}" class="grid"/><text x="{{ c.left|add:'-6' }}" y="{{ t.y }}" class="yl">{{ t.label }}</text>{% endfor %}
+  {% for x in c.xlabels %}<text x="{{ x.x }}" y="{{ c.h|add:'-5' }}" class="xl">{{ x.label }}</text>{% endfor %}
+  {% for l in c.lines %}<polygon points="{{ l.area }}" fill="url(#g{{ forloop.counter }})"/><polyline points="{{ l.line }}" fill="none" stroke="{{ l.color }}" stroke-width="2.200" stroke-linejoin="round"/>
+    {% for x, y in l.points %}<circle cx="{{ x }}" cy="{{ y }}" r="3.200" fill="{{ l.color }}" stroke="#fff" stroke-width="1.200"><title>{{ l.name }}</title></circle>{% endfor %}{% endfor %}
+</svg>
+{% if c.tip %}<div class="ttip"><b>{{ c.tip.label }}</b><span>New: <em class="g">{{ c.tip.new }}</em></span><span>Premium: <em class="p">{{ c.tip.prem }}</em></span></div>{% endif %}
