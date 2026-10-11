@@ -553,3 +553,5 @@ body{font-size:14.5px}.wrap,.page{padding-left:16px;padding-right:16px}
 .notes li{display:flex;gap:14px;padding:16px 18px;border-bottom:1px solid #f4ecef}.notes li:last-child{border:0}.notes li.new{background:#fff7f9}
 .ni{width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--pink2);color:var(--mag)}.notes p{color:#454a57;margin:3px 0}.notes small{color:var(--mut)}
 .nav-auth-m .msgs-l .t{display:inline}
+@media(min-width:1181px) and (max-width:1340px){.nav-links>a{padding:9px 8px}.nav-links{gap:2px}}
+@media(min-width:1001px) and (max-width:1260px){.nav-links>a svg{display:none}.nav-auth .msgs-l{padding:9px 10px}}

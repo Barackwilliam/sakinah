@@ -168,3 +168,15 @@ class AdminAreaTests(TestCase):
         self.assertFalse(Member.objects.filter(name="Bad Row").exists())
         r = self.client.get(reverse("dash_members_csv"), {"gender": "F"})
         self.assertIn(b"Halima Juma", r.content); self.assertNotIn(b"Juma Ali", r.content)
+
+
+class StaffPermissionTests(TestCase):
+    def test_staff_get_admin_group_but_cannot_edit_users(self):
+        u = User.objects.create_user("helper", "helper@example.com", "S3cure-pass-123", is_staff=True)
+        self.assertTrue(u.groups.filter(name="Administrators").exists())
+        u = User.objects.get(pk=u.pk)
+        self.assertTrue(u.has_perm("core.change_member")); self.assertTrue(u.has_perm("core.view_event"))
+        self.assertFalse(u.has_perm("auth.change_user")); self.assertFalse(u.has_perm("auth.add_user"))
+        self.client.force_login(u)
+        for url in ["/admin/core/event/", "/admin/core/plan/", "/admin/core/article/", "/admin/core/supportticket/", "/admin/auth/user/", "/profile/edit/"]:
+            self.assertEqual(self.client.get(url).status_code, 200, url)

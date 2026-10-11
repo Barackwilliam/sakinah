@@ -150,7 +150,8 @@ def signup(request):
 @login_required
 def profile_edit(request):
     if me(request) and not request.user.is_staff: return redirect("m_profile_edit")   # members edit inside their dashboard
-    m = me(request) or Member(user=request.user, name=request.user.get_full_name() or request.user.username, age=18)
+    # user_id (not user=) so request.user.member stays unset until the profile is saved
+    m = me(request) or Member(user_id=request.user.pk, name=request.user.get_full_name() or request.user.username, age=18)
     form = ProfileForm(request.POST or None, request.FILES or None, instance=m)
     if form.is_valid():
         form.save(); messages.success(request, "Profile saved.")
