@@ -20,7 +20,9 @@ def liked_ids(request):
 
 def safe_next(request):
     nxt = request.POST.get("next") or request.GET.get("next")
-    return nxt if nxt and url_has_allowed_host_and_scheme(nxt, {request.get_host()}, request.is_secure()) else None
+    # only site paths ("/account/..."): a bare "?tab=x" would be read by redirect() as a view name and crash
+    ok = nxt and nxt.startswith("/") and url_has_allowed_host_and_scheme(nxt, {request.get_host()}, request.is_secure())
+    return nxt if ok else None
 
 def me(request):
     return getattr(request.user, "member", None) if request.user.is_authenticated else None

@@ -3,7 +3,7 @@
 <meta name="robots" content="noindex"><meta name="theme-color" content="#0d4a31"><title>{% block title %}Dashboard{% endblock %} - {{ site.brand }} Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,500;1,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}"><link rel="stylesheet" href="{% static 'css/admin.css' %}"></head>
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}"><link rel="stylesheet" href="{% static 'css/admin.css' %}">{% include "partials/img_fallback.html" %}</head>
 <body>
 {% include "partials/icons.html" %}{% include "dashboard/icons.html" %}{% include "members/icons.html" %}
 <header class="ah">

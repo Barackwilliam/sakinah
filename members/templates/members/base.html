@@ -4,7 +4,7 @@
 <title>{% block title %}{{ title|default:"Dashboard" }}{% endblock %} - {{ site.brand }}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,500;1,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/member.css' %}"></head>
+<link rel="stylesheet" href="{% static 'css/member.css' %}">{% include "partials/img_fallback.html" %}</head>
 <body class="{% if no_sidebar %}no-sb{% endif %}">
 {% include "members/icons.html" %}
 <header class="mh">
