@@ -148,3 +148,38 @@ class MemberAreaTests(TestCase):
         self.assertEqual(r["Content-Type"], "application/json"); self.assertIn(b"Juma Ali", r.content)
         self.client.post(reverse("m_deactivate"))
         self.me.refresh_from_db(); self.assertEqual(self.me.profile_visibility, "hidden")
+
+
+class RobustnessTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user("juma", "juma@example.com")   # no password needed: force_login below
+        self.me = Member.objects.create(user=self.user, name="Juma Ali", age=30, gender="M", city="Arusha", occupation="Teacher")
+        self.other = Member.objects.create(name="Amina Hassan", age=27, gender="F", city="Arusha", occupation="Nurse")
+        self.client.force_login(self.user)
+
+    def test_unblock_from_safety_page(self):
+        url = reverse("m_block", args=[self.other.pk])
+        self.client.post(url)
+        r = self.client.post(url, {"next": reverse("m_safety") + "?tab=blocked"})
+        self.assertRedirects(r, reverse("m_safety") + "?tab=blocked")
+        self.assertFalse(Block.objects.exists())
+
+    def test_bad_next_values_never_crash(self):
+        for nxt in ["?tab=blocked", "https://evil.example.com/", "//evil.example.com", "javascript:alert(1)"]:
+            r = self.client.post(reverse("m_block", args=[self.other.pk]), {"next": nxt})
+            self.assertEqual(r.status_code, 302, nxt)
+            self.assertTrue(r["Location"].startswith("/account/"), nxt)
+
+    def test_restore_media_puts_back_missing_starter_images(self):
+        import tempfile
+        from django.core.files.base import ContentFile
+        from django.core.management import call_command
+        from django.test import override_settings
+        with tempfile.TemporaryDirectory() as tmp, override_settings(MEDIA_ROOT=tmp):
+            from django.core.files.storage import default_storage
+            self.other.photo.save("amina.jpg", ContentFile(b"x"), save=True)
+            name = self.other.photo.name
+            default_storage.delete(name)
+            self.assertFalse(default_storage.exists(name))
+            call_command("restore_media")
+            self.assertTrue(default_storage.exists(name))

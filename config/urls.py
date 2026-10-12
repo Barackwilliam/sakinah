@@ -16,5 +16,5 @@ urlpatterns = [path(settings.ADMIN_URL, admin.site.urls), path("dashboard/", inc
 if hasattr(settings, "MEDIA_ROOT"):  # local disk media; with Supabase Storage files are served by Supabase
     if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    elif os.getenv("SERVE_MEDIA") == "True":  # e.g. a Render persistent disk mounted at MEDIA_ROOT
+    elif getattr(settings, "SERVE_MEDIA", False):  # production without Supabase Storage: Django serves the uploads itself
         urlpatterns += [re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT})]

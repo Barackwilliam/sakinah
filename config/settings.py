@@ -75,6 +75,8 @@ if REF and os.getenv("SUPABASE_S3_KEY"):
     AWS_DEFAULT_ACL = None
 else:
     MEDIA_URL = "/media/"; MEDIA_ROOT = Path(os.getenv("MEDIA_ROOT", BASE_DIR / "media"))
+    # Without Supabase Storage the app serves uploaded pictures itself, also with DEBUG=False (set SERVE_MEDIA=False to turn off).
+    SERVE_MEDIA = os.getenv("SERVE_MEDIA", "True") == "True"
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
@@ -97,11 +99,14 @@ else:
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Sakinah <no-reply@sakinah.co.tz>")
 
 # --- production hardening (Render terminates HTTPS in front of the app) ---
+# HTTPS-only settings are on by default only when the site is served over HTTPS (Render). Running locally with
+# DEBUG=False over http://127.0.0.1 would otherwise redirect every page and static file to https and nothing would load.
+HTTPS_ONLY = os.getenv("HTTPS_ONLY", "True" if ON_RENDER else "False") == "True"
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", "True") == "True"
-    SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "3600"))
+    SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", str(HTTPS_ONLY)) == "True"
+    SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = HTTPS_ONLY
+    SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "3600" if HTTPS_ONLY else "0"))
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_REFERRER_POLICY = "same-origin"
 

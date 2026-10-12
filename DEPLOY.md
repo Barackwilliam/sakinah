@@ -32,6 +32,13 @@ Mradi una `render.yaml` (Render Blueprint) na `build.sh`. Database na picha zina
   Kisha ingia kupitia `/login/` na ufungue `https://<domain>/<DJANGO_ADMIN_URL>`.
 - Usimpe mteja akaunti ya superuser. Staff wapya wanaongezwa na Super Admin kupitia **Dashboard → User Management**.
 
+## 2c. Static files na picha (media)
+- **CSS, JavaScript na picha za mfumo (static):** zinakusanywa na `collectstatic` wakati wa build na kutolewa na WhiteNoise. Hazihitaji mpangilio wowote.
+- **Picha zinazopakiwa (media):** picha za wanachama, matukio, matangazo, n.k.
+  - **Inapendekezwa: Supabase Storage** (hatua 1.3). Picha zinabaki salama hata baada ya deploy mpya.
+  - **Bila Supabase:** Django yenyewe inatoa picha kutoka diski (`SERVE_MEDIA=True` ni default). Diski ya Render inafutika kila deploy, kwa hivyo `build.sh` inaendesha `restore_media`, inayorudisha picha za mwanzo (za seed). **Picha zilizopakiwa na watu zitapotea kila deploy**, kwa hivyo weka Supabase Storage kabla ya kuwapokea wateja.
+- **Kuendesha kwenye kompyuta yako kwa `DEBUG=False`:** endesha kwanza `python manage.py collectstatic`. Tovuti itafanya kazi kwa `http://127.0.0.1:8000`, kwa sababu kulazimisha `https` kunawashwa kwenye Render tu (`HTTPS_ONLY`).
+
 ## 3. Domain yako (hiari)
 Render → service → **Settings** → **Custom Domains** → ongeza domain, kisha weka DNS records unazopewa. Ongeza domain hiyo kwenye `ALLOWED_HOSTS` na `CSRF_TRUSTED_ORIGINS`.
 
