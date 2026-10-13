@@ -1,0 +1,13 @@
+{% load humanize %}<article class="hm-card hm-dest">
+  <a class="hm-img" href="{{ d.get_absolute_url }}">{% if d.image %}<img src="{{ d.image.url }}" alt="{{ d.name }}, {{ d.country }}" loading="lazy" decoding="async">{% endif %}</a>
+  {% include "honeymoon/_heart.html" with kind="destination" obj=d on=d.is_saved %}
+  <div class="hm-b">
+    <div class="hm-tr"><h3><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></h3><span class="hm-rate"><svg><use href="#i-star"/></svg>{{ d.rating }} <small>({{ d.reviews|intcomma }})</small></span></div>
+    <p class="hm-loc"><svg><use href="#i-pin"/></svg>{{ d.country }}</p>
+    <p class="hm-tag">{{ d.tagline }}</p>
+    {% if not compact %}<p class="hm-dur"><svg><use href="#i-clock2"/></svg>{{ d.days }} Days {{ d.nights }} Nights</p>
+    <ul class="hm-feats">{% for icon, text in d.feature_list %}<li><svg><use href="#i-{{ icon }}"/></svg>{{ text }}</li>{% endfor %}</ul>{% endif %}
+    <div class="hm-foot"><div class="hm-price"><b>From {{ site.currency }} {{ d.from_price|intcomma }}</b><small>per couple</small></div>
+      <a class="hm-go" href="{{ d.get_absolute_url }}">View Packages <svg><use href="#i-arrow"/></svg></a></div>
+  </div>
+</article>

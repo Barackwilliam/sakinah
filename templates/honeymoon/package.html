@@ -1,0 +1,104 @@
+{% extends "base.html" %}{% load humanize %}{% block title %}{{ p.title }} - Honeymoon - {{ site.brand }}{% endblock %}
+{% block content %}
+{% include "honeymoon/_hero.html" with small=1 t1=p.title t2="" rating=p.rating reviews=p.reviews place=p.location lead=p.overview|truncatewords:34 crumbs=crumbs %}
+
+<div class="hm-detail">
+  <div class="hm-dmain">
+    <div class="hm-gal" data-gallery>
+      <div class="hm-gmain">
+        {% if gallery %}<img src="{{ gallery.0 }}" alt="{{ p.title }}" data-gal-img>{% endif %}
+        {% if p.badge %}<span class="hm-ribbon t-{{ p.badge_tone }}"><svg><use href="#i-crown"/></svg>{{ p.badge }}</span>{% endif %}
+        {% include "honeymoon/_heart.html" with kind="package" obj=p on=p.is_saved %}
+        {% if gallery|length > 1 %}<button type="button" class="hm-garr l" data-gal-step="-1" aria-label="Previous photo"><svg><use href="#i-chev-l"/></svg></button>
+        <button type="button" class="hm-garr r" data-gal-step="1" aria-label="Next photo"><svg><use href="#i-chev-r"/></svg></button>{% endif %}
+        <span class="hm-gcount"><span data-gal-n>1</span> / {{ gallery|length }}</span>
+      </div>
+      <div class="hm-gthumbs">
+        {% for url in gallery|slice:"1:5" %}<button type="button" data-gal-go="{{ forloop.counter }}"><img src="{{ url }}" alt="" loading="lazy"></button>{% endfor %}
+        {% if gallery|length > 1 %}<button type="button" class="hm-gall" data-open-dlg="hm-photos"><svg><use href="#i-camera-f"/></svg>View All Photos ({{ gallery|length }})</button>{% endif %}
+      </div>
+      <script type="application/json" data-gal-list>[{% for url in gallery %}"{{ url|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}]</script>
+    </div>
+
+    <ul class="hm-facts">
+      <li><svg><use href="#i-bed"/></svg><b>{{ p.days }} Days {{ p.nights }} Nights</b><small>Duration</small></li>
+      <li><svg><use href="#i-villa"/></svg><b>{{ p.stay }}</b><small>Accommodation</small></li>
+      <li><svg><use href="#i-utensils"/></svg><b>{{ p.meals }}</b><small>{{ p.meals_detail|default:"Meals" }}</small></li>
+      <li><svg><use href="#i-plane"/></svg><b>Flight Option</b><small>{{ p.flights }}</small></li>
+      <li><svg><use href="#i-car"/></svg><b>Airport Transfer</b><small>{{ p.transfer }}</small></li>
+      <li><svg><use href="#i-heart-f"/></svg><b>Romantic Activities</b><small>{{ p.romance }}</small></li>
+    </ul>
+
+    <div class="hm-tabs" data-tabs>
+      <nav class="hm-tabbar" role="tablist">
+        <a href="#overview" class="on" role="tab"><svg><use href="#i-doc"/></svg>Overview</a>
+        {% if p.itinerary_list %}<a href="#itinerary" role="tab"><svg><use href="#i-cal-f"/></svg>Itinerary</a>{% endif %}
+        {% if p.inclusion_list %}<a href="#inclusions" role="tab"><svg><use href="#i-check-c"/></svg>Inclusions</a>{% endif %}
+        {% if p.accommodation %}<a href="#accommodation" role="tab"><svg><use href="#i-bed"/></svg>Accommodation</a>{% endif %}
+        {% if p.activity_list %}<a href="#activities" role="tab"><svg><use href="#i-image"/></svg>Activities</a>{% endif %}
+        {% if p.info_list %}<a href="#info" role="tab"><svg><use href="#i-info"/></svg>Important Information</a>{% endif %}
+        <a href="#reviews" role="tab"><svg><use href="#i-star"/></svg>Reviews</a>
+      </nav>
+
+      <section id="overview" class="hm-panel on">
+        <div class="hm-ov">
+          <div><h2>Overview</h2><div class="prose">{{ p.overview|linebreaks }}</div>
+            {% if p.highlight_list %}<div class="hm-hl"><h3>Package Highlights</h3><ul>{% for icon, text in p.highlight_list %}<li><svg><use href="#i-{{ icon }}"/></svg>{{ text }}</li>{% endfor %}</ul></div>{% endif %}</div>
+          {% if p.ideal_list %}<aside class="hm-ideal"><h3>Ideal For</h3><ul>{% for icon, text in p.ideal_list %}<li><span><svg><use href="#i-{{ icon }}"/></svg></span>{{ text }}</li>{% endfor %}</ul></aside>{% endif %}
+        </div>
+      </section>
+      {% if p.itinerary_list %}<section id="itinerary" class="hm-panel"><h2>Day by Day Itinerary</h2>
+        <ol class="hm-itin">{% for title, text in p.itinerary_list %}<li><span>{{ forloop.counter }}</span><div><b>{{ title }}</b><p>{{ text }}</p></div></li>{% endfor %}</ol></section>{% endif %}
+      {% if p.inclusion_list %}<section id="inclusions" class="hm-panel"><div class="hm-two">
+        <div><h2>What's Included</h2><ul class="hm-check">{% for i in p.inclusion_list %}<li><svg><use href="#i-check-c"/></svg>{{ i }}</li>{% endfor %}</ul></div>
+        {% if p.exclusion_list %}<div><h2>Not Included</h2><ul class="hm-check no">{% for i in p.exclusion_list %}<li><svg><use href="#i-x-c"/></svg>{{ i }}</li>{% endfor %}</ul></div>{% endif %}</div></section>{% endif %}
+      {% if p.accommodation %}<section id="accommodation" class="hm-panel"><h2>Accommodation</h2><p class="hm-stars-line"><span class="hm-stars" style="--r:{{ p.stars }}"></span>{{ p.stars }} Star &middot; {{ p.stay }}</p><div class="prose">{{ p.accommodation|linebreaks }}</div>
+        {% if photos %}<div class="hm-mini">{% for ph in photos|slice:":3" %}<img src="{{ ph.image.url }}" alt="{{ ph.caption }}" loading="lazy">{% endfor %}</div>{% endif %}</section>{% endif %}
+      {% if p.activity_list %}<section id="activities" class="hm-panel"><h2>Activities</h2><ul class="hm-acts">{% for a in p.activity_list %}<li><svg><use href="#i-heart-f"/></svg>{{ a }}</li>{% endfor %}</ul></section>{% endif %}
+      {% if p.info_list %}<section id="info" class="hm-panel"><h2>Important Information</h2><ul class="hm-check info">{% for i in p.info_list %}<li><svg><use href="#i-info"/></svg>{{ i }}</li>{% endfor %}</ul></section>{% endif %}
+      <section id="reviews" class="hm-panel"><h2>Reviews</h2>
+        <div class="hm-score"><b>{{ p.rating }}</b><div><span class="hm-stars" style="--r:{{ p.rating }}"></span><small>Based on {{ p.reviews|intcomma }} reviews</small></div></div>
+        {% for r in reviews %}<div class="rev"><b>{{ r.user.member.name|default:r.user.username }}</b> {% include "partials/stars.html" with r=r.rating %}<small>{{ r.created|date:"d M Y" }}</small>{% if r.comment %}<p>{{ r.comment }}</p>{% endif %}</div>{% endfor %}
+        {% if user.is_authenticated and review_form %}<form method="post" action="{% url 'hm_review' p.slug %}" class="form rev-form">{% csrf_token %}
+          <div class="rate">{% for v in "54321" %}<input type="radio" name="rating" value="{{ v }}" id="rt{{ v }}" required><label for="rt{{ v }}" title="{{ v }} stars">&#9733;</label>{% endfor %}</div>
+          {{ review_form.comment }}<button class="btn btn-s">Post Review</button></form>
+        {% elif not user.is_authenticated %}{% with u=request.get_full_path %}<a class="btn btn-o xs" href="{% url 'login' %}?next={{ u|urlencode }}" data-auth="{{ u }}">Log in to write a review</a>{% endwith %}{% endif %}
+      </section>
+    </div>
+  </div>
+
+  <aside class="hm-dside">
+    <div class="hm-book" id="book">
+      <div class="hm-bprice"><div><span class="hm-from">From</span><b>{{ site.currency }} {{ p.price|intcomma }}</b><small>per couple</small></div>
+        <div class="hm-bmeta"><span class="hm-rate"><svg><use href="#i-star"/></svg>{{ p.rating }} <small>({{ p.reviews|intcomma }} reviews)</small></span>{% if p.badge %}<span class="hm-bbadge"><svg><use href="#i-heart-f"/></svg>{{ p.badge }}</span>{% endif %}</div></div>
+      <form method="post" action="{% url 'hm_book' p.slug %}" class="hm-bform">{% csrf_token %}
+        <h3>Check Availability</h3>
+        <label>{{ form.travel_date.label }}<span class="hm-in"><svg><use href="#i-cal-f"/></svg>{{ form.travel_date }}</span></label>
+        <label>{{ form.couples.label }}<span class="hm-in"><svg><use href="#i-people"/></svg>{{ form.couples }}</span></label>
+        <label>{{ form.name.label }}<span class="hm-in"><svg><use href="#i-user"/></svg>{{ form.name }}</span></label>
+        <label>{{ form.phone.label }}<span class="hm-in"><svg><use href="#i-phone"/></svg>{{ form.phone }}</span></label>
+        <details><summary>Add email or a message</summary>
+          <label>{{ form.email.label }}<span class="hm-in"><svg><use href="#i-mail"/></svg>{{ form.email }}</span></label>
+          <label>Message{{ form.message }}</label></details>
+        <button class="btn btn-s btn-lg block">Book This Package <svg><use href="#i-arrow"/></svg></button>
+        <p class="hm-bnote">No payment now. Our travel team calls you to confirm dates and price.</p>
+      </form>
+      <ul class="hm-trust"><li><svg class="ok"><use href="#i-shield-c"/></svg><b>Secure Booking</b><small>Your payment is safe and secure</small></li>
+        <li><svg><use href="#i-headset"/></svg><b>24/7 Support</b><small>We are here to help you</small></li>
+        <li><svg class="gold"><use href="#i-award"/></svg><b>Best Price</b><small>Guaranteed</small></li></ul>
+    </div>
+    <div class="hm-help"><span><svg><use href="#i-phone"/></svg></span><div><b>Need Help?</b><small>Chat with our travel experts for a customized package.</small></div>
+      {% if site.contact_url %}<a class="btn btn-o block" href="{{ site.contact_url }}" target="_blank" rel="noopener">Contact Us</a>{% else %}<a class="btn btn-o block" href="#book">Contact Us</a>{% endif %}</div>
+  </aside>
+</div>
+
+{% if similar %}<section class="hm-similar">
+  <div class="hm-shead"><h2>Similar Packages</h2><a class="more" href="{{ p.destination.get_absolute_url }}">View All Packages <svg><use href="#i-arrow"/></svg></a></div>
+  <div class="hm-srow">{% for s in similar %}<a class="hm-scard" href="{{ s.get_absolute_url }}"><span>{% if s.image %}<img src="{{ s.image.url }}" alt="" loading="lazy">{% endif %}</span>
+    <b>{{ s.title }}</b><small><svg><use href="#i-pin"/></svg>{{ s.location }}</small><em>{{ site.currency }} {{ s.price|intcomma }} <i>per couple</i></em></a>{% endfor %}</div>
+</section>{% endif %}
+
+<dialog class="hm-lightbox" id="hm-photos"><button type="button" class="am-x" data-close-dlg aria-label="Close">&times;</button>
+  <h2>{{ p.title }} &middot; {{ gallery|length }} photos</h2>
+  <div class="hm-lbgrid">{% for url in gallery %}<img src="{{ url }}" alt="" loading="lazy">{% endfor %}</div></dialog>
+{% endblock %}

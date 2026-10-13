@@ -34,6 +34,7 @@ def home(request):
     gold = Plan.objects.filter(price__gt=0).order_by("price").first()
     return render(request, "home.html", {
         "categories": ServiceCategory.objects.all()[:8],
+        "destinations": Destination.objects.filter(active=True, featured=True)[:5],
         "matches": Member.objects.filter(featured=True, status="active").order_by("joined", "pk")[:4],
         "faces": faces(),
         "events": Event.objects.filter(date__gte=date.today())[:3],

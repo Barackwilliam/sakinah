@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
-from .models import AdvertReview, ArticleComment, Inquiry, Member, Report
+from .models import AdvertReview, ArticleComment, Booking, Inquiry, Member, PackageReview, Report
 
 LOCATIONS = ["Dar es Salaam", "Arusha", "Mwanza", "Dodoma", "Zanzibar", "Mbeya", "Morogoro", "Tanga", "Kilimanjaro", "Iringa", "Kagera",
              "Mtwara", "Tabora", "Kigoma", "Shinyanga", "Singida", "Ruvuma", "Lindi", "Pwani", "Manyara", "Mara", "Rukwa", "Katavi",
@@ -110,3 +110,23 @@ class CommentForm(forms.ModelForm):
         fields = ["body"]
         labels = {"body": ""}
         widgets = {"body": forms.Textarea(attrs={"rows": 3, "placeholder": "Write a respectful comment"})}
+
+
+class BookingForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = ["travel_date", "couples", "name", "phone", "email", "message"]
+        widgets = {"travel_date": forms.DateInput(attrs={"type": "date"}), "couples": forms.Select(choices=[(i, i) for i in range(1, 7)]),
+                   "message": forms.Textarea(attrs={"rows": 3, "placeholder": "Special requests, e.g. flights, extra nights or a surprise for your spouse"})}
+        labels = {"travel_date": "Travel dates", "couples": "Number of couples", "name": "Your name", "phone": "Phone / WhatsApp", "email": "Email (optional)"}
+    def clean_travel_date(self):
+        from datetime import date
+        d = self.cleaned_data.get("travel_date")
+        if d and d < date.today(): raise forms.ValidationError("Choose a date in the future.")
+        return d
+
+class PackageReviewForm(forms.ModelForm):
+    class Meta:
+        model = PackageReview
+        fields = ["rating", "comment"]
+        widgets = {"rating": forms.RadioSelect, "comment": forms.Textarea(attrs={"rows": 3, "placeholder": "Share your honeymoon experience"})}

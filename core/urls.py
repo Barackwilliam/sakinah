@@ -1,6 +1,6 @@
 from django.contrib.auth import views as auth
 from django.urls import path
-from . import views, views_content, views_market
+from . import views, views_content, views_honeymoon as hm, views_market
 urlpatterns = [
     path("", views.home, name="home"),
     path("matches/", views.matches, name="matches"),
@@ -26,4 +26,11 @@ urlpatterns = [
     path("articles/", views_content.articles, name="articles"),
     path("articles/<slug:slug>/", views_content.article, name="article"),
     path("premium/", views_content.premium, name="premium"),
+    path("honeymoon/", hm.destinations, name="hm_destinations"),
+    path("honeymoon/packages/", hm.packages, name="hm_packages"),
+    path("honeymoon/save/", hm.save, name="hm_save"),
+    path("honeymoon/package/<slug:slug>/", hm.package, name="hm_package"),
+    path("honeymoon/package/<slug:slug>/book/", hm.book, name="hm_book"),
+    path("honeymoon/package/<slug:slug>/review/", hm.review, name="hm_review"),
+    path("honeymoon/<slug:slug>/", hm.packages, name="hm_destination"),
 ]

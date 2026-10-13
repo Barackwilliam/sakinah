@@ -128,3 +128,5 @@ class Command(BaseCommand):
             e, _ = Event.objects.get_or_create(title=t, defaults=dict(date=d, start_time=start, end_time=end, city=city, category=cats[cat],
                 capacity=cap, tags=tags, description=desc))
             attach(e, "image", V4 / f"{img}.jpg")
+        from core.seed_honeymoon import seed_honeymoon
+        seed_honeymoon(attach, IMG / "honeymoon")

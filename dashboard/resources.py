@@ -11,7 +11,7 @@ from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from core.forms import LOCATIONS
-from core.models import (Advert, Article, ArticleCategory, Broadcast, Event, EventCategory, EventRegistration, FeatureStrip, Inquiry,
+from core.models import (Advert, Article, ArticleCategory, Booking, Broadcast, Destination, Event, Package, PackagePhoto, PackageReview, EventCategory, EventRegistration, FeatureStrip, Inquiry,
                          Member, MessageTemplate, Notification, Payment, Plan, PremiumPerk, Report, ServiceCategory, SupportTicket, Vendor)
 
 # ---------- small column helpers ----------
@@ -329,6 +329,96 @@ class ServiceCategories(Resource):
     search, ordering = ["name"], ["order", "pk"]
     columns = [("", thumb("image")), ("Category", bold("name", lambda o: o.blurb[:60])), ("Adverts", lambda o: Advert.objects.filter(category=o).count()), ("Order", lambda o: o.order)]
 
+# ---------- honeymoon ----------
+def booking_status(status, msg):
+    def fn(o, r):
+        o.status = status; o.save(update_fields=["status"])
+        if o.user_id and status in ("confirmed", "cancelled"):
+            Notification.objects.create(user=o.user, link=o.package.get_absolute_url(),
+                title=f"Honeymoon booking {'confirmed' if status == 'confirmed' else 'cancelled'}: {o.package.title}",
+                body="Hongera! Your honeymoon booking is confirmed. Our team will share the travel details with you." if status == "confirmed"
+                     else "Your honeymoon booking request was cancelled. Contact us if you would like to choose other dates.")
+        return msg
+    return fn
+
+BOOKING_TONES = {"new": "warn", "contacted": "info", "confirmed": "ok", "cancelled": "bad"}
+
+@register("bookings")
+class Bookings(Resource):
+    title, icon, nav, model = "Honeymoon Bookings", "m-cal", "honeymoon", Booking
+    can_add = False
+    form = model_form(Booking, ["status", "travel_date", "couples", "name", "phone", "email", "message"], widgets={"travel_date": DATE, "message": AREA(3)})
+    search = ["name", "phone", "email", "package__title"]
+    filters = [("status", "All statuses", lambda: Booking.STATUS, lambda qs, v: qs.filter(status=v)),
+               ("package__destination", "All destinations", lambda: [(str(d.pk), d.name) for d in Destination.objects.all()], lambda qs, v: qs.filter(package__destination_id=v))]
+    ordering = ["-created"]
+    def queryset(self): return Booking.objects.select_related("package__destination", "user")
+    columns = [("Couple", lambda o: format_html('<b class="mn">{}</b><small class="mc">{}{}</small>', o.name, o.phone, f" · {o.email}" if o.email else "")),
+               ("Package", lambda o: format_html('<a class="va" href="{}" target="_blank">{}</a><small class="mc">{}</small>', o.package.get_absolute_url(), o.package.title, o.package.destination.name)),
+               ("Travel date", when("travel_date")), ("Couples", lambda o: o.couples), ("Estimated total", lambda o: f"TSh {o.total:,}"),
+               ("Received", when("created", "%d %b %Y %H:%M")), ("Status", lambda o: pill(o.get_status_display(), BOOKING_TONES[o.status]))]
+    actions = {"contacted": ("Mark contacted", "", booking_status("contacted", "marked contacted")),
+               "confirmed": ("Confirm booking", "", booking_status("confirmed", "confirmed and the member notified")),
+               "cancelled": ("Cancel booking", "dang", booking_status("cancelled", "cancelled"))}
+
+@register("packages")
+class Packages(Resource):
+    title, icon, nav, model = "Honeymoon Packages", "i-gem", "honeymoon", Package
+    form = model_form(Package, ["title", "slug", "destination", "location", "package_type", "badge", "badge_tone", "image", "price", "days", "nights", "stars",
+                                "stay", "meals", "meals_detail", "extra", "extra_icon", "flights", "transfer", "romance", "overview", "highlights", "itinerary",
+                                "inclusions", "exclusions", "accommodation", "activities", "important_info", "ideal_for", "rating", "reviews",
+                                "discount", "free_addons", "all_inclusive", "featured", "active", "order"],
+                      widgets={k: AREA(4) for k in ("overview", "highlights", "itinerary", "inclusions", "exclusions", "accommodation", "activities", "important_info", "ideal_for")},
+                      slug_from="title")
+    search = ["title", "location", "destination__name"]
+    filters = [("destination", "All destinations", lambda: [(str(d.pk), d.name) for d in Destination.objects.all()], lambda qs, v: qs.filter(destination_id=v)),
+               ("active", "All", lambda: [("1", "Active"), ("0", "Hidden")], lambda qs, v: qs.filter(active=v == "1"))]
+    ordering = ["destination__order", "order", "pk"]
+    def queryset(self): return Package.objects.select_related("destination").annotate(n_book=Count("bookings", distinct=True), n_photos=Count("photos", distinct=True))
+    row_link = lambda self, o: o.get_absolute_url()
+    columns = [("", thumb("image")), ("Package", bold("title", lambda o: f"{o.destination.name} · {o.days} days {o.nights} nights")), ("Price", money("price")),
+               ("Badge", lambda o: o.badge or "—"),
+               ("Photos", lambda o: format_html('<a class="va" href="{}?package={}">{}</a>', reverse("dash_manage", args=["package-photos"]), o.pk, o.n_photos)),
+               ("Bookings", lambda o: format_html('<a class="va" href="{}?q={}">{}</a>', reverse("dash_manage", args=["bookings"]), o.title, o.n_book)),
+               ("Status", lambda o: format_html("{} {}", pill("Active", "ok") if o.active else pill("Hidden", "mut"), pill("Featured", "info") if o.featured else ""))]
+    actions = {"active": ("Show / hide", "", toggle("active", "is now visible", "is now hidden")), "feature": ("Feature / unfeature", "", toggle("featured", "featured", "unfeatured"))}
+
+@register("destinations")
+class Destinations(Resource):
+    title, icon, nav, model = "Honeymoon Destinations", "i-palm", "honeymoon", Destination
+    form = model_form(Destination, ["name", "slug", "country", "kind", "region", "tagline", "description", "image", "from_price", "days", "nights", "features",
+                                    "rating", "reviews", "featured", "active", "order"], widgets={"description": AREA(3), "features": AREA(3)})
+    search, ordering = ["name", "country"], ["order", "name"]
+    filters = [("kind", "All types", lambda: Destination.KINDS, lambda qs, v: qs.filter(kind=v)),
+               ("region", "All regions", lambda: Destination.REGIONS, lambda qs, v: qs.filter(region=v))]
+    def queryset(self): return Destination.objects.annotate(n_pkg=Count("packages"))
+    row_link = lambda self, o: o.get_absolute_url()
+    columns = [("", thumb("image")), ("Destination", bold("name", lambda o: f"{o.country} · {o.get_kind_display()}")), ("From", money("from_price")),
+               ("Packages", lambda o: format_html('<a class="va" href="{}?destination={}">{}</a>', reverse("dash_manage", args=["packages"]), o.pk, o.n_pkg)),
+               ("Rating", lambda o: f"{o.rating} ({o.reviews:,})"),
+               ("Status", lambda o: format_html("{} {}", pill("Active", "ok") if o.active else pill("Hidden", "mut"), pill("On home page", "info") if o.featured else ""))]
+    actions = {"active": ("Show / hide", "", toggle("active", "is now visible", "is now hidden")), "feature": ("Show on home page / remove", "", toggle("featured", "is on the home page", "removed from the home page"))}
+
+@register("package-photos")
+class PackagePhotos(Resource):
+    title, icon, nav, model = "Package Photos", "i-image", "honeymoon", PackagePhoto
+    form = model_form(PackagePhoto, ["package", "image", "caption", "order"])
+    search = ["caption", "package__title"]
+    filters = [("package", "All packages", lambda: [(str(p.pk), p.title) for p in Package.objects.all()], lambda qs, v: qs.filter(package_id=v))]
+    ordering = ["package__title", "order", "pk"]
+    def queryset(self): return PackagePhoto.objects.select_related("package")
+    columns = [("", thumb("image")), ("Package", lambda o: o.package.title), ("Caption", lambda o: o.caption or "—"), ("Order", lambda o: o.order)]
+
+@register("package-reviews")
+class PackageReviews(Resource):
+    title, icon, nav, model = "Package Reviews", "i-star", "honeymoon", PackageReview
+    can_add = can_edit = False
+    search = ["comment", "package__title", "user__username"]
+    ordering = ["-created"]
+    def queryset(self): return PackageReview.objects.select_related("package", "user__member")
+    columns = [("Member", lambda o: user_label(o.user)), ("Package", lambda o: o.package.title), ("Rating", lambda o: "★" * o.rating),
+               ("Comment", lambda o: (o.comment or "—")[:120]), ("Date", when("created"))]
+
 # ---------- payments ----------
 def complete_payment(o, r):
     if o.status != "pending": return "was not pending"
@@ -386,4 +476,5 @@ SIDEBAR = {  # nav key -> resources listed together in a section header
     "events": ["events", "event-categories", "registrations"], "plans": ["plans", "perks"],
     "content": ["articles", "article-categories", "home-strips"], "comms": ["templates", "broadcasts"],
     "support": ["tickets", "reports", "inquiries"], "marketing": ["adverts", "vendors", "service-categories"],
+    "honeymoon": ["bookings", "packages", "destinations", "package-photos", "package-reviews"],
 }
