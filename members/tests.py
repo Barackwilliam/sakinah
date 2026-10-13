@@ -157,6 +157,10 @@ class RobustnessTests(TestCase):
         self.other = Member.objects.create(name="Amina Hassan", age=27, gender="F", city="Arusha", occupation="Nurse")
         self.client.force_login(self.user)
 
+    def test_conversation_with_deleted_member_goes_back_to_inbox(self):
+        r = self.client.get(reverse("m_messages_with", args=[999999]))
+        self.assertRedirects(r, reverse("m_messages"))
+
     def test_unblock_from_safety_page(self):
         url = reverse("m_block", args=[self.other.pk])
         self.client.post(url)

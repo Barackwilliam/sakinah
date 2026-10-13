@@ -61,7 +61,7 @@
       <details {% if nav == 'marketing' %}open{% endif %}><summary class="{% if nav == 'marketing' %}on{% endif %}"><svg><use href="#i-mega"/></svg>Marketing &amp; Ads</summary>
         <div class="sub"><a href="{% url 'dash_manage' 'adverts' %}" class="{% if sub == 'adverts' %}on{% endif %}">Adverts</a><a href="{% url 'dash_manage' 'vendors' %}" class="{% if sub == 'vendors' %}on{% endif %}">Vendors</a><a href="{% url 'dash_manage' 'service-categories' %}" class="{% if sub == 'service-categories' %}on{% endif %}">Service Categories</a></div></details>
     </nav>
-    <div class="asb-art"><img src="{% static 'img/member/side_art.jpg' %}" alt=""><p>&ldquo;Na Mwenyezi Mungu aliuumba kwa jozi.&rdquo;<span>(Qur'an 78:8)</span></p></div>
+    <div class="asb-art"><img loading="lazy" decoding="async" src="{% static 'img/member/side_art.jpg' %}" alt=""><p>&ldquo;Na Mwenyezi Mungu aliuumba kwa jozi.&rdquo;<span>(Qur'an 78:8)</span></p></div>
   </aside>
   <div class="ascrim" id="sb-scrim" hidden></div>
   <main class="amain">

@@ -51,7 +51,7 @@
       <a href="{% url 'm_settings' %}" class="{% if nav == 'settings' %}on{% endif %}"><svg><use href="#m-gear"/></svg>Settings</a>
       <a href="{% url 'm_help' %}" class="{% if nav == 'help' %}on{% endif %}"><svg><use href="#m-help"/></svg>Help &amp; Support</a>
     </nav>
-    <div class="msb-art"><img src="{% static 'img/member/side_art.jpg' %}" alt="">
+    <div class="msb-art"><img loading="lazy" decoding="async" src="{% static 'img/member/side_art.jpg' %}" alt="">
       <p>{% if nav == 'dashboard' %}&ldquo;Na katika Ishara Zake ni kuwa Amekuumbieni wake zenu kutokana na nafsi zenu ili mpate utulivu kwao...&rdquo;<span>(Qur'an 30:21)</span>
       {% else %}&ldquo;Na katika kila kitu tumeumba kwa jozi.&rdquo;<span>(Qur'an 51:49)</span>{% endif %}</p></div>
   </aside>

@@ -33,7 +33,7 @@
       {% for p in plans %}
       <article class="plan {{ p.style }}{% if p.popular %} pop{% endif %}{% if p.pk == current.pk %} cur{% endif %}">
         {% if p.popular %}<span class="pop-tag">Most Popular</span>{% endif %}
-        {% if p.icon %}<img src="{{ p.icon.url }}" alt="">{% else %}<img src="{% static 'img/member/plan' %}{{ p.icon_n }}.jpg" alt="">{% endif %}
+        {% if p.icon %}<img loading="lazy" decoding="async" src="{{ p.icon.url }}" alt="">{% else %}<img loading="lazy" decoding="async" src="{% static 'img/member/plan' %}{{ p.icon_n }}.jpg" alt="">{% endif %}
         <h3>{{ p.name }}</h3><small>{{ p.tagline|default:"&nbsp;" }}</small>
         <div class="pp"><b>TSh {{ p.price|intcomma }}</b><span>{{ p.period }}</span></div>
         <ul class="tlist">{% for ok, t in p.feature_list %}{% if ok %}<li><svg><use href="#m-check-c"/></svg>{{ t }}</li>{% endif %}{% endfor %}</ul>

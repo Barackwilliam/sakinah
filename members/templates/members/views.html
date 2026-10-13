@@ -15,7 +15,7 @@
     <div class="sumbox pink"><h3><svg class="mag"><use href="#m-eye"/></svg>Profile Views Summary</h3>
       {% for ic, label, n in summary %}<div class="srow"><svg class="mag"><use href="#m-{{ ic }}"/></svg>{{ label }}<b>{{ n }}</b></div>{% endfor %}</div>
     <div class="sumbox yel"><h3><svg class="gold"><use href="#m-star"/></svg>Top Viewers</h3>
-      <ul class="tops">{% for m in top %}<li><a href="{% url 'member' m.pk %}"><span class="cav xs">{% if m.photo and m.can_see_photo|default_if_none:True %}<img src="{{ m.photo.url }}" alt="">{% else %}<b>{{ m.name|first }}</b>{% endif %}</span>
+      <ul class="tops">{% for m in top %}<li><a href="{% url 'member' m.pk %}"><span class="cav xs">{% if m.photo and m.can_see_photo|default_if_none:True %}<img loading="lazy" decoding="async" src="{{ m.photo.url }}" alt="">{% else %}<b>{{ m.name|first }}</b>{% endif %}</span>
         <span><b>{{ m.first_name }}, {{ m.age }}</b><small>Viewed {{ m.view_count }} time{{ m.view_count|pluralize }}</small></span><svg><use href="#m-chev-r"/></svg></a></li>{% empty %}<li class="muted">No viewers yet.</li>{% endfor %}</ul></div>
     <div class="sumbox grn"><h3><svg class="ok"><use href="#m-bulb"/></svg>Tips to Get More Views</h3>
       <ul class="tlist"><li><svg><use href="#m-check-c"/></svg>Complete your profile fully</li><li><svg><use href="#m-check-c"/></svg>Add clear and recent photos</li><li><svg><use href="#m-check-c"/></svg>Write an interesting bio</li>

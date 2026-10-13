@@ -56,17 +56,16 @@ def visible(qs, request, me):
     if not me.is_premium: qs = qs.exclude(profile_visibility="premium")
     return qs
 
-def tab_counts(**qs): return {k: v.count() for k, v in qs.items()}
-
 # ---------- dashboard ----------
 @login_required
 def dashboard(request):
     me = me_or_create(request)
     comp = data.completion(me)
+    c = data.counts(request.user, me)
     acts = [("heart", "People who liked you", data.liked_me(me).count(), "m_liked"), ("eye", "Profile views", me.profile_views.count(), "m_views"),
-            ("chat", "New messages", Message.objects.filter(to=me, read=False).count(), "m_messages"),
+            ("chat", "New messages", c["unread"], "m_messages"),
             ("people", "Mutual matches", data.mutual(request.user, me).count(), "m_matches"),
-            ("bell", "New notifications", request.user.notifications.filter(read=False).count(), "m_notifications")]
+            ("bell", "New notifications", c["n_notes"], "m_notifications")]
     perks = list(PremiumPerk.objects.all()[:6])
     return page(request, "members/dashboard.html", {"me": me, "comp": comp, "acts": acts, "perks": perks,
         "suggested": decorate(data.suggestions(request.user, me, 8), request, me),
@@ -112,11 +111,13 @@ MATCH_TABS = [("all", "All Matches"), ("mutual", "Mutual Matches"), ("liked_you"
 @login_required
 def matches(request):
     me, g = me_or_create(request), request.GET
-    sets = {"all": data.all_matches(request.user, me), "mutual": data.mutual(request.user, me), "liked_you": data.liked_me(me),
-            "you_liked": data.i_liked(request.user), "shortlisted": Member.objects.filter(shortlisted_by__user=request.user)}
-    n = tab_counts(**sets)
+    # three id lists answer every tab and its count (instead of a COUNT query per tab)
+    mine, theirs = set(data.i_liked(request.user).values_list("pk", flat=True)), set(data.liked_me(me).values_list("pk", flat=True))
+    sets = {"all": mine | theirs, "mutual": mine & theirs, "liked_you": theirs, "you_liked": mine,
+            "shortlisted": set(Member.objects.filter(shortlisted_by__user=request.user).values_list("pk", flat=True))}
+    n = {k: len(v) for k, v in sets.items()}
     tab = g.get("tab") if g.get("tab") in sets else "all"
-    qs = sets[tab].exclude(pk__in=data.blocked_ids(request.user))
+    qs = Member.objects.filter(pk__in=sets[tab]).exclude(pk__in=data.blocked_ids(request.user))
     if g.get("show") == "online": qs = qs.filter(show_online=True, last_seen__gte=timezone.now() - timedelta(minutes=5))
     if g.get("show") == "verified": qs = qs.filter(verified=True)
     if g.get("city"): qs = qs.filter(city=g["city"])
@@ -152,7 +153,10 @@ def messages_page(request, pk=None):
              "favorites": [c for c in allc if c["fav"]], "archived": [c for c in allc if c["archived"]]}.get(tab, allc)
     if g.get("q"):
         q = g["q"].lower(); shown = [c for c in shown if q in c["member"].name.lower() or q in c["last"].body.lower()]
-    other = get_object_or_404(Member, pk=pk) if pk else (shown[0]["member"] if shown else None)
+    other = Member.objects.filter(pk=pk).first() if pk else (shown[0]["member"] if shown else None)
+    if pk and other is None:   # e.g. an old notification about someone who has since deleted their account
+        messages.info(request, "This member is no longer on Sakinah.")
+        return redirect("m_messages")
     form = ConversationForm(request.POST or None, request.FILES or None)
     if other and request.method == "POST":
         if other.pk in blocked or (other.user_id and Block.objects.filter(user=other.user, member=me).exists()):
@@ -189,7 +193,7 @@ def conversation_action(request, pk):
 @login_required
 def profile(request):
     me = me_or_create(request)
-    n_photos = (1 if me.photo else 0) + me.photos.count()
+    n_photos = (1 if me.photo else 0) + data.photo_count(me)
     return page(request, "members/profile.html", {"me": me, "comp": data.completion(me), "photos": me.photos.all()[:5], "tab": "overview",
         "n_photos": min(n_photos, 6), "empty_slots": range(max(0, 6 - n_photos)),
         "visibility_choices": [("all", "Show my profile to all members"), ("verified", "Show only to verified members"),
@@ -217,7 +221,7 @@ def photos(request):
             messages.success(request, "Photo added.")
             return redirect(safe_next(request) or "m_photos")
     return page(request, "members/photos.html", {"me": me, "form": form, "photos": me.photos.all(), "tab": "photos",
-        "n_photos": (1 if me.photo else 0) + me.photos.count()}, "profile")
+        "n_photos": (1 if me.photo else 0) + data.photo_count(me)}, "profile")
 
 @login_required
 @require_POST
@@ -291,14 +295,15 @@ def views(request):
         m = viewers.get(r["viewer"])
         if m: m.viewed_at, m.view_count = r["last"], r["n"]; items.append(m)
     now = timezone.now()
-    summary = [("eye", "Total Profile Views", base.count()), ("cal", "This Week", data.period_filter(base, "created", "7").count()),
-               ("cal", "This Month", data.period_filter(base, "created", "month").count()), ("cal", "Last 3 Months", data.period_filter(base, "created", "90").count()),
-               ("people", "Unique Visitors", base.values("viewer").distinct().count())]
-    top = sorted([m for m in Member.objects.filter(user__in=base.values("viewer"))], key=lambda m: -base.filter(viewer=m.user).count())[:5]
-    for m in top: m.view_count = base.filter(viewer=m.user).count()
+    pc = data.period_counts(base)
+    counts = dict(base.values_list("viewer").annotate(n=Count("id")).order_by())   # one grouped query instead of two per viewer
+    summary = [("eye", "Total Profile Views", pc["n_all"]), ("cal", "This Week", pc["n_7"]), ("cal", "This Month", pc["n_month"]),
+               ("cal", "Last 3 Months", pc["n_90"]), ("people", "Unique Visitors", len(counts))]
+    top = sorted(Member.objects.filter(user__in=counts.keys()), key=lambda m: -counts[m.user_id])[:5]
+    for m in top: m.view_count = counts[m.user_id]
     return page(request, "members/views.html", {"me": me, "members": decorate(items, request, me), "tab": tab, "f": g, "summary": summary, "top": top,
-        "tabs": [("all", "All Views", base.count(), "eye"), ("recent", "Recent (7 days)", data.period_filter(base, "created", "7").count(), "cal"),
-                 ("month", "This Month", data.period_filter(base, "created", "month").count(), "cal"), ("90", "Last 3 Months", data.period_filter(base, "created", "90").count(), "cal")],
+        "tabs": [("all", "All Views", pc["n_all"], "eye"), ("recent", "Recent (7 days)", pc["n_7"], "cal"),
+                 ("month", "This Month", pc["n_month"], "cal"), ("90", "Last 3 Months", pc["n_90"], "cal")],
         "locations": LOCATIONS, "age_opts": AGE_OPTS, "now": now}, "views", header="notify")
 
 # ---------- who liked me ----------
@@ -319,7 +324,8 @@ def liked(request):
     for lk in qs:
         m = getattr(lk.user, "member", None)
         if m: m.liked_at = lk.created; items.append(m)
-    n = {"all": base.count(), "new": new.count(), "week": data.period_filter(base, "created", "7").count(), "month": data.period_filter(base, "created", "month").count()}
+    pc = data.period_counts(base)
+    n = {"all": pc["n_all"], "new": new.count() if seen else pc["n_all"], "week": pc["n_7"], "month": pc["n_month"]}
     resp = page(request, "members/liked.html", {"me": me, "members": decorate(items, request, me), "tab": tab, "n": n, "f": g, "locations": LOCATIONS, "age_opts": AGE_OPTS,
         "locked": not me.is_premium, "perks": ["See who liked you", "Get more profile views", "Priority in search results", "Advanced filters"]}, "liked")
     if me.is_premium:
@@ -339,9 +345,10 @@ def activity_feed(user, me, kind="all", limit=40):
             if m: items.append({"t": lk.created, "kind": "like", "icon": "heart", "color": "#d61f45", "m": m, "text": "liked your profile"})
     if kind in ("all", "matches"):
         mutual_ids = set(data.mutual(user, me).values_list("pk", flat=True))
+        backs = dict(Like.objects.filter(member=me, user__member__in=mutual_ids).values_list("user__member", "created"))
         for lk in Like.objects.filter(user=user, member__in=mutual_ids).select_related("member"):
-            back = Like.objects.filter(user=lk.member.user, member=me).first()
-            t = max(lk.created, back.created) if back else lk.created
+            back = backs.get(lk.member_id)
+            t = max(lk.created, back) if back else lk.created
             items.append({"t": t, "kind": "match", "icon": "people", "color": "#2b4fb8", "m": lk.member, "text": "mutual", "pre": "You got a"})
     if kind in ("all", "messages"):
         for msg in Message.objects.filter(to=me).select_related("sender__member")[:limit]:
@@ -364,19 +371,22 @@ def nice_ticks(top):
 def activity(request):
     me = me_or_create(request)
     tab = request.GET.get("tab", "all")
-    week = timezone.now() - timedelta(days=7); prev = week - timedelta(days=7)
-    def wk(qs, f="created"):
-        a = qs.filter(**{f"{f}__gte": week}).count(); b = qs.filter(**{f"{f}__gte": prev, f"{f}__lt": week}).count()
-        return round((a - b) * 100 / b) if b else (100 if a else 0)
+    now = timezone.now(); week, month = now - timedelta(days=7), now - timedelta(days=30); prev = week - timedelta(days=7)
+    def stats(qs, **extra):
+        """Total, this week, last week and last 30 days in a single query."""
+        return qs.aggregate(total=Count("pk"), wk=Count("pk", filter=Q(created__gte=week)), prev=Count("pk", filter=Q(created__gte=prev, created__lt=week)),
+                            month=Count("pk", filter=Q(created__gte=month)), **extra)
+    def wk(st): return round((st["wk"] - st["prev"]) * 100 / st["prev"]) if st["prev"] else (100 if st["wk"] else 0)
     views_qs, likes_qs = me.profile_views.exclude(viewer=request.user), Like.objects.filter(member=me).exclude(user=request.user)
     msgs_qs, saved_qs = Message.objects.filter(to=me), Shortlist.objects.filter(user=request.user)
+    v, lk, sv = stats(views_qs), stats(likes_qs), stats(saved_qs)
+    ms = stats(msgs_qs, unread=Count("pk", filter=Q(read=False)))
     n_mutual = data.mutual(request.user, me).count()
-    cards = [("eye", "Profile Views", views_qs.count(), wk(views_qs), "pink", "#a0123c"), ("heart", "People Who Liked Me", likes_qs.count(), wk(likes_qs), "grn", "#0f7a45"),
-             ("people", "Mutual Matches", n_mutual, None, "blu", "#2b4fb8"), ("chat", "New Messages", msgs_qs.filter(read=False).count(), wk(msgs_qs), "yel", "#b8741a"),
-             ("bookmark", "Saved Profiles", saved_qs.count(), wk(saved_qs), "pur", "#7c3aed")]
-    month = timezone.now() - timedelta(days=30)
-    bars = [("Profile Views", views_qs.filter(created__gte=month).count(), "#a0123c"), ("Likes", likes_qs.filter(created__gte=month).count(), "#f472b6"),
-            ("Matches", n_mutual, "#16a34a"), ("Messages", msgs_qs.filter(created__gte=month).count(), "#3b82f6"), ("Saved", saved_qs.filter(created__gte=month).count(), "#8b5cf6")]
+    cards = [("eye", "Profile Views", v["total"], wk(v), "pink", "#a0123c"), ("heart", "People Who Liked Me", lk["total"], wk(lk), "grn", "#0f7a45"),
+             ("people", "Mutual Matches", n_mutual, None, "blu", "#2b4fb8"), ("chat", "New Messages", ms["unread"], wk(ms), "yel", "#b8741a"),
+             ("bookmark", "Saved Profiles", sv["total"], wk(sv), "pur", "#7c3aed")]
+    bars = [("Profile Views", v["month"], "#a0123c"), ("Likes", lk["month"], "#f472b6"),
+            ("Matches", n_mutual, "#16a34a"), ("Messages", ms["month"], "#3b82f6"), ("Saved", sv["month"], "#8b5cf6")]
     top_n = nice_ticks(max([b[1] for b in bars] + [1]))[0]
     bars = [{"label": l, "n": n, "h": round(n * 100 / top_n), "c": c} for l, n, c in bars]
     scores = {}
@@ -386,8 +396,9 @@ def activity(request):
     scores.pop(None, None)
     top = sorted(scores.items(), key=lambda kv: -(kv[1]["views"] + 2 * kv[1]["likes"] + 3 * kv[1]["msgs"]))[:5]
     tops = []
+    found = Member.objects.in_bulk([pk for pk, _ in top])
     for pk, s in top:
-        m = Member.objects.filter(pk=pk).first()
+        m = found.get(pk)
         if not m: continue
         best = max(("views", "eye", "view"), ("likes", "heart", "like"), ("msgs", "chat", "message"), key=lambda k: s[k[0]])
         m.top_icon, m.top_text = best[1], f"{s[best[0]]} {best[2]}{'s' if s[best[0]] != 1 else ''}"
@@ -417,11 +428,12 @@ def events(request):
         nxt = Event.objects.filter(date__gte=today).order_by("date").first(); y, mth = (nxt.date.year, nxt.date.month) if nxt else (today.year, today.month)
     days = {e.date.day: ("mine" if e.pk in mine_ids else "ev") for e in Event.objects.filter(date__year=y, date__month=mth)}
     prev_m = date(y - (mth == 1), 12 if mth == 1 else mth - 1, 1); next_m = date(y + (mth == 12), 1 if mth == 12 else mth + 1, 1)
-    types = sorted({t for e in Event.objects.all() for t in e.tag_list})
+    cities_tags = list(Event.objects.values_list("city", "tags"))
+    types = sorted({t.strip() for _, tags in cities_tags for t in tags.split(",") if t.strip()})
     return page(request, "members/events.html", {"me": me, "events": qs, "tab": tab, "f": g, "mine": mine_ids,
         "saved": set(EventSave.objects.filter(user=request.user).values_list("event_id", flat=True)),
         "categories": EventCategory.objects.annotate(n=Count("events")).filter(n__gt=0).order_by("order", "pk"),
-        "locations": sorted(set(Event.objects.values_list("city", flat=True))), "types": types,
+        "locations": sorted({c for c, _ in cities_tags}), "types": types,
         "cal": cal.Calendar(firstweekday=6).monthdayscalendar(y, mth), "cal_title": date(y, mth, 1), "cal_days": days,
         "today": today.day if (today.year, today.month) == (y, mth) else 0, "prev_month": prev_m.strftime("%Y-%m"), "next_month": next_m.strftime("%Y-%m"),
         "my_regs": EventRegistration.objects.filter(user=request.user).select_related("event").order_by("-event__date")[:3], "today_date": today},

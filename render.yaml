@@ -6,7 +6,7 @@ services:
     runtime: python
     plan: free
     buildCommand: ./build.sh
-    startCommand: gunicorn config.wsgi:application --workers 2 --timeout 60
+    startCommand: gunicorn config.wsgi:application --workers 2 --threads 4 --timeout 60
     healthCheckPath: /
     envVars:
       - key: PYTHON_VERSION

@@ -30,7 +30,7 @@
   <tr>
     <td><input type="checkbox" name="ids" value="{{ m.pk }}" form="bulk" class="rowck" aria-label="Select {{ m.name }}"></td>
     <td>{{ pg.start_index|add:forloop.counter0 }}</td>
-    <td><span class="av mav">{% if m.photo %}<img src="{{ m.photo.url }}" alt="">{% else %}{{ m.name|first }}{% endif %}</span></td>
+    <td><span class="av mav">{% if m.photo %}<img loading="lazy" decoding="async" src="{{ m.photo.url }}" alt="">{% else %}{{ m.name|first }}{% endif %}</span></td>
     <td class="nw"><b class="mn">{{ m.name }}</b><small class="mc">{{ m.code }}</small>{% if m.n_reports %}<a class="pill bad" href="{% url 'dash_manage' 'reports' %}?q={{ m.name|urlencode }}">{{ m.n_reports }} report{{ m.n_reports|pluralize }}</a>{% endif %}</td>
     <td>{% include "dashboard/_gender.html" %}</td>
     <td>{{ m.age }}</td>

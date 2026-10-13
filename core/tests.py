@@ -238,3 +238,21 @@ class SeedTests(TestCase):
                     top = model.objects.aggregate(m=dm.Max(f.name))["m"] or 0
                     self.assertLessEqual(top, 32767, f"{model.__name__}.{f.name}")
         self.assertEqual(Plan.objects.count(), 5)
+
+
+class UploadShrinkTests(TestCase):
+    def test_large_photos_are_resized_and_small_ones_kept(self):
+        import tempfile
+        from io import BytesIO
+        from PIL import Image
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from django.test import override_settings
+        m = Member.objects.create(name="Amina", age=28, gender="F", city="Arusha")
+        big = BytesIO(); Image.effect_noise((3000, 2000), 60).convert("RGB").save(big, "JPEG", quality=95)
+        small = BytesIO(); Image.new("RGBA", (200, 200), (0, 0, 0, 0)).save(small, "PNG")
+        with tempfile.TemporaryDirectory() as tmp, override_settings(MEDIA_ROOT=tmp):
+            p = MemberPhoto.objects.create(member=m, image=SimpleUploadedFile("phone.jpeg", big.getvalue(), "image/jpeg"))
+            self.assertLess(p.image.size, big.tell())
+            self.assertEqual(max(Image.open(p.image.path).size), 1600)
+            q = MemberPhoto.objects.create(member=m, image=SimpleUploadedFile("logo.png", small.getvalue(), "image/png"))
+            self.assertEqual(q.image.size, small.tell())

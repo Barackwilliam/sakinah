@@ -16,7 +16,7 @@
         {% for i in feed %}
         <li style="--c:{{ i.color }}">
           <time>{{ i.t|ago }}</time><svg class="tl-ic" style="color:{{ i.color }}"><use href="#m-{{ i.icon }}"/></svg>
-          {% if i.m %}<a class="cav sm" href="{% url 'member' i.m.pk %}">{% if i.m.photo %}<img src="{{ i.m.photo.url }}" alt="">{% else %}<b>{{ i.m.name|first }}</b>{% endif %}</a>
+          {% if i.m %}<a class="cav sm" href="{% url 'member' i.m.pk %}">{% if i.m.photo %}<img loading="lazy" decoding="async" src="{{ i.m.photo.url }}" alt="">{% else %}<b>{{ i.m.name|first }}</b>{% endif %}</a>
           <div class="tl-t"><p>{% if i.pre %}{{ i.pre }} {% endif %}{% if i.kind == 'match' %}<b>mutual match</b> with <b>{{ i.m.name }}</b>{% elif i.kind == 'saved' %}<b>{{ i.m.name }}</b>&rsquo;s profile{% else %}<b>{{ i.m.name }}</b> {{ i.text }}{% endif %}</p>
             <small>{% if i.quote %}&ldquo;{{ i.quote }}{% if i.quote|length >= 40 %}...{% endif %}&rdquo;{% else %}{{ i.m.city }}, {{ i.m.age }}{% endif %}</small></div>
           {% if i.kind == 'message' %}<a class="btn g sm" href="{% url 'm_messages_with' i.m.pk %}">Reply</a>{% else %}<a class="btn g sm" href="{% url 'member' i.m.pk %}">View Profile</a>{% endif %}
@@ -40,7 +40,7 @@
       <div class="bars"><div class="yax">{% for t in ticks %}<span>{{ t }}</span>{% endfor %}</div>
         {% for b in bars %}<div class="abar"><b>{{ b.n }}</b><i style="height:{{ b.h }}%;background:{{ b.c }}"></i><span>{{ b.label }}</span></div>{% endfor %}</div></div>
     <div class="box aside-b"><h3 class="bh yelh"><svg class="gold"><use href="#m-star"/></svg>Top Interactions<a class="ed" href="{% url 'm_views' %}">View All</a></h3>
-      <ol class="tops ti">{% for m in tops %}<li><a href="{% url 'member' m.pk %}"><em class="r{{ forloop.counter }}">{{ forloop.counter }}</em><span class="cav xs">{% if m.photo %}<img src="{{ m.photo.url }}" alt="">{% else %}<b>{{ m.name|first }}</b>{% endif %}</span>
+      <ol class="tops ti">{% for m in tops %}<li><a href="{% url 'member' m.pk %}"><em class="r{{ forloop.counter }}">{{ forloop.counter }}</em><span class="cav xs">{% if m.photo %}<img loading="lazy" decoding="async" src="{{ m.photo.url }}" alt="">{% else %}<b>{{ m.name|first }}</b>{% endif %}</span>
         <span><b>{{ m.name }}</b><small>{{ m.city }}, {{ m.age }}</small></span><span class="tis"><svg><use href="#m-{{ m.top_icon }}"/></svg>{{ m.top_text }}</span><svg><use href="#m-chev-r"/></svg></a></li>
         {% empty %}<li class="muted">No interactions yet.</li>{% endfor %}</ol></div>
     <div class="sumbox grn"><h3><svg class="ok"><use href="#m-bulb"/></svg>Tips to Increase Your Activity</h3>
