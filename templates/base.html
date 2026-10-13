@@ -1,4 +1,4 @@
-{% load static %}<!doctype html>
+{% load static assets %}<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -6,7 +6,7 @@
 <title>{% block title %}{{ site.brand }} - {{ site.tagline }}{% endblock %}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<link rel="stylesheet" href="{% asset 'css/main.css' %}">
 {% include "partials/img_fallback.html" %}</head><body class="{% block bodyclass %}{% endblock %}">
 {% include "partials/icons.html" %}
 {% include "partials/navbar.html" %}
@@ -15,5 +15,5 @@
 {% include "partials/footer.html" %}
 {% include "partials/tabbar.html" %}
 {% if modal_login %}{% include "partials/auth_modal.html" %}{% endif %}
-<script src="{% static 'js/main.js' %}"></script>
+<script src="{% asset 'js/main.js' %}"></script>
 </body></html>
