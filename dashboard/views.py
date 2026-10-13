@@ -13,7 +13,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 from core.models import (Advert, ProfileView, SupportTicket, Article, Broadcast, Event, EventRegistration, Inquiry, Like, Member, Message, MessageTemplate,
-                         Notification, Payment, Plan, Report, SiteSetting)
+                         Notification, Payment, Plan, Report, SiteSetting, Booking)
 from .charts import bar_chart, donut, line_chart
 from .forms import BroadcastForm, PaymentForm
 
@@ -100,7 +100,8 @@ def badge_counts():
     if data is None:
         inquiries, tickets = Inquiry.objects.filter(handled=False).count(), SupportTicket.objects.filter(status="open").count()
         data = {"n_alerts": Report.objects.filter(resolved=False).count() + inquiries + tickets, "n_inbox": inquiries, "n_tickets": tickets,
-                "n_msgs": Message.objects.filter(created__date=timezone.localdate()).count()}
+                "n_msgs": Message.objects.filter(created__date=timezone.localdate()).count(), "n_bookings": Booking.objects.filter(status="new").count()}
+        data["n_alerts"] += data["n_bookings"]
         cache.set("admin-badges", data, 30)
     return data
 

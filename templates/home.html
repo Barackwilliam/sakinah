@@ -58,6 +58,14 @@
   </div>
 </section>
 
+{% if destinations %}<section class="hm-home reveal">
+  <div class="wrap sect">
+    <div class="sec-h"><div class="hm-home-t"><span class="hm-home-ic"><svg><use href="#i-palm"/></svg></span><div><h2><span>Honeymoon</span> Destinations</h2><p>Romantic getaways for a beautiful start to your new journey together.</p></div></div>
+      <a class="btn btn-o" href="{% url 'hm_destinations' %}">View All Destinations <svg><use href="#i-arrow"/></svg></a></div>
+    <div class="hm-grid home">{% for d in destinations %}{% include "honeymoon/_dest_card.html" with compact=1 %}{% endfor %}</div>
+  </div>
+</section>{% endif %}
+
 <div class="wrap duo reveal">
   <div class="prem">
     <div class="prem-txt">

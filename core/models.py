@@ -573,6 +573,9 @@ class SupportTicket(models.Model):
 from django.db.models.signals import post_delete, post_save  # noqa: E402
 from django.dispatch import receiver  # noqa: E402
 
+from .models_honeymoon import Booking, Destination, HoneymoonSave, Package, PackagePhoto, PackageReview  # noqa: E402,F401
+
+@receiver([post_save, post_delete], sender=Booking)
 @receiver([post_save, post_delete], sender=SupportTicket)
 @receiver([post_save, post_delete], sender=Report)
 @receiver([post_save, post_delete], sender=Inquiry)
@@ -583,5 +586,5 @@ def _refresh_admin_badges(**kwargs):
 from django.db.models.signals import pre_save  # noqa: E402
 from .images import shrink_uploads  # noqa: E402
 
-for _model in (SiteSetting, Plan, Member, MemberPhoto, ServiceCategory, Event, Message, Vendor, Advert, AdvertPhoto, Article):
+for _model in (SiteSetting, Plan, Member, MemberPhoto, ServiceCategory, Event, Message, Vendor, Advert, AdvertPhoto, Article, Destination, Package, PackagePhoto):
     pre_save.connect(shrink_uploads, sender=_model, dispatch_uid=f"shrink-{_model.__name__}")

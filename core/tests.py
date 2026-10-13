@@ -256,3 +256,73 @@ class UploadShrinkTests(TestCase):
             self.assertEqual(max(Image.open(p.image.path).size), 1600)
             q = MemberPhoto.objects.create(member=m, image=SimpleUploadedFile("logo.png", small.getvalue(), "image/png"))
             self.assertEqual(q.image.size, small.tell())
+
+
+class HoneymoonTests(TestCase):
+    def setUp(self):
+        from core.models import Destination, Package
+        self.zanzibar = Destination.objects.create(name="Zanzibar", slug="zanzibar", country="Tanzania", kind="beach", region="tanzania",
+                                                   tagline="White sand", from_price=2_500_000, featured=True)
+        self.dubai = Destination.objects.create(name="Dubai", slug="dubai", country="UAE", kind="city", region="international", tagline="Skyline",
+                                                from_price=4_200_000, days=8)
+        self.pkg = Package.objects.create(destination=self.zanzibar, title="Zanzibar Romantic Getaway", slug="zanzibar-romantic-getaway", location="Zanzibar, Tanzania",
+                                          price=2_500_000, badge="Best Seller", itinerary="Day 1 - Arrival|Pickup", inclusions="Hotel", discount=True)
+        self.cheap = Package.objects.create(destination=self.zanzibar, title="Short Honeymoon", slug="short", location="Zanzibar", price=1_900_000, days=3, nights=2, stars=3)
+
+    def test_pages_and_filters(self):
+        self.assertContains(self.client.get(reverse("home")), "Honeymoon")
+        r = self.client.get(reverse("hm_destinations"))
+        self.assertContains(r, "Zanzibar"); self.assertContains(r, "Dubai")
+        r = self.client.get(reverse("hm_destinations"), {"cat": "tanzania"})
+        self.assertContains(r, "White sand"); self.assertNotContains(r, "Skyline")
+        r = self.client.get(reverse("hm_destinations"), {"dur": "8-10", "sort": "-price", "view": "list", "min": "abc"})
+        self.assertContains(r, "Dubai"); self.assertNotContains(r, "White sand")
+        r = self.client.get(reverse("hm_destination", args=["zanzibar"]), {"stars": "3"})
+        self.assertContains(r, "Short Honeymoon"); self.assertNotContains(r, "Romantic Getaway</a>")
+        r = self.client.get(reverse("hm_packages"), {"offer": "discount"})
+        self.assertContains(r, "Zanzibar Romantic Getaway"); self.assertNotContains(r, "Short Honeymoon</a>")
+        r = self.client.get(reverse("hm_package", args=[self.pkg.slug]))
+        self.assertContains(r, "Book This Package"); self.assertContains(r, "Day 1 - Arrival"); self.assertContains(r, "Short Honeymoon")
+        self.pkg.active = False; self.pkg.save()
+        self.assertEqual(self.client.get(reverse("hm_package", args=[self.pkg.slug])).status_code, 404)
+        self.assertEqual(self.client.get(reverse("hm_destination", args=["nowhere"])).status_code, 404)
+
+    def test_booking_request(self):
+        from core.models import Booking
+        url = reverse("hm_book", args=[self.pkg.slug])
+        self.client.post(url, {"travel_date": "2001-01-01", "couples": 1, "name": "Asha", "phone": "0712"})
+        self.assertFalse(Booking.objects.exists())
+        user = User.objects.create_user("asha")
+        self.client.force_login(user)
+        r = self.client.post(url, {"travel_date": (date.today() + timedelta(days=60)).isoformat(), "couples": 2, "name": "Asha", "phone": "0712000000"})
+        self.assertRedirects(r, self.pkg.get_absolute_url())
+        b = Booking.objects.get()
+        self.assertEqual((b.user, b.status, b.total), (user, "new", 5_000_000))
+        self.assertTrue(Notification.objects.filter(user=user, title__contains="Booking request").exists())
+
+    def test_save_and_review_need_login(self):
+        from core.models import HoneymoonSave, PackageReview
+        save = reverse("hm_save")
+        self.assertEqual(self.client.post(save, {"kind": "package", "pk": self.pkg.pk}).status_code, 302)
+        self.assertFalse(HoneymoonSave.objects.exists())
+        self.client.force_login(User.objects.create_user("omar"))
+        self.client.post(save, {"kind": "package", "pk": self.pkg.pk}); self.client.post(save, {"kind": "destination", "pk": self.dubai.pk})
+        self.assertEqual(HoneymoonSave.objects.count(), 2)
+        self.client.post(save, {"kind": "package", "pk": self.pkg.pk})
+        self.assertEqual(HoneymoonSave.objects.count(), 1)
+        self.assertEqual(self.client.post(save, {"kind": "member", "pk": "1"}).status_code, 302)
+        review = reverse("hm_review", args=[self.pkg.slug])
+        self.client.post(review, {"rating": 5, "comment": "Beautiful"}); self.client.post(review, {"rating": 1})
+        self.assertEqual(PackageReview.objects.get().rating, 5)
+
+    def test_dashboard_manages_honeymoon(self):
+        from django.contrib.auth.models import Group
+        from core.models import Booking
+        staff = User.objects.create_user("boss", is_staff=True); staff.groups.add(Group.objects.get_or_create(name="Super Admins")[0])
+        self.client.force_login(staff)
+        b = Booking.objects.create(package=self.pkg, name="Asha", phone="0712")
+        for key in ["bookings", "packages", "destinations", "package-photos", "package-reviews"]:
+            self.assertEqual(self.client.get(reverse("dash_manage", args=[key])).status_code, 200, key)
+        self.assertContains(self.client.get(reverse("dashboard")), "Honeymoon")
+        self.client.post(reverse("dash_manage_action", args=["bookings", b.pk]), {"act": "confirmed"})
+        b.refresh_from_db(); self.assertEqual(b.status, "confirmed")

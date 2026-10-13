@@ -67,3 +67,18 @@ $$('.tabs').forEach(tb=>tb.addEventListener('click',e=>{const a=e.target.closest
 // login page: member / admin tabs only change where you land after login
 $$('[data-lg]').forEach(t=>t.addEventListener('click',()=>{$$('[data-lg]').forEach(x=>x.classList.toggle('on',x===t));
   $('#lg-next').value=t.dataset.next;$('#lg-title').textContent=t.dataset.lg==='admin'?'Admin Login':'Welcome Back'}));
+
+// honeymoon: gallery arrows / thumbnails, tabs, sort and destination pickers, mobile filters
+$$('[data-gallery]').forEach(g=>{const list=JSON.parse($('[data-gal-list]',g).textContent||'[]'),img=$('[data-gal-img]',g),n=$('[data-gal-n]',g);let i=0;
+  const show=k=>{if(!list.length||!img)return;i=(k+list.length)%list.length;img.src=list[i];if(n)n.textContent=i+1};
+  g.addEventListener('click',e=>{const s=e.target.closest('[data-gal-step]'),t=e.target.closest('[data-gal-go]');
+    if(s)show(i+ +s.dataset.galStep);else if(t)show(+t.dataset.galGo)});
+  let x0=null;img&&img.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
+  img&&img.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>40)show(i+(dx<0?1:-1));x0=null})});
+$$('[data-tabs]').forEach(t=>{const tabs=$$('.hm-tabbar a',t),panels=$$('.hm-panel',t);t.classList.add('js');
+  const pick=id=>{if(!panels.some(p=>p.id===id))return false;tabs.forEach(a=>a.classList.toggle('on',a.hash==='#'+id));panels.forEach(p=>p.classList.toggle('on',p.id===id));return true};
+  tabs.forEach(a=>a.addEventListener('click',e=>{e.preventDefault();pick(a.hash.slice(1));history.replaceState(null,'',a.hash)}));
+  if(location.hash)pick(location.hash.slice(1))});
+$$('[data-nav-param]').forEach(s=>s.addEventListener('change',()=>{const u=new URL(location.href);u.searchParams.set(s.dataset.navParam,s.value);u.searchParams.delete('page');location.href=u}));
+$$('[data-goto]').forEach(s=>s.addEventListener('change',()=>{location.href=s.value}));
+$$('[data-toggle-filters]').forEach(b=>b.addEventListener('click',()=>{const f=$('#hm-filters');if(f){f.classList.toggle('open');f.scrollIntoView({behavior:'smooth',block:'start'})}}));

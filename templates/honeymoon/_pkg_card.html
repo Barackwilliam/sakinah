@@ -1,0 +1,13 @@
+{% load humanize %}<article class="hm-card hm-pkg">
+  <a class="hm-img" href="{{ p.get_absolute_url }}">{% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.title }}" loading="lazy" decoding="async">{% endif %}</a>
+  {% if p.badge %}<span class="hm-ribbon t-{{ p.badge_tone }}"><svg><use href="#i-{% if p.badge_tone == 'gold' %}crown{% elif p.badge_tone == 'pink' %}heart-f{% elif p.badge_tone == 'orange' %}safari{% elif p.badge_tone == 'blue' %}gem{% elif p.badge_tone == 'navy' %}tag{% else %}villa{% endif %}"/></svg>{{ p.badge }}</span>{% endif %}
+  {% include "honeymoon/_heart.html" with kind="package" obj=p on=p.is_saved %}
+  <div class="hm-b">
+    <h3><a href="{{ p.get_absolute_url }}">{{ p.title }}</a></h3>
+    <div class="hm-tr"><p class="hm-loc"><svg><use href="#i-pin"/></svg>{{ p.location }}</p><span class="hm-rate"><svg><use href="#i-star"/></svg>{{ p.rating }} <small>({{ p.reviews|intcomma }})</small></span></div>
+    <p class="hm-dur"><svg><use href="#i-clock2"/></svg>{{ p.days }} Days {{ p.nights }} Nights</p>
+    <ul class="hm-feats"><li><svg><use href="#i-bed"/></svg>{{ p.stay }}</li><li><svg><use href="#i-utensils"/></svg>{{ p.meals }}</li>{% if p.extra %}<li><svg><use href="#i-{{ p.extra_icon }}"/></svg>{{ p.extra }}</li>{% endif %}</ul>
+    <div class="hm-foot"><div class="hm-price"><b>{{ site.currency }} {{ p.price|intcomma }}</b><small>per couple</small></div>
+      <a class="hm-go" href="{{ p.get_absolute_url }}">View Package <svg><use href="#i-arrow"/></svg></a></div>
+  </div>
+</article>
