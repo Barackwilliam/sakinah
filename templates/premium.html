@@ -16,7 +16,7 @@
     {% for p in plans %}
     <article class="plan{% if p.popular %} top{% endif %}">
       {% if p.popular %}<span class="plan-badge"><svg><use href="#i-crown"/></svg>Most Popular</span>{% endif %}
-      <span class="plan-ic">{% if p.icon %}<img src="{{ p.icon.url }}" alt="">{% else %}<svg><use href="#i-crown"/></svg>{% endif %}</span>
+      <span class="plan-ic">{% if p.icon %}<img loading="lazy" decoding="async" src="{{ p.icon.url }}" alt="">{% else %}<svg><use href="#i-crown"/></svg>{% endif %}</span>
       <h3>{{ p.name }} Plan</h3><p class="plan-tag">{{ p.tagline }}</p>
       <div class="amt">{{ site.currency }} {{ p.price|intcomma }}<small>{{ p.period }}</small></div>
       {% if p.price %}<a class="btn {% if p.popular %}btn-s{% else %}btn-p{% endif %} block" href="#pay" data-plan="{{ p.name }}">Upgrade Now</a>

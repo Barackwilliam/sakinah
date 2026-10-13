@@ -11,7 +11,7 @@
       {% if ad.featured %}<span class="ad-feat"><svg><use href="#i-crown"/></svg>Featured</span>{% endif %}
       <span class="ad-cnt"><svg><use href="#i-camera-f"/></svg><span id="ad-n">1</span>/{{ photos|length|add:1 }}</span></div>
     <div class="ad-thumbs" id="ad-thumbs">
-      {% if ad.image %}<button type="button" class="on" data-src="{{ ad.image.url }}" data-n="1"><img src="{{ ad.image.url }}" alt=""></button>{% endif %}
+      {% if ad.image %}<button type="button" class="on" data-src="{{ ad.image.url }}" data-n="1"><img loading="lazy" decoding="async" src="{{ ad.image.url }}" alt=""></button>{% endif %}
       {% for p in photos %}<button type="button" data-src="{{ p.image.url }}" data-n="{{ forloop.counter|add:1 }}"><img src="{{ p.image.url }}" alt="" loading="lazy"></button>{% endfor %}
     </div>
   </div>
@@ -34,7 +34,7 @@
 
   <aside class="ad-side">
     <div class="box vendor">
-      <div class="vd-top"><span class="vd-logo">{% if ad.vendor.logo %}<img src="{{ ad.vendor.logo.url }}" alt="">{% else %}{{ ad.vendor.name|first }}{% endif %}</span>
+      <div class="vd-top"><span class="vd-logo">{% if ad.vendor.logo %}<img loading="lazy" decoding="async" src="{{ ad.vendor.logo.url }}" alt="">{% else %}{{ ad.vendor.name|first }}{% endif %}</span>
         <div><h3>{{ ad.vendor.name }}</h3>{% if ad.vendor.verified %}<p class="ok-t"><svg><use href="#i-check-c"/></svg>Verified Vendor</p>{% endif %}
           <p><svg><use href="#i-pin"/></svg>{{ ad.vendor.city }}, Tanzania</p><p><svg><use href="#i-cal-f"/></svg>Member since: {{ ad.vendor.member_since|date:"M Y" }}</p>
           {% if vstats.n %}<p>{% include "partials/stars.html" with r=vstats.avg %}{{ vstats.avg|floatformat:1 }} ({{ vstats.n }} reviews)</p>{% endif %}</div></div>

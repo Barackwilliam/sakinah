@@ -23,7 +23,9 @@ OWNER_GROUP = "Super Admins"
 
 def is_owner(user):
     """The client's Super Admin (and the developer). Only they manage staff accounts, site settings and the audit log."""
-    return user.is_superuser or user.groups.filter(name=OWNER_GROUP).exists()
+    if not hasattr(user, "_is_owner"):   # asked several times per page; look it up once
+        user._is_owner = user.is_superuser or user.groups.filter(name=OWNER_GROUP).exists()
+    return user._is_owner
 
 def owner_required(view):
     @wraps(view)
@@ -75,18 +77,32 @@ def month_window():
     today = timezone.localdate(); this = today.replace(day=1); last = (this - timedelta(days=1)).replace(day=1)
     return this, last
 
-def stat(qs, field, is_datetime=True):
-    """Percent change of new rows this month against last month."""
+def group_stats(qs, field, groups, is_datetime=True):
+    """{name: (count, % change of new rows this month vs last, new this month, new last month)} for several filters, in one query."""
     this, last = month_window()
     f = f"{field}__date" if is_datetime else field
-    return change(qs.filter(**{f"{f}__gte": this}).count(), qs.filter(**{f"{f}__gte": last, f"{f}__lt": this}).count())
+    agg = {}
+    for k, q in groups.items():
+        agg[f"{k}__n"] = Count("pk", filter=q); agg[f"{k}__a"] = Count("pk", filter=q & Q(**{f"{f}__gte": this}))
+        agg[f"{k}__b"] = Count("pk", filter=q & Q(**{f"{f}__gte": last, f"{f}__lt": this}))
+    r = qs.aggregate(**agg)
+    return {k: (r[f"{k}__n"], change(r[f"{k}__a"], r[f"{k}__b"]), r[f"{k}__a"], r[f"{k}__b"]) for k in groups}
+
+def message_counts():
+    """{(sender member id, recipient member id): number of messages}, from one grouped query."""
+    rows = Message.objects.filter(sender__member__isnull=False).values_list("sender__member", "to").annotate(n=Count("pk")).order_by()
+    return {(a, b): n for a, b, n in rows}
 
 def badge_counts():
-    return {"n_alerts": Report.objects.filter(resolved=False).count() + Inquiry.objects.filter(handled=False).count()
-                        + SupportTicket.objects.filter(status="open").count(),
-            "n_inbox": Inquiry.objects.filter(handled=False).count(),
-            "n_tickets": SupportTicket.objects.filter(status="open").count(),
-            "n_msgs": Message.objects.filter(created__date=timezone.localdate()).count()}
+    """Header and sidebar badges. Shown on every admin page, so kept for 30 seconds instead of counted each time."""
+    from django.core.cache import cache
+    data = cache.get("admin-badges")
+    if data is None:
+        inquiries, tickets = Inquiry.objects.filter(handled=False).count(), SupportTicket.objects.filter(status="open").count()
+        data = {"n_alerts": Report.objects.filter(resolved=False).count() + inquiries + tickets, "n_inbox": inquiries, "n_tickets": tickets,
+                "n_msgs": Message.objects.filter(created__date=timezone.localdate()).count()}
+        cache.set("admin-badges", data, 30)
+    return data
 
 def page(request, template, ctx):
     return render(request, template, {**badge_counts(), "site": SiteSetting.load(), "now_local": timezone.localtime(),
@@ -123,6 +139,14 @@ def pair_messages(a, b):
     if b.user_id: q |= Q(sender=b.user, to=a)
     return Message.objects.filter(q)
 
+def contacted_pairs(pairs):
+    """{(a.pk, b.pk)} for the pairs that have exchanged at least one message, found with one query."""
+    if not pairs: return set()
+    q = Q(pk__in=[])
+    for a, b, _ in pairs: q |= Q(sender__member=a, to=b) | Q(sender__member=b, to=a)
+    sent = set(Message.objects.filter(q).values_list("sender__member", "to").distinct())
+    return {(a.pk, b.pk) for a, b, _ in pairs if (a.pk, b.pk) in sent or (b.pk, a.pk) in sent}
+
 def last_active(m):
     if not m.last_seen: return ("Never", False)
     delta = timezone.now() - m.last_seen
@@ -146,23 +170,34 @@ def overview(request):
     end = today; start = (today.replace(day=1) - timedelta(days=31 * (span - 1))).replace(day=1)
     months = months_between(start, end)[-span:]
     this, last = month_window()
-    members = Member.objects.all(); total = members.count()
-    new_this = members.filter(joined__date__gte=this).count()
-    active = members.filter(last_seen__gte=now - timedelta(days=30))
-    active_prev = members.filter(last_seen__gte=now - timedelta(days=60), last_seen__lt=now - timedelta(days=30)).count()
-    premium = members.filter(premium_until__gte=today, plan__isnull=False)
+    members = Member.objects.all()
+    # One query per table for every number on the page (each query is a round trip to the database).
+    ages_q = {f"age{i}": Count("pk", filter=Q(age__gte=lo, age__lte=hi)) for i, (_, lo, hi, _) in enumerate(AGE_GROUPS)}
+    mc = members.aggregate(total=Count("pk"), new_this=Count("pk", filter=Q(joined__date__gte=this)),
+                           new_last=Count("pk", filter=Q(joined__date__gte=last, joined__date__lt=this)),
+                           active=Count("pk", filter=Q(last_seen__gte=now - timedelta(days=30))),
+                           active_prev=Count("pk", filter=Q(last_seen__gte=now - timedelta(days=60), last_seen__lt=now - timedelta(days=30))),
+                           online=Count("pk", filter=Q(last_seen__gte=now - timedelta(minutes=5))),
+                           premium=Count("pk", filter=Q(premium_until__gte=today, plan__isnull=False)),
+                           males=Count("pk", filter=Q(gender="M")), females=Count("pk", filter=Q(gender="F")), **ages_q)
+    total = mc["total"]
     prem_pay = Payment.objects.filter(kind="premium", status="completed")
-    paid = Payment.objects.filter(status="completed")
-    rev_this = paid.filter(created__date__gte=this).aggregate(s=Sum("amount"))["s"] or 0
-    rev_last = paid.filter(created__date__gte=last, created__date__lt=this).aggregate(s=Sum("amount"))["s"] or 0
-    upcoming = Event.objects.filter(date__gte=today)
+    pc = Payment.objects.filter(status="completed").aggregate(
+        rev_this=Sum("amount", filter=Q(created__date__gte=this)), rev_last=Sum("amount", filter=Q(created__date__gte=last, created__date__lt=this)),
+        prem_this=Count("pk", filter=Q(kind="premium", created__date__gte=this)),
+        prem_last=Count("pk", filter=Q(kind="premium", created__date__gte=last, created__date__lt=this)))
+    rev_this, rev_last = pc["rev_this"] or 0, pc["rev_last"] or 0
+    msg = Message.objects.aggregate(total=Count("pk"), today=Count("pk", filter=Q(created__date=today)), this=Count("pk", filter=Q(created__date__gte=this)),
+                                    last=Count("pk", filter=Q(created__date__gte=last, created__date__lt=this)))
+    ev = Event.objects.aggregate(upcoming=Count("pk", filter=Q(date__gte=today)),
+                                 this=Count("pk", filter=Q(date__gte=this, date__lte=today.replace(day=28) + timedelta(days=4))),
+                                 last=Count("pk", filter=Q(date__gte=last, date__lt=this)))
     cards = [
-        ("Total Members", f"{total:,}", stat(members, "joined"), f"New this month: {new_this:,}", "m-people", "#0f6b43", ""),
-        ("Active Members", f"{active.count():,}", change(active.count(), active_prev), f"Online now: {members.filter(last_seen__gte=now - timedelta(minutes=5)).count():,}", "m-heart", "#a0123c", "online"),
-        ("Premium Members", f"{premium.count():,}", stat(prem_pay, "created"), f"{round(premium.count() * 100 / (total or 1), 1)}% of total", "i-crown", "#d4950f", ""),
-        ("Total Messages", f"{Message.objects.count():,}", stat(Message.objects, "created"), f"Today: {Message.objects.filter(created__date=today).count():,}", "m-chat", "#1d63d8", ""),
-        ("Upcoming Events", f"{upcoming.count():,}", change(Event.objects.filter(date__gte=this, date__lte=today.replace(day=28) + timedelta(days=4)).count(),
-                                                       Event.objects.filter(date__gte=last, date__lt=this).count()), "This month", "m-cal", "#9b1a4d", ""),
+        ("Total Members", f"{total:,}", change(mc["new_this"], mc["new_last"]), f"New this month: {mc['new_this']:,}", "m-people", "#0f6b43", ""),
+        ("Active Members", f"{mc['active']:,}", change(mc["active"], mc["active_prev"]), f"Online now: {mc['online']:,}", "m-heart", "#a0123c", "online"),
+        ("Premium Members", f"{mc['premium']:,}", change(pc["prem_this"], pc["prem_last"]), f"{round(mc['premium'] * 100 / (total or 1), 1)}% of total", "i-crown", "#d4950f", ""),
+        ("Total Messages", f"{msg['total']:,}", change(msg["this"], msg["last"]), f"Today: {msg['today']:,}", "m-chat", "#1d63d8", ""),
+        ("Upcoming Events", f"{ev['upcoming']:,}", change(ev["this"], ev["last"]), "This month", "m-cal", "#9b1a4d", ""),
         ("Total Revenue", f"{SiteSetting.load().currency} {rev_this:,}", change(rev_this, rev_last), "This month", "i-coins", "#c58a12", ""),
     ]
     reg = per_month(members.filter(joined__date__gte=start), "joined", months)
@@ -170,19 +205,19 @@ def overview(request):
     trend = line_chart([m.strftime("%b") for m in months], [("New Members" if is_owner(request.user) else "All Members", "#16824f", reg),
                                                             ("Premium Members", "#d61f5a", prem)], width=420, height=210, pad_l=34)
     trend["tip"] = {"label": months[-1].strftime("%b %Y"), "new": reg[-1], "prem": prem[-1]}
-    males, females = members.filter(gender="M").count(), members.filter(gender="F").count()
+    males, females = mc["males"], mc["females"]
     mp = round(males * 100 / (total or 1), 1)
     ages = []
-    for label, lo, hi, color in AGE_GROUPS:
-        n = members.filter(age__gte=lo, age__lte=hi).count()
+    for i, (label, lo, hi, color) in enumerate(AGE_GROUPS):
+        n = mc[f"age{i}"]
         ages.append({"label": label, "n": n, "color": color, "pct": round(n * 100 / (total or 1), 1)})
     top = max([a["n"] for a in ages] + [1])
     for a in ages: a["h"] = round(a["n"] * 100 / top)
     latest = list(members.select_related("plan").order_by("-joined")[:5])
     for m in latest: m.state = member_state(m)
-    matches = []
-    for a, b, t in mutual_pairs()[:5]:
-        matches.append({"a": a, "b": b, "t": t, "contacted": pair_messages(a, b).exists()})
+    pairs = mutual_pairs()[:5]
+    talked = contacted_pairs(pairs)
+    matches = [{"a": a, "b": b, "t": t, "contacted": (a.pk, b.pk) in talked} for a, b, t in pairs]
     actives = list(members.filter(last_seen__gte=now - timedelta(days=7)).order_by("-last_seen")[:5])
     for m in actives: m.seen_text, m.online = last_active(m)
     return page(request, "dashboard/overview.html", {
@@ -233,12 +268,10 @@ def members(request):
     pg = Paginator(qs, per).get_page(g.get("page"))
     rows = list(pg.object_list)
     for m in rows: m.state = member_state(m); m.seen_text, m.online = last_active(m)
-    all_m = Member.objects.all(); total = all_m.count()
-    this, last = month_window()
-    def mc(q):
-        qs2 = all_m.filter(q); return qs2.count(), stat(qs2, "joined")
-    pend, ver, rej, sus = (mc(MEMBER_FILTERS[k]) for k in ("pending", "verified", "rejected", "suspended"))
-    cards = [("Total Members", f"{total:,}", stat(all_m, "joined"), f"New this month: {all_m.filter(joined__date__gte=this).count():,}", "m-people", "#0f6b43", "", "up"),
+    st = group_stats(Member.objects.all(), "joined", {"all": Q(pk__isnull=False), **{k: MEMBER_FILTERS[k] for k in ("pending", "verified", "rejected", "suspended")}})
+    total = st["all"][0]
+    pend, ver, rej, sus = (st[k] for k in ("pending", "verified", "rejected", "suspended"))
+    cards = [("Total Members", f"{total:,}", st["all"][1], f"New this month: {st['all'][2]:,}", "m-people", "#0f6b43", "", "up"),
              ("Pending Approval", f"{pend[0]:,}", pend[1], "Awaiting verification", "m-clock", "#e2a83a", "", "am"),
              ("Verified Members", f"{ver[0]:,}", None, f"{round(ver[0] * 100 / (total or 1), 1)}% active and verified", "a-check", "#16a34a", "", "up"),
              ("Rejected Members", f"{rej[0]:,}", rej[1], "Did not meet criteria", "a-user-x", "#d61f5a", "", "dn"),
@@ -369,21 +402,20 @@ def matches(request):
         base = "?" + urlencode({"tab": "messages", **({"a": g["a"], "b": g["b"]} if pair else {"q": g.get("q", "")})})
         return page(request, "dashboard/matches_messages.html", {"nav": "matches", "sub": "messages", "pg": pg, "pair": pair, "f": g, "base": base})
     if tab == "all":
-        rows = [{"a": a, "b": b, "t": t, "score": pair_score(a, b), "n": pair_messages(a, b).count()} for a, b, t in pairs]
+        sent = message_counts()
+        rows = [{"a": a, "b": b, "t": t, "score": pair_score(a, b), "n": sent.get((a.pk, b.pk), 0) + sent.get((b.pk, a.pk), 0)} for a, b, t in pairs]
         pg = Paginator(rows, 20).get_page(g.get("page"))
         return page(request, "dashboard/matches_all.html", {"nav": "matches", "sub": "all", "pg": pg, "total": len(rows)})
-    likes_m = Like.objects.filter(created__date__gte=this).count()
-    views_m = ProfileView.objects.filter(created__date__gte=this).count()
-    regs_m = EventRegistration.objects.filter(created__date__gte=this).count()
-    acts_this = likes_m + views_m + regs_m
-    acts_last = (Like.objects.filter(created__date__gte=last, created__date__lt=this).count() + ProfileView.objects.filter(created__date__gte=last, created__date__lt=this).count()
-                 + EventRegistration.objects.filter(created__date__gte=last, created__date__lt=this).count())
+    month = lambda qs: group_stats(qs, "created", {"n": Q(pk__isnull=False)})["n"]   # (total, change, this month)
+    likes, views, regs, msgs = month(Like.objects), month(ProfileView.objects), month(EventRegistration.objects), month(Message.objects)
+    acts_this = likes[2] + views[2] + regs[2]
+    acts_last = likes[3] + views[3] + regs[3]
     new_matches = sum(1 for *_, t in pairs if timezone.localtime(t).date() >= this)
     old_matches = sum(1 for *_, t in pairs if last <= timezone.localtime(t).date() < this)
-    msg_this = Message.objects.filter(created__date__gte=this).count()
-    cards = [("Total Members", f"{members.count():,}", stat(members, "joined"), f"New this month: {members.filter(joined__date__gte=this).count():,}", "m-people", "#a0123c"),
+    ms = group_stats(members, "joined", {"n": Q(pk__isnull=False)})["n"]
+    cards = [("Total Members", f"{ms[0]:,}", ms[1], f"New this month: {ms[2]:,}", "m-people", "#a0123c"),
              ("Total Matches", f"{len(pairs):,}", change(new_matches, old_matches), "New matches this month", "m-heart", "#e11d63"),
-             ("Messages Exchanged", f"{msg_this:,}", stat(Message.objects, "created"), "This month", "m-chat", "#a0123c"),
+             ("Messages Exchanged", f"{msgs[2]:,}", msgs[1], "This month", "m-chat", "#a0123c"),
              ("Upcoming Events", f"{Event.objects.filter(date__gte=today).count():,}", None, "Scheduled", "m-cal", "#a0123c"),
              ("Total Activities", f"{acts_this:,}", change(acts_this, acts_last), "This month", "m-people", "#16824f")]
     # find potential matches
@@ -492,22 +524,24 @@ def communications(request):
         return redirect("dash_comms")
     start = timezone.localdate() - timedelta(days=27)
     days = [start + timedelta(days=7 * i) for i in range(4)]
-    sent = Broadcast.objects.filter(status="sent")
-    def weekly(channel):
-        return [sent.filter(channel=channel, sent_at__date__gte=d, sent_at__date__lt=d + timedelta(days=7)).aggregate(s=Sum("recipients"))["s"] or 0 for d in days]
     this, last = month_window()
-    def monthly(channel=None):
-        q = sent if channel is None else sent.filter(channel=channel)
-        a = q.filter(sent_at__date__gte=this).aggregate(s=Sum("recipients"))["s"] or 0
-        b = q.filter(sent_at__date__gte=last, sent_at__date__lt=this).aggregate(s=Sum("recipients"))["s"] or 0
-        return a, change(a, b)
+    chans = ("email", "inapp", "notification")
+    rsum = lambda q: Sum("recipients", filter=q)
+    agg = {"m_a": rsum(Q(sent_at__date__gte=this)), "m_b": rsum(Q(sent_at__date__gte=last, sent_at__date__lt=this))}
+    for c in chans:
+        agg[f"{c}_a"] = rsum(Q(channel=c, sent_at__date__gte=this)); agg[f"{c}_b"] = rsum(Q(channel=c, sent_at__date__gte=last, sent_at__date__lt=this))
+        for i, d in enumerate(days): agg[f"{c}_w{i}"] = rsum(Q(channel=c, sent_at__date__gte=d, sent_at__date__lt=d + timedelta(days=7)))
+    r = {k: v or 0 for k, v in Broadcast.objects.filter(status="sent").aggregate(**agg).items()}   # every chart and card number in one query
+    weekly = lambda c: [r[f"{c}_w{i}"] for i in range(len(days))]
+    monthly = lambda c="m": (r[f"{c}_a"], change(r[f"{c}_a"], r[f"{c}_b"]))
     member_msgs = Message.objects.filter(created__date__gte=this).count()
     cards = [("Total Messages", *monthly(), "mail", "#e23d5a"), ("Emails Sent", *monthly("email"), "send", "#2f6fe4"),
              ("In-App Messages", *monthly("inapp"), "chat", "#22a052"), ("Notifications", *monthly("notification"), "bell", "#e0a21a"),
              ("Member Messages", member_msgs, None, "people", "#8b5cf6")]
-    groups = [("All Members", recipients({}).count()), ("Verified Members", recipients({"verified": "yes"}).count()),
-              ("Premium Members", recipients({"plan": "premium"}).count()), ("Women", recipients({"gender": "F"}).count()),
-              ("Men", recipients({"gender": "M"}).count())]
+    rc = recipients({}).aggregate(n_all=Count("pk"), n_verified=Count("pk", filter=Q(verified=True)),
+                                  n_premium=Count("pk", filter=Q(premium_until__gte=timezone.localdate())),
+                                  n_women=Count("pk", filter=Q(gender="F")), n_men=Count("pk", filter=Q(gender="M")))
+    groups = [("All Members", rc["n_all"]), ("Verified Members", rc["n_verified"]), ("Premium Members", rc["n_premium"]), ("Women", rc["n_women"]), ("Men", rc["n_men"])]
     groups += [(c["city"], c["n"]) for c in Member.objects.filter(user__isnull=False).values("city").annotate(n=Count("pk")).order_by("-n")[:4]]
     return page(request, "dashboard/communications.html", {"nav": "comms", "form": form, "cards": cards,
         "templates": MessageTemplate.objects.all(), "history": Broadcast.objects.select_related("created_by")[:8],
@@ -532,32 +566,42 @@ def payments(request):
     all_paid = Payment.objects.filter(status="completed")
     paid = all_paid.filter(created__date__range=(start, end))
     months = months_between(start, end)
-    total = paid.aggregate(s=Sum("amount"))["s"] or 0
-    by_kind = {k: paid.filter(kind=k).aggregate(s=Sum("amount"))["s"] or 0 for k, _ in Payment.KINDS}
     this, last = month_window()
-    def mchange(qs, value=True):
-        a = qs.filter(created__date__gte=this); b = qs.filter(created__date__gte=last, created__date__lt=this)
-        return change(a.aggregate(s=Sum("amount"))["s"] or 0, b.aggregate(s=Sum("amount"))["s"] or 0) if value else change(a.count(), b.count())
+    amt = lambda q: Sum("amount", filter=q)
+    in_period, m_a, m_b = Q(created__date__range=(start, end)), Q(created__date__gte=this), Q(created__date__gte=last, created__date__lt=this)
+    agg = {"total": amt(in_period), "count": Count("pk", filter=in_period), "a": amt(m_a), "b": amt(m_b),
+           "n_a": Count("pk", filter=m_a), "n_b": Count("pk", filter=m_b)}
+    for k, _ in Payment.KINDS:
+        agg[f"k_{k}"] = amt(in_period & Q(kind=k)); agg[f"{k}_a"] = amt(m_a & Q(kind=k)); agg[f"{k}_b"] = amt(m_b & Q(kind=k))
+    r = {k: v or 0 for k, v in all_paid.aggregate(**agg).items()}   # every card and the type split in one query
+    total, by_kind = r["total"], {k: r[f"k_{k}"] for k, _ in Payment.KINDS}
     cur = SiteSetting.load().currency
-    cards = [("Total Revenue", f"{cur} {total:,}", mchange(all_paid), "coins", "#e23d5a"),
-             ("Total Transactions", f"{paid.count():,}", mchange(all_paid, False), "cart", "#2f6fe4"),
+    cards = [("Total Revenue", f"{cur} {total:,}", change(r["a"], r["b"]), "coins", "#e23d5a"),
+             ("Total Transactions", f"{r['count']:,}", change(r["n_a"], r["n_b"]), "cart", "#2f6fe4"),
              ("Paying Members", f"{paid.exclude(user=None).values('user').distinct().count():,}", None, "people", "#22a052"),
-             ("Premium Revenue", f"{cur} {by_kind['premium']:,}", mchange(all_paid.filter(kind='premium')), "crown", "#e0a21a"),
-             ("Advert Revenue", f"{cur} {by_kind['advert']:,}", mchange(all_paid.filter(kind='advert')), "doc", "#8b5cf6")]
+             ("Premium Revenue", f"{cur} {by_kind['premium']:,}", change(r["premium_a"], r["premium_b"]), "crown", "#e0a21a"),
+             ("Advert Revenue", f"{cur} {by_kind['advert']:,}", change(r["advert_a"], r["advert_b"]), "doc", "#8b5cf6")]
     colors = {"membership": "#e23d5a", "premium": "#2f6fe4", "advert": "#22a052", "event": "#f0a020", "other": "#8b5cf6"}
+    by_month = {}
+    for row in paid.annotate(m=TruncMonth("created")).values("kind", "m").annotate(v=Sum("amount")).order_by():
+        if row["m"]: by_month[(row["kind"], row["m"].year, row["m"].month)] = row["v"] or 0
     trend = line_chart([m.strftime("%b") for m in months],
-        [(label, colors[k], [v / 1000 for v in per_month(paid.filter(kind=k), "created", months, "amount")]) for k, label in Payment.KINDS])
+        [(label, colors[k], [by_month.get((k, m.year, m.month), 0) / 1000 for m in months]) for k, label in Payment.KINDS])
     kinds = donut([(label, colors[k], by_kind[k]) for k, label in Payment.KINDS if by_kind[k]] or [("No payments", "#eceef3", 0)])
     gw = dict(Payment.GATEWAYS)
     gateways = list(paid.values("gateway").annotate(s=Sum("amount"), n=Count("pk")).order_by("-s"))
     for g in gateways: g["name"], g["pct"] = gw.get(g["gateway"], g["gateway"]), round(g["s"] * 100 / (total or 1))
+    today = timezone.localdate()
+    rev = dict(paid.values_list("plan").annotate(s=Sum("amount")).order_by())
+    subs = dict(Member.objects.filter(premium_until__gte=today).values_list("plan").annotate(n=Count("pk")).order_by())
+    n_free = None
     plans = []
     for p in Plan.objects.all():
-        s = paid.filter(plan=p).aggregate(s=Sum("amount"))["s"] or 0
-        plans.append({"name": p.name, "subs": Member.objects.filter(plan=p, premium_until__gte=timezone.localdate()).count() if p.price else
-                      Member.objects.exclude(premium_until__gte=timezone.localdate()).count(), "revenue": s, "pct": round(s * 100 / (by_kind["premium"] or 1))})
-    pending = Payment.objects.filter(status="pending").aggregate(s=Sum("amount"))["s"] or 0
-    refunds = Payment.objects.filter(status="refunded", created__date__range=(start, end)).aggregate(s=Sum("amount"))["s"] or 0
+        if not p.price and n_free is None: n_free = Member.objects.exclude(premium_until__gte=today).count()
+        s = rev.get(p.pk) or 0
+        plans.append({"name": p.name, "subs": subs.get(p.pk, 0) if p.price else n_free, "revenue": s, "pct": round(s * 100 / (by_kind["premium"] or 1))})
+    other = Payment.objects.aggregate(pending=Sum("amount", filter=Q(status="pending")), refunds=Sum("amount", filter=Q(status="refunded", created__date__range=(start, end))))
+    pending, refunds = other["pending"] or 0, other["refunds"] or 0
     return page(request, "dashboard/payments.html", {"nav": "payments", "start": start, "end": end, "cards": cards, "trend": trend,
         "kinds": kinds, "total": total, "gateways": gateways, "plans": plans,
         "plan_totals": (sum(p["subs"] for p in plans), sum(p["revenue"] for p in plans)),

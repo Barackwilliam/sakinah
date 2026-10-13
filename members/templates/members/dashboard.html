@@ -23,7 +23,7 @@
       {% if suggested|length > 4 %}<button class="sug-arr" type="button" aria-label="More" onclick="document.getElementById('sug').scrollBy({left:document.getElementById('sug').clientWidth,behavior:'smooth'})"><svg><use href="#m-chev-r"/></svg></button>{% endif %}</div></div></section>
   <div class="dpair">
   <section class="box dev"><div class="box-h"><svg><use href="#m-cal"/></svg><h2>Sakinah Events</h2><a class="va" href="{% url 'm_events' %}">View All</a></div>
-    <ul class="box-b">{% for e in events %}<li><a href="{% url 'm_event' e.pk %}">{% if forloop.first and e.image %}<img src="{{ e.image.url }}" alt="">{% else %}<span class="dev-ic"><svg><use href="#m-cal"/></svg></span>{% endif %}
+    <ul class="box-b">{% for e in events %}<li><a href="{% url 'm_event' e.pk %}">{% if forloop.first and e.image %}<img loading="lazy" decoding="async" src="{{ e.image.url }}" alt="">{% else %}<span class="dev-ic"><svg><use href="#m-cal"/></svg></span>{% endif %}
       <div><b>{{ e.title }}</b><small><svg><use href="#m-cal-o"/></svg>{{ e.date|date:"d M Y" }}</small><small><svg class="mag"><use href="#m-pin"/></svg>{{ e.city }}</small></div></a></li>{% empty %}<li class="empty">No upcoming events.</li>{% endfor %}</ul></section>
   <section class="box dsafe"><div class="box-h"><svg><use href="#m-shield"/></svg><h2>Safety &amp; Privacy</h2></div>
     <ul class="box-b">
@@ -41,7 +41,7 @@
       <div class="box-b"><div class="dmem-s"><svg><use href="#m-crown"/></svg><b>{% if me.is_premium %}{{ me.plan.name }} Member{% else %}Free Member{% endif %}</b><a href="{% url 'm_membership' %}">{% if me.is_premium %}Renew{% else %}Upgrade{% endif %}</a></div>
         <ul class="chk-list">{% for p in perks %}<li class="{% if not me.is_premium %}x{% endif %}"><svg><use href="#m-{% if me.is_premium %}check-c{% else %}x-c{% endif %}"/></svg>{{ p.text }}</li>{% endfor %}</ul>
         {% if me.is_premium %}<p class="muted sm">Active until {{ me.premium_until|date:"d M Y" }}</p>{% endif %}</div></section>
-  <a class="dpromo" href="{% url 'm_find' %}"><img src="{% static 'img/member/promo_card.jpg' %}" alt="Pata Mwenza, Pata Utulivu. Tunakuunganisha na watu waaminifu kwa ajili ya ndoa yenye baraka."></a>
+  <a class="dpromo" href="{% url 'm_find' %}"><img loading="lazy" decoding="async" src="{% static 'img/member/promo_card.jpg' %}" alt="Pata Mwenza, Pata Utulivu. Tunakuunganisha na watu waaminifu kwa ajili ya ndoa yenye baraka."></a>
   </aside>
 
 </div>

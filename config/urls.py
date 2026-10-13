@@ -17,4 +17,8 @@ if hasattr(settings, "MEDIA_ROOT"):  # local disk media; with Supabase Storage f
     if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     elif getattr(settings, "SERVE_MEDIA", False):  # production without Supabase Storage: Django serves the uploads itself
-        urlpatterns += [re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT})]
+        def cached_serve(request, path, **kw):   # uploads get a new name when replaced, so browsers may keep them for a week
+            resp = serve(request, path, **kw)
+            resp["Cache-Control"] = "public, max-age=604800"
+            return resp
+        urlpatterns += [re_path(r"^media/(?P<path>.*)$", cached_serve, {"document_root": settings.MEDIA_ROOT})]

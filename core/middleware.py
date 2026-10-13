@@ -1,3 +1,4 @@
+from django.middleware.gzip import GZipMiddleware
 from datetime import timedelta
 from django.utils import timezone
 from .models import Member
@@ -7,8 +8,11 @@ class LastSeenMiddleware:
     def __init__(self, get_response): self.get_response = get_response
     def __call__(self, request):
         if request.user.is_authenticated:
-            now = timezone.now()
-            Member.objects.filter(user=request.user).exclude(last_seen__gt=now - timedelta(minutes=1)).update(last_seen=now)
+            from django.core.cache import cache
+            # at most one database write per user per minute; other requests in that minute skip the query entirely
+            if cache.add(f"seen:{request.user.pk}", 1, 60):
+                now = timezone.now()
+                Member.objects.filter(user=request.user).exclude(last_seen__gt=now - timedelta(minutes=1)).update(last_seen=now)
         return self.get_response(request)
 
 
@@ -23,3 +27,11 @@ class HideDjangoAdminMiddleware:
             from django.http import Http404
             raise Http404
         return self.get_response(request)
+
+
+class GZipPagesMiddleware(GZipMiddleware):
+    """Compress pages, but not photos and other files that are already compressed."""
+    def process_response(self, request, response):
+        if response.get("Content-Type", "").startswith(("image/", "video/", "audio/", "application/pdf", "application/zip")):
+            return response
+        return super().process_response(request, response)

@@ -24,6 +24,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "core.middleware.GZipPagesMiddleware",   # pages shrink to about a fifth on the wire (static files are pre-compressed by WhiteNoise)
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -51,7 +52,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # --- Supabase Postgres ---
 DB_URL = os.getenv("DATABASE_URL", "").strip()
-DATABASES = {"default": dj_database_url.parse(DB_URL or f"sqlite:///{BASE_DIR/'db.sqlite3'}", conn_max_age=60, conn_health_checks=True,
+DATABASES = {"default": dj_database_url.parse(DB_URL or f"sqlite:///{BASE_DIR/'db.sqlite3'}", conn_max_age=600, conn_health_checks=True,
                                               ssl_require=bool(DB_URL) and os.getenv("DB_SSL", "True") == "True")}
 
 # --- Supabase Storage bucket (S3-compatible) ---

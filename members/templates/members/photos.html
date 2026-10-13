@@ -8,7 +8,7 @@
     <div class="phgrid big">
       {% if me.photo %}<figure><img src="{{ me.photo.url }}" alt=""><span class="phmain">Main photo</span>
         <form method="post" action="{% url 'm_photo_main' %}" data-confirm="Remove your main photo?">{% csrf_token %}<input type="hidden" name="act" value="delete"><button aria-label="Remove"><svg><use href="#m-close"/></svg></button></form></figure>{% endif %}
-      {% for p in photos %}<figure><img src="{{ p.image.url }}" alt="">
+      {% for p in photos %}<figure><img loading="lazy" decoding="async" src="{{ p.image.url }}" alt="">
         <form method="post" action="{% url 'm_photo_action' p.pk %}" data-confirm="Remove this photo?">{% csrf_token %}<input type="hidden" name="act" value="delete"><button aria-label="Remove"><svg><use href="#m-close"/></svg></button></form>
         <form class="mkmain" method="post" action="{% url 'm_photo_action' p.pk %}">{% csrf_token %}<input type="hidden" name="act" value="main"><button class="btn sm lt">Make main</button></form></figure>{% endfor %}
       {% if n_photos < 6 %}

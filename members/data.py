@@ -1,6 +1,6 @@
 """Shared queries for the member area."""
 from datetime import timedelta
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.utils import timezone
 from core.models import Block, Like, Member, Message, Shortlist
 
@@ -24,12 +24,34 @@ def all_matches(user, member):
     return Member.objects.filter(pk__in=ids)
 
 def counts(user, member):
+    """Sidebar and header badges for every member page: three small queries, done once per request."""
+    if not hasattr(user, "_member_counts"): user._member_counts = _counts(user, member)
+    return user._member_counts
+
+def _counts(user, member):
     unread = Message.objects.filter(to__user=user, read=False).count()
-    since = member.likes_seen_at if member and member.likes_seen_at else None
-    new_likes = Like.objects.filter(member=member).exclude(user=user)
-    if since: new_likes = new_likes.filter(created__gt=since)
-    return {"unread": unread, "new_likes": new_likes.count() if member else 0, "n_notes": user.notifications.filter(read=False).count(),
-            "n_matches": all_matches(user, member).count() if member else 0}
+    n_notes = user.notifications.filter(read=False).count()
+    if member is None: return {"unread": unread, "new_likes": 0, "n_notes": n_notes, "n_matches": 0}
+    since = member.likes_seen_at
+    matched, new_likes = set(), 0
+    # likes I gave and likes I received, in one query
+    for liker, liked, liker_member, created in Like.objects.filter(Q(user=user) | Q(member=member)).values_list("user_id", "member_id", "user__member", "created"):
+        if liker == user.id: matched.add(liked)
+        if liked == member.pk and liker != user.id:
+            if liker_member: matched.add(liker_member)
+            if not since or created > since: new_likes += 1
+    return {"unread": unread, "new_likes": new_likes, "n_notes": n_notes, "n_matches": len(matched)}
+
+def photo_count(member):
+    """Profile photo plus gallery photos, counted once per request."""
+    if not hasattr(member, "_photo_count"): member._photo_count = member.photos.count()
+    return member._photo_count
+
+def period_counts(qs, field="created"):
+    """{"all", "7", "month", "90"} counts for the period tabs, in one query."""
+    now = timezone.now()
+    since = {"7": now - timedelta(days=7), "month": now.replace(day=1, hour=0, minute=0, second=0, microsecond=0), "90": now - timedelta(days=90)}
+    return qs.aggregate(n_all=Count("pk"), **{f"n_{k}": Count("pk", filter=Q(**{f"{field}__gte": v})) for k, v in since.items()})
 
 COMPLETION = [  # (section, label, test)
     ("Basic Information", "name, age, city and occupation", lambda m: all([m.name, m.age, m.city, m.occupation])),
@@ -37,7 +59,7 @@ COMPLETION = [  # (section, label, test)
     ("Basic Information", "height", lambda m: bool(m.height_cm)),
     ("Basic Information", "languages", lambda m: bool(m.languages)),
     ("Photos", "profile photo", lambda m: bool(m.photo)),
-    ("Photos", "at least 3 more photos", lambda m: m.photos.count() >= 3),
+    ("Photos", "at least 3 more photos", lambda m: photo_count(m) >= 3),
     ("About Me", "about me", lambda m: len(m.bio) >= 40),
     ("About Me", "interests", lambda m: bool(m.interests)),
     ("About Me", "religion & values", lambda m: bool(m.prayer or m.values)),
@@ -54,7 +76,7 @@ def completion(member):
     for sec in dict.fromkeys(s for s, _, _ in COMPLETION):
         items = [ok for s, _, ok in done if s == sec]
         sections.append({"name": sec, "done": all(items)})
-    photos = (1 if member.photo else 0) + member.photos.count()
+    photos = (1 if member.photo else 0) + photo_count(member)
     for s in sections:
         if s["name"] == "Photos": s["name"] = f"Photos ({min(photos, 6)}/6)"
     return {"pct": round(100 * sum(ok for *_, ok in done) / len(done)), "sections": sections,

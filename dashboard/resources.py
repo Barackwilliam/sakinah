@@ -201,6 +201,7 @@ class Articles(Resource):
                       help={"body": "Separate paragraphs with an empty line. Start a line with ## for a heading."})
     search = ["title", "author", "tags"]
     filters = [("category", "All categories", lambda: [(str(c.pk), c.name) for c in ArticleCategory.objects.all()], lambda qs, v: qs.filter(category_id=v))]
+    def queryset(self): return Article.objects.select_related("category")
     ordering = ["-published", "-pk"]
     columns = [("", thumb("image")), ("Article", bold("title", lambda o: o.category.name if o.category else "")), ("Author", lambda o: o.author or "—"),
                ("Published", when("published")), ("Views", lambda o: f"{o.views:,}"), ("Featured", yesno("featured", "Featured", "—", "info"))]

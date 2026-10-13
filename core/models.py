@@ -28,9 +28,22 @@ class SiteSetting(models.Model):
         digits = "".join(c for c in self.contact_whatsapp if c.isdigit())
         return f"https://wa.me/{digits}" if digits else (f"mailto:{self.contact_email}" if self.contact_email else "")
     class Meta: verbose_name = "Site setting"
+    CACHE_KEY = "site-setting"
     @classmethod
     def load(cls):
-        return cls.objects.first() or cls()
+        """Read on every page, so it is kept in the cache for a minute and refreshed as soon as it is saved."""
+        from django.core.cache import cache
+        obj = cache.get(cls.CACHE_KEY)
+        if obj is None:
+            obj = cls.objects.first() or cls()
+            cache.set(cls.CACHE_KEY, obj, 60)
+        return obj
+    def save(self, *args, **kwargs):
+        from django.core.cache import cache
+        super().save(*args, **kwargs); cache.delete(self.CACHE_KEY)
+    def delete(self, *args, **kwargs):
+        from django.core.cache import cache
+        cache.delete(self.CACHE_KEY); return super().delete(*args, **kwargs)
     def __str__(self): return self.brand
 
 class Plan(models.Model):
@@ -554,3 +567,21 @@ class SupportTicket(models.Model):
     replied_at = models.DateTimeField(null=True, blank=True)
     class Meta: ordering = ["-created"]
     def __str__(self): return f"{self.get_kind_display()}: {self.subject}"
+
+
+# ---- keep the cached admin badge counts honest: a new or answered ticket, report or inquiry refreshes them at once ----
+from django.db.models.signals import post_delete, post_save  # noqa: E402
+from django.dispatch import receiver  # noqa: E402
+
+@receiver([post_save, post_delete], sender=SupportTicket)
+@receiver([post_save, post_delete], sender=Report)
+@receiver([post_save, post_delete], sender=Inquiry)
+def _refresh_admin_badges(**kwargs):
+    from django.core.cache import cache
+    cache.delete("admin-badges")
+
+from django.db.models.signals import pre_save  # noqa: E402
+from .images import shrink_uploads  # noqa: E402
+
+for _model in (SiteSetting, Plan, Member, MemberPhoto, ServiceCategory, Event, Message, Vendor, Advert, AdvertPhoto, Article):
+    pre_save.connect(shrink_uploads, sender=_model, dispatch_uid=f"shrink-{_model.__name__}")
