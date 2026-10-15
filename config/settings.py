@@ -55,16 +55,19 @@ DB_URL = os.getenv("DATABASE_URL", "").strip()
 DATABASES = {"default": dj_database_url.parse(DB_URL or f"sqlite:///{BASE_DIR/'db.sqlite3'}", conn_max_age=600, conn_health_checks=True,
                                               ssl_require=bool(DB_URL) and os.getenv("DB_SSL", "True") == "True")}
 
+# Text stamped on every uploaded picture (members, adverts, events, honeymoon, articles). Empty turns it off.
+WATERMARK_TEXT = os.getenv("WATERMARK_TEXT", "sakinah.co.tz")
+
 # --- Supabase Storage bucket (S3-compatible) ---
 STORAGES = {
-    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "default": {"BACKEND": "core.storage.WatermarkFileSystemStorage"},
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage" if not DEBUG
                     else "django.contrib.staticfiles.storage.StaticFilesStorage"},
 }
 REF = os.getenv("SUPABASE_PROJECT_REF", "")
 BUCKET = os.getenv("SUPABASE_BUCKET", "nusrah-media")
 if REF and os.getenv("SUPABASE_S3_KEY"):
-    STORAGES["default"] = {"BACKEND": "storages.backends.s3.S3Storage"}
+    STORAGES["default"] = {"BACKEND": "core.storage.WatermarkS3Storage"}
     AWS_ACCESS_KEY_ID = os.getenv("SUPABASE_S3_KEY")
     AWS_SECRET_ACCESS_KEY = os.getenv("SUPABASE_S3_SECRET")
     AWS_STORAGE_BUCKET_NAME = BUCKET

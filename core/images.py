@@ -1,42 +1,63 @@
-"""Shrink uploaded photos before they are stored, so pages never download multi-megabyte phone pictures."""
+"""Every picture saved to the media storage is resized (no multi-megabyte phone photos) and stamped with the site
+watermark, e.g. "sakinah.co.tz". The work happens in the storage class (core/storage.py), so it covers member uploads,
+dashboard uploads, starter images and anything else that stores a picture."""
 from io import BytesIO
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from PIL import Image, ImageOps
+from pathlib import Path
+from django.conf import settings
+from PIL import Image, ImageDraw, ImageFont, ImageOps, PngImagePlugin
 
 MAX_SIDE = 1600          # pixels; enough for the largest place a photo is shown
-MIN_BYTES = 300 * 1024   # smaller files are left exactly as uploaded
+MIN_SIDE = 60            # only tiny thumbnails and icons are left alone
+MARK = "sakinah-watermark"   # written into the file so a picture is never stamped twice
+FONT = Path(__file__).parent / "fonts" / "DejaVuSans-Bold.ttf"
+SKIP = ("plans/", "vendors/", "support/", "site/logo")   # plan icons, vendor logos, support attachments and the site logo
 
-def shrink(file):
-    """Return a smaller JPEG/PNG copy of an uploaded image, or None to keep the original."""
+def wants_mark(name):
+    return bool(getattr(settings, "WATERMARK_TEXT", "")) and not str(name).replace("\\", "/").startswith(SKIP)
+
+def is_marked(img):
+    return MARK in str(img.info.get("comment", b"")) or img.info.get("Comment") == MARK
+
+def stamp(img, text):
+    """Draw the text a little below the centre of the picture (clear of name bars and badges that cards lay over photos): soft white letters with a dark shadow, readable on any photo."""
+    w, h = img.size
+    size = max(9, min(64, int(w * 0.055)))
+    font = ImageFont.truetype(str(FONT), size)
+    layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(layer)
+    box = draw.textbbox((0, 0), text, font=font)
+    tw, th = box[2] - box[0], box[3] - box[1]
+    x, y = (w - tw) // 2, int(h * 0.62) - th // 2
+    shadow = max(1, size // 18)
+    draw.text((x + shadow, y + shadow), text, font=font, fill=(0, 0, 0, 95))
+    draw.text((x, y), text, font=font, fill=(255, 255, 255, 165))
+    return Image.alpha_composite(img.convert("RGBA"), layer)
+
+def process(data, name, keep_format=False):
+    """Return (bytes, name) of the resized and watermarked picture, or None to store the original unchanged."""
     try:
-        if file.size <= MIN_BYTES: return None
-        file.seek(0)
-        img = Image.open(file)
-        if img.format not in ("JPEG", "PNG", "WEBP", "MPO"): return None   # leave GIFs and anything unusual alone
+        img = Image.open(BytesIO(data))
+        fmt = img.format
+        if fmt not in ("JPEG", "PNG", "WEBP", "MPO"): return None   # leave GIFs, SVGs and anything unusual alone
+        if is_marked(img): return None
         has_alpha = img.mode in ("RGBA", "LA") or (img.mode == "P" and "transparency" in img.info)
         img = ImageOps.exif_transpose(img)    # keep phone photos the right way up
         img.thumbnail((MAX_SIDE, MAX_SIDE))
+        marked = wants_mark(name) and min(img.size) >= MIN_SIDE and img.size[0] >= 110
+        if marked: img = stamp(img, settings.WATERMARK_TEXT)
+        elif len(data) <= 300 * 1024: return None   # small and not watermarked: keep exactly as uploaded
         out = BytesIO()
-        if has_alpha:
-            img.save(out, "PNG", optimize=True); ext, ctype = "png", "image/png"
+        as_png = has_alpha or (keep_format and fmt == "PNG")
+        if as_png:
+            info = PngImagePlugin.PngInfo()
+            if marked: info.add_text("Comment", MARK)
+            img.save(out, "PNG", optimize=True, pnginfo=info); ext = "png"
         else:
-            img.convert("RGB").save(out, "JPEG", quality=82, optimize=True, progressive=True); ext, ctype = "jpg", "image/jpeg"
-        if out.tell() >= file.size: return None
-        name = file.name.rsplit("/", 1)[-1].rsplit(".", 1)[0] + "." + ext
-        out.seek(0)
-        return InMemoryUploadedFile(out, None, name, ctype, out.getbuffer().nbytes, None)
+            img.convert("RGB").save(out, "JPEG", quality=84, optimize=True, progressive=True, comment=MARK.encode() if marked else b""); ext = "jpg"
+        if not marked and out.tell() >= len(data): return None
+        stem, _, old_ext = str(name).rpartition(".")
+        if keep_format or old_ext.lower() in (("png",) if as_png else ("jpg", "jpeg")): new_name = name
+        else: new_name = f"{stem or name}.{ext}"
+        return out.getvalue(), new_name
     except Exception:
-        return None   # never block an upload because of resizing
-    finally:
-        try: file.seek(0)
-        except Exception: pass
-
-def shrink_uploads(sender, instance, **kwargs):
-    """pre_save hook: replace every newly uploaded image on the instance with a smaller copy."""
-    from django.db.models import ImageField
-    for field in sender._meta.fields:
-        if not isinstance(field, ImageField): continue
-        f = getattr(instance, field.attname)
-        if not f or getattr(f, "_committed", True): continue
-        small = shrink(f.file)
-        if small is not None: f.file, f.name = small, small.name
+        return None   # never block an upload because of image processing

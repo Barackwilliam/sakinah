@@ -249,13 +249,38 @@ class UploadShrinkTests(TestCase):
         from django.test import override_settings
         m = Member.objects.create(name="Amina", age=28, gender="F", city="Arusha")
         big = BytesIO(); Image.effect_noise((3000, 2000), 60).convert("RGB").save(big, "JPEG", quality=95)
-        small = BytesIO(); Image.new("RGBA", (200, 200), (0, 0, 0, 0)).save(small, "PNG")
+        small = BytesIO(); Image.new("RGBA", (50, 50), (0, 0, 0, 0)).save(small, "PNG")   # tiny icons are stored as they are
         with tempfile.TemporaryDirectory() as tmp, override_settings(MEDIA_ROOT=tmp):
             p = MemberPhoto.objects.create(member=m, image=SimpleUploadedFile("phone.jpeg", big.getvalue(), "image/jpeg"))
             self.assertLess(p.image.size, big.tell())
             self.assertEqual(max(Image.open(p.image.path).size), 1600)
             q = MemberPhoto.objects.create(member=m, image=SimpleUploadedFile("logo.png", small.getvalue(), "image/png"))
             self.assertEqual(q.image.size, small.tell())
+
+    def test_every_picture_gets_the_watermark_once(self):
+        import tempfile
+        from io import BytesIO
+        from PIL import Image
+        from django.core.files.base import ContentFile
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from django.core.management import call_command
+        from django.test import override_settings
+        from core.images import MARK
+        photo = BytesIO(); Image.new("RGB", (800, 600), (40, 90, 160)).save(photo, "JPEG")
+        with tempfile.TemporaryDirectory() as tmp, override_settings(MEDIA_ROOT=tmp, WATERMARK_TEXT="sakinah.co.tz"):
+            p = MemberPhoto.objects.create(member=Member.objects.create(name="Amina", age=28, gender="F", city="Arusha"),
+                                           image=SimpleUploadedFile("me.jpg", photo.getvalue(), "image/jpeg"))
+            img = Image.open(p.image.path)
+            self.assertIn(MARK.encode(), img.info.get("comment", b""))
+            self.assertNotEqual(img.convert("RGB").getpixel((400, 372)), (40, 90, 160))   # letters drawn below the centre
+            before = open(p.image.path, "rb").read()
+            from io import StringIO; call_command("watermark_images", stdout=StringIO())
+            self.assertEqual(open(p.image.path, "rb").read(), before)   # never stamped twice
+            site = SiteSetting.load(); site.logo.save("logo.jpg", ContentFile(photo.getvalue()), save=False)
+            self.assertNotIn(MARK.encode(), Image.open(site.logo.path).info.get("comment", b""))   # the logo stays clean
+        with tempfile.TemporaryDirectory() as tmp, override_settings(MEDIA_ROOT=tmp, WATERMARK_TEXT=""):
+            q = MemberPhoto.objects.create(member=p.member, image=SimpleUploadedFile("plain.jpg", photo.getvalue(), "image/jpeg"))
+            self.assertEqual(q.image.size, len(photo.getvalue()))   # switched off: stored exactly as uploaded
 
 
 class HoneymoonTests(TestCase):
