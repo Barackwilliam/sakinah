@@ -10,3 +10,5 @@ python manage.py ensure_admin
 if [ "${SEED_ON_DEPLOY:-True}" = "True" ]; then python manage.py seed; fi
 # Render's disk is wiped on each deploy; put back starter images the database still points to (no-op with Supabase Storage).
 python manage.py restore_media
+# Stamp the watermark on pictures stored before it was switched on (only needed once, with Supabase Storage). Skips pictures already stamped.
+if [ "${WATERMARK_EXISTING:-False}" = "True" ]; then python manage.py watermark_images; fi

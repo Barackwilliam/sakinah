@@ -14,7 +14,7 @@ class SiteSetting(models.Model):
     hero_text = models.CharField(max_length=250, default="Connect with verified people who are looking for meaningful relationships and marriage.")
     hero_quote = models.CharField(max_length=200, default="Zaidi ya uchumba, ni safari ya maisha na mwenye kheri.")
     hero_image = models.ImageField(upload_to="site/", blank=True)
-    logo = models.ImageField(upload_to="site/", blank=True)
+    logo = models.ImageField(upload_to="site/logo/", blank=True)   # its own folder: logos are not watermarked
     premium_image = models.ImageField(upload_to="site/", blank=True, help_text="Couple photo on the Go Premium card")
     advert_image = models.ImageField(upload_to="site/", blank=True, help_text="Photo on the Advertise Your Marriage Service card")
     currency = models.CharField(max_length=10, default="TSh")
@@ -582,9 +582,3 @@ from .models_honeymoon import Booking, Destination, HoneymoonSave, Package, Pack
 def _refresh_admin_badges(**kwargs):
     from django.core.cache import cache
     cache.delete("admin-badges")
-
-from django.db.models.signals import pre_save  # noqa: E402
-from .images import shrink_uploads  # noqa: E402
-
-for _model in (SiteSetting, Plan, Member, MemberPhoto, ServiceCategory, Event, Message, Vendor, Advert, AdvertPhoto, Article, Destination, Package, PackagePhoto):
-    pre_save.connect(shrink_uploads, sender=_model, dispatch_uid=f"shrink-{_model.__name__}")

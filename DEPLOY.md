@@ -59,3 +59,10 @@ python manage.py seed
 python manage.py createsuperuser
 python manage.py runserver
 ```
+
+## Watermark kwenye picha
+
+Kila picha inayowekwa kwenye mfumo (picha za members, adverts, events, honeymoon, makala n.k.) inawekewa maandishi **sakinah.co.tz** chini kidogo ya katikati, na inapunguzwa ukubwa isizidi 1600px. Logo ya tovuti, icons za mipango, logo za vendors na viambatisho vya support haviwekewi watermark.
+
+- Kubadilisha maandishi: weka `WATERMARK_TEXT` kwenye Render (Environment). Ukiiacha tupu, watermark inazimwa.
+- Picha zilizokuwepo kabla: endesha `python manage.py watermark_images` mara moja (kwenye Render weka `WATERMARK_EXISTING=True` kwa deploy moja, kisha uiondoe). Picha zenye watermark tayari hazirudiwi.
