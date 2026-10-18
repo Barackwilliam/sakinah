@@ -32,6 +32,12 @@ services:
       # Secret path of the developer-only Django admin (everyone except superusers gets 404 there)
       - key: DJANGO_ADMIN_URL
         sync: false
+      # Email (password reset, broadcasts). Render's free plan blocks SMTP, so use Brevo's free HTTPS API:
+      # brevo.com > SMTP & API > API Keys. DEFAULT_FROM_EMAIL must be a sender you verified in Brevo.
+      - key: BREVO_API_KEY
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        sync: false
       # Text stamped on every uploaded picture; leave empty to switch the watermark off
       - key: WATERMARK_TEXT
         value: sakinah.co.tz

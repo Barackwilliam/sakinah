@@ -130,3 +130,23 @@ class PackageReviewForm(forms.ModelForm):
         model = PackageReview
         fields = ["rating", "comment"]
         widgets = {"rating": forms.RadioSelect, "comment": forms.Textarea(attrs={"rows": 3, "placeholder": "Share your honeymoon experience"})}
+
+
+class FindAccountResetForm(forms.Form):
+    """Forgot password: members may type their email, username or phone number; the link always goes to the account's email."""
+    email = forms.CharField(label="Email, username or phone number", max_length=150,
+                            widget=forms.TextInput(attrs={"autocomplete": "username", "placeholder": "e.g. amina@example.com or 0712 345 678"}))
+
+    def get_users(self, value):
+        from django.contrib.auth import get_user_model
+        from django.db.models import Q, Value
+        from django.db.models.functions import Replace
+        value = value.strip()
+        digits = "".join(c for c in value if c.isdigit())
+        q = Q(email__iexact=value) | Q(username__iexact=value)
+        users = get_user_model().objects.filter(is_active=True)
+        if len(digits) >= 9:   # 0712 345 678, +255712345678 and 255-712-345-678 all match on the last nine digits
+            bare = Replace(Replace(Replace("member__phone", Value(" "), Value("")), Value("-"), Value("")), Value("+"), Value(""))
+            users = users.annotate(bare_phone=bare)
+            q |= Q(bare_phone__endswith=digits[-9:])
+        return [u for u in users.filter(q).distinct() if u.has_usable_password()]

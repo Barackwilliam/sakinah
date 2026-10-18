@@ -90,16 +90,27 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTHENTICATION_BACKENDS = ["core.backends.EmailOrUsernameBackend"]
 LOGIN_URL = "login"; LOGIN_REDIRECT_URL = "home"; LOGOUT_REDIRECT_URL = "home"
 
-# --- email (password reset, admin emails). Without EMAIL_HOST, emails are printed to the log. ---
-if os.getenv("EMAIL_HOST"):
+# --- email (password reset, broadcasts). Render's free plan blocks SMTP, so an HTTPS email API is preferred there:
+# BREVO_API_KEY (Brevo, 300 free emails a day) or RESEND_API_KEY (Resend). EMAIL_HOST uses plain SMTP (paid Render plans,
+# or your own server). With none of them, emails are only printed to the log. ---
+BREVO_API_KEY = os.getenv("BREVO_API_KEY", "").strip()
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "").strip()
+EMAIL_TIMEOUT = 15   # never let a slow mail server hang a page
+if BREVO_API_KEY:
+    EMAIL_BACKEND = "core.email_backends.BrevoBackend"
+elif RESEND_API_KEY:
+    EMAIL_BACKEND = "core.email_backends.ResendBackend"
+elif os.getenv("EMAIL_HOST"):
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = os.environ["EMAIL_HOST"]
     EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
     EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
     EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
-    EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True") == "True"
+    EMAIL_USE_SSL = EMAIL_PORT == 465
+    EMAIL_USE_TLS = not EMAIL_USE_SSL and os.getenv("EMAIL_USE_TLS", "True") == "True"
 else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_LIVE = "console" not in EMAIL_BACKEND
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Sakinah <no-reply@sakinah.co.tz>")
 
 # --- production hardening (Render terminates HTTPS in front of the app) ---

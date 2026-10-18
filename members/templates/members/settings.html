@@ -23,6 +23,7 @@
       </div>
     </div>
     {% include "members/_hfield.html" with f=f.birth_date %}{% include "members/_hfield.html" with f=f.gender %}{% include "members/_hfield.html" with f=f.city %}
+    <label class="prow hideface"><svg><use href="#m-eye-off"/></svg><span><b>Hide my face</b><small>Blur your face on the photo you choose here and on future uploads.</small></span>{{ f.hide_face }}<i class="sw"></i></label>
     {% for e in f.photo.errors %}<p class="ferr">{{ e }}</p>{% endfor %}
     <div class="stb"><button class="btn">Save Changes</button></div>
   </form>

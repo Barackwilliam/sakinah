@@ -1,13 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth import views as auth
+from core import views_password as password_views
 import os
 from django.urls import path, include, re_path
 from django.views.static import serve
 from django.conf import settings
 from django.conf.urls.static import static
 password_reset = [
-    path("password-reset/", auth.PasswordResetView.as_view(), name="password_reset"),
-    path("password-reset/sent/", auth.PasswordResetDoneView.as_view(), name="password_reset_done"),
+    path("password-reset/", password_views.password_reset, name="password_reset"),
+    path("password-reset/sent/", password_views.password_reset_done, name="password_reset_done"),
     path("reset/<uidb64>/<token>/", auth.PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
     path("reset/done/", auth.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
 ]

@@ -351,3 +351,71 @@ class HoneymoonTests(TestCase):
         self.assertContains(self.client.get(reverse("dashboard")), "Honeymoon")
         self.client.post(reverse("dash_manage_action", args=["bookings", b.pk]), {"act": "confirmed"})
         b.refresh_from_db(); self.assertEqual(b.status, "confirmed")
+
+
+class PasswordResetTests(TestCase):
+    def setUp(self):
+        from django.core.cache import cache
+        cache.clear()
+        self.user = User.objects.create_user("amina", "amina@example.com", "Old-pass-123")
+        self.member = Member.objects.create(user=self.user, name="Amina Hassan", age=28, gender="F", city="Arusha", phone="0712 345 678")
+
+    def reset(self, value):
+        return self.client.post(reverse("password_reset"), {"email": value})
+
+    def test_email_username_or_phone_find_the_account_and_the_link_works(self):
+        from django.core import mail
+        from django.test import override_settings
+        with override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend", EMAIL_LIVE=True):
+            for value in ["AMINA@example.com", "amina", "+255712345678"]:
+                from django.core.cache import cache; cache.clear()
+                self.assertRedirects(self.reset(value), reverse("password_reset_done"))
+            self.assertEqual(len(mail.outbox), 3)
+            self.reset("nobody@example.com")   # unknown: same page, nothing sent
+            self.assertEqual(len(mail.outbox), 3)
+        msg = mail.outbox[0]
+        self.assertEqual(msg.to, ["amina@example.com"]); self.assertIn("Amina Hassan", msg.body)
+        self.assertTrue(any("text/html" in m for _, m in msg.alternatives))
+        link = next(w for w in msg.body.split() if "/reset/" in w)
+        r = self.client.get(link, follow=True)
+        r = self.client.post(r.redirect_chain[-1][0], {"new_password1": "New-pass-456!", "new_password2": "New-pass-456!"})
+        self.assertRedirects(r, reverse("password_reset_complete"))
+        self.user.refresh_from_db(); self.assertTrue(self.user.check_password("New-pass-456!"))
+
+    def test_when_email_cannot_be_sent_support_gets_a_ticket(self):
+        from django.test import override_settings
+        with override_settings(EMAIL_BACKEND="django.core.mail.backends.console.EmailBackend", EMAIL_LIVE=False, DEBUG=False):
+            self.assertRedirects(self.reset("amina"), reverse("password_reset_done"))
+        t = SupportTicket.objects.get()
+        self.assertEqual((t.user, t.subject), (self.user, "Password reset help"))
+        with override_settings(EMAIL_BACKEND="core.email_backends.BrevoBackend", EMAIL_LIVE=True, BREVO_API_KEY="x"):
+            from unittest import mock
+            from django.core.cache import cache; cache.clear()
+            with mock.patch("urllib.request.urlopen", side_effect=OSError("network down")):
+                self.assertRedirects(self.reset("amina"), reverse("password_reset_done"))
+        self.assertEqual(SupportTicket.objects.count(), 1)   # one open ticket is enough
+
+    def test_staff_can_create_a_reset_link_from_the_dashboard(self):
+        staff = User.objects.create_user("boss", is_staff=True)
+        self.client.force_login(staff)
+        SupportTicket.objects.create(user=self.user, subject="Password reset help", message="x")
+        r = self.client.post(reverse("dash_member_action", args=[self.member.pk]), {"act": "reset_link"}, follow=True)
+        self.assertContains(r, "/account/reset/")
+        self.assertEqual(SupportTicket.objects.get().status, "closed")
+        r = self.client.post(reverse("dash_member_action", args=[Member.objects.create(user=staff, name="Boss", age=40).pk]), {"act": "reset_link"}, follow=True)
+        self.assertNotContains(r, "/account/reset/")
+
+    def test_brevo_backend_sends_json(self):
+        import json
+        from unittest import mock
+        from django.core.mail import EmailMultiAlternatives
+        from core.email_backends import BrevoBackend
+        from django.test import override_settings
+        resp = mock.MagicMock(); resp.__enter__.return_value.status = 201
+        with override_settings(BREVO_API_KEY="key-1"), mock.patch("urllib.request.urlopen", return_value=resp) as urlopen:
+            m = EmailMultiAlternatives("Hi", "text", "Sakinah <no-reply@sakinah.co.tz>", ["a@example.com"]); m.attach_alternative("<b>hi</b>", "text/html")
+            self.assertEqual(BrevoBackend().send_messages([m]), 1)
+        req = urlopen.call_args[0][0]
+        body = json.loads(req.data)
+        self.assertEqual(req.get_header("Api-key"), "key-1")
+        self.assertEqual((body["sender"]["email"], body["to"], body["htmlContent"]), ("no-reply@sakinah.co.tz", [{"email": "a@example.com"}], "<b>hi</b>"))
