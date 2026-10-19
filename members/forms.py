@@ -1,4 +1,5 @@
 from django import forms
+from core.faces import HideFaceMixin
 from core.forms import ProfileForm, CITY
 from core.models import Member, Payment, Plan, SupportTicket
 
@@ -26,8 +27,11 @@ class ConversationForm(forms.Form):
         if not d.get("body") and not d.get("image"): raise forms.ValidationError("Write a message or attach a photo.")
         return d
 
-class PhotoForm(forms.Form):
+class PhotoForm(HideFaceMixin, forms.Form):
+    face_field = "image"
     image = forms.ImageField()
+    def __init__(self, *a, hide_face=False, **kw):
+        super().__init__(*a, **kw); self.add_hide_face(hide_face)
 
 class PreferencesForm(forms.ModelForm):
     class Meta:
@@ -43,7 +47,7 @@ class PrivacyForm(forms.ModelForm):
         model = Member
         fields = ["profile_visibility", "photo_visibility", "show_online", "show_age", "location_display", "allow_messages_from", "show_in_search"]
 
-class AccountForm(forms.ModelForm):
+class AccountForm(HideFaceMixin, forms.ModelForm):
     email = forms.EmailField()
     city = forms.ChoiceField(choices=CITY, label="Location")
     class Meta:
@@ -55,6 +59,10 @@ class AccountForm(forms.ModelForm):
         super().__init__(*a, **kw)
         if self.instance.user_id: self.fields["email"].initial = self.instance.user.email
         self.fields["photo"].required = False
+        self.add_hide_face(self.instance.hide_face)
+    def save(self, commit=True):
+        self.instance.hide_face = self.cleaned_data.get("hide_face", False)   # remembered for the next upload too
+        return super().save(commit)
     def clean_email(self):
         from django.contrib.auth.models import User
         e = self.cleaned_data["email"].lower()

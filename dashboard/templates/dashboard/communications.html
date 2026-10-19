@@ -8,7 +8,7 @@
 <form method="post" class="g-comm" id="compose">{% csrf_token %}{{ form.channel }}
   <section class="panel"><div class="pn-h"><svg><use href="#i-doc"/></svg><h2>Create New Message</h2></div>
     <div class="chans">{% for v, l in channels %}<button type="button" data-chan="{{ v }}" class="{% if form.channel.value == v %}on{% endif %}">{{ l }}</button>{% endfor %}<button type="button" disabled title="Needs an SMS provider">SMS (not set up)</button></div>
-    {% if not email_live %}<p class="hint">Email is not configured yet, so emails are only printed to the server log. Add EMAIL_HOST settings to send real email. In-app messages and notifications work now.</p>{% endif %}
+    {% if not email_live %}<p class="hint">Email is not configured yet, so emails are only printed to the server log. Add BREVO_API_KEY (or RESEND_API_KEY) on Render to send real email. In-app messages and notifications work now.</p>{% endif %}
     <label class="lbl">To <span class="req">*</span></label>
     <div class="quick">
       <button type="button" class="on" data-pick='{"gender":"","verified":"","plan":""}'>All Members</button>

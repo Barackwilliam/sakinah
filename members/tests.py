@@ -187,3 +187,42 @@ class RobustnessTests(TestCase):
             self.assertFalse(default_storage.exists(name))
             call_command("restore_media")
             self.assertTrue(default_storage.exists(name))
+
+
+class HideFaceTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user("zahra")
+        self.me = Member.objects.create(user=self.user, name="Zahra", age=26, gender="F", city="Mwanza")
+        self.client.force_login(self.user)
+
+    def upload(self, data, hide):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        post = {"image": SimpleUploadedFile("me.jpg", data, "image/jpeg")}
+        if hide: post["hide_face"] = "on"
+        return self.client.post(reverse("m_photos"), post)
+
+    def test_member_chooses_to_hide_their_face(self):
+        import tempfile
+        from io import BytesIO
+        from pathlib import Path
+        from django.conf import settings
+        from django.test import override_settings
+        import numpy as np
+        from PIL import Image
+        from core.faces import find_faces
+        face = (Path(settings.BASE_DIR) / "seed_images" / "amina.jpg").read_bytes()
+        plain = BytesIO(); Image.new("RGB", (600, 600), (30, 120, 200)).save(plain, "JPEG")
+        with tempfile.TemporaryDirectory() as tmp, override_settings(MEDIA_ROOT=tmp):
+            self.assertRedirects(self.upload(face, hide=True), reverse("m_photos"))
+            self.me.refresh_from_db()
+            self.assertTrue(self.me.hide_face)                                     # the switch is remembered
+            self.assertEqual(find_faces(np.array(Image.open(self.me.photo.path).convert("RGB"))), [])   # no face can be found any more
+            r = self.upload(plain.getvalue(), hide=True)                           # no face: refuse instead of showing it
+            self.assertContains(r, "could not find a face"); self.assertEqual(self.me.photos.count(), 0)
+            self.upload(face, hide=False)
+            p = self.me.photos.get(); self.assertTrue(find_faces(np.array(Image.open(p.image.path).convert("RGB"))))
+            old = Path(p.image.path)
+            self.client.post(reverse("m_photo_action", args=[p.pk]), {"act": "hide"})
+            p.refresh_from_db()
+            self.assertEqual(find_faces(np.array(Image.open(p.image.path).convert("RGB"))), [])
+            self.assertFalse(old.exists())                                          # the original with the face is gone

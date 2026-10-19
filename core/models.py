@@ -106,6 +106,8 @@ class Member(models.Model):
     profile_visibility = models.CharField(max_length=10, choices=VISIBILITY, default="all")
     photo_visibility = models.CharField(max_length=10, choices=VISIBILITY[:3], default="all")
     show_online = models.BooleanField(default=True)
+    hide_face = models.BooleanField("Hide my face on new photos", default=False,
+                                    help_text="The member's choice when uploading: faces are covered with a soft blur before the photo is saved.")
     show_age = models.BooleanField(default=True)
     location_display = models.CharField(max_length=10, choices=LOCATION_SHOW, default="city")
     allow_messages_from = models.CharField(max_length=10, choices=MESSAGES_FROM, default="all")

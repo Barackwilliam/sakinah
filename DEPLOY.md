@@ -43,7 +43,14 @@ Mradi una `render.yaml` (Render Blueprint) na `build.sh`. Database na picha zina
 Render → service → **Settings** → **Custom Domains** → ongeza domain, kisha weka DNS records unazopewa. Ongeza domain hiyo kwenye `ALLOWED_HOSTS` na `CSRF_TRUSTED_ORIGINS`.
 
 ## 4. Email (hiari, kwa "Forgot password")
-Weka `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `DEFAULT_FROM_EMAIL` (mfano Gmail SMTP: `smtp.gmail.com`, 587, na *App password*). Bila hizi, email zinaandikwa kwenye log tu, na Communication Center inatuma notifications na in-app messages pekee.
+**Render free plan inazuia SMTP** (ports 25, 465 na 587; tangu Septemba 2025), kwa hiyo Gmail SMTP haifanyi kazi huko. Tumia **Brevo** (bure, email 300 kwa siku):
+1. Jisajili [brevo.com](https://www.brevo.com), kisha **Senders** → ongeza na uthibitishe email utakayotumia kutuma (mfano `no-reply@sakinah.co.tz` au Gmail yako).
+2. **SMTP & API → API Keys** → tengeneza key.
+3. Kwenye Render weka `BREVO_API_KEY` = key hiyo, na `DEFAULT_FROM_EMAIL` = `Sakinah <email-uliyothibitisha>`.
+
+Mbadala: `RESEND_API_KEY` (resend.com), au `EMAIL_HOST`/`EMAIL_PORT`/`EMAIL_HOST_USER`/`EMAIL_HOST_PASSWORD` kwa SMTP (inafanya kazi kwenye plan za kulipia tu). Bila hivi, email zinaandikwa kwenye log tu.
+
+**Forgot password bila email:** member anaweza kuandika email, username au namba ya simu. Email ikishindwa kutumwa (au akaunti haina email), ombi linaingia **Support & Tickets** kama "Password reset help". Admin anafungua **Members Management → ⋮ → Password reset link**, ananakili link na kumtumia member kwa WhatsApp au SMS.
 
 ## Mambo ya kujua
 - **Free plan** ya Render inalala baada ya dakika 15 bila wageni; ombi la kwanza linachukua takriban sekunde 30–60. Plan ya kulipia haina tatizo hili.
@@ -66,3 +73,7 @@ Kila picha inayowekwa kwenye mfumo (picha za members, adverts, events, honeymoon
 
 - Kubadilisha maandishi: weka `WATERMARK_TEXT` kwenye Render (Environment). Ukiiacha tupu, watermark inazimwa.
 - Picha zilizokuwepo kabla: endesha `python manage.py watermark_images` mara moja (kwenye Render weka `WATERMARK_EXISTING=True` kwa deploy moja, kisha uiondoe). Picha zenye watermark tayari hazirudiwi.
+
+## Kuficha sura (Hide my face)
+
+Kwenye **My Photos** na **Settings**, member anachagua mwenyewe swichi ya **Hide my face**. Ikiwa imewashwa, mfumo unagundua sura (YuNet, ndani ya `core/ml/`) na kuifunika kwa wingu laini kabla picha haijahifadhiwa. Picha isiyo na sura inakataliwa ili isionekane kimakosa. Kila picha iliyopakiwa ina kitufe cha **Hide face**: kinaficha sura na kufuta picha ya asili.

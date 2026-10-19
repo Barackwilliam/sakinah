@@ -211,23 +211,45 @@ def profile_edit(request):
 @login_required
 def photos(request):
     me = me_or_create(request)
-    form = PhotoForm(request.POST or None, request.FILES or None)
+    form = PhotoForm(request.POST or None, request.FILES or None, hide_face=me.hide_face)
     if request.method == "POST":
         if (1 if me.photo else 0) + me.photos.count() >= 6:
             messages.error(request, "You can have up to 6 photos. Remove one first.")
         elif form.is_valid():
-            if not me.photo: me.photo = form.cleaned_data["image"]; me.save(update_fields=["photo"])
+            hidden = form.cleaned_data["hide_face"]
+            if not me.photo: me.photo = form.cleaned_data["image"]
             else: MemberPhoto.objects.create(member=me, image=form.cleaned_data["image"], order=me.photos.count() + 2)
-            messages.success(request, "Photo added.")
+            me.hide_face = hidden; me.save(update_fields=["photo", "hide_face"])   # the switch stays as the member left it
+            messages.success(request, "Photo added with your face hidden." if hidden else "Photo added.")
             return redirect(safe_next(request) or "m_photos")
     return page(request, "members/photos.html", {"me": me, "form": form, "photos": me.photos.all(), "tab": "photos",
         "n_photos": (1 if me.photo else 0) + data.photo_count(me)}, "profile")
+
+def hide_face_on(request, field):
+    """Replace a stored photo with a copy whose faces are clouded, and delete the original file so it cannot be reached."""
+    from django.core.files.base import ContentFile
+    from core.faces import hide_faces
+    try:
+        with field.open("rb") as fh: data = fh.read()
+        hidden, n = hide_faces(data)
+    except Exception:
+        hidden, n = None, 0
+    if not hidden:
+        messages.error(request, "We could not find a face in this photo, so it was left as it is."); return
+    old = field.name
+    field.save(old.rsplit("/", 1)[-1].rsplit(".", 1)[0] + ".jpg", ContentFile(hidden), save=True)
+    if field.name != old: field.storage.delete(old)
+    messages.success(request, "Your face is now hidden on this photo.")
 
 @login_required
 @require_POST
 def photo_action(request, pk=None):
     me = me_or_create(request)
     act = request.POST.get("act")
+    if act == "hide":       # cover the face on a photo that is already uploaded
+        field = me.photo if pk is None else get_object_or_404(MemberPhoto, pk=pk, member=me).image
+        if field: hide_face_on(request, field)
+        return redirect(safe_next(request) or "m_photos")
     if pk is None:          # the main photo
         if act == "delete" and me.photo:
             nxt = me.photos.first()

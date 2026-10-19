@@ -311,10 +311,21 @@ def apply_member_action(m, act, request):
 @require_POST
 def member_action(request, pk):
     m = get_object_or_404(Member, pk=pk)
+    back = request.POST.get("back") or reverse("dash_members")
+    if request.POST.get("act") == "reset_link":
+        # for members who cannot receive email: staff copy this link and send it on WhatsApp or SMS
+        if not m.user_id or m.user.is_staff:
+            messages.error(request, "Password links are only for member accounts.")
+        else:
+            from django.contrib.admin.models import CHANGE, LogEntry
+            from core.views_password import reset_link
+            LogEntry.objects.log_actions(request.user.pk, [m], CHANGE, change_message="Created a password reset link", single_object=True)
+            SupportTicket.objects.filter(user=m.user, subject__startswith="Password reset help", status="open").update(status="closed")
+            messages.success(request, f"Password reset link for {m.name} (works once, for 3 days). Copy it and send it to them: {reset_link(request, m.user)}")
+        return redirect(back if back.startswith("/") else reverse("dash_members"))
     name, done = m.name, apply_member_action(m, request.POST.get("act"), request)
     if done: messages.success(request, f"{name} {done}.")
     else: messages.error(request, "That action is not allowed for this member.")
-    back = request.POST.get("back") or reverse("dash_members")
     return redirect(back if back.startswith("/") else reverse("dash_members"))
 
 @staff_required
@@ -549,7 +560,7 @@ def communications(request):
         "estimate": recipients(raw_filters(request.POST if request.method == "POST" else request.GET)).count(),
         "chart": bar_chart([d.strftime("%d %b") for d in days], [("Emails", "#e23d5a", weekly("email")), ("In-App", "#2f6fe4", weekly("inapp")),
                                                                  ("Notifications", "#22a052", weekly("notification"))]),
-        "groups": groups, "email_live": "smtp" in settings.EMAIL_BACKEND, "channels": Broadcast.CHANNELS})
+        "groups": groups, "email_live": "console" not in settings.EMAIL_BACKEND, "channels": Broadcast.CHANNELS})
 
 # ---------- payments ----------
 @staff_required

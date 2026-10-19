@@ -51,6 +51,7 @@
           {% if m.status != 'suspended' %}<button name="act" value="suspend">Suspend</button>{% endif %}
           {% if m.status != 'rejected' %}<button name="act" value="reject">Reject</button>{% endif %}
           {% if m.n_reports %}<button name="act" value="resolve">Resolve reports</button>{% endif %}
+          {% if m.user_id and not m.user.is_staff %}<button name="act" value="reset_link">Password reset link</button>{% endif %}
           <button name="act" value="delete" class="dang" onclick="return confirm('Delete {{ m.name|escapejs }} permanently? This removes their account, messages and likes.')">Delete</button>
         </form></details></div></td>
   </tr>
