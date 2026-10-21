@@ -8,6 +8,7 @@ from django.contrib.sessions.models import Session
 from django.core.paginator import Paginator
 from django.db.models import Count, Max, Q
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -152,7 +153,7 @@ def messages_page(request, pk=None):
     shown = {"all": [c for c in allc if not c["archived"]], "unread": [c for c in allc if c["unread"] and not c["archived"]],
              "favorites": [c for c in allc if c["fav"]], "archived": [c for c in allc if c["archived"]]}.get(tab, allc)
     if g.get("q"):
-        q = g["q"].lower(); shown = [c for c in shown if q in c["member"].name.lower() or q in c["last"].body.lower()]
+        q = g["q"].lower(); shown = [c for c in shown if q in c["member"].name.lower() or q in c["last"].preview.lower()]
     other = Member.objects.filter(pk=pk).first() if pk else (shown[0]["member"] if shown else None)
     if pk and other is None:   # e.g. an old notification about someone who has since deleted their account
         messages.info(request, "This member is no longer on Sakinah.")
@@ -164,15 +165,25 @@ def messages_page(request, pk=None):
         elif not other.can_message(me):
             messages.error(request, f"{other.name} only accepts messages from {other.get_allow_messages_from_display().lower()}.")
         elif form.is_valid():
-            Message.objects.create(sender=request.user, to=other, body=form.cleaned_data["body"], image=form.cleaned_data.get("image"))
+            d = form.cleaned_data
+            Message.objects.create(sender=request.user, to=other, body=d["body"], image=d.get("image"), audio=d.get("voice"),
+                                   duration=min(d.get("duration") or 0, 120) if d.get("voice") else 0)
             if other.user_id and other.notify_messages:
-                Notification.objects.create(user=other.user, title=f"New message from {me.name}", link=reverse("m_messages_with", args=[me.pk]))
+                Notification.objects.create(user=other.user, title=f"New {'voice message' if d.get('voice') else 'message'} from {me.name}",
+                                            link=reverse("m_messages_with", args=[me.pk]))
+            if request.headers.get("x-requested-with") == "fetch": return JsonResponse({"ok": True})   # voice notes are posted by script
             return redirect("m_messages_with", pk=other.pk)
+        if request.headers.get("x-requested-with") == "fetch":
+            errs = [str(m) for m in messages.get_messages(request)] + [e for v in form.errors.values() for e in v]
+            return JsonResponse({"ok": False, "error": errs[0] if errs else "The voice note could not be sent."}, status=400)
     thread = []
     if other:
         thread = Message.objects.filter(Q(sender=request.user, to=other) | (Q(sender=other.user, to=me) if other.user_id else Q(pk__in=[]))).order_by("created")
     state = ConversationState.objects.filter(user=request.user, member=other).first() if other else None
+    from .calls import call_permission
+    call_ok, call_reason = call_permission(me, other) if other else (False, "")
     return page(request, "members/messages.html", {"me": me, "convos": shown, "other": other, "thread": thread, "form": form, "tab": tab, "f": g,
+        "call_ok": call_ok, "call_reason": call_reason,
         "n_all": len([c for c in allc if not c["archived"]]), "n_unread": sum(1 for c in allc if c["unread"]), "state": state,
         "can_send": bool(other) and other.pk not in blocked and other.can_message(me),
         "emoji": "😊 🙂 😄 🤲 🙏 ❤️ 🌸 🌙 ⭐ 👍 👋 🤝 💐 😇 🕌 📿".split(), "blocked_ids": blocked,

@@ -19,12 +19,26 @@ class MemberProfileForm(ProfileForm):
     class Meta(ProfileForm.Meta):
         fields = [f for f in ProfileForm.Meta.fields if f != "photo" and not f.startswith("pref_")] + ["headline", "practice", "interests", "lifestyle"]
 
+VOICE_MAX_SECONDS, VOICE_MAX_BYTES = 120, 4 * 1024 * 1024
+VOICE_TYPES = {"audio/webm": "webm", "audio/ogg": "ogg", "audio/mp4": "m4a", "audio/x-m4a": "m4a", "audio/aac": "aac", "audio/mpeg": "mp3",
+               "video/webm": "webm", "video/mp4": "m4a"}   # some browsers label recorded sound as video
+
 class ConversationForm(forms.Form):
     body = forms.CharField(max_length=1000, required=False, widget=forms.TextInput(attrs={"placeholder": "Andika ujumbe wako hapa...", "autocomplete": "off"}))
     image = forms.ImageField(required=False)
+    voice = forms.FileField(required=False)
+    duration = forms.IntegerField(required=False, min_value=0, max_value=VOICE_MAX_SECONDS + 5)
+    def clean_voice(self):
+        v = self.cleaned_data.get("voice")
+        if not v: return v
+        ctype = (getattr(v, "content_type", "") or "").split(";")[0].strip().lower()
+        if ctype not in VOICE_TYPES: raise forms.ValidationError("That voice note format is not supported.")
+        if v.size > VOICE_MAX_BYTES: raise forms.ValidationError("Voice notes can be up to 2 minutes long.")
+        v.name = f"voice.{VOICE_TYPES[ctype]}"   # never trust the uploaded file name
+        return v
     def clean(self):
         d = super().clean()
-        if not d.get("body") and not d.get("image"): raise forms.ValidationError("Write a message or attach a photo.")
+        if not d.get("body") and not d.get("image") and not d.get("voice"): raise forms.ValidationError("Write a message, attach a photo or record a voice note.")
         return d
 
 class PhotoForm(HideFaceMixin, forms.Form):

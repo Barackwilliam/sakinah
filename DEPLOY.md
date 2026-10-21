@@ -77,3 +77,16 @@ Kila picha inayowekwa kwenye mfumo (picha za members, adverts, events, honeymoon
 ## Kuficha sura (Hide my face)
 
 Kwenye **My Photos** na **Settings**, member anachagua mwenyewe swichi ya **Hide my face**. Ikiwa imewashwa, mfumo unagundua sura (YuNet, ndani ya `core/ml/`) na kuifunika kwa wingu laini kabla picha haijahifadhiwa. Picha isiyo na sura inakataliwa ili isionekane kimakosa. Kila picha iliyopakiwa ina kitufe cha **Hide face**: kinaficha sura na kufuta picha ya asili.
+
+## Voice call, video call na voice note
+
+- **Voice note:** kitufe cha kipaza sauti kwenye chat (hadi dakika 2). Inafuata ruhusa zilezile za ujumbe. Haihitaji mpangilio wowote.
+- **Voice na video call:** kitufe cha simu na video juu ya chat. Mpigaji lazima awe **Premium**, na wawe **mutual match** (wamependana wote wawili); block inaheshimiwa. Mpokeaji anaona dirisha la simu yenye mlio popote alipo kwenye site. Simu ambayo haijapokelewa ndani ya sekunde 45 inakuwa "Missed call", na inaonekana kwenye chat pamoja na notification.
+- Sauti na video zinapita moja kwa moja kati ya members (WebRTC); server inapitisha tu taarifa za kuunganisha. Simu zinahitaji **https** (Render inayo) au `127.0.0.1` kwa majaribio.
+
+**TURN (muhimu kwa mitandao ya simu):** bila TURN, simu nyingi zinaunganika kwenye Wi-Fi lakini mara nyingi zinashindwa kwenye data ya simu (Vodacom, Airtel, Tigo). Weka TURN ya bure:
+1. Ingia [dash.cloudflare.com](https://dash.cloudflare.com) → **Realtime** → **TURN Server** → **Create**.
+2. Nakili **Turn Token ID** na **API Token**.
+3. Kwenye Render weka `CLOUDFLARE_TURN_KEY_ID` na `CLOUDFLARE_TURN_API_TOKEN`. (GB 1,000 kwa mwezi ni bure.)
+
+Mbadala: huduma yoyote ya TURN yenye username/password (mfano metered.ca) — weka `TURN_URLS` (zitenganishwe kwa koma), `TURN_USERNAME` na `TURN_CREDENTIAL`.

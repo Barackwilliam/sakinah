@@ -226,3 +226,73 @@ class HideFaceTests(TestCase):
             p.refresh_from_db()
             self.assertEqual(find_faces(np.array(Image.open(p.image.path).convert("RGB"))), [])
             self.assertFalse(old.exists())                                          # the original with the face is gone
+
+
+class CallTests(TestCase):
+    def setUp(self):
+        from core.models import Like
+        self.a = User.objects.create_user("omar"); self.b = User.objects.create_user("aisha"); self.c = User.objects.create_user("stranger")
+        plan = Plan.objects.create(name="Gold", price=50000)
+        self.ma = Member.objects.create(user=self.a, name="Omar Ali", age=30, gender="M", city="Arusha", plan=plan, premium_until=date.today() + timedelta(days=30))
+        self.mb = Member.objects.create(user=self.b, name="Aisha Salim", age=27, gender="F", city="Arusha")
+        self.mc = Member.objects.create(user=self.c, name="Other", age=28, gender="F", city="Arusha")
+        Like.objects.create(user=self.a, member=self.mb); Like.objects.create(user=self.b, member=self.ma)
+        self.client.force_login(self.a)
+
+    def start(self, member, kind="video"):
+        return self.client.post(reverse("m_call_start", args=[member.pk]), {"kind": kind})
+
+    def test_full_call_flow_and_call_log(self):
+        import json
+        from core.models import Call
+        r = self.start(self.mb); self.assertEqual(r.status_code, 200)
+        call = Call.objects.get(); self.assertEqual((call.caller, call.callee, call.kind, call.status), (self.a, self.b, "video", "ringing"))
+        self.assertEqual(self.client.get(reverse("m_call", args=[call.pk])).status_code, 200)
+        other = self.client_class(); other.force_login(self.b)
+        inc = other.get(reverse("m_call_incoming")).json()["call"]; self.assertEqual((inc["id"], inc["name"]), (call.pk, "Omar Ali"))
+        self.assertEqual(other.post(reverse("m_call_answer", args=[call.pk])).status_code, 200)
+        self.client.post(reverse("m_call_signal", args=[call.pk]), json.dumps([{"kind": "offer", "data": {"type": "offer", "sdp": "x"}}]), content_type="application/json")
+        st = other.get(reverse("m_call_state", args=[call.pk])).json()
+        self.assertEqual((st["status"], [s["kind"] for s in st["signals"]]), ("accepted", ["offer"]))
+        self.assertEqual(self.client.get(reverse("m_call_state", args=[call.pk])).json()["signals"], [])   # never your own signals
+        other.post(reverse("m_call_end", args=[call.pk]))
+        call.refresh_from_db(); self.assertEqual(call.status, "ended")
+        self.assertTrue(Message.objects.filter(kind="call", body__startswith="Video call ·").exists())
+        stranger = self.client_class(); stranger.force_login(self.c)
+        self.assertEqual(stranger.get(reverse("m_call_state", args=[call.pk])).status_code, 404)
+
+    def test_who_may_call(self):
+        from core.models import Block, Call
+        self.assertEqual(self.start(self.mc).status_code, 403)                       # not a mutual match
+        self.client.force_login(self.b)
+        r = self.start(self.ma); self.assertEqual(r.status_code, 403); self.assertTrue(r.json()["premium"])   # Aisha is not Premium
+        self.client.force_login(self.a)
+        Block.objects.create(user=self.b, member=self.ma)
+        self.assertEqual(self.start(self.mb).status_code, 403)                       # blocked
+        self.assertFalse(Call.objects.exists())
+
+    def test_unanswered_call_becomes_missed(self):
+        from django.utils import timezone
+        from core.models import Call
+        self.start(self.mb, "voice"); call = Call.objects.get()
+        Call.objects.filter(pk=call.pk).update(created=timezone.now() - timedelta(minutes=2))
+        other = self.client_class(); other.force_login(self.b)
+        self.assertIsNone(other.get(reverse("m_call_incoming")).json()["call"])
+        call.refresh_from_db(); self.assertEqual(call.status, "missed")
+        self.assertTrue(Notification.objects.filter(user=self.b, title__startswith="Missed voice call").exists())
+        self.assertEqual(self.start(self.mb).status_code, 200)                      # the line is free again
+
+    def test_voice_notes(self):
+        import tempfile
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from django.test import override_settings
+        url = reverse("m_messages_with", args=[self.mb.pk])
+        with tempfile.TemporaryDirectory() as tmp, override_settings(MEDIA_ROOT=tmp):
+            r = self.client.post(url, {"voice": SimpleUploadedFile("x.exe", b"MZ", "application/octet-stream"), "duration": 3}, HTTP_X_REQUESTED_WITH="fetch")
+            self.assertEqual(r.status_code, 400)
+            r = self.client.post(url, {"voice": SimpleUploadedFile("rec.webm", b"\x1aE\xdf\xa3" + b"0" * 2000, "audio/webm;codecs=opus"), "duration": 4},
+                                 HTTP_X_REQUESTED_WITH="fetch")
+            self.assertEqual(r.json(), {"ok": True})
+            m = Message.objects.get(); self.assertEqual((m.duration, m.audio.name.endswith(".webm")), (4, True))
+            self.assertEqual(m.preview, "🎤 Voice message (0:04)")
+            self.assertContains(self.client.get(url), "data-voice")

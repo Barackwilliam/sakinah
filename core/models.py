@@ -296,9 +296,18 @@ class Message(models.Model):
     to = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="inbox")
     body = models.TextField(max_length=1000, blank=True)
     image = models.ImageField(upload_to="messages/", blank=True)
+    audio = models.FileField(upload_to="voice/", blank=True, help_text="Voice note")
+    duration = models.PositiveSmallIntegerField(default=0, help_text="Voice note length in seconds")
+    kind = models.CharField(max_length=5, default="text", choices=[("text", "Message"), ("call", "Call log")])
     created = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
     class Meta: ordering = ["created"]
+    @property
+    def preview(self):
+        """Short text for conversation lists."""
+        if self.body: return self.body
+        if self.audio: return f"🎤 Voice message ({self.duration // 60}:{self.duration % 60:02d})"
+        return "📷 Photo" if self.image else ""
     def __str__(self): return f"{self.sender} -> {self.to}: {self.body[:30]}"
 
 
@@ -575,6 +584,7 @@ class SupportTicket(models.Model):
 from django.db.models.signals import post_delete, post_save  # noqa: E402
 from django.dispatch import receiver  # noqa: E402
 
+from .models_calls import Call, CallSignal  # noqa: E402,F401
 from .models_honeymoon import Booking, Destination, HoneymoonSave, Package, PackagePhoto, PackageReview  # noqa: E402,F401
 
 @receiver([post_save, post_delete], sender=Booking)

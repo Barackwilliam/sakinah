@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import calls, views
 urlpatterns = [
     path("", views.dashboard, name="m_dashboard"),
     path("find/", views.find, name="m_find"),
@@ -33,4 +33,11 @@ urlpatterns = [
     path("settings/delete/", views.delete_account, name="m_delete"),
     path("help/", views.help_page, name="m_help"),
     path("notifications/", views.notifications, name="m_notifications"),
+    path("calls/start/<int:pk>/", calls.start, name="m_call_start"),
+    path("calls/incoming/", calls.incoming, name="m_call_incoming"),
+    path("calls/<int:pk>/", calls.screen, name="m_call"),
+    path("calls/<int:pk>/answer/", calls.answer, name="m_call_answer"),
+    path("calls/<int:pk>/end/", calls.end, name="m_call_end"),
+    path("calls/<int:pk>/state/", calls.state, name="m_call_state"),
+    path("calls/<int:pk>/signal/", calls.signal, name="m_call_signal"),
 ]
