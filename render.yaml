@@ -38,6 +38,11 @@ services:
         sync: false
       - key: DEFAULT_FROM_EMAIL
         sync: false
+      # Voice/video calls: TURN relay so calls connect on mobile data (Cloudflare Realtime TURN, 1,000 GB free a month)
+      - key: CLOUDFLARE_TURN_KEY_ID
+        sync: false
+      - key: CLOUDFLARE_TURN_API_TOKEN
+        sync: false
       # Text stamped on every uploaded picture; leave empty to switch the watermark off
       - key: WATERMARK_TEXT
         value: sakinah.co.tz

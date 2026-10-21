@@ -1,0 +1,48 @@
+/* incoming call card (every member page) */
+.ic-wrap{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:rgba(20,6,12,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:16px;font-family:Poppins,'Plus Jakarta Sans',system-ui,sans-serif}
+.ic-wrap[hidden]{display:none}
+.ic-card{width:min(340px,100%);background:linear-gradient(170deg,#3b0a1d,#14060c 75%);color:#fff;border-radius:26px;padding:30px 24px 26px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.45);animation:icIn .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes icIn{from{transform:translateY(24px) scale(.96);opacity:0}}
+.ic-av{position:relative;width:104px;height:104px;margin:0 auto 14px}.ic-av img,.ic-av b{position:relative;z-index:1;width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.85);display:grid;place-items:center;background:#a1053a;font:700 40px Georgia,serif}
+.ic-ring{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,255,255,.5);animation:icRing 1.8s ease-out infinite}.ic-ring.r2{animation-delay:.9s}
+@keyframes icRing{to{transform:scale(1.7);opacity:0}}
+.ic-kind{font-size:13px;opacity:.8;margin:0 0 2px}.ic-name{font:700 24px 'Playfair Display',Georgia,serif;margin:0 0 22px}
+.ic-btns{display:flex;justify-content:space-around}
+.ic-btns>*{display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:none;color:#fff;cursor:pointer;text-decoration:none;font:500 12px Poppins,system-ui,sans-serif}
+.ic-btns svg{width:62px;height:62px;padding:17px;border-radius:50%;box-sizing:border-box}
+.ic-decline svg{background:#e5304f}.ic-accept svg{background:#18a957;animation:icShake 1.2s ease-in-out infinite}
+@keyframes icShake{0%,60%,100%{transform:rotate(0)}10%,30%,50%{transform:rotate(-14deg)}20%,40%{transform:rotate(14deg)}}
+@media (prefers-reduced-motion:reduce){.ic-ring,.ic-accept svg{animation:none}}
+#call-toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translate(-50%,30px);opacity:0;z-index:10000;background:#1d2133;color:#fff;padding:12px 18px;border-radius:12px;font:500 13.5px Poppins,system-ui,sans-serif;max-width:min(92vw,420px);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:.25s;pointer-events:none}
+#call-toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* the call screen */
+.callpage{margin:0;background:#14060c;color:#fff;font-family:Poppins,system-ui,sans-serif;overflow:hidden}
+.callpage svg{width:24px;height:24px}
+.cs{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(18px + env(safe-area-inset-top)) 16px calc(26px + env(safe-area-inset-bottom))}
+.cs-bg{position:absolute;inset:-40px;background:radial-gradient(circle at 50% 30%,rgba(161,5,58,.55),transparent 60%),var(--bg,none) center/cover;filter:blur(38px) brightness(.45);z-index:0}
+.cs-remote{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;z-index:1;opacity:0;transition:opacity .4s}
+.cs.has-video .cs-remote{opacity:1}
+.cs-top,.cs-who,.cs-bar{position:relative;z-index:2}
+.cs-top{width:100%;max-width:880px;display:flex;justify-content:space-between;align-items:center;font-size:13px;opacity:.85}
+.cs-brand{font:700 20px 'Playfair Display',Georgia,serif}.cs-lock{display:inline-flex;align-items:center;gap:6px}.cs-lock svg{width:15px;height:15px}
+.cs-who{text-align:center;margin-top:6vh;transition:opacity .3s}
+.cs.has-video.connected .cs-who{opacity:0;pointer-events:none}
+.cs.video.has-video .cs-who h1{text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.cs-av{position:relative;width:140px;height:140px;margin:0 auto 18px}
+.cs-av img,.cs-av b{position:relative;z-index:1;width:140px;height:140px;border-radius:50%;object-fit:cover;border:4px solid rgba(255,255,255,.85);display:grid;place-items:center;background:#a1053a;font:700 54px Georgia,serif;box-sizing:border-box}
+.cs-pulse{position:absolute;inset:0;border-radius:50%;background:rgba(255,255,255,.18);animation:icRing 2s ease-out infinite}.cs-pulse.p2{animation-delay:1s}
+.cs.connected .cs-pulse{animation:none;opacity:0}
+.cs-who h1{font:700 30px 'Playfair Display',Georgia,serif;margin:0 0 6px}
+.cs-status{margin:0;font-size:15px;opacity:.85;min-height:22px}.cs-timer{margin:4px 0 0;font-size:16px;font-variant-numeric:tabular-nums;letter-spacing:.5px}
+.cs.has-video .cs-timer{position:fixed;top:calc(52px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:rgba(0,0,0,.4);padding:4px 12px;border-radius:999px}
+.cs-self{position:absolute;z-index:3;right:16px;top:calc(60px + env(safe-area-inset-top));width:min(28vw,180px);aspect-ratio:3/4;object-fit:cover;border-radius:14px;border:2px solid rgba(255,255,255,.7);background:#222;box-shadow:0 8px 24px rgba(0,0,0,.4);transform:scaleX(-1)}
+.callpage.voice .cs-self,.cs.nocam .cs-self,.cs.selfoff .cs-self{display:none}
+.cs-bar{display:flex;gap:18px;padding:12px 18px;border-radius:999px;background:rgba(255,255,255,.08);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.cs-btn{display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:none;color:#fff;cursor:pointer;font:500 11.5px Poppins,system-ui,sans-serif;padding:0}
+.cs-btn svg{width:58px;height:58px;padding:16px;border-radius:50%;background:rgba(255,255,255,.16);box-sizing:border-box;transition:background .2s,transform .15s}
+.cs-btn:hover svg{transform:scale(1.06)}.cs-btn .off{display:none}.cs-btn.active .on{display:none}.cs-btn.active .off{display:block}
+.cs-btn.active svg{background:#fff;color:#14060c}.cs-btn.end svg{background:#e5304f}
+.cs.over .cs-bar{opacity:.4;pointer-events:none}
+@media(max-width:520px){.cs-av,.cs-av img,.cs-av b{width:118px;height:118px}.cs-who h1{font-size:26px}.cs-bar{gap:12px}.cs-btn svg{width:54px;height:54px;padding:15px}}
+.ic-av [hidden]{display:none}

@@ -55,6 +55,14 @@ DB_URL = os.getenv("DATABASE_URL", "").strip()
 DATABASES = {"default": dj_database_url.parse(DB_URL or f"sqlite:///{BASE_DIR/'db.sqlite3'}", conn_max_age=600, conn_health_checks=True,
                                               ssl_require=bool(DB_URL) and os.getenv("DB_SSL", "True") == "True")}
 
+# Voice and video calls: a TURN relay lets calls connect on mobile networks. Cloudflare (1,000 GB free a month) or any TURN
+# service with fixed credentials (e.g. metered.ca). Without one, calls still work on most Wi-Fi but often fail on mobile data.
+CLOUDFLARE_TURN_KEY_ID = os.getenv("CLOUDFLARE_TURN_KEY_ID", "").strip()
+CLOUDFLARE_TURN_API_TOKEN = os.getenv("CLOUDFLARE_TURN_API_TOKEN", "").strip()
+TURN_URLS = os.getenv("TURN_URLS", "")
+TURN_USERNAME = os.getenv("TURN_USERNAME", "")
+TURN_CREDENTIAL = os.getenv("TURN_CREDENTIAL", "")
+
 # Text stamped on every uploaded picture (members, adverts, events, honeymoon, articles). Empty turns it off.
 WATERMARK_TEXT = os.getenv("WATERMARK_TEXT", "sakinah.co.tz")
 

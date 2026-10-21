@@ -456,3 +456,24 @@ body{padding-bottom:70px}.mmain{padding:10px}.pban{padding:12px 14px;gap:14px;mi
 .prow.hideface>svg{color:var(--m)}
 .phgrid .phhide{top:8px;left:8px;right:auto;bottom:auto}.phgrid .phhide button{width:auto;height:28px;border-radius:6px;padding:0 9px;font-size:11.5px;gap:4px;display:inline-flex}
 .phgrid .phhide button svg{width:13px;height:13px}
+/* voice notes, recorder and call history in chats */
+.cmic{width:40px;height:40px;border-radius:50%;border:0;background:#fdeef2;color:var(--m);display:grid;place-items:center;cursor:pointer;flex:none}
+.cmic svg{width:19px;height:19px}.cmic:hover{background:#fbdbe5}.cmic:disabled{opacity:.5}
+.cform{position:relative}.cform.recording>:not(.crec){visibility:hidden}
+.crec{position:absolute;inset:0;display:flex;align-items:center;gap:10px;padding:0 10px;background:var(--card,#fff);border-radius:inherit}
+.crec[hidden]{display:none}.crec-x,.crec-send{width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;flex:none}
+.crec-x{background:#f3f1f2;color:#6b6f7b}.crec-send{background:var(--m);color:#fff}.crec-x svg,.crec-send svg{width:18px;height:18px}
+.crec-dot{width:10px;height:10px;border-radius:50%;background:#e5304f;animation:recBlink 1s ease-in-out infinite;flex:none}
+@keyframes recBlink{50%{opacity:.25}}
+.crec-t{font-variant-numeric:tabular-nums;font-size:14px;min-width:38px}.crec small{color:var(--mut);font-size:11.5px;white-space:nowrap}
+.crec-bar{flex:1;height:4px;border-radius:4px;background:#f1e3e8;overflow:hidden}.crec-bar i{display:block;height:100%;width:0;background:var(--m);transition:width .2s linear}
+@media(max-width:480px){.crec small{display:none}}
+.vnote{display:flex;align-items:center;gap:9px;min-width:190px;padding:2px 0 6px}
+.vplay{width:36px;height:36px;border-radius:50%;border:0;display:grid;place-items:center;background:var(--m);color:#fff;cursor:pointer;flex:none}
+.bub.me .vplay{background:#fff;color:var(--m)}.vplay svg{width:15px;height:15px}.vplay .i-pause,.vnote.on .vplay .i-play{display:none}.vnote.on .vplay .i-pause{display:block}
+.vwave{flex:1;height:22px;position:relative;background:repeating-linear-gradient(90deg,currentColor 0 2px,transparent 2px 5px);opacity:.35;-webkit-mask:linear-gradient(transparent 20%,#000 20% 80%,transparent 80%)}
+.vwave i{position:absolute;inset:0 auto 0 0;width:0;background:currentColor;opacity:1}
+.vtime{font-size:11.5px;font-variant-numeric:tabular-nums;min-width:30px}
+.clog{display:flex;justify-content:center;margin:10px 0}.clog span{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;background:#eef6f1;color:#17643a;font-size:12.5px;font-weight:600}
+.clog.miss span{background:#fdeef2;color:#b4123f}.clog svg{width:15px;height:15px}.clog time{font-weight:400;opacity:.7;margin-left:4px}
+.cact .ibtn.up{position:relative}.cact .ibtn.up:after{content:"";position:absolute;top:4px;right:4px;width:8px;height:8px;border-radius:50%;background:#e2a320}
