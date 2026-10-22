@@ -144,13 +144,22 @@ def conversations(user, me):
     return list(convos.values())
 
 @login_required
-def message_block_en(me):
-    """Why this member may not send a message right now, or "" when they may."""
+def message_block_en(me, other=None):
+    """Why this member may not write right now, or "" when they may.
+
+    A plan buys the right to start a conversation and to keep writing in it. Without one you may
+    still answer whoever wrote to you, one answer for each message they send.
+    """
     if me is None: return "Complete your profile before sending messages."
-    if me.allowance("daily_messages") == 0:
-        return "Your plan does not include messaging. Upgrade to start a conversation."
+    has_plan = me.allowance("daily_messages") != 0
+    sent, got = Message.thread_counts(me.user, other) if other is not None else (0, 0)
+    if other is not None and (sent or got):                       # the conversation is already going
+        if has_plan or sent < got: return ""
+        return f"You have answered their message. Wait for {other.first_name} to write again, or upgrade to write whenever you like."
+    if not has_plan:
+        return "Your plan cannot start a conversation. Upgrade to write first - answering someone is always free."
     if me.messages_left == 0:
-        return "You have used today's messages. They come back in 24 hours, or upgrade for more."
+        return "You have started all of today's conversations. More in 24 hours, or upgrade for a bigger plan."
     return ""
 
 def call_block_en(me):
@@ -183,12 +192,13 @@ def messages_page(request, pk=None):
             messages.error(request, "You can't message this member.")
         elif not other.can_message(me):
             messages.error(request, f"{other.name} only accepts messages from {other.get_allow_messages_from_display().lower()}.")
-        elif message_block_en(me):
-            messages.error(request, message_block_en(me))
+        elif message_block_en(me, other):
+            messages.error(request, message_block_en(me, other))
         elif form.is_valid():
             d = form.cleaned_data
             Message.objects.create(sender=request.user, to=other, body=d["body"], image=d.get("image"), audio=d.get("voice"),
-                                   duration=min(d.get("duration") or 0, 120) if d.get("voice") else 0)
+                                   duration=min(d.get("duration") or 0, 120) if d.get("voice") else 0,
+                                   opens=Message.starts_conversation(request.user, other))
             if other.user_id and other.notify_messages:
                 Notification.objects.create(user=other.user, title=f"New {'voice message' if d.get('voice') else 'message'} from {me.name}",
                                             link=reverse("m_messages_with", args=[me.pk]))
@@ -206,8 +216,8 @@ def messages_page(request, pk=None):
     return page(request, "members/messages.html", {"me": me, "convos": shown, "other": other, "thread": thread, "form": form, "tab": tab, "f": g,
         "call_ok": call_ok, "call_reason": call_reason,
         "n_all": len([c for c in allc if not c["archived"]]), "n_unread": sum(1 for c in allc if c["unread"]), "state": state,
-        "can_send": bool(other) and other.pk not in blocked and other.can_message(me) and not message_block_en(me),
-        "no_send": message_block_en(me), "msgs_left": me.messages_left,
+        "can_send": bool(other) and other.pk not in blocked and other.can_message(me) and not message_block_en(me, other),
+        "no_send": message_block_en(me, other) if other else "", "msgs_left": me.messages_left,
         "emoji": "😊 🙂 😄 🤲 🙏 ❤️ 🌸 🌙 ⭐ 👍 👋 🤝 💐 😇 🕌 📿".split(), "blocked_ids": blocked,
         "today": timezone.localdate(), "yesterday": timezone.localdate() - timedelta(days=1)}, "messages")
 

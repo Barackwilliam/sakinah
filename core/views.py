@@ -198,13 +198,22 @@ def call_why(mine, other, ok, reason):
     return "Simu haipatikani kwa akaunti hii kwa sasa."
 
 
-def message_block(mine):
-    """Why this member may not send a message right now, in Swahili, or "" when they may."""
+def message_block(mine, other=None):
+    """Why this member may not write right now, in Swahili, or "" when they may.
+
+    A plan buys the right to start a conversation and to keep writing in it. Without one you may
+    still answer whoever wrote to you, one answer for each message they send.
+    """
     if mine is None: return "Kamilisha wasifu wako ili uweze kutuma ujumbe."
-    if mine.allowance("daily_messages") == 0:
-        return "Kifurushi chako hakiruhusu kutuma ujumbe. Jiunge na kifurushi kikubwa ili uanze kuwasiliana."
+    has_plan = mine.allowance("daily_messages") != 0
+    sent, got = Message.thread_counts(mine.user, other) if other is not None else (0, 0)
+    if other is not None and (sent or got):                       # the conversation is already going
+        if has_plan or sent < got: return ""
+        return f"Umeshajibu ujumbe wake. Subiri {other.first_name} akuandikie tena, au jiunge na kifurushi ili uandike wakati wowote."
+    if not has_plan:
+        return "Kifurushi chako hakikuruhusu kuanzisha mazungumzo. Jiunge na kifurushi ili uanze; kujibu aliyekuandikia ni bure."
     if mine.messages_left == 0:
-        return "Umetumia ujumbe wako wote wa leo. Utapata mwingine baada ya masaa 24, au ongeza kifurushi."
+        return "Umefikia kikomo cha mazungumzo mapya ya leo. Utaweza kuanzisha mengine baada ya masaa 24, au ongeza kifurushi."
     return ""
 
 def chat_page(request, other=None, form=None):
@@ -220,7 +229,7 @@ def chat_page(request, other=None, form=None):
            "today": today, "yesterday": today - timedelta(days=1), "blocked_ids": blocked, "me_member": mine}
     if other:
         they_blocked_me = bool(other.user_id and mine and Block.objects.filter(user=other.user, member=mine).exists())
-        no_send = message_block(mine)
+        no_send = message_block(mine, other)
         can_send = other.pk not in blocked and not they_blocked_me and other.can_message(mine) and not no_send
         call_ok, call_reason = call_permission(mine, other) if mine else (False, "")
         msgs = mark_groups(list(thread_qs(request.user, mine, other)))
@@ -245,12 +254,13 @@ def thread(request, pk):
             messages.error(request, "Huwezi kumtumia ujumbe mwanachama huyu.")
         elif not other.can_message(mine):
             messages.error(request, f"{other.first_name} anapokea ujumbe kutoka kwa {other.get_allow_messages_from_display().lower()} pekee.")
-        elif message_block(mine):
-            messages.error(request, message_block(mine))
+        elif message_block(mine, other):
+            messages.error(request, message_block(mine, other))
         elif form.is_valid():
             d = form.cleaned_data
             Message.objects.create(sender=request.user, to=other, body=d["body"], image=d.get("image"), audio=d.get("voice"),
-                                   duration=min(d.get("duration") or 0, 120) if d.get("voice") else 0)
+                                   duration=min(d.get("duration") or 0, 120) if d.get("voice") else 0,
+                                   opens=Message.starts_conversation(request.user, other))
             if other.user_id and other.notify_messages and mine:
                 Notification.objects.create(user=other.user, title=f"Ujumbe mpya kutoka {mine.name}", link=reverse("thread", args=[mine.pk]))
             if request.headers.get("x-requested-with") == "fetch": return JsonResponse({"ok": True})

@@ -222,7 +222,7 @@ class SiteSectionTests(TestCase):
     def test_plan_features(self):
         p = Plan.objects.create(name="Gold", price=50000, features="Priority support\n-Incognito mode", popular=True,
                                 daily_messages=-1, daily_call_seconds=300)
-        self.assertEqual(p.feature_list, [(True, "Unlimited messages"), (True, "5 minutes of calls a day"),
+        self.assertEqual(p.feature_list, [(True, "Start as many chats as you like"), (True, "5 minutes of calls a day"),
                                           (True, "Priority support"), (False, "Incognito mode")])
         r = self.client.get(reverse("premium"))
         self.assertContains(r, "Most Popular"); self.assertContains(r, "Incognito mode")
@@ -543,23 +543,26 @@ class PlanAllowanceTests(TestCase):
 
     def test_a_member_without_a_plan_can_read_but_not_send(self):
         r = self.client.get(reverse("thread", args=[self.her.pk]))
-        self.assertContains(r, "Kifurushi chako hakiruhusu kutuma ujumbe")
+        self.assertContains(r, "hakikuruhusu kuanzisha mazungumzo")
         self.send()
         self.assertEqual(Message.objects.count(), 0)
 
-    def test_a_plan_stops_at_its_daily_count(self):
-        self.on(3, 30)
-        for i in range(3): self.send(f"Ujumbe {i}")
-        self.assertEqual(Message.objects.count(), 3)
-        self.send("Wa nne")
-        self.assertEqual(Message.objects.count(), 3)                       # the fourth is refused
+    def test_a_plan_stops_at_its_daily_count_of_new_conversations(self):
+        self.on(2, 30)
+        others = [Member.objects.create(user=User.objects.create_user(f"mtu{i}"), name=f"Mtu {i}", age=25, gender="F", city="Tanga")
+                  for i in range(3)]
+        for m in others[:2]: self.client.post(reverse("thread", args=[m.pk]), {"body": "Salaam"})
+        self.assertEqual(Message.objects.count(), 2)
+        self.client.post(reverse("thread", args=[others[2].pk]), {"body": "Salaam"})
+        self.assertEqual(Message.objects.count(), 2)                       # the third conversation is refused
         self.assertEqual(self.mine.messages_left, 0)
-        r = self.client.get(reverse("thread", args=[self.her.pk]))
-        self.assertContains(r, "Umetumia ujumbe wako wote wa leo")
+        r = self.client.get(reverse("thread", args=[others[2].pk]))
+        self.assertContains(r, "kikomo cha mazungumzo mapya ya leo")
 
     def test_unlimited_means_unlimited(self):
         self.on(-1, -1)
-        for i in range(12): self.send(f"Ujumbe {i}")
+        for i in range(12):
+            self.send(f"Ujumbe {i}")
         self.assertEqual(Message.objects.count(), 12)
         self.assertEqual(self.mine.messages_left, -1)
         self.assertTrue(self.mine.can_send_messages)
@@ -593,6 +596,64 @@ class PlanAllowanceTests(TestCase):
 
     def test_the_plan_card_prints_the_allowance(self):
         plan = Plan.objects.create(name="Gold test", price=50000, daily_messages=100, daily_call_seconds=300)
-        self.assertEqual(plan.allowance_lines, [(True, "100 messages a day"), (True, "5 minutes of calls a day")])
+        self.assertEqual(plan.allowance_lines, [(True, "Start 100 new chats a day"), (True, "5 minutes of calls a day")])
         free = Plan.objects.create(name="Free test", price=0)
-        self.assertEqual(free.allowance_lines, [(False, "No messaging"), (False, "No voice or video calls")])
+        self.assertEqual(free.allowance_lines, [(False, "Cannot start a chat"), (False, "No voice or video calls")])
+
+
+class ReplyRuleTests(TestCase):
+    """Starting a conversation needs a plan; answering one does not, but it is one answer per message."""
+    def setUp(self):
+        self.me = User.objects.create_user("hamisi")
+        self.mine = Member.objects.create(user=self.me, name="Hamisi Juma", age=32, gender="M", city="Mbeya")
+        self.her_user = User.objects.create_user("rehema")
+        self.her = Member.objects.create(user=self.her_user, name="Rehema Ally", age=28, gender="F", city="Mbeya")
+        self.plan = Plan.objects.create(name="Gold", price=50000, daily_messages=2, daily_call_seconds=300)
+        self.client.force_login(self.me)                      # Hamisi has no plan
+
+    def url(self, m): return reverse("thread", args=[m.pk])
+    def paid(self, member):
+        Member.objects.filter(pk=member.pk).update(plan=self.plan, premium_until=timezone.localdate() + timedelta(days=30))
+        member.refresh_from_db()
+
+    def mine_sent(self): return Message.objects.filter(sender=self.me, to=self.her).count()
+
+    def test_without_a_plan_he_cannot_write_first(self):
+        self.client.post(self.url(self.her), {"body": "Hujambo"})
+        self.assertEqual(self.mine_sent(), 0)
+        self.assertContains(self.client.get(self.url(self.her)), "hakikuruhusu kuanzisha mazungumzo")
+
+    def test_she_writes_first_and_he_may_answer_once(self):
+        self.paid(self.her)
+        Message.objects.create(sender=self.her_user, to=self.mine, body="Assalamu Alaikum")
+        self.client.post(self.url(self.her), {"body": "Wa alaikum salaam"})
+        self.assertEqual(self.mine_sent(), 1)
+        self.client.post(self.url(self.her), {"body": "Na habari za siku?"})      # a second answer is his turn used up
+        self.assertEqual(self.mine_sent(), 1)
+        self.assertContains(self.client.get(self.url(self.her)), "Umeshajibu ujumbe wake")
+        Message.objects.create(sender=self.her_user, to=self.mine, body="Nzuri sana")
+        self.client.post(self.url(self.her), {"body": "Alhamdulillah"})           # she wrote again, so he may too
+        self.assertEqual(self.mine_sent(), 2)
+
+    def test_a_call_log_is_not_a_message_he_can_answer(self):
+        Message.objects.create(sender=self.her_user, to=self.mine, body="Missed voice call", kind="call")
+        self.client.post(self.url(self.her), {"body": "Nimekukosa"})
+        self.assertEqual(self.mine_sent(), 0)
+
+    def test_a_paying_member_keeps_writing_without_waiting(self):
+        self.paid(self.mine)
+        self.client.post(self.url(self.her), {"body": "Assalamu Alaikum"})
+        for i in range(3): self.client.post(self.url(self.her), {"body": f"Ujumbe {i}"})
+        self.assertEqual(self.mine_sent(), 4)                 # one start plus three follow-ups, no answer needed
+
+    def test_the_daily_count_is_about_starting_not_about_every_message(self):
+        self.paid(self.mine)
+        third = Member.objects.create(user=User.objects.create_user("zuhura"), name="Zuhura", age=26, gender="F", city="Dodoma")
+        self.client.post(self.url(self.her), {"body": "Salaam"})
+        self.client.post(self.url(third), {"body": "Salaam"})
+        self.assertEqual(self.mine.messages_left, 0)          # two starts on a plan that allows two
+        self.client.post(self.url(self.her), {"body": "Tena"})
+        self.assertEqual(self.mine_sent(), 2)                 # the open chat still takes messages
+        fourth = Member.objects.create(user=User.objects.create_user("sadia"), name="Sadia", age=24, gender="F", city="Tanga")
+        self.client.post(self.url(fourth), {"body": "Salaam"})
+        self.assertEqual(Message.objects.filter(sender=self.me, to=fourth).count(), 0)   # but no new one today

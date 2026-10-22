@@ -75,7 +75,7 @@
       </div>
 
       {% if can_send %}
-      {% if msgs_left > 0 and msgs_left <= 5 %}<p class="ch-left"><svg><use href="#i-info"/></svg>Umebakiwa na ujumbe {{ msgs_left }} leo. <a href="{% url 'm_membership' %}">Ongeza kifurushi</a></p>{% endif %}
+      {% if msgs_left > 0 and msgs_left <= 5 %}<p class="ch-left"><svg><use href="#i-info"/></svg>Unaweza kuanzisha mazungumzo {{ msgs_left }} mapya leo. Kujibu ni bure. <a href="{% url 'm_membership' %}">Ongeza kifurushi</a></p>{% endif %}
       <form class="ch-form" method="post" enctype="multipart/form-data" id="ch-form">{% csrf_token %}
         <details class="ch-emo"><summary aria-label="Emoji"><svg><use href="#i-smile"/></svg></summary><div>{% for e in emoji %}<button type="button" data-emo="{{ e }}">{{ e }}</button>{% endfor %}</div></details>
         <textarea name="body" rows="1" id="ch-box" placeholder="Andika ujumbe..."></textarea>
