@@ -61,7 +61,7 @@ def matches(request):
     page = Paginator(qs, 12).get_page(q.get("page"))
     params = q.copy(); params.pop("page", None)
     return render(request, "matches.html", {"page": page, "locations": LOCATIONS, "ages": AGES, "f": q, "seek": seek, "religions": Member.RELIGION,
-                                            "qs": params.urlencode(), "liked": liked_ids(request)})
+                                            "qs": params.urlencode(), "liked": liked_ids(request), "call_why": call_block(mine)})
 
 @login_required
 def member_detail(request, pk):
@@ -197,6 +197,14 @@ def call_why(mine, other, ok, reason):
     if reason.startswith("You can't call"): return "Huwezi kumpigia simu mwanachama huyu."
     return "Simu haipatikani kwa akaunti hii kwa sasa."
 
+
+def call_block(mine):
+    """Why this member may not place a call right now, in Swahili, or "" when they may."""
+    if mine is None: return "Kamilisha wasifu wako ili uweze kupiga simu."
+    if mine.allowance("daily_call_seconds") == 0: return "premium"
+    if mine.call_seconds_left == 0:
+        return "Umetumia muda wako wote wa simu leo. Utapata mwingine baada ya masaa 24, au ongeza kifurushi."
+    return ""
 
 def message_block(mine, other=None):
     """Why this member may not write right now, in Swahili, or "" when they may.
