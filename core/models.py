@@ -55,9 +55,23 @@ class Plan(models.Model):
     features = models.TextField(blank=True, help_text="One feature per line. Start a line with - for a feature the plan does not include.")
     popular = models.BooleanField(default=False, verbose_name="Most popular")
     icon = models.ImageField(upload_to="plans/", blank=True)
+    daily_messages = models.IntegerField(default=0, verbose_name="Messages per day",
+                                         help_text="How many messages this plan may send in 24 hours. 0 = none, -1 = unlimited.")
+    daily_call_seconds = models.IntegerField(default=0, verbose_name="Call seconds per day",
+                                             help_text="Voice and video call time allowed in 24 hours, in seconds. 0 = none, -1 = unlimited.")
+    @property
+    def allowance_lines(self):
+        """The daily messaging and call allowance, written out for the plan cards."""
+        n, secs = self.daily_messages, self.daily_call_seconds
+        msgs = "Unlimited messages" if n < 0 else f"{n} messages a day" if n else "No messaging"
+        if secs < 0: calls = "Unlimited voice and video calls"
+        elif not secs: calls = "No voice or video calls"
+        elif secs % 60 == 0: calls = f"{secs // 60} minute{'s' if secs >= 120 else ''} of calls a day"
+        else: calls = f"{secs} seconds of calls a day"
+        return [(n != 0, msgs), (secs != 0, calls)]
     @property
     def feature_list(self):
-        return [(not l.startswith("-"), l.lstrip("-+ ").strip()) for l in self.features.splitlines() if l.strip()]
+        return self.allowance_lines + [(not l.startswith("-"), l.lstrip("-+ ").strip()) for l in self.features.splitlines() if l.strip()]
     class Meta: ordering = ["order"]
     def __str__(self): return self.name
 
@@ -229,6 +243,41 @@ class Member(models.Model):
         super().save(*args, **kwargs)
     @property
     def is_premium(self): return bool(self.plan_id and self.premium_until and self.premium_until >= timezone.localdate())
+
+    @property
+    def quota_plan(self):
+        """The plan whose daily allowance applies right now - a lapsed plan counts as none."""
+        return self.plan if self.is_premium else None
+
+    def allowance(self, field):
+        """How much of `field` this member's plan allows in 24 hours (-1 means unlimited)."""
+        plan = self.quota_plan
+        return getattr(plan, field) if plan else 0
+
+    def used_today(self, field):
+        """How much of the daily allowance is already spent since midnight."""
+        if not self.user_id: return 0
+        since = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
+        if field == "daily_messages":
+            return Message.objects.filter(sender_id=self.user_id, kind="text", created__gte=since).count()
+        mine = Call.objects.filter(caller_id=self.user_id, created__gte=since)       # only calls you place cost you time
+        spent = mine.aggregate(n=models.Sum("billed_seconds"))["n"] or 0
+        live = mine.filter(status="accepted").first()
+        return spent + (live.seconds if live else 0)
+
+    def left_today(self, field):
+        """What is left of the daily allowance: -1 for unlimited, never below 0."""
+        allowed = self.allowance(field)
+        return -1 if allowed < 0 else max(0, allowed - self.used_today(field))
+
+    @property
+    def messages_left(self): return self.left_today("daily_messages")
+    @property
+    def call_seconds_left(self): return self.left_today("daily_call_seconds")
+    @property
+    def can_send_messages(self): return self.messages_left != 0
+    @property
+    def can_call(self): return self.call_seconds_left != 0
 
 class MemberPhoto(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="photos")

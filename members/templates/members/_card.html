@@ -15,12 +15,17 @@
       {% if mode == 'match' %}<li class="mm"><svg><use href="#m-heart"/></svg>{% if m.is_mutual %}Mutual Match{% elif m.likes_me %}Likes You{% else %}You Liked{% endif %}</li>
       {% elif mode != 'views' %}<li><svg><use href="#m-heart"/></svg>Seeking Marriage</li>{% endif %}</ul>
     <div class="mc-a">
-      {% if locked %}<a class="btn block" style="grid-column:1/-1" href="{% url 'm_membership' %}"><svg><use href="#m-crown"/></svg>Upgrade to see</a>
-      {% elif mode == 'match' %}<a class="btn" href="{% url 'm_messages_with' m.pk %}"><svg><use href="#m-chat"/></svg>Message</a><a class="btn g" href="{{ m_url }}">View Profile</a>
-      {% elif mode == 'views' %}<a class="btn g" href="{{ m_url }}">View Profile</a><a class="btn" href="{% url 'm_messages_with' m.pk %}"><svg><use href="#m-chat-o"/></svg>Message</a>
-      {% else %}<a class="btn g" href="{{ m_url }}">View Profile</a>
-        <form method="post" action="{% url 'like' m.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
-          <button class="btn"><svg><use href="#m-heart{% if not m.i_liked %}-o{% endif %}"/></svg>{% if mode == 'liked' %}{% if m.i_liked %}Liked{% else %}Like Back{% endif %}{% elif m.i_liked %}Liked{% else %}Like{% endif %}</button></form>{% endif %}
+      {% if locked %}<a class="btn block" href="{% url 'm_membership' %}"><svg><use href="#m-crown"/></svg>Upgrade to see</a>
+      {% else %}
+      <a class="btn g wide" href="{{ m_url }}">View Profile</a>
+      {% if msg_why %}<button class="btn ic off" type="button" title="{{ msg_why }}" data-why="{{ msg_why }}" aria-label="Message"><svg><use href="#m-chat-o"/></svg></button>
+      {% else %}<a class="btn ic" href="{% url 'm_messages_with' m.pk %}" title="Message {{ m.first_name }}" aria-label="Message"><svg><use href="#m-chat-o"/></svg></a>{% endif %}
+      {% if call_why %}<button class="btn ic off" type="button" title="{{ call_why }}" data-why="{{ call_why }}" aria-label="Voice call"><svg><use href="#m-phone"/></svg></button>
+      <button class="btn ic off" type="button" title="{{ call_why }}" data-why="{{ call_why }}" aria-label="Video call"><svg><use href="#m-video"/></svg></button>
+      {% else %}{% url 'm_call_start' m.pk as start_url %}
+      <button class="btn ic" type="button" data-call="voice" data-start="{{ start_url }}" title="Voice call {{ m.first_name }}" aria-label="Voice call"><svg><use href="#m-phone"/></svg></button>
+      <button class="btn ic" type="button" data-call="video" data-start="{{ start_url }}" title="Video call {{ m.first_name }}" aria-label="Video call"><svg><use href="#m-video"/></svg></button>{% endif %}
+      {% endif %}
     </div>
   </div>
 </article>

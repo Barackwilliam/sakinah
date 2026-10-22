@@ -34,7 +34,8 @@ def page(request, template, ctx, nav, **opts):
     me = ctx.get("me") or me_or_create(request)
     if me.status != "active" and nav not in ("help", "settings"):   # suspended / rejected accounts only reach support and settings
         template, ctx, nav = "members/blocked_account.html", {"me": me}, "blocked"
-    base = {"site": SiteSetting.load(), "me": me, "nav": nav, "header_nav": opts.get("header", "main"), **data.counts(request.user, me)}
+    base = {"site": SiteSetting.load(), "me": me, "nav": nav, "header_nav": opts.get("header", "main"), **data.counts(request.user, me),
+            "msg_why": message_block_en(me), "call_why": call_block_en(me)}        # what the member cards may offer today
     base.update({k: v for k, v in opts.items() if k != "header"})
     return render(request, template, {**base, **ctx})
 
@@ -143,6 +144,24 @@ def conversations(user, me):
     return list(convos.values())
 
 @login_required
+def message_block_en(me):
+    """Why this member may not send a message right now, or "" when they may."""
+    if me is None: return "Complete your profile before sending messages."
+    if me.allowance("daily_messages") == 0:
+        return "Your plan does not include messaging. Upgrade to start a conversation."
+    if me.messages_left == 0:
+        return "You have used today's messages. They come back in 24 hours, or upgrade for more."
+    return ""
+
+def call_block_en(me):
+    """Why this member may not place a call right now, or "" when they may."""
+    if me is None: return "Complete your profile before calling."
+    if me.allowance("daily_call_seconds") == 0:
+        return "Your plan does not include calls. Upgrade to call other members."
+    if me.call_seconds_left == 0:
+        return "You have used today's call time. It comes back in 24 hours, or upgrade for more."
+    return ""
+
 def messages_page(request, pk=None):
     me, g = me_or_create(request), request.GET
     blocked = data.blocked_ids(request.user)
@@ -164,6 +183,8 @@ def messages_page(request, pk=None):
             messages.error(request, "You can't message this member.")
         elif not other.can_message(me):
             messages.error(request, f"{other.name} only accepts messages from {other.get_allow_messages_from_display().lower()}.")
+        elif message_block_en(me):
+            messages.error(request, message_block_en(me))
         elif form.is_valid():
             d = form.cleaned_data
             Message.objects.create(sender=request.user, to=other, body=d["body"], image=d.get("image"), audio=d.get("voice"),
@@ -185,7 +206,8 @@ def messages_page(request, pk=None):
     return page(request, "members/messages.html", {"me": me, "convos": shown, "other": other, "thread": thread, "form": form, "tab": tab, "f": g,
         "call_ok": call_ok, "call_reason": call_reason,
         "n_all": len([c for c in allc if not c["archived"]]), "n_unread": sum(1 for c in allc if c["unread"]), "state": state,
-        "can_send": bool(other) and other.pk not in blocked and other.can_message(me),
+        "can_send": bool(other) and other.pk not in blocked and other.can_message(me) and not message_block_en(me),
+        "no_send": message_block_en(me), "msgs_left": me.messages_left,
         "emoji": "😊 🙂 😄 🤲 🙏 ❤️ 🌸 🌙 ⭐ 👍 👋 🤝 💐 😇 🕌 📿".split(), "blocked_ids": blocked,
         "today": timezone.localdate(), "yesterday": timezone.localdate() - timedelta(days=1)}, "messages")
 

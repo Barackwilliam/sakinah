@@ -7,7 +7,7 @@
 {% include "members/icons.html" %}
 <main class="cs" id="call" data-id="{{ call.pk }}" data-kind="{{ call.kind }}" data-caller="{{ is_caller|yesno:'1,0' }}" data-answer="{{ answer|yesno:'1,0' }}"
   data-state="{% url 'm_call_state' call.pk %}" data-signal="{% url 'm_call_signal' call.pk %}" data-end="{% url 'm_call_end' call.pk %}"
-  data-accept="{% url 'm_call_answer' call.pk %}" data-back="{{ back }}" data-status="{{ call.status }}">
+  data-accept="{% url 'm_call_answer' call.pk %}" data-back="{{ back }}" data-status="{{ call.status }}" data-cap="{{ cap }}">
   <video class="cs-remote" id="remote" autoplay playsinline></video>
   <audio id="remote-audio" autoplay></audio>
   <div class="cs-bg" style="{% if other.photo %}--bg:url('{{ other.photo.url }}'){% endif %}"></div>

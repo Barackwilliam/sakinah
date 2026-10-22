@@ -192,10 +192,20 @@ def call_why(mine, other, ok, reason):
     """Why the call buttons are off, in Swahili, so the chat can say it instead of hiding them."""
     if ok or reason == "premium": return ""
     if mine is None: return "Kamilisha wasifu wako ili uweze kupiga simu."
+    if reason == "spent": return "Umetumia muda wako wote wa simu leo. Utapata mwingine baada ya masaa 24, au ongeza kifurushi."
     if not other.user_id: return f"{other.first_name} bado hajaanza kutumia simu za Sakinah."
     if reason.startswith("You can't call"): return "Huwezi kumpigia simu mwanachama huyu."
-    if "liked each other" in reason: return f"Mtaweza kupigiana simu baada ya wewe na {other.first_name} kupendana nyote wawili."
     return "Simu haipatikani kwa akaunti hii kwa sasa."
+
+
+def message_block(mine):
+    """Why this member may not send a message right now, in Swahili, or "" when they may."""
+    if mine is None: return "Kamilisha wasifu wako ili uweze kutuma ujumbe."
+    if mine.allowance("daily_messages") == 0:
+        return "Kifurushi chako hakiruhusu kutuma ujumbe. Jiunge na kifurushi kikubwa ili uanze kuwasiliana."
+    if mine.messages_left == 0:
+        return "Umetumia ujumbe wako wote wa leo. Utapata mwingine baada ya masaa 24, au ongeza kifurushi."
+    return ""
 
 def chat_page(request, other=None, form=None):
     """The messages screen: the conversation list on the left and, when one is picked, the chat on the right."""
@@ -210,11 +220,13 @@ def chat_page(request, other=None, form=None):
            "today": today, "yesterday": today - timedelta(days=1), "blocked_ids": blocked, "me_member": mine}
     if other:
         they_blocked_me = bool(other.user_id and mine and Block.objects.filter(user=other.user, member=mine).exists())
-        can_send = other.pk not in blocked and not they_blocked_me and other.can_message(mine)
+        no_send = message_block(mine)
+        can_send = other.pk not in blocked and not they_blocked_me and other.can_message(mine) and not no_send
         call_ok, call_reason = call_permission(mine, other) if mine else (False, "")
         msgs = mark_groups(list(thread_qs(request.user, mine, other)))
         ctx.update({"msgs": msgs, "form": form or ConversationForm(), "can_send": can_send, "call_ok": call_ok, "call_reason": call_reason, "call_why": call_why(mine, other, call_ok, call_reason),
-                    "they_blocked_me": they_blocked_me, "last_id": msgs[-1].pk if msgs else 0})
+                    "they_blocked_me": they_blocked_me, "last_id": msgs[-1].pk if msgs else 0, "no_send": no_send,
+                    "msgs_left": mine.messages_left if mine else 0})
     return render(request, "messages.html", ctx)
 
 def liked_blocked(user):
@@ -233,6 +245,8 @@ def thread(request, pk):
             messages.error(request, "Huwezi kumtumia ujumbe mwanachama huyu.")
         elif not other.can_message(mine):
             messages.error(request, f"{other.first_name} anapokea ujumbe kutoka kwa {other.get_allow_messages_from_display().lower()} pekee.")
+        elif message_block(mine):
+            messages.error(request, message_block(mine))
         elif form.is_valid():
             d = form.cleaned_data
             Message.objects.create(sender=request.user, to=other, body=d["body"], image=d.get("image"), audio=d.get("voice"),

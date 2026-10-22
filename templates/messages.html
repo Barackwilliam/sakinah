@@ -75,6 +75,7 @@
       </div>
 
       {% if can_send %}
+      {% if msgs_left > 0 and msgs_left <= 5 %}<p class="ch-left"><svg><use href="#i-info"/></svg>Umebakiwa na ujumbe {{ msgs_left }} leo. <a href="{% url 'm_membership' %}">Ongeza kifurushi</a></p>{% endif %}
       <form class="ch-form" method="post" enctype="multipart/form-data" id="ch-form">{% csrf_token %}
         <details class="ch-emo"><summary aria-label="Emoji"><svg><use href="#i-smile"/></svg></summary><div>{% for e in emoji %}<button type="button" data-emo="{{ e }}">{{ e }}</button>{% endfor %}</div></details>
         <textarea name="body" rows="1" id="ch-box" placeholder="Andika ujumbe..."></textarea>
@@ -88,7 +89,7 @@
         </div>
       </form>
       {% else %}
-      <p class="ch-locked"><svg><use href="#i-lock"/></svg>{% if other.pk in blocked_ids %}Umemzuia mwanachama huyu.{% elif they_blocked_me %}Huwezi kumtumia ujumbe mwanachama huyu.{% else %}{{ other.first_name }} anapokea ujumbe kutoka kwa {{ other.get_allow_messages_from_display|lower }} pekee.{% endif %}</p>
+      <p class="ch-locked"><svg><use href="#i-lock"/></svg>{% if other.pk in blocked_ids %}Umemzuia mwanachama huyu.{% elif they_blocked_me %}Huwezi kumtumia ujumbe mwanachama huyu.{% elif no_send %}{{ no_send }} <a href="{% url 'm_membership' %}">Angalia vifurushi</a>{% else %}{{ other.first_name }} anapokea ujumbe kutoka kwa {{ other.get_allow_messages_from_display|lower }} pekee.{% endif %}</p>
       {% endif %}
 
       {% else %}
