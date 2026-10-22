@@ -419,3 +419,83 @@ class PasswordResetTests(TestCase):
         body = json.loads(req.data)
         self.assertEqual(req.get_header("Api-key"), "key-1")
         self.assertEqual((body["sender"]["email"], body["to"], body["htmlContent"]), ("no-reply@sakinah.co.tz", [{"email": "a@example.com"}], "<b>hi</b>"))
+
+
+class PublicChatTests(TestCase):
+    def setUp(self):
+        self.me = User.objects.create_user("juma")
+        self.mine = Member.objects.create(user=self.me, name="Juma Ali", age=30, gender="M", city="Arusha")
+        self.her_user = User.objects.create_user("amina2")
+        self.her = Member.objects.create(user=self.her_user, name="Amina Hassan", age=27, gender="F", city="Arusha")
+        self.other = Member.objects.create(name="Zahra Said", age=26, gender="F", city="Mwanza")   # no login yet
+        self.client.force_login(self.me)
+
+    def url(self, m=None):
+        return reverse("thread", args=[m.pk]) if m else reverse("inbox")
+
+    def test_list_search_and_opening_a_chat(self):
+        Message.objects.create(sender=self.her_user, to=self.mine, body="Assalamu Alaikum")
+        Message.objects.create(sender=self.me, to=self.other, body="Habari ya leo")
+        r = self.client.get(self.url())
+        self.assertContains(r, "Amina Hassan"); self.assertContains(r, "Zahra Said")
+        self.assertContains(r, "Mazungumzo yako")                      # nothing opened yet
+        r = self.client.get(self.url(), {"q": "zahra"})
+        self.assertContains(r, "Zahra Said"); self.assertNotContains(r, "Amina Hassan")
+        r = self.client.get(self.url(self.her))
+        self.assertContains(r, "Assalamu Alaikum"); self.assertContains(r, 'id="ch-form"')
+        self.assertTrue(Message.objects.get(sender=self.her_user).read)   # opening the chat marks it read
+
+    def test_sending_text_photo_and_voice(self):
+        import tempfile
+        from io import BytesIO
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from django.test import override_settings
+        from PIL import Image
+        png = BytesIO(); Image.new("RGB", (400, 300), (200, 80, 120)).save(png, "PNG")
+        with tempfile.TemporaryDirectory() as tmp, override_settings(MEDIA_ROOT=tmp):
+            self.assertRedirects(self.client.post(self.url(self.her), {"body": "Habari"}), self.url(self.her))
+            self.client.post(self.url(self.her), {"body": "", "image": SimpleUploadedFile("p.png", png.getvalue(), "image/png")})
+            r = self.client.post(self.url(self.her), {"voice": SimpleUploadedFile("v.webm", b"\x1aE\xdf\xa3" + b"0" * 900, "audio/webm"), "duration": 7},
+                                 HTTP_X_REQUESTED_WITH="fetch")
+            self.assertEqual(r.json(), {"ok": True})
+            texts = list(Message.objects.filter(sender=self.me).values_list("body", flat=True))
+            self.assertEqual(texts, ["Habari", "", ""])
+            self.assertEqual(Message.objects.filter(sender=self.me).last().preview, "🎤 Voice message (0:07)")
+            self.assertTrue(Notification.objects.filter(user=self.her_user, title__startswith="Ujumbe mpya").exists())
+            self.assertEqual(self.client.post(self.url(self.her), {"body": ""}, HTTP_X_REQUESTED_WITH="fetch").status_code, 400)
+
+    def test_blocks_and_message_rules_are_respected(self):
+        Block.objects.create(user=self.me, member=self.her)
+        r = self.client.post(self.url(self.her), {"body": "hujambo"})
+        self.assertFalse(Message.objects.exists())
+        self.assertContains(self.client.get(self.url(self.her)), "Umemzuia mwanachama huyu")
+        self.assertNotContains(self.client.get(self.url()), "Amina Hassan")     # blocked people leave the list
+        Block.objects.all().delete()
+        Block.objects.create(user=self.her_user, member=self.mine)              # she blocked me
+        self.client.post(self.url(self.her), {"body": "hujambo"})
+        self.assertFalse(Message.objects.exists())
+        Block.objects.all().delete()
+        self.her.allow_messages_from = "matched"; self.her.save()
+        self.client.post(self.url(self.her), {"body": "hujambo"})
+        self.assertFalse(Message.objects.exists())
+        self.assertContains(self.client.get(self.url(self.her)), "anapokea ujumbe kutoka")
+
+    def test_feed_brings_new_messages_only(self):
+        first = Message.objects.create(sender=self.me, to=self.her, body="Ya kwanza")
+        r = self.client.get(reverse("thread_feed", args=[self.her.pk]), {"after": first.pk}).json()
+        self.assertEqual((r["html"], r["last"]), ("", first.pk))
+        new = Message.objects.create(sender=self.her_user, to=self.mine, body="Jibu langu")
+        r = self.client.get(reverse("thread_feed", args=[self.her.pk]), {"after": first.pk}).json()
+        self.assertIn("Jibu langu", r["html"]); self.assertEqual(r["last"], new.pk)
+        self.assertNotIn("Ya kwanza", r["html"])
+        new.refresh_from_db(); self.assertTrue(new.read)                        # reading the feed marks them read
+
+    def test_messages_are_grouped_by_day_and_sender(self):
+        from core.views import mark_groups
+        a = Message.objects.create(sender=self.me, to=self.her, body="1")
+        b = Message.objects.create(sender=self.me, to=self.her, body="2")
+        c = Message.objects.create(sender=self.her_user, to=self.mine, body="3")
+        Message.objects.filter(pk=a.pk).update(created=a.created - timedelta(days=1))
+        msgs = mark_groups(list(Message.objects.filter(pk__in=[a.pk, b.pk, c.pk]).order_by("created")))
+        self.assertEqual([m.show_day for m in msgs], [True, True, False])      # a new day starts at b
+        self.assertEqual([m.show_av for m in msgs], [True, True, True])        # b starts the day, c changes sender

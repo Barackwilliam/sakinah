@@ -12,6 +12,7 @@ urlpatterns = [
     path("messages/", views.inbox, name="inbox"),
     path("notifications/", views.notifications, name="notifications"),
     path("messages/<int:pk>/", views.thread, name="thread"),
+    path("messages/<int:pk>/feed/", views.thread_feed, name="thread_feed"),
     path("profile/edit/", views.profile_edit, name="profile_edit"),
     path("signup/", views.signup, name="signup"),
     path("login/", views.LoginView.as_view(), name="login"),

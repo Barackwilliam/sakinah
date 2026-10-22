@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% asset 'css/main.css' %}">
-{% include "partials/img_fallback.html" %}</head><body class="{% block bodyclass %}{% endblock %}">
+{% include "partials/img_fallback.html" %}{% block head %}{% endblock %}</head><body class="{% block bodyclass %}{% endblock %}">
 {% include "partials/icons.html" %}
 {% include "partials/navbar.html" %}
 {% if messages %}<div class="msgs">{% for m in messages %}<p class="msg {{ m.tags }}">{{ m }}</p>{% endfor %}</div>{% endif %}
@@ -16,5 +16,6 @@
 {% include "partials/tabbar.html" %}
 {% if modal_login %}{% include "partials/auth_modal.html" %}{% endif %}
 <script src="{% asset 'js/main.js' %}"></script>
+{% block scripts %}{% endblock %}
 {% include "partials/incoming_call.html" %}
 </body></html>

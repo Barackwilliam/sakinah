@@ -227,6 +227,13 @@ class HideFaceTests(TestCase):
             self.assertEqual(find_faces(np.array(Image.open(p.image.path).convert("RGB"))), [])
             self.assertFalse(old.exists())                                          # the original with the face is gone
 
+    def test_settings_switch_saves_both_the_email_and_the_face_choice(self):
+        self.client.post(reverse("m_settings"), {"section": "account", "account-name": "Zahra", "account-email": "zahra@example.com",
+                                                 "account-gender": "F", "account-city": "Mwanza", "account-hide_face": "on"})
+        self.me.refresh_from_db(); self.user.refresh_from_db()
+        self.assertTrue(self.me.hide_face)
+        self.assertEqual(self.user.email, "zahra@example.com")
+
 
 class CallTests(TestCase):
     def setUp(self):
