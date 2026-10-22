@@ -33,6 +33,8 @@ class PaymentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["payer_name"].required = False
+        if self.instance.pk and self.instance.user_id:      # editing: show the member it already belongs to
+            self.fields["member"].initial = getattr(self.instance.user, "member", None)
     def clean(self):
         d = super().clean()
         m = d.get("member")

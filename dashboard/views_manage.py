@@ -44,7 +44,9 @@ def manage_list(request, key):
     if key == "members": return redirect("dash_members")
     g = request.GET
     pg = Paginator(r.filtered(g), r.per_page).get_page(g.get("page"))
-    rows = [{"obj": o, "cells": [fn(o) for _, fn in r.columns], "link": r.row_link(o) if r.row_link else None} for o in pg.object_list]
+    rows = [{"obj": o, "cells": [fn(o) for _, fn in r.columns], "link": r.row_link(o) if r.row_link else None,
+             "buttons": [(n, r.actions[n][0], r.actions[n][1]) for n, show in r.front.items() if show(o)],
+             "menu": [(n, a[0], a[1]) for n, a in r.actions.items() if not (n in r.front and r.front[n](o))]} for o in pg.object_list]
     params = g.copy(); params.pop("page", None)
     return page(request, "dashboard/res_list.html", {"nav": r.nav, "sub": key, "r": r, "rows": rows, "pg": pg, "f": g, "qs": params.urlencode(),
         "filters": [(k, label, choices()) for k, label, choices, _ in r.filters], "section": section_links(r),

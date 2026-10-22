@@ -7,7 +7,7 @@ from django.core.mail import send_mass_mail
 from django.db import connection
 from django.db.models import Count, Q, Sum
 from django.db.models.functions import TruncMonth
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -623,13 +623,12 @@ def payments(request):
 @staff_required
 @require_POST
 def payment_action(request, pk):
+    """Approve or refund from the overview. Same work, and the same answer, as the transactions list."""
+    from .resources import complete_payment, refund_payment
     p = get_object_or_404(Payment, pk=pk)
-    act = request.POST.get("act")
-    if act == "complete" and p.status == "pending":
-        p.status = "completed"; p.save(update_fields=["status"]); p.activate()
-    elif act == "refund" and p.status == "completed":
-        p.status = "refunded"; p.save(update_fields=["status"])
-    messages.success(request, f"{p.invoice_no} is now {p.get_status_display().lower()}.")
+    act = {"complete": complete_payment, "refund": refund_payment}.get(request.POST.get("act"))
+    if act is None: raise Http404
+    messages.success(request, f"{p.invoice_no} {act(p, request)}.")
     return redirect("dash_payments")
 
 @staff_required
