@@ -229,6 +229,13 @@ class SiteSectionTests(TestCase):
 
 
 class SeedTests(TestCase):
+    def test_every_seeded_member_can_be_reached(self):
+        """A member with no account of their own cannot be called, so the seed gives everyone one."""
+        from django.core.management import call_command
+        call_command("seed", verbosity=0)
+        self.assertFalse(Member.objects.filter(user__isnull=True).exists())
+        self.assertFalse(any(m.user.has_usable_password() for m in Member.objects.all()))   # not a way into the site
+
     def test_seed_runs_twice_and_fits_postgres_smallint(self):
         """SQLite ignores column sizes; PostgreSQL rejects values above 32767 in small integer fields."""
         from django.apps import apps

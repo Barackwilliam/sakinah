@@ -1,11 +1,28 @@
 from datetime import date
 from pathlib import Path
+from django.contrib.auth.models import User
 from django.core.files import File
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 from core.models import *
 from core.seed_data import *
+
+def give_login(member):
+    """Every seeded member needs an account of their own: without one nobody can call them.
+
+    The password is left unusable, so these demo profiles are not a way into the live site;
+    set one from the dashboard when you want to sign in as a sample member.
+    """
+    if member.user_id: return member
+    base = slugify(member.name.split()[0]) or f"member{member.pk}"
+    name, n = f"demo_{base}", 1
+    while User.objects.filter(username=name).exists():
+        n += 1; name = f"demo_{base}{n}"
+    user = User.objects.create(username=name, email=f"{name}@example.com", first_name=member.name.split()[0])
+    user.set_unusable_password(); user.save()
+    member.user = user; member.save(update_fields=["user"])
+    return member
 
 class Command(BaseCommand):
     help = "Load initial Sakinah content and placeholder images (replace images any time via /admin)"
@@ -43,6 +60,7 @@ class Command(BaseCommand):
             for k in blank: setattr(m, k, {"education": edu, "bio": bio}[k])
             if blank: m.save(update_fields=blank)
             attach(m, "photo", IMG / f"{img}.jpg")
+            give_login(m)
         for i, (n, price, period, tagline, popular, features) in enumerate(PLANS):
             plan, _ = Plan.objects.get_or_create(name=n, defaults=dict(price=price, order=i))
             if not plan.features:
@@ -112,8 +130,10 @@ class Command(BaseCommand):
             m, _ = Member.objects.get_or_create(name=n, age=age, defaults=dict(gender=g, city=city, occupation=occ, education=edu, bio=bio,
                 verified=True, compatibility=80 + age % 12, prayer="Regularly"))
             attach(m, "photo", V4 / f"{img}.jpg")
+            give_login(m)
         mo, created = Member.objects.get_or_create(name=MOHAMMED["name"], defaults=MOHAMMED)
         attach(mo, "photo", V4 / "m_mohammed1.jpg")
+        give_login(mo)
         if created:
             for i in range(2, 6):
                 p = V4 / f"m_mohammed{i}.jpg"
