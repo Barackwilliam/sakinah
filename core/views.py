@@ -188,6 +188,15 @@ def conversation_rows(user, mine):
         if mine and msg.to_id == mine.pk and not msg.read: row["unread"] += 1
     return list(rows.values())
 
+def call_why(mine, other, ok, reason):
+    """Why the call buttons are off, in Swahili, so the chat can say it instead of hiding them."""
+    if ok or reason == "premium": return ""
+    if mine is None: return "Kamilisha wasifu wako ili uweze kupiga simu."
+    if not other.user_id: return f"{other.first_name} bado hajaanza kutumia simu za Sakinah."
+    if reason.startswith("You can't call"): return "Huwezi kumpigia simu mwanachama huyu."
+    if "liked each other" in reason: return f"Mtaweza kupigiana simu baada ya wewe na {other.first_name} kupendana nyote wawili."
+    return "Simu haipatikani kwa akaunti hii kwa sasa."
+
 def chat_page(request, other=None, form=None):
     """The messages screen: the conversation list on the left and, when one is picked, the chat on the right."""
     from members.calls import call_permission
@@ -204,7 +213,7 @@ def chat_page(request, other=None, form=None):
         can_send = other.pk not in blocked and not they_blocked_me and other.can_message(mine)
         call_ok, call_reason = call_permission(mine, other) if mine else (False, "")
         msgs = mark_groups(list(thread_qs(request.user, mine, other)))
-        ctx.update({"msgs": msgs, "form": form or ConversationForm(), "can_send": can_send, "call_ok": call_ok, "call_reason": call_reason,
+        ctx.update({"msgs": msgs, "form": form or ConversationForm(), "can_send": can_send, "call_ok": call_ok, "call_reason": call_reason, "call_why": call_why(mine, other, call_ok, call_reason),
                     "they_blocked_me": they_blocked_me, "last_id": msgs[-1].pk if msgs else 0})
     return render(request, "messages.html", ctx)
 

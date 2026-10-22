@@ -433,6 +433,17 @@ class PublicChatTests(TestCase):
     def url(self, m=None):
         return reverse("thread", args=[m.pk]) if m else reverse("inbox")
 
+    def test_the_call_buttons_always_show_and_say_why_when_they_are_off(self):
+        # a Premium member who is not yet a mutual match: the buttons stay, with the reason in Swahili
+        plan = Plan.objects.create(name="Premium", price=30000)
+        Member.objects.filter(pk=self.mine.pk).update(plan=plan, premium_until=timezone.localdate() + timedelta(days=30))
+        r = self.client.get(self.url(self.her))
+        self.assertContains(r, 'class="ch-ib off"', count=2)
+        self.assertContains(r, "Mtaweza kupigiana simu")
+        # a member without a login cannot be called at all
+        r = self.client.get(self.url(self.other))
+        self.assertContains(r, "bado hajaanza kutumia simu")
+
     def test_list_search_and_opening_a_chat(self):
         Message.objects.create(sender=self.her_user, to=self.mine, body="Assalamu Alaikum")
         Message.objects.create(sender=self.me, to=self.other, body="Habari ya leo")

@@ -34,6 +34,15 @@
     document.addEventListener('click', (e) => { const d = $('.ch-emo'); if (d && d.open && !d.contains(e.target)) d.open = false; });
   }
 
+  // calls that are not available yet: say why instead of leaving a dead button
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-why]'); if (!b || !b.dataset.why) return;
+    let t = document.getElementById('call-toast');
+    if (!t) { t = document.createElement('div'); t.id = 'call-toast'; document.body.appendChild(t); }
+    t.textContent = b.dataset.why; t.classList.add('show');
+    clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 4500);
+  });
+
   // new messages while the chat is open
   if (body && body.dataset.feed) {
     let last = +body.dataset.last || 0, busy = false;

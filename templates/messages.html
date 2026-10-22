@@ -45,8 +45,11 @@
           <button class="ch-ib" type="button" title="Mpigie {{ other.first_name }} video" data-call="video" data-start="{{ start_url }}"><svg><use href="#i-video"/></svg></button>
           <button class="ch-ib" type="button" title="Mpigie {{ other.first_name }} simu" data-call="voice" data-start="{{ start_url }}"><svg><use href="#i-phone"/></svg></button>
           {% elif call_reason == "premium" %}
-          <a class="ch-ib up" href="{% url 'm_membership' %}" title="Simu za sauti na video ni huduma ya Premium"><svg><use href="#i-video"/></svg></a>
-          <a class="ch-ib up" href="{% url 'm_membership' %}" title="Simu za sauti na video ni huduma ya Premium"><svg><use href="#i-phone"/></svg></a>
+          <a class="ch-ib up" href="{% url 'm_membership' %}" title="Simu ya video ni huduma ya Premium - bofya kujiunga"><svg><use href="#i-video"/></svg></a>
+          <a class="ch-ib up" href="{% url 'm_membership' %}" title="Simu ya sauti ni huduma ya Premium - bofya kujiunga"><svg><use href="#i-phone"/></svg></a>
+          {% else %}
+          <button class="ch-ib off" type="button" title="{{ call_why }}" data-why="{{ call_why }}"><svg><use href="#i-video"/></svg></button>
+          <button class="ch-ib off" type="button" title="{{ call_why }}" data-why="{{ call_why }}"><svg><use href="#i-phone"/></svg></button>
           {% endif %}
           <details class="ch-menu">
             <summary class="ch-ib" aria-label="Chaguo zaidi"><svg><use href="#i-dots"/></svg></summary>
