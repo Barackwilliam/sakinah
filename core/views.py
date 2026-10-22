@@ -4,13 +4,14 @@ from django.contrib.auth import login, views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Count, Q
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 from django.utils import timezone
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
-from .forms import LOCATIONS, LoginForm, SignupForm, ProfileForm, MessageForm, ReportForm
+from .forms import LOCATIONS, LoginForm, SignupForm, ProfileForm, ConversationForm, ReportForm
 from .models import *
 
 AGES = {"20-35": (20, 35), "25-40": (25, 40), "35+": (35, 99)}
@@ -161,33 +162,99 @@ def profile_edit(request):
         return redirect("member", pk=form.instance.pk)
     return render(request, "profile_edit.html", {"form": form})
 
+EMOJI = "😊 🙂 😄 🤲 🙏 ❤️ 🌸 🌙 ⭐ 👍 👋 🤝 💐 😇 🕌 📿".split()
+
 def thread_qs(user, mine, other):
     q = Q(sender=user, to=other)
     if other.user_id and mine: q |= Q(sender=other.user, to=mine)
-    return Message.objects.filter(q).select_related("sender")
+    return Message.objects.filter(q).select_related("sender").order_by("created")
+
+def mark_groups(msgs, prev=None):
+    """Flag which messages start a new day or a new run from the same person, so the chat is grouped like a messenger."""
+    for m in msgs:
+        m.show_day = prev is None or timezone.localtime(m.created).date() != timezone.localtime(prev.created).date()
+        m.show_av = prev is None or prev.sender_id != m.sender_id or m.show_day
+        prev = m
+    return msgs
+
+def conversation_rows(user, mine):
+    """One row per person: the other member, the last message, and how many of their messages are still unread."""
+    rows = {}
+    q = Q(sender=user) | (Q(to=mine) if mine else Q(pk__in=[]))
+    for msg in Message.objects.filter(q).select_related("to", "sender__member").order_by("-created"):
+        other = msg.to if msg.sender_id == user.id else getattr(msg.sender, "member", None)
+        if other is None or (mine and other.pk == mine.pk): continue
+        row = rows.setdefault(other.pk, {"member": other, "last": msg, "unread": 0})
+        if mine and msg.to_id == mine.pk and not msg.read: row["unread"] += 1
+    return list(rows.values())
+
+def chat_page(request, other=None, form=None):
+    """The messages screen: the conversation list on the left and, when one is picked, the chat on the right."""
+    from members.calls import call_permission
+    mine = me(request)
+    blocked = liked_blocked(request.user)
+    rows = [c for c in conversation_rows(request.user, mine) if c["member"].pk not in blocked]
+    q = (request.GET.get("q") or "").strip()
+    shown = [c for c in rows if q.lower() in c["member"].name.lower() or q.lower() in c["last"].preview.lower()] if q else rows
+    today = timezone.localdate()
+    ctx = {"convos": shown, "other": other, "f": request.GET, "n_unread": sum(c["unread"] for c in rows), "emoji": EMOJI,
+           "today": today, "yesterday": today - timedelta(days=1), "blocked_ids": blocked, "me_member": mine}
+    if other:
+        they_blocked_me = bool(other.user_id and mine and Block.objects.filter(user=other.user, member=mine).exists())
+        can_send = other.pk not in blocked and not they_blocked_me and other.can_message(mine)
+        call_ok, call_reason = call_permission(mine, other) if mine else (False, "")
+        msgs = mark_groups(list(thread_qs(request.user, mine, other)))
+        ctx.update({"msgs": msgs, "form": form or ConversationForm(), "can_send": can_send, "call_ok": call_ok, "call_reason": call_reason,
+                    "they_blocked_me": they_blocked_me, "last_id": msgs[-1].pk if msgs else 0})
+    return render(request, "messages.html", ctx)
+
+def liked_blocked(user):
+    return set(Block.objects.filter(user=user).values_list("member_id", flat=True))
 
 @login_required
 def thread(request, pk):
     other, mine = get_object_or_404(Member, pk=pk), me(request)
-    if other == mine: return redirect("inbox")
-    form = MessageForm(request.POST or None)
-    if form.is_valid():
-        Message.objects.create(sender=request.user, to=other, body=form.cleaned_data["body"])
-        return redirect("thread", pk=pk)
+    if mine and other.pk == mine.pk: return redirect("inbox")
+    form = None
+    if request.method == "POST":
+        form = ConversationForm(request.POST, request.FILES)
+        blocked = liked_blocked(request.user)
+        they_blocked_me = bool(other.user_id and mine and Block.objects.filter(user=other.user, member=mine).exists())
+        if other.pk in blocked or they_blocked_me:
+            messages.error(request, "Huwezi kumtumia ujumbe mwanachama huyu.")
+        elif not other.can_message(mine):
+            messages.error(request, f"{other.first_name} anapokea ujumbe kutoka kwa {other.get_allow_messages_from_display().lower()} pekee.")
+        elif form.is_valid():
+            d = form.cleaned_data
+            Message.objects.create(sender=request.user, to=other, body=d["body"], image=d.get("image"), audio=d.get("voice"),
+                                   duration=min(d.get("duration") or 0, 120) if d.get("voice") else 0)
+            if other.user_id and other.notify_messages and mine:
+                Notification.objects.create(user=other.user, title=f"Ujumbe mpya kutoka {mine.name}", link=reverse("thread", args=[mine.pk]))
+            if request.headers.get("x-requested-with") == "fetch": return JsonResponse({"ok": True})
+            return redirect("thread", pk=pk)
+        if request.headers.get("x-requested-with") == "fetch":
+            errs = [str(m) for m in messages.get_messages(request)] + [e for v in form.errors.values() for e in v]
+            return JsonResponse({"ok": False, "error": errs[0] if errs else "Ujumbe haukutumwa."}, status=400)
     if mine and other.user_id: Message.objects.filter(sender=other.user, to=mine, read=False).update(read=True)
-    return render(request, "thread.html", {"other": other, "msgs": thread_qs(request.user, mine, other), "form": form})
+    return chat_page(request, other, form)
+
+@login_required
+def thread_feed(request, pk):
+    """New messages since ?after=, so an open chat updates itself without reloading the page."""
+    other, mine = get_object_or_404(Member, pk=pk), me(request)
+    after = int(request.GET.get("after") or 0) if (request.GET.get("after") or "0").isdigit() else 0
+    before = thread_qs(request.user, mine, other).filter(pk__lte=after).last() if after else None
+    msgs = mark_groups(list(thread_qs(request.user, mine, other).filter(pk__gt=after)[:50]), before)
+    if mine and other.user_id: Message.objects.filter(sender=other.user, to=mine, read=False).update(read=True)
+    today = timezone.localdate()
+    html = "".join(render_to_string("partials/chat_msg.html", {"msg": m, "other": other, "user": request.user,
+                                                               "today": today, "yesterday": today - timedelta(days=1)}, request) for m in msgs)
+    seen = bool(mine) and Message.objects.filter(sender=request.user, to=other, read=False).count() == 0
+    return JsonResponse({"html": html, "last": msgs[-1].pk if msgs else after, "online": other.is_online, "seen": seen})
 
 @login_required
 def inbox(request):
-    mine, convos = me(request), {}
-    q = Q(sender=request.user) | (Q(to=mine) if mine else Q(pk__in=[]))
-    for msg in Message.objects.filter(q).select_related("to", "sender__member").order_by("-created"):
-        other = msg.to if msg.sender_id == request.user.id else getattr(msg.sender, "member", None)
-        if other is None or other == mine: continue
-        c = convos.setdefault(other.pk, {"member": other, "last": msg, "unread": 0})
-        if msg.to == mine and not msg.read: c["unread"] += 1
-    return render(request, "inbox.html", {"convos": convos.values()})
-
+    return chat_page(request)
 
 @login_required
 def notifications(request):

@@ -13,12 +13,12 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from core.forms import LOCATIONS
+from core.forms import ConversationForm, LOCATIONS
 from core.models import (Block, ConversationState, Event, EventCategory, EventRegistration, EventSave, Like, Member, MemberPhoto,
                          Message, Notification, Payment, Plan, PremiumPerk, ProfileView, SearchLog, Shortlist, SiteSetting, SupportTicket)
 from core.views import safe_next
 from . import data
-from .forms import (AccountForm, ConversationForm, MemberProfileForm, PaymentRequestForm, PhotoForm, PreferencesForm, PrivacyForm, ProfileSettingsForm, SettingsPrefsForm,
+from .forms import (AccountForm, MemberProfileForm, PaymentRequestForm, PhotoForm, PreferencesForm, PrivacyForm, ProfileSettingsForm, SettingsPrefsForm,
                     TicketForm, NotifyForm, AppearanceForm)
 
 AGES = [("18", "18"), ("20", "20"), ("25", "25"), ("30", "30"), ("35", "35"), ("40", "40"), ("45", "45"), ("50", "50"), ("60", "60+")]
@@ -242,9 +242,9 @@ def hide_face_on(request, field):
     from core.faces import hide_faces
     try:
         with field.open("rb") as fh: data = fh.read()
-        hidden, n = hide_faces(data)
+        hidden, _ = hide_faces(data)
     except Exception:
-        hidden, n = None, 0
+        hidden = None
     if not hidden:
         messages.error(request, "We could not find a face in this photo, so it was left as it is."); return
     old = field.name

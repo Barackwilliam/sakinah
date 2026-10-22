@@ -751,8 +751,9 @@ body{font-size:14.5px}.wrap,.page{padding-left:16px;padding-right:16px}
 .hm-panel{padding:16px}.hm-promise-in{grid-template-columns:1fr;padding:16px}.hm-home-t{align-items:flex-start}.hm-home-ic{width:46px;height:46px;border-radius:14px}
 .hm-dest-intro{flex-direction:column;align-items:stretch}.hm-dest-intro img{width:100%;height:140px}}
 /* seven header links: tighten them on laptop widths so nothing spills past the screen edge */
-@media(min-width:1101px) and (max-width:1420px){.nav-in{gap:12px}.nav-links{gap:0}.nav-links>a{padding:9px 8px;gap:5px;font-size:13.5px}.nav-links>a.on:after{left:8px;right:8px}.nav-auth{gap:8px}.nav-auth .btn{padding:10px 15px}}
-@media(min-width:1101px) and (max-width:1240px){.nav-links>a{padding:9px 6px;font-size:13px}.logo-text b{font-size:26px}}
+
+@media(min-width:1101px) and (max-width:1260px){.nav-links>a{padding:9px 6px;font-size:13px}.logo-text b{font-size:26px}
+.nav-auth .ibtn.plain{display:none}}   /* the search button goes: "Find a Match" is right there in the menu */
 .hm-strip .hm-all b,.hm-strip .hm-all.on b{color:#fff}
 .hm-strip{grid-auto-columns:minmax(84px,1fr)}.hm-strip b{overflow:hidden;text-overflow:ellipsis;font-size:11.5px}
 .hm-chk.round{white-space:nowrap}.hm-chk.round .hm-stars{width:54px;height:10px;-webkit-mask-size:10.8px 10px;mask-size:10.8px 10px}
@@ -761,3 +762,9 @@ body{font-size:14.5px}.wrap,.page{padding-left:16px;padding-right:16px}
 .hm-bprice b{white-space:nowrap;font-size:24px}
 @media(max-width:640px){.hm-tools{flex-wrap:wrap}.hm-sort{flex:1 1 100%;order:3}.hm-sort .hm-sel{flex:1}.hm-view{margin-left:auto}
 .hm-gthumbs>.hm-gall{aspect-ratio:auto;padding:11px!important}}
+
+/* Seven header links plus, for a signed-in member, four icon buttons and Logout: the row is wider than the 1280px
+   header box, so it is kept compact on every desktop width instead of spilling past the right edge. */
+@media(min-width:1101px){
+.nav-in{gap:10px}.nav-links{gap:0}.nav-links>a{padding:9px 8px;gap:5px;font-size:13.5px}.nav-links>a.on:after{left:8px;right:8px}
+.nav-auth{gap:6px}.nav-auth .btn{padding:10px 14px;font-size:13.5px}.nav-auth .msgs-l{padding:10px 10px}.nav-auth .me-l{padding:5px}}

@@ -1,0 +1,19 @@
+{% if msg.show_day %}<div class="ch-day"><span>{% if msg.created|date:"Ymd" == today|date:"Ymd" %}Leo{% elif msg.created|date:"Ymd" == yesterday|date:"Ymd" %}Jana{% else %}{{ msg.created|date:"j M Y" }}{% endif %}</span></div>{% endif %}
+{% if msg.kind == "call" %}
+<div class="ch-log{% if 'Missed' in msg.body or 'declined' in msg.body %} miss{% endif %}"><span><svg><use href="#i-{% if 'ideo' in msg.body %}video{% else %}phone{% endif %}"/></svg>{{ msg.body }}<time>{{ msg.created|time:"H:i" }}</time></span></div>
+{% elif msg.sender_id == user.id %}
+<div class="ch-b me" data-id="{{ msg.pk }}"><div class="ch-bb">
+  {% if msg.image %}<a class="ch-img" href="{{ msg.image.url }}" target="_blank" rel="noopener"><img loading="lazy" decoding="async" src="{{ msg.image.url }}" alt=""></a>{% endif %}
+  {% if msg.audio %}{% include "partials/voice_note.html" %}{% endif %}
+  {% if msg.body %}<p>{{ msg.body|linebreaksbr }}</p>{% endif %}
+  <time>{{ msg.created|time:"H:i" }}<svg class="ch-tick{% if msg.read %} seen{% endif %}"><use href="#i-tick2"/></svg></time>
+</div></div>
+{% else %}
+<div class="ch-b them" data-id="{{ msg.pk }}">{% if msg.show_av %}<span class="ch-av avsm">{% if other.photo %}<img loading="lazy" decoding="async" src="{{ other.photo.url }}" alt="">{% else %}<b>{{ other.name|first }}</b>{% endif %}</span>{% else %}<span class="ch-av avsm ghost"></span>{% endif %}
+  <div class="ch-bb">
+    {% if msg.image %}<a class="ch-img" href="{{ msg.image.url }}" target="_blank" rel="noopener"><img loading="lazy" decoding="async" src="{{ msg.image.url }}" alt=""></a>{% endif %}
+    {% if msg.audio %}{% include "partials/voice_note.html" %}{% endif %}
+    {% if msg.body %}<p>{{ msg.body|linebreaksbr }}</p>{% endif %}
+    <time>{{ msg.created|time:"H:i" }}</time>
+  </div></div>
+{% endif %}

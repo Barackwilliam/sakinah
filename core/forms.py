@@ -72,8 +72,28 @@ class ProfileForm(forms.ModelForm):
     def sections(self):
         return [(title, icon, [self[f] for f in names]) for title, icon, names in self.SECTIONS]
 
-class MessageForm(forms.Form):
-    body = forms.CharField(max_length=1000, label="", widget=forms.Textarea(attrs={"rows": 2, "placeholder": "Andika ujumbe wako..."}))
+VOICE_MAX_SECONDS, VOICE_MAX_BYTES = 120, 4 * 1024 * 1024
+VOICE_TYPES = {"audio/webm": "webm", "audio/ogg": "ogg", "audio/mp4": "m4a", "audio/x-m4a": "m4a", "audio/aac": "aac", "audio/mpeg": "mp3",
+               "video/webm": "webm", "video/mp4": "m4a"}   # some browsers label recorded sound as video
+
+class ConversationForm(forms.Form):
+    """One chat message: text, a photo, or a voice note (used by both the public chat and the member area)."""
+    body = forms.CharField(max_length=1000, required=False, widget=forms.TextInput(attrs={"placeholder": "Andika ujumbe wako hapa...", "autocomplete": "off"}))
+    image = forms.ImageField(required=False)
+    voice = forms.FileField(required=False)
+    duration = forms.IntegerField(required=False, min_value=0, max_value=VOICE_MAX_SECONDS + 5)
+    def clean_voice(self):
+        v = self.cleaned_data.get("voice")
+        if not v: return v
+        ctype = (getattr(v, "content_type", "") or "").split(";")[0].strip().lower()
+        if ctype not in VOICE_TYPES: raise forms.ValidationError("That voice note format is not supported.")
+        if v.size > VOICE_MAX_BYTES: raise forms.ValidationError("Voice notes can be up to 2 minutes long.")
+        v.name = f"voice.{VOICE_TYPES[ctype]}"   # never trust the uploaded file name
+        return v
+    def clean(self):
+        d = super().clean()
+        if not d.get("body") and not d.get("image") and not d.get("voice"): raise forms.ValidationError("Write a message, attach a photo or record a voice note.")
+        return d
 
 
 class LoginForm(AuthenticationForm):
