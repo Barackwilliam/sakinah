@@ -105,6 +105,8 @@ class FlowTests(TestCase):
         juma = Member.objects.get(user__username="juma")
         amina_user = User.objects.create_user("amina", "a@example.com", "S3cure-pass-123")
         self.amina.user = amina_user; self.amina.save()
+        plan = Plan.objects.create(name="Chat test", price=5000, daily_messages=-1)   # messaging needs a plan that allows it
+        Member.objects.filter(pk__in=[juma.pk, self.amina.pk]).update(plan=plan, premium_until=date.today() + timedelta(days=30))
         self.client.post(reverse("thread", args=[self.amina.pk]), {"body": "Assalaam alaikum"})
         self.assertEqual(Message.objects.get().to, self.amina)
         self.client.force_login(amina_user)
@@ -218,8 +220,10 @@ class SiteSectionTests(TestCase):
         self.client.post(url); self.assertEqual(self.event.registrations.count(), 0)
 
     def test_plan_features(self):
-        p = Plan.objects.create(name="Gold", price=50000, features="Unlimited messages\n-Incognito mode", popular=True)
-        self.assertEqual(p.feature_list, [(True, "Unlimited messages"), (False, "Incognito mode")])
+        p = Plan.objects.create(name="Gold", price=50000, features="Priority support\n-Incognito mode", popular=True,
+                                daily_messages=-1, daily_call_seconds=300)
+        self.assertEqual(p.feature_list, [(True, "Unlimited messages"), (True, "5 minutes of calls a day"),
+                                          (True, "Priority support"), (False, "Incognito mode")])
         r = self.client.get(reverse("premium"))
         self.assertContains(r, "Most Popular"); self.assertContains(r, "Incognito mode")
 
@@ -428,21 +432,28 @@ class PublicChatTests(TestCase):
         self.her_user = User.objects.create_user("amina2")
         self.her = Member.objects.create(user=self.her_user, name="Amina Hassan", age=27, gender="F", city="Arusha")
         self.other = Member.objects.create(name="Zahra Said", age=26, gender="F", city="Mwanza")   # no login yet
+        self.plan = Plan.objects.create(name="Chat test", price=5000, daily_messages=-1, daily_call_seconds=0)
+        Member.objects.filter(pk=self.mine.pk).update(plan=self.plan, premium_until=timezone.localdate() + timedelta(days=30))
+        self.mine.refresh_from_db()
         self.client.force_login(self.me)
 
     def url(self, m=None):
         return reverse("thread", args=[m.pk]) if m else reverse("inbox")
 
     def test_the_call_buttons_always_show_and_say_why_when_they_are_off(self):
-        # a Premium member who is not yet a mutual match: the buttons stay, with the reason in Swahili
-        plan = Plan.objects.create(name="Premium", price=30000)
-        Member.objects.filter(pk=self.mine.pk).update(plan=plan, premium_until=timezone.localdate() + timedelta(days=30))
+        # a member without a login cannot be called at all: grey buttons, with the reason in Swahili
+        Plan.objects.filter(pk=self.plan.pk).update(daily_call_seconds=300)
+        r = self.client.get(self.url(self.other))
+        self.assertContains(r, 'class="ch-ib off"', count=2)
+        self.assertContains(r, "bado hajaanza kutumia simu")
+        # today's call time spent: still two buttons, now saying so
+        Call.objects.create(caller=self.me, callee=self.her_user, status="ended", billed_seconds=300)
         r = self.client.get(self.url(self.her))
         self.assertContains(r, 'class="ch-ib off"', count=2)
-        self.assertContains(r, "Mtaweza kupigiana simu")
-        # a member without a login cannot be called at all
-        r = self.client.get(self.url(self.other))
-        self.assertContains(r, "bado hajaanza kutumia simu")
+        self.assertContains(r, "Umetumia muda wako wote wa simu leo")
+        # a plan with no call time at all points at the plans instead
+        Plan.objects.filter(pk=self.plan.pk).update(daily_call_seconds=0)
+        self.assertContains(self.client.get(self.url(self.her)), "ch-ib up")
 
     def test_list_search_and_opening_a_chat(self):
         Message.objects.create(sender=self.her_user, to=self.mine, body="Assalamu Alaikum")
@@ -477,7 +488,7 @@ class PublicChatTests(TestCase):
 
     def test_blocks_and_message_rules_are_respected(self):
         Block.objects.create(user=self.me, member=self.her)
-        r = self.client.post(self.url(self.her), {"body": "hujambo"})
+        self.client.post(self.url(self.her), {"body": "hujambo"})
         self.assertFalse(Message.objects.exists())
         self.assertContains(self.client.get(self.url(self.her)), "Umemzuia mwanachama huyu")
         self.assertNotContains(self.client.get(self.url()), "Amina Hassan")     # blocked people leave the list
@@ -510,3 +521,78 @@ class PublicChatTests(TestCase):
         msgs = mark_groups(list(Message.objects.filter(pk__in=[a.pk, b.pk, c.pk]).order_by("created")))
         self.assertEqual([m.show_day for m in msgs], [True, True, False])      # a new day starts at b
         self.assertEqual([m.show_av for m in msgs], [True, True, True])        # b starts the day, c changes sender
+
+
+class PlanAllowanceTests(TestCase):
+    """What each plan may send and call in 24 hours."""
+    def setUp(self):
+        self.me = User.objects.create_user("juma3")
+        self.mine = Member.objects.create(user=self.me, name="Juma Ali", age=30, gender="M", city="Arusha")
+        self.her_user = User.objects.create_user("amina3")
+        self.her = Member.objects.create(user=self.her_user, name="Amina Hassan", age=27, gender="F", city="Arusha")
+        self.client.force_login(self.me)
+
+    def on(self, messages_a_day, call_seconds):
+        plan = Plan.objects.create(name="Test", price=1000, daily_messages=messages_a_day, daily_call_seconds=call_seconds)
+        Member.objects.filter(pk=self.mine.pk).update(plan=plan, premium_until=timezone.localdate() + timedelta(days=30))
+        self.mine.refresh_from_db()
+        return plan
+
+    def send(self, body="Habari"):
+        return self.client.post(reverse("thread", args=[self.her.pk]), {"body": body})
+
+    def test_a_member_without_a_plan_can_read_but_not_send(self):
+        r = self.client.get(reverse("thread", args=[self.her.pk]))
+        self.assertContains(r, "Kifurushi chako hakiruhusu kutuma ujumbe")
+        self.send()
+        self.assertEqual(Message.objects.count(), 0)
+
+    def test_a_plan_stops_at_its_daily_count(self):
+        self.on(3, 30)
+        for i in range(3): self.send(f"Ujumbe {i}")
+        self.assertEqual(Message.objects.count(), 3)
+        self.send("Wa nne")
+        self.assertEqual(Message.objects.count(), 3)                       # the fourth is refused
+        self.assertEqual(self.mine.messages_left, 0)
+        r = self.client.get(reverse("thread", args=[self.her.pk]))
+        self.assertContains(r, "Umetumia ujumbe wako wote wa leo")
+
+    def test_unlimited_means_unlimited(self):
+        self.on(-1, -1)
+        for i in range(12): self.send(f"Ujumbe {i}")
+        self.assertEqual(Message.objects.count(), 12)
+        self.assertEqual(self.mine.messages_left, -1)
+        self.assertTrue(self.mine.can_send_messages)
+
+    def test_call_logs_do_not_eat_the_message_allowance(self):
+        self.on(2, 60)
+        Message.objects.create(sender=self.her_user, to=self.mine, body="Missed voice call", kind="call")
+        Message.objects.create(sender=self.me, to=self.her, body="Voice call", kind="call")
+        self.assertEqual(self.mine.messages_left, 2)
+
+    def test_calls_need_call_time_on_the_plan(self):
+        from members.calls import call_permission
+        self.assertEqual(call_permission(self.mine, self.her), (False, "premium"))   # no plan at all
+        self.on(10, 30)
+        self.assertEqual(call_permission(self.mine, self.her), (True, ""))
+        Call.objects.create(caller=self.me, callee=self.her_user, kind="voice", status="ended",
+                            answered_at=timezone.now(), ended_at=timezone.now(), billed_seconds=30)
+        self.assertEqual(self.mine.call_seconds_left, 0)
+        self.assertEqual(call_permission(self.mine, self.her), (False, "spent"))
+
+    def test_a_call_is_capped_at_the_time_that_is_left_and_is_billed(self):
+        from members.calls import call_cap, finish
+        self.on(10, 90)
+        Call.objects.create(caller=self.me, callee=self.her_user, status="ended", billed_seconds=60)
+        call = Call.objects.create(caller=self.me, callee=self.her_user, status="accepted",
+                                   answered_at=timezone.now() - timedelta(seconds=5))
+        self.assertEqual(call_cap(call), 30)                               # 90 allowed, 60 already spent
+        finish(call, "ended")
+        call.refresh_from_db()
+        self.assertGreaterEqual(call.billed_seconds, 5)
+
+    def test_the_plan_card_prints_the_allowance(self):
+        plan = Plan.objects.create(name="Gold test", price=50000, daily_messages=100, daily_call_seconds=300)
+        self.assertEqual(plan.allowance_lines, [(True, "100 messages a day"), (True, "5 minutes of calls a day")])
+        free = Plan.objects.create(name="Free test", price=0)
+        self.assertEqual(free.allowance_lines, [(False, "No messaging"), (False, "No voice or video calls")])

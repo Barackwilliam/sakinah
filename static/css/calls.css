@@ -35,6 +35,7 @@
 .cs.connected .cs-pulse{animation:none;opacity:0}
 .cs-who h1{font:700 30px 'Playfair Display',Georgia,serif;margin:0 0 6px}
 .cs-status{margin:0;font-size:15px;opacity:.85;min-height:22px}.cs-timer{margin:4px 0 0;font-size:16px;font-variant-numeric:tabular-nums;letter-spacing:.5px}
+.cs-timer.low{color:#ffd166}
 .cs.has-video .cs-timer{position:fixed;top:calc(52px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:rgba(0,0,0,.4);padding:4px 12px;border-radius:999px}
 .cs-self{position:absolute;z-index:3;right:16px;top:calc(60px + env(safe-area-inset-top));width:min(28vw,180px);aspect-ratio:3/4;object-fit:cover;border-radius:14px;border:2px solid rgba(255,255,255,.7);background:#222;box-shadow:0 8px 24px rgba(0,0,0,.4);transform:scaleX(-1)}
 .callpage.voice .cs-self,.cs.nocam .cs-self,.cs.selfoff .cs-self{display:none}

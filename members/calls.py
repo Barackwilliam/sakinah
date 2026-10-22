@@ -9,24 +9,31 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 from core.ice import ice_servers
 from core.models import Block, Call, CallSignal, Member, Message, Notification
-from . import data
 
 def call_permission(me, other):
-    """(allowed, reason) for `me` calling `other`: a Premium member calling a mutual match, with no block either way."""
+    """(allowed, reason) for `me` calling `other`: a plan with call time left, and no block either way."""
     if other is None or not other.user_id or other.pk == me.pk: return False, "This member can't receive calls."
     if not me.is_active_member or not other.is_active_member: return False, "Calls are not available for this account."
     if Block.objects.filter(Q(user=me.user, member=other) | Q(user=other.user, member=me)).exists():
         return False, "You can't call this member."
-    if not me.is_premium: return False, "premium"
-    if not data.mutual(me.user, me).filter(pk=other.pk).exists():
-        return False, f"You can call {other.first_name} once you have both liked each other."
+    if me.allowance("daily_call_seconds") == 0: return False, "premium"
+    if me.call_seconds_left == 0: return False, "spent"
     return True, ""
+
+def call_cap(call):
+    """Seconds this call may still run on the caller's daily allowance, or None when the plan is unlimited."""
+    me = getattr(call.caller, "member", None)
+    if me is None: return 0
+    allowed = me.allowance("daily_call_seconds")
+    if allowed < 0: return None
+    return max(0, allowed - (me.used_today("daily_call_seconds") - call.seconds))
 
 def finish(call, status):
     """Close a call and leave a line in the chat ("Missed video call", "Voice call · 2:31")."""
     if not call.live: return call
     call.status, call.ended_at = status, timezone.now()
-    call.save(update_fields=["status", "ended_at"])
+    call.billed_seconds = call.seconds                       # what this call took off the caller's daily allowance
+    call.save(update_fields=["status", "ended_at", "billed_seconds"])
     kind = call.get_kind_display().lower()
     text = {"ended": f"{kind.capitalize()} · {call.duration_text}", "declined": f"{kind.capitalize()} declined",
             "missed": f"Missed {kind}", "cancelled": f"Missed {kind}"}[status]
@@ -59,7 +66,10 @@ def start(request, pk):
     if not ok:
         if reason == "premium":
             return JsonResponse({"ok": False, "premium": True, "url": reverse("m_membership"),
-                                 "error": "Voice and video calls are a Premium feature. Upgrade to call your matches."}, status=403)
+                                 "error": "Your plan does not include calls. Upgrade to call other members."}, status=403)
+        if reason == "spent":
+            return JsonResponse({"ok": False, "premium": True, "url": reverse("m_membership"),
+                                 "error": "You have used today's call time. It comes back in 24 hours, or upgrade for more."}, status=403)
         return JsonResponse({"ok": False, "error": reason}, status=403)
     tidy(Call.objects.filter(Q(caller=other.user) | Q(callee=other.user) | Q(caller=request.user) | Q(callee=request.user)))
     if Call.objects.filter(Q(caller=other.user) | Q(callee=other.user), status__in=["ringing", "accepted"]).exists():
@@ -89,7 +99,8 @@ def screen(request, pk):
     if not call.live:
         return redirect(reverse("m_messages_with", args=[other.pk]) if other else reverse("m_messages"))
     return render(request, "members/call.html", {"call": call, "other": other, "is_caller": me_caller, "answer": request.GET.get("answer") == "1",
-        "ice": ice_servers(), "back": reverse("m_messages_with", args=[other.pk]) if other else reverse("m_messages")})
+        "ice": ice_servers(), "cap": call_cap(call) or 0,
+        "back": reverse("m_messages_with", args=[other.pk]) if other else reverse("m_messages")})
 
 @login_required
 @require_POST
@@ -117,9 +128,11 @@ def state(request, pk):
     """Call status plus the other browser's connection messages newer than ?after=."""
     call = my_call(request, pk)
     if call.expired(): finish(call, "missed")
+    cap = call_cap(call)
+    if call.status == "accepted" and cap is not None and call.seconds >= cap: finish(call, "ended")
     after = int(request.GET.get("after") or 0) if (request.GET.get("after") or "0").isdigit() else 0
     sig = call.signals.filter(pk__gt=after).exclude(sender=request.user).values("pk", "kind", "data")[:100]
-    return JsonResponse({"status": call.status, "seconds": call.seconds, "signals": [{"id": s["pk"], "kind": s["kind"], "data": s["data"]} for s in sig]})
+    return JsonResponse({"status": call.status, "seconds": call.seconds, "cap": cap or 0, "signals": [{"id": s["pk"], "kind": s["kind"], "data": s["data"]} for s in sig]})
 
 @login_required
 @require_POST

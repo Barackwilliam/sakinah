@@ -18,6 +18,7 @@ class Call(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     answered_at = models.DateTimeField(null=True, blank=True)
     ended_at = models.DateTimeField(null=True, blank=True)
+    billed_seconds = models.PositiveIntegerField(default=0, help_text="How long the call ran, kept for the caller's daily allowance.")
     class Meta:
         ordering = ["-created"]
         indexes = [models.Index(fields=["callee", "status"]), models.Index(fields=["caller", "status"])]

@@ -178,12 +178,17 @@ class Registrations(Resource):
 @register("plans")
 class Plans(Resource):
     title, icon, nav, model = "Membership Plans", "m-crown", "plans", Plan
-    form = model_form(Plan, ["name", "price", "period", "order", "tagline", "features", "popular", "icon"], widgets={"features": AREA(8)},
-                      help={"features": "One feature per line. Start a line with - for a feature the plan does NOT include. Write 'All Silver features' to include the previous plan."})
+    form = model_form(Plan, ["name", "price", "period", "order", "tagline", "daily_messages", "daily_call_seconds", "features", "popular", "icon"],
+                      widgets={"features": AREA(8)},
+                      help={"features": "One feature per line. Start a line with - for a feature the plan does NOT include. Write 'All Silver features' to include the previous plan.",
+                            "daily_messages": "Messages this plan may send in 24 hours. 0 = none, -1 = unlimited.",
+                            "daily_call_seconds": "Voice and video call time in 24 hours, in seconds (60 = 1 minute). 0 = none, -1 = unlimited."})
     search, ordering = ["name"], ["order", "pk"]
     columns = [("", thumb("icon")), ("Plan", bold("name", lambda o: o.tagline)), ("Price", lambda o: f"TSh {o.price:,} {o.period}"),
+               ("Per day", lambda o: f"{'Unlimited' if o.daily_messages < 0 else o.daily_messages} messages · "
+                                     f"{'Unlimited' if o.daily_call_seconds < 0 else str(o.daily_call_seconds // 60) + ' min' if o.daily_call_seconds >= 60 else str(o.daily_call_seconds) + ' sec'} calls"),
                ("Active members", lambda o: o.members.filter(premium_until__gte=date.today()).count() if o.price else "—"),
-               ("Most popular", yesno("popular", "Yes", "—")), ("Order", lambda o: o.order)]
+               ("Most popular", yesno("popular", "Yes", "—"))]
 
 @register("perks")
 class Perks(Resource):

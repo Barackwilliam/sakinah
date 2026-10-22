@@ -66,6 +66,7 @@
       {% endfor %}
     </div>
     {% if can_send %}
+    {% if msgs_left > 0 and msgs_left <= 5 %}<p class="cnote warn"><svg><use href="#m-info"/></svg>{{ msgs_left }} message{{ msgs_left|pluralize }} left today. <a href="{% url 'm_membership' %}">Upgrade</a></p>{% endif %}
     <form class="cform" method="post" enctype="multipart/form-data">{% csrf_token %}
       <details class="cemo"><summary aria-label="Emoji"><svg><use href="#m-smile"/></svg></summary><div>{% for e in emoji %}<button type="button" data-emo="{{ e }}">{{ e }}</button>{% endfor %}</div></details>
       <textarea name="body" rows="1" placeholder="Andika ujumbe wako hapa..." id="cbox"></textarea>
@@ -78,7 +79,7 @@
         <button type="button" class="crec-send" aria-label="Send voice note"><svg><use href="#m-send"/></svg></button></div>
     </form>
     {% else %}
-    <p class="cnote"><svg><use href="#m-lock"/></svg>{% if other.pk in blocked_ids %}You blocked this member.{% else %}{{ other.first_name }} only accepts messages from {{ other.get_allow_messages_from_display|lower }}.{% endif %}</p>
+    <p class="cnote"><svg><use href="#m-lock"/></svg>{% if other.pk in blocked_ids %}You blocked this member.{% elif no_send %}{{ no_send }} <a href="{% url 'm_membership' %}">See plans</a>{% else %}{{ other.first_name }} only accepts messages from {{ other.get_allow_messages_from_display|lower }}.{% endif %}</p>
     {% endif %}
     {% else %}
     <div class="cstart big"><svg><use href="#m-chat-o"/></svg><h3>Your conversations</h3><p>Pick a conversation or find someone to talk to.</p><a class="btn" href="{% url 'm_find' %}">Find a Match</a></div>

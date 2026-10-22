@@ -23,9 +23,19 @@
   };
   const hangup = () => { if (!done) { post(D.end); leave('Call ended', 900); } };
 
+  const clock = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s) % 60).padStart(2, '0')}`;
+  const cap = +D.cap || 0;   // seconds this call may run on the plan's daily allowance; 0 means no limit
+
   const startTimer = (from = 0) => {
     if (started) return; started = Date.now() - from * 1000; $('timer').hidden = false; el.classList.add('live');
-    const show = () => { const s = Math.floor((Date.now() - started) / 1000); $('timer').textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+    const show = () => {
+      const s = Math.floor((Date.now() - started) / 1000);
+      if (!cap) return void ($('timer').textContent = clock(s));
+      const left = cap - s;
+      $('timer').textContent = `${clock(s)} · ${clock(Math.max(0, left))} left`;
+      $('timer').classList.toggle('low', left <= 10);
+      if (left <= 0 && !done) { post(D.end); leave('Your plan\'s call time for today is finished', 1600); }
+    };
     show(); tick = setInterval(show, 1000);
   };
 

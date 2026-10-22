@@ -6,7 +6,12 @@
   const toast = (text) => { let t = $('#call-toast'); if (!t) { t = document.createElement('div'); t.id = 'call-toast'; document.body.appendChild(t); }
     t.textContent = text; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 4500); };
 
-  // ---- start a call from the chat header ----
+  // ---- a button that is switched off says why instead of doing nothing ----
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-why]'); if (b && b.dataset.why) toast(b.dataset.why);
+  });
+
+  // ---- start a call from a chat header or a member card ----
   document.addEventListener('click', async (e) => {
     const b = e.target.closest('[data-call][data-start]'); if (!b) return;
     b.disabled = true;

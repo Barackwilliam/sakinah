@@ -55,6 +55,9 @@
 .ch-ib{width:40px;height:40px;display:grid;place-items:center;border:0;border-radius:50%;background:#fdeef2;color:var(--mag);cursor:pointer;transition:background .18s,transform .15s}
 .ch-ib:hover{background:#fbd9e3;transform:translateY(-1px)}
 .ch-ib svg{width:19px;height:19px}
+.ch-left{display:flex;align-items:center;gap:8px;margin:0;padding:9px 16px;background:#fff7ed;color:#9a5b12;font-size:12.5px;border-top:1px solid var(--line)}
+.ch-left svg{width:15px;height:15px;flex:none}
+.ch-left a{color:var(--mag);font-weight:600}
 .ch-ib.off{background:#f2f3f7;color:#9aa0b4}
 .ch-ib.off:hover{background:#e9ebf2;transform:none}
 .ch-ib.up{position:relative}
