@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 import calendar
 from datetime import timedelta
@@ -63,7 +64,7 @@ class Plan(models.Model):
     def allowance_lines(self):
         """The daily messaging and call allowance, written out for the plan cards."""
         n, secs = self.daily_messages, self.daily_call_seconds
-        msgs = "Unlimited messages" if n < 0 else f"{n} messages a day" if n else "No messaging"
+        msgs = "Start as many chats as you like" if n < 0 else f"Start {n} new chats a day" if n else "Cannot start a chat"
         if secs < 0: calls = "Unlimited voice and video calls"
         elif not secs: calls = "No voice or video calls"
         elif secs % 60 == 0: calls = f"{secs // 60} minute{'s' if secs >= 120 else ''} of calls a day"
@@ -259,7 +260,7 @@ class Member(models.Model):
         if not self.user_id: return 0
         since = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
         if field == "daily_messages":
-            return Message.objects.filter(sender_id=self.user_id, kind="text", created__gte=since).count()
+            return Message.objects.filter(sender_id=self.user_id, kind="text", opens=True, created__gte=since).count()
         mine = Call.objects.filter(caller_id=self.user_id, created__gte=since)       # only calls you place cost you time
         spent = mine.aggregate(n=models.Sum("billed_seconds"))["n"] or 0
         live = mine.filter(status="accepted").first()
@@ -348,9 +349,23 @@ class Message(models.Model):
     audio = models.FileField(upload_to="voice/", blank=True, help_text="Voice note")
     duration = models.PositiveSmallIntegerField(default=0, help_text="Voice note length in seconds")
     kind = models.CharField(max_length=5, default="text", choices=[("text", "Message"), ("call", "Call log")])
+    opens = models.BooleanField(default=False, help_text="This message started the conversation, so it counts against the sender's daily allowance.")
     created = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
     class Meta: ordering = ["created"]
+    @classmethod
+    def thread_counts(cls, sender_user, other):
+        """(sent, received) real messages between these two - call logs don't count as talking."""
+        mine = getattr(sender_user, "member", None)
+        sent = cls.objects.filter(sender=sender_user, to=other, kind="text").count()
+        got = cls.objects.filter(sender=other.user, to=mine, kind="text").count() if other.user_id and mine else 0
+        return sent, got
+
+    @classmethod
+    def starts_conversation(cls, sender_user, other):
+        """True when nobody has written yet: only the first message costs the sender an allowance."""
+        return cls.thread_counts(sender_user, other) == (0, 0)
+
     @property
     def preview(self):
         """Short text for conversation lists."""

@@ -66,7 +66,7 @@
       {% endfor %}
     </div>
     {% if can_send %}
-    {% if msgs_left > 0 and msgs_left <= 5 %}<p class="cnote warn"><svg><use href="#m-info"/></svg>{{ msgs_left }} message{{ msgs_left|pluralize }} left today. <a href="{% url 'm_membership' %}">Upgrade</a></p>{% endif %}
+    {% if msgs_left > 0 and msgs_left <= 5 %}<p class="cnote warn"><svg><use href="#m-info"/></svg>{{ msgs_left }} new chat{{ msgs_left|pluralize }} left today. Replying is always free. <a href="{% url 'm_membership' %}">Upgrade</a></p>{% endif %}
     <form class="cform" method="post" enctype="multipart/form-data">{% csrf_token %}
       <details class="cemo"><summary aria-label="Emoji"><svg><use href="#m-smile"/></svg></summary><div>{% for e in emoji %}<button type="button" data-emo="{{ e }}">{{ e }}</button>{% endfor %}</div></details>
       <textarea name="body" rows="1" placeholder="Andika ujumbe wako hapa..." id="cbox"></textarea>

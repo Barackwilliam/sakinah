@@ -308,3 +308,59 @@ class ManagePagesTests(TestCase):
         r = self.client.post(reverse("dash_password"), {"old_password": "S3cure-pass-123", "new_password1": "Br4nd-new-pass!", "new_password2": "Br4nd-new-pass!"})
         self.assertRedirects(r, reverse("dashboard"))
         self.owner.refresh_from_db(); self.assertTrue(self.owner.check_password("Br4nd-new-pass!"))
+
+
+class PaymentApprovalTests(TestCase):
+    """Approving a membership payment has to put the member on the plan, or say plainly why it did not."""
+    def setUp(self):
+        self.admin = User.objects.create_user("boss2", "boss2@example.com", "S3cure-pass-123", is_staff=True)
+        self.user = User.objects.create_user("amina4", "amina4@example.com", "S3cure-pass-123")
+        self.me = Member.objects.create(user=self.user, name="Amina", age=27, gender="F", city="Arusha")
+        self.plan = Plan.objects.create(name="Tanzanite", price=100000, daily_messages=-1, daily_call_seconds=1800)
+        self.client.force_login(self.admin)
+
+    def pending(self, **kw):
+        return Payment.objects.create(payer_name="Amina", payer_phone="0712000111", kind="premium", plan=self.plan, months=1,
+                                      amount=self.plan.price, gateway="mpesa", reference="X1", status="pending", **kw)
+
+    def flash(self, r):
+        return " ".join(str(m) for m in r.wsgi_request._messages)
+
+    def test_approving_from_the_overview_puts_the_member_on_the_plan(self):
+        p = self.pending(user=self.user)
+        r = self.client.post(reverse("dash_payment_action", args=[p.pk]), {"act": "complete"}, follow=True)
+        self.me.refresh_from_db()
+        self.assertEqual(self.me.plan, self.plan)
+        self.assertTrue(self.me.is_premium)
+        self.assertIn("Tanzanite", self.flash(r))
+        self.assertTrue(Notification.objects.filter(user=self.user, title__icontains="activated").exists())
+
+    def test_approving_from_the_transactions_list_does_the_same(self):
+        p = self.pending(user=self.user)
+        self.client.post(reverse("dash_manage_action", args=["payments", p.pk]), {"act": "complete"}, follow=True)
+        self.me.refresh_from_db()
+        self.assertTrue(self.me.is_premium)
+
+    def test_a_payment_with_no_member_says_why_no_plan_started(self):
+        p = self.pending()                                        # recorded by hand, nobody linked
+        r = self.client.post(reverse("dash_payment_action", args=[p.pk]), {"act": "complete"}, follow=True)
+        p.refresh_from_db()
+        self.assertEqual(p.status, "completed")                   # the money is still recorded
+        self.assertIn("not linked to a member", self.flash(r))
+        self.me.refresh_from_db(); self.assertFalse(self.me.is_premium)
+
+    def test_the_pending_row_offers_the_button_and_a_way_to_link_a_member(self):
+        self.pending()
+        r = self.client.get(reverse("dash_manage", args=["payments"]), {"status": "pending"})
+        self.assertContains(r, "Approve payment")
+        self.assertContains(r, 'value="complete"')
+        # and an unlinked payment can be fixed by editing it
+        p = Payment.objects.get()
+        r = self.client.post(reverse("dash_manage_edit", args=["payments", p.pk]),
+                             {"member": self.me.pk, "payer_name": "Amina", "payer_phone": "0712000111", "kind": "premium",
+                              "plan": self.plan.pk, "months": 1, "amount": self.plan.price, "gateway": "mpesa",
+                              "reference": "X1", "status": "pending", "description": ""})
+        p.refresh_from_db()
+        self.assertEqual(p.user, self.user)
+        self.client.post(reverse("dash_payment_action", args=[p.pk]), {"act": "complete"})
+        self.me.refresh_from_db(); self.assertTrue(self.me.is_premium)

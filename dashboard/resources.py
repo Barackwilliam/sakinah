@@ -11,6 +11,7 @@ from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from core.forms import LOCATIONS
+from .forms import PaymentForm
 from core.models import (Advert, Article, ArticleCategory, Booking, Broadcast, Destination, Event, Package, PackagePhoto, PackageReview, EventCategory, EventRegistration, FeatureStrip, Inquiry,
                          Member, MessageTemplate, Notification, Payment, Plan, PremiumPerk, Report, ServiceCategory, SupportTicket, Vendor)
 
@@ -103,6 +104,7 @@ class Resource:
     columns = []; search = []; filters = []; ordering = ["-pk"]
     can_add = can_edit = can_delete = True; owner_only = False; per_page = 20
     actions = {}          # name -> (label, tone, fn(obj, request) -> message)
+    front = {}            # name -> fn(obj) -> True to also show that action as a button on the row
     row_link = None       # fn(obj) -> url for the first column
     note = ""
     def queryset(self): return self.model.objects.all()
@@ -431,7 +433,15 @@ def complete_payment(o, r):
     if activated and o.user_id:
         Notification.objects.create(user=o.user, title=f"{o.plan.name} plan activated", link=reverse("m_membership"),
                                     body=f"Thank you! Your {o.plan.name} plan is active until {o.user.member.premium_until:%d %b %Y}.")
-    return "confirmed" + (" and the plan activated" if activated else "")
+        return f"confirmed, and {o.user.member.name} is on the {o.plan.name} plan until {o.user.member.premium_until:%d %b %Y}"
+    return "confirmed, but no plan was activated: " + why_no_plan(o)
+
+def why_no_plan(o):
+    """Why confirming this payment did not put anyone on a plan - said plainly, so nobody is left guessing."""
+    if o.kind != "premium": return f"it is a {o.get_kind_display().lower()}, not a membership payment"
+    if not o.plan_id: return "no plan is set on it, so edit it and choose one"
+    if not o.user_id: return "it is not linked to a member, so edit it and choose the member"
+    return "the payer's account has no member profile"
 
 def refund_payment(o, r):
     if o.status != "completed": return "was not completed"
@@ -440,7 +450,8 @@ def refund_payment(o, r):
 @register("payments")
 class Payments(Resource):
     title, icon, nav, model = "All Transactions", "i-coins", "payments", Payment
-    can_add = can_edit = can_delete = False
+    can_add = can_delete = False
+    form = PaymentForm
     search = ["invoice_no", "payer_name", "payer_phone", "reference", "description"]
     filters = [("status", "All statuses", lambda: list(Payment.STATUS), lambda qs, v: qs.filter(status=v)),
                ("kind", "All types", lambda: list(Payment.KINDS), lambda qs, v: qs.filter(kind=v)),
@@ -453,7 +464,8 @@ class Payments(Resource):
                ("Amount", money("amount")),
                ("Status", lambda o: pill(o.get_status_display(), {"completed": "ok", "pending": "warn"}.get(o.status, "bad"))),
                ("", lambda o: format_html('<a class="va" href="{}" target="_blank">Receipt</a>', reverse("dash_receipt", args=[o.pk])) if o.status == "completed" else "")]
-    actions = {"complete": ("Confirm payment", "", complete_payment), "refund": ("Refund", "dang", refund_payment)}
+    actions = {"complete": ("Approve payment", "", complete_payment), "refund": ("Refund", "dang", refund_payment)}
+    front = {"complete": lambda o: o.status == "pending"}        # approving is one click, not hidden in the menu
 
 # ---------- members (add / edit only; the list is the Members Management page) ----------
 @register("members")
