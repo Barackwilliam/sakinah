@@ -447,6 +447,19 @@ class PublicChatTests(TestCase):
     def url(self, m=None):
         return reverse("thread", args=[m.pk]) if m else reverse("inbox")
 
+    def test_the_match_cards_carry_call_buttons(self):
+        plan = Plan.objects.create(name="Call plan", price=20000, daily_messages=10, daily_call_seconds=300)
+        Member.objects.filter(pk=self.mine.pk).update(plan=plan, premium_until=timezone.localdate() + timedelta(days=30))
+        r = self.client.get(reverse("matches"))
+        self.assertContains(r, 'data-call="voice"')
+        self.assertContains(r, 'data-call="video"')
+        self.assertContains(r, "Piga Simu"); self.assertContains(r, "Video Call")
+        self.assertNotContains(r, "Tuma Ujumbe")        # WhatsApp duplicated the chat button; it lives on the profile page
+        Plan.objects.filter(pk=plan.pk).update(daily_call_seconds=0)        # no call time on the plan
+        r = self.client.get(reverse("matches"))
+        self.assertNotContains(r, 'data-call="voice"')
+        self.assertContains(r, "pc-b4 up")                                  # it points at the plans instead
+
     def test_the_call_buttons_always_show_and_say_why_when_they_are_off(self):
         # a member without a login cannot be called at all: grey buttons, with the reason in Swahili
         Plan.objects.filter(pk=self.plan.pk).update(daily_call_seconds=300)
