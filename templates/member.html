@@ -48,6 +48,19 @@
       <a class="btn btn-p btn-lg" href="{% url 'thread' m.pk %}"><svg><use href="#i-chat"/></svg>Send Message</a>
       <form method="post" action="{% url 'shortlist' m.pk %}" class="likef">{% csrf_token %}<input type="hidden" name="next" value="{{ m_url }}">
         <button class="btn btn-o btn-lg"><svg><use href="#i-bookmark{% if shortlisted %}-f{% endif %}"/></svg>{% if shortlisted %}Shortlisted{% else %}Add to Shortlist{% endif %}</button></form>
+      {% if not m.user_id %}{% with why=m.first_name|add:" has not started using calls on Sakinah yet." %}
+        <button class="btn btn-call off btn-lg" type="button" data-why="{{ why }}"><svg><use href="#i-phone"/></svg>Voice Call</button>
+        <button class="btn btn-vid off btn-lg" type="button" data-why="{{ why }}"><svg><use href="#i-video"/></svg>Video Call</button>
+      {% endwith %}{% elif call_why == "premium" %}
+        <a class="btn btn-call up btn-lg" href="{% url 'm_membership' %}" title="Calls come with a membership plan - tap to join"><svg><use href="#i-phone"/></svg>Voice Call</a>
+        <a class="btn btn-vid up btn-lg" href="{% url 'm_membership' %}" title="Calls come with a membership plan - tap to join"><svg><use href="#i-video"/></svg>Video Call</a>
+      {% elif call_why %}
+        <button class="btn btn-call off btn-lg" type="button" data-why="{{ call_why }}"><svg><use href="#i-phone"/></svg>Voice Call</button>
+        <button class="btn btn-vid off btn-lg" type="button" data-why="{{ call_why }}"><svg><use href="#i-video"/></svg>Video Call</button>
+      {% else %}{% url 'm_call_start' m.pk as start_url %}
+        <button class="btn btn-call btn-lg" type="button" data-call="voice" data-start="{{ start_url }}" title="Call {{ m.first_name }}"><svg><use href="#i-phone"/></svg>Voice Call</button>
+        <button class="btn btn-vid btn-lg" type="button" data-call="video" data-start="{{ start_url }}" title="Video call {{ m.first_name }}"><svg><use href="#i-video"/></svg>Video Call</button>
+      {% endif %}
       {% endif %}
     </div>
     <nav class="tabs"><a href="#about" class="on"><svg><use href="#i-user"/></svg>About</a><a href="#photos"><svg><use href="#i-camera-f"/></svg>Photos</a>

@@ -76,7 +76,8 @@ def member_detail(request, pk):
     i = ids.index(m.pk) if m.pk in ids else -1
     return render(request, "member.html", {"m": m, "liked": liked_ids(request), "is_me": m == mine, "gallery": m.photos.all(),
         "prev_id": ids[i - 1] if i > 0 else None, "next_id": ids[i + 1] if 0 <= i < len(ids) - 1 else None,
-        "shortlisted": Shortlist.objects.filter(user=request.user, member=m).exists(), "report_form": ReportForm()})
+        "shortlisted": Shortlist.objects.filter(user=request.user, member=m).exists(), "report_form": ReportForm(),
+        "call_why": call_block_en(mine)})
 
 @login_required
 @require_POST
@@ -197,6 +198,11 @@ def call_why(mine, other, ok, reason):
     if reason.startswith("You can't call"): return "Huwezi kumpigia simu mwanachama huyu."
     return "Simu haipatikani kwa akaunti hii kwa sasa."
 
+
+def call_block_en(mine):
+    """The same, in English, for the pages that are written in English."""
+    from members.views import call_block_en as en
+    return "premium" if mine and mine.allowance("daily_call_seconds") == 0 else en(mine)
 
 def call_block(mine):
     """Why this member may not place a call right now, in Swahili, or "" when they may."""
