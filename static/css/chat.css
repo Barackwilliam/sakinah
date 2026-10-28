@@ -55,6 +55,9 @@
 .ch-ib{width:40px;height:40px;display:grid;place-items:center;border:0;border-radius:50%;background:#fdeef2;color:var(--mag);cursor:pointer;transition:background .18s,transform .15s}
 .ch-ib:hover{background:#fbd9e3;transform:translateY(-1px)}
 .ch-ib svg{width:19px;height:19px}
+.ch-b.ch-wait .ch-bb{opacity:.6}
+.ch-b.ch-fail .ch-bb{opacity:1;background:#fdecee;color:#9a1b2c}
+.ch-err{display:block;margin-top:4px;font-size:11.5px;line-height:1.35;color:#9a1b2c}
 .ch-left{display:flex;align-items:center;gap:8px;margin:0;padding:9px 16px;background:#fff7ed;color:#9a5b12;font-size:12.5px;border-top:1px solid var(--line)}
 .ch-left svg{width:15px;height:15px;flex:none}
 .ch-left a{color:var(--mag);font-weight:600}

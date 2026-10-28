@@ -12,16 +12,41 @@
   });
 
   // ---- start a call from a chat header or a member card ----
+  // A call screen is a whole page, so it cannot arrive instantly. The waiting card does, and the microphone
+  // is asked for straight away, so the seconds before the screen opens are spent doing the useful part.
+  const waiting = (kind) => {
+    let w = $('#call-wait');
+    if (!w) {
+      w = document.createElement('div'); w.id = 'call-wait';
+      w.innerHTML = '<div class="cw-card"><span class="cw-ring"></span><svg class="cw-ic"></svg><p></p>' +
+                    '<button type="button" class="cw-x">Cancel</button></div>';
+      document.body.appendChild(w);
+      $('.cw-x', w).addEventListener('click', () => { w.classList.remove('show'); w.dataset.off = '1'; });
+    }
+    delete w.dataset.off;
+    $('.cw-ic', w).innerHTML = `<use href="#${document.getElementById('m-video') ? 'm' : 'i'}-${kind === 'video' ? 'video' : 'phone'}"/>`;
+    $('p', w).textContent = kind === 'video' ? 'Starting video call\u2026' : 'Calling\u2026';
+    w.classList.add('show');
+    return w;
+  };
+
   document.addEventListener('click', async (e) => {
     const b = e.target.closest('[data-call][data-start]'); if (!b) return;
     b.disabled = true;
-    const fd = new FormData(); fd.append('kind', b.dataset.call);
+    const kind = b.dataset.call, w = waiting(kind);
+    // warm the microphone/camera up now: the permission prompt and device start are the slowest part of a call
+    const warm = navigator.mediaDevices
+      ? navigator.mediaDevices.getUserMedia({ audio: true, video: kind === 'video' }).catch(() => null)
+      : Promise.resolve(null);
+    const fd = new FormData(); fd.append('kind', kind);
     try {
       const r = await post(b.dataset.start, fd), j = await r.json();
-      if (j.ok) location.href = j.url;
-      else if (j.premium) { toast(j.error); setTimeout(() => location.href = j.url, 1500); }
-      else toast(j.error || 'The call could not be started.');
-    } catch (_) { toast('No connection. Check your internet and try again.'); }
+      const stream = await warm;
+      if (stream) stream.getTracks().forEach((t) => t.stop());   // the call screen opens its own; just prove it works
+      if (w.dataset.off) { if (j.ok && j.end) post(j.end, new FormData()); }   // they changed their mind while waiting
+      else if (j.ok) location.href = j.url;
+      else { w.classList.remove('show'); if (j.premium) { toast(j.error); setTimeout(() => location.href = j.url, 1500); } else toast(j.error || 'The call could not be started.'); }
+    } catch (_) { w.classList.remove('show'); toast('No connection. Check your internet and try again.'); }
     b.disabled = false;
   });
 
@@ -87,8 +112,12 @@
       const ext = (blob.type.includes('mp4') ? 'm4a' : blob.type.includes('ogg') ? 'ogg' : 'webm');
       fd.append('voice', new File([blob], 'voice.' + ext, { type: blob.type.split(';')[0] || 'audio/webm' })); fd.append('duration', Math.round(secs));
       mic.disabled = true;
-      try { const r = await post(mic.dataset.voiceUrl, fd), j = await r.json(); if (j.ok) location.reload(); else toast(j.error); }
-      catch (_) { toast('The voice note could not be sent. Check your internet.'); }
+      try {
+        const r = await post(mic.dataset.voiceUrl, fd), j = await r.json();
+        if (!j.ok) toast(j.error);
+        else if (j.html && window.chatAppend) window.chatAppend(j.html, j.id);   // the chat puts it straight on screen
+        else location.reload();                                                  // older page: fall back to a reload
+      } catch (_) { toast('The voice note could not be sent. Check your internet.'); }
       mic.disabled = false;
     };
     mic.addEventListener('click', async () => {

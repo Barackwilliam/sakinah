@@ -95,5 +95,22 @@ t.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey&&window
 document.querySelectorAll('[data-emo]').forEach(function(x){x.onclick=function(){t.value+=x.dataset.emo;t.focus();fit()}});
 document.querySelectorAll('.cfile input').forEach(function(i){i.onchange=function(){document.querySelectorAll('.cfile input').forEach(function(o){if(o!==i)o.value=''});
   i.parentNode.classList.toggle('has',!!i.files.length);if(i.files.length&&!t.value)t.placeholder=i.files[0].name+' - add a caption or press send'}});
-t.form.addEventListener('submit',function(e){var f=[].some.call(t.form.querySelectorAll('.cfile input'),function(i){return i.files.length});if(!t.value.trim()&&!f){e.preventDefault();t.focus()}});
+function esc(x){return x.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+// Send over the wire: the bubble is on screen at once, and the page never reloads.
+window.chatAppend=function(html){if(!b)return false;var h=document.createElement('div');h.innerHTML=html;
+  var s=b.querySelector('.cstart');if(s)s.remove();while(h.firstChild)b.appendChild(h.firstChild);end();return true};
+t.form.addEventListener('submit',function(e){
+  var f=[].some.call(t.form.querySelectorAll('.cfile input'),function(i){return i.files.length});
+  var text=t.value.trim();e.preventDefault();if(!text&&!f)return t.focus();
+  var fd=new FormData(t.form),wait=document.createElement('div');
+  wait.className='bub me waiting';wait.innerHTML='<div><p>'+esc(text)+'<time>&hellip;</time></p></div>';
+  var s=b.querySelector('.cstart');if(s)s.remove();b.appendChild(wait);end();
+  t.value='';fit();t.placeholder='Andika ujumbe wako hapa...';
+  t.form.querySelectorAll('.cfile input').forEach(function(i){i.value='';i.parentNode.classList.remove('has')});
+  fetch(location.pathname,{method:'POST',body:fd,credentials:'same-origin',headers:{'X-Requested-With':'fetch'}})
+    .then(function(r){return r.json()})
+    .then(function(j){if(j.ok&&j.html){var h=document.createElement('div');h.innerHTML=j.html;wait.replaceWith.apply(wait,h.childNodes);end()}
+      else{wait.classList.add('failed');wait.querySelector('time').textContent=j.error||'not sent'}})
+    .catch(function(){wait.classList.add('failed');wait.querySelector('time').textContent='no connection'});
+});
 })();</script>{% endblock %}

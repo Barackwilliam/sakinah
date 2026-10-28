@@ -10,6 +10,7 @@ from django.db.models import Count, Max, Q
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
@@ -196,13 +197,16 @@ def messages_page(request, pk=None):
             messages.error(request, message_block_en(me, other))
         elif form.is_valid():
             d = form.cleaned_data
-            Message.objects.create(sender=request.user, to=other, body=d["body"], image=d.get("image"), audio=d.get("voice"),
-                                   duration=min(d.get("duration") or 0, 120) if d.get("voice") else 0,
-                                   opens=Message.starts_conversation(request.user, other))
+            msg = Message.objects.create(sender=request.user, to=other, body=d["body"], image=d.get("image"), audio=d.get("voice"),
+                                         duration=min(d.get("duration") or 0, 120) if d.get("voice") else 0,
+                                         opens=Message.starts_conversation(request.user, other))
             if other.user_id and other.notify_messages:
                 Notification.objects.create(user=other.user, title=f"New {'voice message' if d.get('voice') else 'message'} from {me.name}",
                                             link=reverse("m_messages_with", args=[me.pk]))
-            if request.headers.get("x-requested-with") == "fetch": return JsonResponse({"ok": True})   # voice notes are posted by script
+            if request.headers.get("x-requested-with") == "fetch":      # voice notes and messages are posted by script
+                return JsonResponse({"ok": True, "id": msg.pk, "html": render_to_string(
+                    "members/_msg.html", {"msg": msg, "other": other, "me": me, "today": timezone.localdate(),
+                                          "yesterday": timezone.localdate() - timedelta(days=1)}, request=request)})
             return redirect("m_messages_with", pk=other.pk)
         if request.headers.get("x-requested-with") == "fetch":
             errs = [str(m) for m in messages.get_messages(request)] + [e for v in form.errors.values() for e in v]

@@ -76,7 +76,8 @@ def start(request, pk):
         return JsonResponse({"ok": False, "error": f"{other.first_name} is on another call. Try again in a few minutes."}, status=409)
     Call.objects.filter(Q(caller=request.user) | Q(callee=request.user), status__in=["ringing", "accepted"]).update(status="ended", ended_at=timezone.now())
     call = Call.objects.create(caller=request.user, callee=other.user, kind=kind)
-    return JsonResponse({"ok": True, "id": call.pk, "url": reverse("m_call", args=[call.pk])})
+    return JsonResponse({"ok": True, "id": call.pk, "url": reverse("m_call", args=[call.pk]),
+                         "end": reverse("m_call_end", args=[call.pk])})
 
 @login_required
 def incoming(request):

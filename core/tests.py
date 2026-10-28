@@ -510,7 +510,9 @@ class PublicChatTests(TestCase):
             self.client.post(self.url(self.her), {"body": "", "image": SimpleUploadedFile("p.png", png.getvalue(), "image/png")})
             r = self.client.post(self.url(self.her), {"voice": SimpleUploadedFile("v.webm", b"\x1aE\xdf\xa3" + b"0" * 900, "audio/webm"), "duration": 7},
                                  HTTP_X_REQUESTED_WITH="fetch")
-            self.assertEqual(r.json(), {"ok": True})
+            j = r.json()
+            self.assertTrue(j["ok"])
+            self.assertIn("data-voice", j["html"])      # the finished bubble comes back, so no page reload is needed
             texts = list(Message.objects.filter(sender=self.me).values_list("body", flat=True))
             self.assertEqual(texts, ["Habari", "", ""])
             self.assertEqual(Message.objects.filter(sender=self.me).last().preview, "🎤 Voice message (0:07)")

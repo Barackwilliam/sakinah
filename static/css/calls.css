@@ -13,6 +13,17 @@
 .ic-decline svg{background:#e5304f}.ic-accept svg{background:#18a957;animation:icShake 1.2s ease-in-out infinite}
 @keyframes icShake{0%,60%,100%{transform:rotate(0)}10%,30%,50%{transform:rotate(-14deg)}20%,40%{transform:rotate(14deg)}}
 @media (prefers-reduced-motion:reduce){.ic-ring,.ic-accept svg{animation:none}}
+/* The card that appears the instant a call button is pressed, so nobody is left wondering. */
+#call-wait{position:fixed;inset:0;z-index:9998;display:none;place-items:center;background:rgba(14,10,18,.55);backdrop-filter:blur(3px)}
+#call-wait.show{display:grid}
+.cw-card{position:relative;display:grid;justify-items:center;gap:14px;padding:34px 38px;border-radius:20px;background:#fff;box-shadow:0 24px 60px rgba(0,0,0,.3);text-align:center}
+.cw-ring{position:absolute;top:26px;width:64px;height:64px;border-radius:50%;background:rgba(160,18,60,.18);animation:cw-pulse 1.4s ease-out infinite}
+@keyframes cw-pulse{0%{transform:scale(.8);opacity:.9}100%{transform:scale(1.9);opacity:0}}
+.cw-ic{position:relative;width:34px;height:34px;color:#a0123c;margin-top:12px}
+.cw-card p{margin:0;font:600 15px Poppins,system-ui,sans-serif;color:#1d2133}
+.cw-x{border:0;background:#f1f2f6;color:#555b6e;padding:9px 20px;border-radius:999px;font:600 13px inherit;cursor:pointer}
+.cw-x:hover{background:#e6e8ef}
+@media(prefers-reduced-motion:reduce){.cw-ring{animation:none}}
 #call-toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translate(-50%,30px);opacity:0;z-index:10000;background:#1d2133;color:#fff;padding:12px 18px;border-radius:12px;font:500 13.5px Poppins,system-ui,sans-serif;max-width:min(92vw,420px);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:.25s;pointer-events:none}
 #call-toast.show{opacity:1;transform:translate(-50%,0)}
 
