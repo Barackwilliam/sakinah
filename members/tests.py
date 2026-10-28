@@ -314,7 +314,9 @@ class CallTests(TestCase):
             self.assertEqual(r.status_code, 400)
             r = self.client.post(url, {"voice": SimpleUploadedFile("rec.webm", b"\x1aE\xdf\xa3" + b"0" * 2000, "audio/webm;codecs=opus"), "duration": 4},
                                  HTTP_X_REQUESTED_WITH="fetch")
-            self.assertEqual(r.json(), {"ok": True})
+            j = r.json()
+            self.assertTrue(j["ok"])
+            self.assertIn("data-voice", j["html"])      # the finished bubble comes back, so no page reload is needed
             m = Message.objects.get(); self.assertEqual((m.duration, m.audio.name.endswith(".webm")), (4, True))
             self.assertEqual(m.preview, "🎤 Voice message (0:04)")
             self.assertContains(self.client.get(url), "data-voice")

@@ -76,7 +76,8 @@ def member_detail(request, pk):
     i = ids.index(m.pk) if m.pk in ids else -1
     return render(request, "member.html", {"m": m, "liked": liked_ids(request), "is_me": m == mine, "gallery": m.photos.all(),
         "prev_id": ids[i - 1] if i > 0 else None, "next_id": ids[i + 1] if 0 <= i < len(ids) - 1 else None,
-        "shortlisted": Shortlist.objects.filter(user=request.user, member=m).exists(), "report_form": ReportForm()})
+        "shortlisted": Shortlist.objects.filter(user=request.user, member=m).exists(), "report_form": ReportForm(),
+        "call_why": call_block_en(mine)})
 
 @login_required
 @require_POST
@@ -198,6 +199,11 @@ def call_why(mine, other, ok, reason):
     return "Simu haipatikani kwa akaunti hii kwa sasa."
 
 
+def call_block_en(mine):
+    """The same, in English, for the pages that are written in English."""
+    from members.views import call_block_en as en
+    return "premium" if mine and mine.allowance("daily_call_seconds") == 0 else en(mine)
+
 def call_block(mine):
     """Why this member may not place a call right now, in Swahili, or "" when they may."""
     if mine is None: return "Kamilisha wasifu wako ili uweze kupiga simu."
@@ -223,6 +229,14 @@ def message_block(mine, other=None):
     if mine.messages_left == 0:
         return "Umefikia kikomo cha mazungumzo mapya ya leo. Utaweza kuanzisha mengine baada ya masaa 24, au ongeza kifurushi."
     return ""
+
+def bubble_html(request, msg, other, mine, prev=None):
+    """One chat bubble, rendered the same way the page renders it."""
+    mark_groups([msg], prev)
+    today = timezone.localdate()
+    return render_to_string("partials/chat_msg.html",
+                            {"msg": msg, "other": other, "me_member": mine, "today": today, "yesterday": today - timedelta(days=1)},
+                            request=request)
 
 def chat_page(request, other=None, form=None):
     """The messages screen: the conversation list on the left and, when one is picked, the chat on the right."""
@@ -266,12 +280,14 @@ def thread(request, pk):
             messages.error(request, message_block(mine, other))
         elif form.is_valid():
             d = form.cleaned_data
-            Message.objects.create(sender=request.user, to=other, body=d["body"], image=d.get("image"), audio=d.get("voice"),
-                                   duration=min(d.get("duration") or 0, 120) if d.get("voice") else 0,
-                                   opens=Message.starts_conversation(request.user, other))
+            msg = Message.objects.create(sender=request.user, to=other, body=d["body"], image=d.get("image"), audio=d.get("voice"),
+                                         duration=min(d.get("duration") or 0, 120) if d.get("voice") else 0,
+                                         opens=Message.starts_conversation(request.user, other))
             if other.user_id and other.notify_messages and mine:
                 Notification.objects.create(user=other.user, title=f"Ujumbe mpya kutoka {mine.name}", link=reverse("thread", args=[mine.pk]))
-            if request.headers.get("x-requested-with") == "fetch": return JsonResponse({"ok": True})
+            if request.headers.get("x-requested-with") == "fetch":
+                # hand back the finished bubble so the chat can swap it in without fetching the page again
+                return JsonResponse({"ok": True, "id": msg.pk, "html": bubble_html(request, msg, other, mine)})
             return redirect("thread", pk=pk)
         if request.headers.get("x-requested-with") == "fetch":
             errs = [str(m) for m in messages.get_messages(request)] + [e for v in form.errors.values() for e in v]

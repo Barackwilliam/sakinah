@@ -213,6 +213,8 @@ body{padding-bottom:70px}.mmain{padding:10px}.pban{padding:12px 14px;gap:14px;mi
 .cemo>div{position:absolute;bottom:46px;left:-6px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 34px rgba(0,0,0,.12);padding:8px;display:grid;grid-template-columns:repeat(8,34px);gap:2px;z-index:5}
 .cemo>div button{border:0;background:none;font-size:20px;height:34px;border-radius:6px;cursor:pointer}.cemo>div button:hover{background:var(--m-l)}
 .csend{width:46px;height:46px;border:0;border-radius:8px;background:var(--m);color:#fff;display:grid;place-items:center;cursor:pointer}.csend svg{width:22px;height:22px}.csend:hover{background:var(--m-d)}
+.bub.waiting>div{opacity:.6}
+.bub.failed>div{opacity:1;background:#fdecee;color:#9a1b2c}
 .cnote{display:flex;align-items:center;gap:8px;margin:10px;padding:12px 14px;border-radius:9px;background:var(--y-l);font-size:13px}
 .cnote svg{width:16px;height:16px;flex:none}
 .cnote a{color:var(--g);font-weight:600;text-decoration:underline}

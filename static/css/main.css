@@ -378,7 +378,13 @@ dialog.inq h2{color:var(--green);font-size:24px;padding-right:40px}dialog.inq .a
 .pf-head h1{font-size:clamp(26px,2.8vw,34px);color:var(--navy);display:flex;align-items:center;gap:14px;flex-wrap:wrap}.pf-head .pc-on{font-family:var(--sans);font-size:13px}
 .pf-facts{margin-top:10px}.pf-facts li{display:flex;align-items:center;gap:10px;color:#3b3f4a;padding:4px 0}.pf-facts svg{color:var(--mag)}
 .pf-tools{display:flex;gap:10px}
-.pf-act{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}.pf-act .likef{display:contents}.pf-act .btn{padding:14px 10px}
+.pf-act{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:20px 0}.pf-act .likef{display:contents}.pf-act>.btn,.pf-act .likef .btn{grid-column:span 2}.pf-act .btn{padding:14px 10px}
+.pf-act .btn-call,.pf-act .btn-vid{grid-column:span 3}
+.btn-call{background:#12884a;color:#fff;border:0}.btn-vid{background:var(--mag-d);color:#fff;border:0}
+.btn-call:hover,.btn-vid:hover{filter:brightness(1.1)}
+.pf-act .btn.off{background:#f1f2f6;color:#9aa0b4;border:0;cursor:pointer}
+.pf-act .btn.up{position:relative}
+.pf-act .btn.up:after{content:"";position:absolute;top:8px;right:8px;width:9px;height:9px;border-radius:50%;background:var(--gold-2);border:1.5px solid #fff}
 .pf-main .tabs{background:#fff;border:1px solid #f1e3e8;border-radius:14px 14px 0 0;margin-bottom:18px}
 .pf-grid{display:grid;grid-template-columns:1.65fr 1fr;gap:18px;align-items:start}.pf-col .box+.box{margin-top:18px}
 .pf-pair{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.pf-pair .box+.box{margin-top:0}
@@ -519,7 +525,7 @@ body{font-size:14.5px}.wrap,.page{padding-left:16px;padding-right:16px}
 .ad-hl{grid-template-columns:repeat(2,1fr);row-gap:14px}.ad-hl li:nth-child(3){border-left:0}.ad-price b{font-size:28px}.ad-cta{grid-template-columns:1fr}
 .ad-two{grid-template-columns:1fr}.ad-two>.ad-sec:first-child{border-right:0;border-bottom:1px solid #f4ecef}.ad-sec{padding:16px}
 .rel-grid{grid-template-columns:1fr 1fr}.ad-thumbs button{flex-basis:30%}
-.pf-left{grid-template-columns:1fr}.pf-left>.box{grid-row:auto;grid-column:auto}.pf-act{grid-template-columns:1fr}.pf-pair,.pf-col.side{grid-template-columns:1fr}
+.pf-left{grid-template-columns:1fr}.pf-left>.box{grid-row:auto;grid-column:auto}.pf-act{grid-template-columns:1fr 1fr}.pf-act>.btn,.pf-act .likef .btn{grid-column:span 2}.pf-act .btn-call,.pf-act .btn-vid{grid-column:span 1}.pf-pair,.pf-col.side{grid-template-columns:1fr}
 .pf-foot{flex-direction:column}.pf-foot .btn{width:100%}
 .three .lcol,.three .rcol,.two-r .rcol{grid-template-columns:1fr}.art-grid,.ev-grid{grid-template-columns:1fr}
 .plans{grid-template-columns:1fr;row-gap:24px}.benefits{grid-template-columns:1fr}.offer{flex-direction:column;align-items:flex-start;padding:20px}.offer .btn{margin-left:0;width:100%}

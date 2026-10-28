@@ -447,6 +447,17 @@ class PublicChatTests(TestCase):
     def url(self, m=None):
         return reverse("thread", args=[m.pk]) if m else reverse("inbox")
 
+    def test_the_profile_page_carries_call_buttons(self):
+        plan = Plan.objects.create(name="Profile plan", price=20000, daily_messages=10, daily_call_seconds=300)
+        Member.objects.filter(pk=self.mine.pk).update(plan=plan, premium_until=timezone.localdate() + timedelta(days=30))
+        r = self.client.get(reverse("member", args=[self.her.pk]))
+        self.assertContains(r, "Voice Call"); self.assertContains(r, "Video Call")
+        self.assertContains(r, 'data-call="video"')
+        Plan.objects.filter(pk=plan.pk).update(daily_call_seconds=0)
+        r = self.client.get(reverse("member", args=[self.her.pk]))
+        self.assertNotContains(r, 'data-call="video"')
+        self.assertContains(r, "btn-vid up")                       # it points at the plans instead
+
     def test_the_match_cards_carry_call_buttons(self):
         plan = Plan.objects.create(name="Call plan", price=20000, daily_messages=10, daily_call_seconds=300)
         Member.objects.filter(pk=self.mine.pk).update(plan=plan, premium_until=timezone.localdate() + timedelta(days=30))
@@ -499,7 +510,9 @@ class PublicChatTests(TestCase):
             self.client.post(self.url(self.her), {"body": "", "image": SimpleUploadedFile("p.png", png.getvalue(), "image/png")})
             r = self.client.post(self.url(self.her), {"voice": SimpleUploadedFile("v.webm", b"\x1aE\xdf\xa3" + b"0" * 900, "audio/webm"), "duration": 7},
                                  HTTP_X_REQUESTED_WITH="fetch")
-            self.assertEqual(r.json(), {"ok": True})
+            j = r.json()
+            self.assertTrue(j["ok"])
+            self.assertIn("data-voice", j["html"])      # the finished bubble comes back, so no page reload is needed
             texts = list(Message.objects.filter(sender=self.me).values_list("body", flat=True))
             self.assertEqual(texts, ["Habari", "", ""])
             self.assertEqual(Message.objects.filter(sender=self.me).last().preview, "🎤 Voice message (0:07)")
