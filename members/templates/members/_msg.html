@@ -4,6 +4,6 @@
 {% elif msg.sender_id == user.id %}
 <div class="bub me"><div><p>{% if msg.image %}<img loading="lazy" decoding="async" src="{{ msg.image.url }}" alt="">{% endif %}{% if msg.audio %}{% include "members/_voice.html" %}{% endif %}{{ msg.body|linebreaksbr }}<time>{{ msg.created|time:"H:i" }}<svg class="{% if msg.read %}seen{% endif %}"><use href="#m-tick2"/></svg></time></p></div></div>
 {% else %}
-<div class="bub them"><span class="cav sm">{% if other.photo %}<img src="{{ other.photo.url }}" alt="">{% endif %}</span>
+<div class="bub them"><span class="cav sm">{% if other.photo %}<img src="{{ other.card_photo.url }}" alt="">{% endif %}</span>
   <div><p>{% if msg.image %}<img loading="lazy" decoding="async" src="{{ msg.image.url }}" alt="">{% endif %}{% if msg.audio %}{% include "members/_voice.html" %}{% endif %}{{ msg.body|linebreaksbr }}</p><time>{{ msg.created|time:"H:i" }}</time></div></div>
 {% endif %}

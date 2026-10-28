@@ -9,7 +9,7 @@
   <time>{{ msg.created|time:"H:i" }}<svg class="ch-tick{% if msg.read %} seen{% endif %}"><use href="#i-tick2"/></svg></time>
 </div></div>
 {% else %}
-<div class="ch-b them" data-id="{{ msg.pk }}">{% if msg.show_av %}<span class="ch-av avsm">{% if other.photo %}<img loading="lazy" decoding="async" src="{{ other.photo.url }}" alt="">{% else %}<b>{{ other.name|first }}</b>{% endif %}</span>{% else %}<span class="ch-av avsm ghost"></span>{% endif %}
+<div class="ch-b them" data-id="{{ msg.pk }}">{% if msg.show_av %}<span class="ch-av avsm">{% if other.photo %}<img loading="lazy" decoding="async" src="{{ other.card_photo.url }}" alt="">{% else %}<b>{{ other.name|first }}</b>{% endif %}</span>{% else %}<span class="ch-av avsm ghost"></span>{% endif %}
   <div class="ch-bb">
     {% if msg.image %}<a class="ch-img" href="{{ msg.image.url }}" target="_blank" rel="noopener"><img loading="lazy" decoding="async" src="{{ msg.image.url }}" alt=""></a>{% endif %}
     {% if msg.audio %}{% include "partials/voice_note.html" %}{% endif %}

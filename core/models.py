@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models import Q
 from django.urls import reverse
 import calendar
+from pathlib import Path
 from datetime import timedelta
 from django.utils import timezone
 
@@ -121,6 +122,8 @@ class Member(models.Model):
     profile_visibility = models.CharField(max_length=10, choices=VISIBILITY, default="all")
     photo_visibility = models.CharField(max_length=10, choices=VISIBILITY[:3], default="all")
     show_online = models.BooleanField(default=True)
+    thumb = models.ImageField(upload_to="members/thumbs/", blank=True,
+                              help_text="A small copy of the photo, made automatically, for cards and avatars.")
     hide_face = models.BooleanField("Hide my face on new photos", default=False,
                                     help_text="The member's choice when uploading: faces are covered with a soft blur before the photo is saved.")
     show_age = models.BooleanField(default=True)
@@ -242,6 +245,31 @@ class Member(models.Model):
             t = timezone.localdate(); b = self.birth_date
             self.age = t.year - b.year - ((t.month, t.day) < (b.month, b.day))
         super().save(*args, **kwargs)
+        self.make_thumb()
+
+    def make_thumb(self):
+        """Keep a small copy beside the photo: a card or an avatar should not fetch a full-size picture."""
+        from django.core.files.base import ContentFile
+        from .images import thumbnail
+        if not self.photo:
+            if self.thumb: Member.objects.filter(pk=self.pk).update(thumb=""); self.thumb = ""
+            return
+        want = f"{Path(self.photo.name).stem}.jpg"
+        if self.thumb and Path(self.thumb.name).name == want: return      # already made for this photo
+        try: data = self.photo.read()
+        except Exception: return                                          # the file is gone; the card falls back to the photo
+        finally:
+            try: self.photo.close()
+            except Exception: pass
+        small = thumbnail(data)
+        if small is None: return                                          # the photo is already small enough
+        self.thumb.save(want, ContentFile(small), save=False)
+        Member.objects.filter(pk=self.pk).update(thumb=self.thumb.name)
+
+    @property
+    def card_photo(self):
+        """The picture to show where it appears small: the thumbnail when there is one."""
+        return self.thumb or self.photo
     @property
     def is_premium(self): return bool(self.plan_id and self.premium_until and self.premium_until >= timezone.localdate())
 

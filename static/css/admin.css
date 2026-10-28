@@ -197,3 +197,12 @@ body{background:var(--bg);font-size:13.5px}
 .imgw{display:flex;align-items:center;gap:14px;padding:8px;border:1px dashed #e0dcdf;border-radius:8px}.imgw-cur{width:84px;height:62px;border-radius:7px;overflow:hidden;background:var(--m-l);display:grid;place-items:center;flex:none}
 .imgw-cur img{width:100%;height:100%;object-fit:cover}.imgw-cur svg{width:26px;height:26px;color:var(--m)}.imgw-r{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0}
 .imgw-btn{cursor:pointer}.imgw-name{color:var(--mut);font-size:11.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.imgw-clear{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--bad);cursor:pointer}
+
+/* A tap has to answer at once: the thing pressed goes down, and a bar shows the page is on its way. */
+#go-bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:99999;background:linear-gradient(90deg,#c00a3b,#f3c66b);
+  box-shadow:0 0 8px rgba(192,10,59,.5);opacity:0;transition:width .35s ease-out,opacity .2s}
+#go-bar.on{opacity:1}
+#go-bar.done{transition:width .12s ease-out,opacity .3s .1s;opacity:0}
+a.pressed,button.pressed,.btn.pressed,[role=button].pressed{transform:scale(.97);filter:brightness(.94);transition:transform .06s ease-out,filter .06s ease-out}
+.mc.pressed,.pcard.pressed{transform:scale(.995);transition:transform .08s ease-out}
+@media(prefers-reduced-motion:reduce){a.pressed,button.pressed,.btn.pressed,.mc.pressed,.pcard.pressed{transform:none}#go-bar{transition:opacity .2s}}

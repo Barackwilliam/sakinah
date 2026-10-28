@@ -71,7 +71,7 @@
 
     {% if tab == 'blocked' %}
     <section class="box fsec"><h3 class="bh"><svg class="mag"><use href="#m-ban"/></svg>Blocked Users</h3><p class="bsub">Blocked members cannot see your profile or message you, and you will not see them.</p>
-      <ul class="blist">{% for b in blocked %}<li><span class="cav xs">{% if b.member.photo %}<img loading="lazy" decoding="async" src="{{ b.member.photo.url }}" alt="">{% else %}<b>{{ b.member.name|first }}</b>{% endif %}</span><span><b>{{ b.member.name }}</b><small>{{ b.member.city }} &middot; blocked {{ b.created|date:"j M Y" }}</small></span>
+      <ul class="blist">{% for b in blocked %}<li><span class="cav xs">{% if b.member.photo %}<img loading="lazy" decoding="async" src="{{ b.member.card_photo.url }}" alt="">{% else %}<b>{{ b.member.name|first }}</b>{% endif %}</span><span><b>{{ b.member.name }}</b><small>{{ b.member.city }} &middot; blocked {{ b.created|date:"j M Y" }}</small></span>
         <form method="post" action="{% url 'm_block' b.member.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}?tab=blocked"><button class="btn o sm">Unblock</button></form></li>
       {% empty %}<li class="empty">You have not blocked anyone.</li>{% endfor %}</ul></section>
     {% endif %}

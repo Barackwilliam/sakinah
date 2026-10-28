@@ -33,6 +33,22 @@ def stamp(img, text):
     draw.text((x, y), text, font=font, fill=(255, 255, 255, 165))
     return Image.alpha_composite(img.convert("RGBA"), layer)
 
+THUMB_SIDE = 500         # pixels; cards, avatars and conversation rows never show a photo larger than this
+
+def thumbnail(data, side=THUMB_SIDE):
+    """A small copy of an already-processed picture, for the places that show it the size of a stamp."""
+    try:
+        img = Image.open(BytesIO(data))
+        if img.format not in ("JPEG", "PNG", "WEBP", "MPO"): return None
+        img = ImageOps.exif_transpose(img)
+        if max(img.size) <= side: return None        # already small enough to send as it is
+        img.thumbnail((side, side))
+        out = BytesIO()
+        img.convert("RGB").save(out, "JPEG", quality=78, optimize=True, progressive=True)
+        return out.getvalue()
+    except Exception:
+        return None
+
 def process(data, name, keep_format=False):
     """Return (bytes, name) of the resized and watermarked picture, or None to store the original unchanged."""
     try:

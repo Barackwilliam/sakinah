@@ -15,7 +15,7 @@
   <form class="box stc" id="account" method="post" enctype="multipart/form-data">{% csrf_token %}<input type="hidden" name="section" value="account">
     <header class="sth grn"><svg class="ok"><use href="#m-user"/></svg><div><h3>Account Information</h3><p>Update your basic account details.</p></div></header>
     <div class="acc">
-      <label class="acc-ph">{% if me.photo %}<img src="{{ me.photo.url }}" alt="" id="acc-img">{% else %}<b id="acc-img">{{ me.name|first }}</b>{% endif %}<span><svg><use href="#m-camera"/></svg></span>
+      <label class="acc-ph">{% if me.photo %}<img src="{{ me.card_photo.url }}" alt="" id="acc-img">{% else %}<b id="acc-img">{{ me.name|first }}</b>{% endif %}<span><svg><use href="#m-camera"/></svg></span>
         <input type="file" name="account-photo" accept="image/*" hidden onchange="var r=new FileReader(),i=document.getElementById('acc-img');r.onload=function(){if(i.tagName=='IMG')i.src=r.result};r.readAsDataURL(this.files[0])"></label>
       <div class="acc-f">
         <label class="ff"><span>{{ f.name.label }}</span>{{ f.name }}{% for e in f.name.errors %}<em>{{ e }}</em>{% endfor %}</label>

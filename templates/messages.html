@@ -17,7 +17,7 @@
       <ul class="ch-rows">
         {% for c in convos %}{% with m=c.member %}
         <li><a href="{% url 'thread' m.pk %}" class="{% if other and other.pk == m.pk %}on{% endif %}">
-          <span class="ch-av">{% if m.photo %}<img loading="lazy" decoding="async" src="{{ m.photo.url }}" alt="">{% else %}<b>{{ m.name|first }}</b>{% endif %}{% if m.is_online %}<em title="Yupo mtandaoni"></em>{% endif %}</span>
+          <span class="ch-av">{% if m.photo %}<img loading="lazy" decoding="async" src="{{ m.card_photo.url }}" alt="">{% else %}<b>{{ m.name|first }}</b>{% endif %}{% if m.is_online %}<em title="Yupo mtandaoni"></em>{% endif %}</span>
           <span class="ch-rt"><b>{{ m.name }}</b><small>{% if c.last.sender_id == user.id %}<span class="ch-you">Wewe:</span> {% endif %}{{ c.last.preview|default:"Mazungumzo mapya"|truncatechars:52 }}</small></span>
           <span class="ch-rm"><time>{% if c.last.created|date:"Ymd" == today|date:"Ymd" %}{{ c.last.created|time:"H:i" }}{% elif c.last.created|date:"Ymd" == yesterday|date:"Ymd" %}Jana{% else %}{{ c.last.created|date:"j M" }}{% endif %}</time>{% if c.unread %}<i>{{ c.unread }}</i>{% endif %}</span>
         </a></li>
@@ -34,7 +34,7 @@
       {% url 'thread' other.pk as here %}
       <header class="ch-top">
         <a class="ch-back" href="{% url 'inbox' %}" aria-label="Rudi kwenye orodha"><svg><use href="#i-chev-l"/></svg></a>
-        <a class="ch-av avlg" href="{% url 'member' other.pk %}">{% if other.photo %}<img src="{{ other.photo.url }}" alt="">{% else %}<b>{{ other.name|first }}</b>{% endif %}{% if other.is_online %}<em></em>{% endif %}</a>
+        <a class="ch-av avlg" href="{% url 'member' other.pk %}">{% if other.photo %}<img src="{{ other.card_photo.url }}" alt="">{% else %}<b>{{ other.name|first }}</b>{% endif %}{% if other.is_online %}<em></em>{% endif %}</a>
         <div class="ch-who">
           <h2><a href="{% url 'member' other.pk %}">{{ other.name }}{% if other.show_age and other.age %}, {{ other.age }}{% endif %}</a>{% if other.verified %}<svg class="ch-vtick" title="Imethibitishwa"><use href="#i-check-c"/></svg>{% endif %}</h2>
           <p id="ch-presence" class="{% if other.is_online %}on{% endif %}">{% if other.is_online %}Yupo mtandaoni{% elif other.city %}{{ other.location_text }}{% else %}Mwanachama wa {{ site.brand }}{% endif %}</p>
@@ -66,7 +66,7 @@
         {% if not other.user_id %}<p class="ch-info"><svg><use href="#i-info"/></svg>{{ other.name }} bado hajaanza kutumia ujumbe wa {{ site.brand }}; ujumbe wako utamfikia atakapoingia.</p>{% endif %}
         {% for msg in msgs %}{% include "partials/chat_msg.html" %}{% empty %}
         <div class="ch-hello">
-          <span class="ch-av avxl">{% if other.photo %}<img src="{{ other.photo.url }}" alt="">{% else %}<b>{{ other.name|first }}</b>{% endif %}</span>
+          <span class="ch-av avxl">{% if other.photo %}<img src="{{ other.card_photo.url }}" alt="">{% else %}<b>{{ other.name|first }}</b>{% endif %}</span>
           <h3>Sema <b>Assalamu Alaikum</b> kwa {{ other.first_name }}</h3>
           <p>Anza mazungumzo kwa heshima na unyenyekevu. Mazungumzo yenu ni ya faragha kati yenu wawili.</p>
           {% if can_send %}<div class="ch-ice"><button type="button" class="ch-chip" data-say="Assalamu Alaikum">Assalamu Alaikum</button><button type="button" class="ch-chip" data-say="Habari za siku?">Habari za siku?</button><button type="button" class="ch-chip" data-say="Nimefurahi kukutana nawe">Nimefurahi kukutana nawe</button></div>{% endif %}

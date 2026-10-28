@@ -8,7 +8,7 @@
       <li><svg><use href="#i-check-c"/></svg>Private, respectful messaging</li>
       <li><svg><use href="#i-check-c"/></svg>Free to join, upgrade any time</li>
     </ul>
-    {% if faces %}<div class="aa-faces"><span class="stack">{% for m in faces %}<img src="{{ m.photo.url }}" alt="">{% endfor %}</span><small>Real, verified people<br>across Tanzania</small></div>{% endif %}
+    {% if faces %}<div class="aa-faces"><span class="stack">{% for m in faces %}<img src="{{ m.card_photo.url }}" alt="">{% endfor %}</span><small>Real, verified people<br>across Tanzania</small></div>{% endif %}
     <blockquote>&ldquo;{{ site.hero_quote }}&rdquo;</blockquote>
   </div>
 </aside>

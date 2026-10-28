@@ -1,7 +1,7 @@
 {% load member_tags %}{% url 'member' m.pk as m_url %}
 <article class="mc{% if locked %} blur{% endif %}">
   <a class="mc-ph" href="{% if locked %}{% url 'm_membership' %}{% else %}{{ m_url }}{% endif %}">
-    {% if m.photo and m.can_see_photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" loading="lazy">{% endif %}
+    {% if m.photo and m.can_see_photo %}<img src="{{ m.card_photo.url }}" alt="{{ m.name }}" loading="lazy">{% endif %}
     {% if mode == 'liked' %}<span class="st-pill liked"><svg><use href="#m-heart"/></svg>Liked your profile</span>
     {% elif mode == 'views' %}{% if m.is_online %}<span class="st-pill">Online</span>{% elif m.viewed_at.date == now.date %}<span class="st-pill off">Today</span>{% else %}<span class="st-pill off">{{ m.viewed_at|ago }}</span>{% endif %}
     {% else %}<span class="st-pill{% if not m.is_online %} off{% endif %}">{% if m.is_online %}Online{% else %}Offline{% endif %}</span>{% endif %}

@@ -2,7 +2,7 @@
 {% block content %}
 <section class="dhero">
   <div class="dh-l">
-    <a class="dh-av" href="{% url 'm_photos' %}">{% if me.photo %}<img src="{{ me.photo.url }}" alt="">{% else %}<span>{{ me.name|first }}</span>{% endif %}<i><svg><use href="#m-edit"/></svg></i></a>
+    <a class="dh-av" href="{% url 'm_photos' %}">{% if me.photo %}<img src="{{ me.card_photo.url }}" alt="">{% else %}<span>{{ me.name|first }}</span>{% endif %}<i><svg><use href="#m-edit"/></svg></i></a>
     <div class="dh-t"><em>Assalamu Alaikum,</em><h1>{{ me.first_name }} <span class="wave">&#128075;</span></h1>
       <p>Karibu Sakinah. Endelea kuboresha wasifu wako ili kupata mwenza anayekufaa.</p></div>
     <div class="dh-prog"><div><b>Ukamili wa Wasifu</b><span class="bar"><i style="width:{{ comp.pct }}%"></i></span><em>{{ comp.pct }}%</em></div>

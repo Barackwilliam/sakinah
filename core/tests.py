@@ -690,3 +690,33 @@ class ReplyRuleTests(TestCase):
         fourth = Member.objects.create(user=User.objects.create_user("sadia"), name="Sadia", age=24, gender="F", city="Tanga")
         self.client.post(self.url(fourth), {"body": "Salaam"})
         self.assertEqual(Message.objects.filter(sender=self.me, to=fourth).count(), 0)   # but no new one today
+
+
+class PhotoWeightTests(TestCase):
+    """Cards and avatars must not pull down a full-size picture."""
+    def big_jpeg(self):
+        from PIL import Image
+        from io import BytesIO
+        buf = BytesIO()
+        Image.new("RGB", (1400, 1400), (120, 40, 70)).save(buf, "JPEG", quality=92)
+        return buf.getvalue()
+
+    def test_saving_a_photo_makes_a_small_copy_that_cards_use(self):
+        import tempfile
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from django.test import override_settings
+        with tempfile.TemporaryDirectory() as tmp, override_settings(MEDIA_ROOT=tmp, WATERMARK_TEXT=""):
+            big = self.big_jpeg()
+            m = Member.objects.create(name="Rukia", age=26, gender="F", city="Tanga",
+                                      photo=SimpleUploadedFile("big.jpg", big, "image/jpeg"))
+            m.refresh_from_db()
+            self.assertTrue(m.thumb, "a small copy should be made when the photo is saved")
+            self.assertEqual(m.card_photo, m.thumb)                       # cards reach for the small one
+            self.assertLess(m.thumb.size, m.photo.size / 2)               # and it is markedly lighter
+            from PIL import Image
+            self.assertLessEqual(max(Image.open(m.thumb.path).size), 500)
+
+    def test_a_member_with_no_photo_falls_back_cleanly(self):
+        m = Member.objects.create(name="Juma", age=30, gender="M", city="Arusha")
+        self.assertFalse(m.thumb)
+        self.assertEqual(m.card_photo, m.photo)                           # falsy, so templates skip the image
