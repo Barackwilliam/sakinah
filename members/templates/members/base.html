@@ -28,7 +28,7 @@
     {% if not hide_events_nav %}<a href="{% url 'm_events' %}" class="{% if nav == 'events' %}on{% endif %}"><span class="ni"><svg><use href="#m-cal"/></svg></span>Events</a>{% endif %}
     {% if no_sidebar %}<a href="{% url 'm_dashboard' %}"><span class="ni"><svg><use href="#m-more"/></svg></span>More</a>{% endif %}
   </nav>
-  <details class="mh-user"><summary><span class="av">{% if me.photo %}<img src="{{ me.photo.url }}" alt="">{% else %}{{ me.name|default:user.get_username|first|upper }}{% endif %}</span>
+  <details class="mh-user"><summary><span class="av">{% if me.photo %}<img src="{{ me.card_photo.url }}" alt="">{% else %}{{ me.name|default:user.get_username|first|upper }}{% endif %}</span>
     <span class="who"><b>{{ me.first_name|default:user.get_username }}</b><small>{% if me.is_premium %}Premium Member{% else %}Member{% endif %}</small></span><svg><use href="#m-chev-d"/></svg></summary>
     <div class="mh-menu"><a href="{% url 'm_profile' %}">My Profile</a><a href="{% url 'm_settings' %}">Settings</a><a href="{% url 'home' %}">Main website</a>{% if user.is_staff %}<a href="{% url 'dashboard' %}">Admin dashboard</a>{% endif %}
       <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button>Logout</button></form></div></details>

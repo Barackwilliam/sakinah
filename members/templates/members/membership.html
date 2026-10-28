@@ -89,7 +89,7 @@
   </div>
   <aside>
     <div class="box aside-b"><h3 class="bh yelh sm14"><svg class="gold"><use href="#m-crown"/></svg>My Membership Status</h3>
-      <div class="mst"><span class="av">{% if me.photo %}<img src="{{ me.photo.url }}" alt="">{% else %}{{ me.name|first }}{% endif %}</span><div><b>{{ me.name }}</b>{% if me.is_premium %}<span class="prem"><svg><use href="#m-crown"/></svg>Premium Member</span>{% else %}<span class="prem free">Free Member</span>{% endif %}</div></div>
+      <div class="mst"><span class="av">{% if me.photo %}<img src="{{ me.card_photo.url }}" alt="">{% else %}{{ me.name|first }}{% endif %}</span><div><b>{{ me.name }}</b>{% if me.is_premium %}<span class="prem"><svg><use href="#m-crown"/></svg>Premium Member</span>{% else %}<span class="prem free">Free Member</span>{% endif %}</div></div>
       <dl class="mstl"><div><dt><svg><use href="#m-people"/></svg>Plan:</dt><dd>{{ current.name }}</dd></div>
         <div><dt><svg><use href="#m-cal"/></svg>Valid Until:</dt><dd>{% if me.is_premium %}{{ me.premium_until|date:"j M Y" }}{% else %}&mdash;{% endif %}</dd></div>
         <div><dt><svg><use href="#m-user"/></svg>Status:</dt><dd>{% if me.is_premium %}<i class="dot"></i>Active{% else %}<i class="dot off"></i>Free{% endif %}</dd></div></dl>

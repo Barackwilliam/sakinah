@@ -1,7 +1,7 @@
 {% url 'member' m.pk as u_view %}
 <article class="mcard">
   <a class="m-ph" href="{% if user.is_authenticated %}{{ u_view }}{% else %}{% url 'login' %}?next={{ u_view|urlencode }}" data-auth="{{ u_view }}{% endif %}">
-    {% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" loading="lazy">{% endif %}
+    {% if m.photo %}<img src="{{ m.card_photo.url }}" alt="{{ m.name }}" loading="lazy">{% endif %}
     {% if m.verified %}<span class="vbadge"><svg><use href="#i-check-c"/></svg>Verified</span>{% endif %}
     {% if m.is_online %}<span class="online" title="Online sasa"></span>{% endif %}
     <span class="m-ov"><b>{{ m.name }}, {{ m.age }}</b><small><svg><use href="#i-pin"/></svg>{{ m.city }}</small></span>

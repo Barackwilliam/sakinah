@@ -19,8 +19,8 @@
     <div class="hero-art" aria-hidden="true">
       <div class="ring r1"></div><div class="ring r2"></div>
       {% with a=faces.0 b=faces.1 %}
-      <div class="arch big">{% if a %}<img loading="lazy" decoding="async" src="{{ a.photo.url }}" alt="">{% endif %}</div>
-      <div class="arch small">{% if b %}<img loading="lazy" decoding="async" src="{{ b.photo.url }}" alt="">{% endif %}</div>
+      <div class="arch big">{% if a %}<img loading="lazy" decoding="async" src="{{ a.card_photo.url }}" alt="">{% endif %}</div>
+      <div class="arch small">{% if b %}<img loading="lazy" decoding="async" src="{{ b.card_photo.url }}" alt="">{% endif %}</div>
       <div class="chip c1"><span class="ci ok"><svg><use href="#i-check-c"/></svg></span><div><b>Imethibitishwa</b><small>Verified members</small></div></div>
       {% if a %}<div class="chip c2"><span class="ci mag"><svg><use href="#i-heart-f"/></svg></span><div><b>{{ a.compatibility }}% Match</b><small>{{ a.name }}, {{ a.age }} &middot; {{ a.city }}</small></div></div>{% endif %}
       {% endwith %}

@@ -24,5 +24,7 @@ optional() {
 if [ "${SEED_ON_DEPLOY:-True}" = "True" ]; then optional python manage.py seed; fi
 # Render's disk is wiped on each deploy; put back starter images the database still points to (no-op with Supabase Storage).
 optional python manage.py restore_media
+# Small copies of member photos, for cards and avatars. Skips the ones already made.
+optional python manage.py make_thumbs
 # Stamp the watermark on pictures stored before it was switched on (only needed once, with Supabase Storage). Skips pictures already stamped.
 if [ "${WATERMARK_EXISTING:-False}" = "True" ]; then optional python manage.py watermark_images; fi

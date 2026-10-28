@@ -82,3 +82,64 @@ $$('[data-tabs]').forEach(t=>{const tabs=$$('.hm-tabbar a',t),panels=$$('.hm-pan
 $$('[data-nav-param]').forEach(s=>s.addEventListener('change',()=>{const u=new URL(location.href);u.searchParams.set(s.dataset.navParam,s.value);u.searchParams.delete('page');location.href=u}));
 $$('[data-goto]').forEach(s=>s.addEventListener('change',()=>{location.href=s.value}));
 $$('[data-toggle-filters]').forEach(b=>b.addEventListener('click',()=>{const f=$('#hm-filters');if(f){f.classList.toggle('open');f.scrollIntoView({behavior:'smooth',block:'start'})}}));
+
+/* ---- Every tap answers at once ----------------------------------------------------------------
+   A page takes a moment to arrive. Without a sign that the tap landed, people press again and
+   again and decide the phone has frozen. So: the thing pressed goes down under the finger, a bar
+   crawls across the top while the page is on its way, and the page itself is fetched early - on
+   hover on a mouse, on first touch on a phone - so the browser already holds it when the tap lands. */
+(function () {
+  const internal = (a) => a && a.href && a.origin === location.origin && !a.target && !a.hasAttribute('download') &&
+                          !a.href.startsWith('mailto:') && !a.href.startsWith('tel:') &&
+                          a.getAttribute('href') !== '#' && !a.dataset.noPrefetch;
+
+  // --- the bar across the top
+  let bar, timer;
+  const startBar = () => {
+    if (!bar) { bar = document.createElement('div'); bar.id = 'go-bar'; document.body.appendChild(bar); }
+    bar.classList.remove('done'); bar.style.width = '0'; bar.classList.add('on');
+    requestAnimationFrame(() => { bar.style.width = '72%'; });
+    clearTimeout(timer); timer = setTimeout(() => { bar.style.width = '88%'; }, 1400);
+  };
+  const stopBar = () => {
+    if (!bar) return;
+    clearTimeout(timer); bar.style.width = '100%'; bar.classList.add('done');
+    setTimeout(() => { bar.classList.remove('on', 'done'); bar.style.width = '0'; }, 320);
+  };
+
+  // --- pressed state, the instant the finger lands
+  document.addEventListener('pointerdown', (e) => {
+    const t = e.target.closest('a,button,[role=button],.btn,.mc,.pcard');
+    if (!t || t.disabled) return;
+    t.classList.add('pressed');
+    const off = () => { t.classList.remove('pressed'); };
+    addEventListener('pointerup', off, { once: true });
+    addEventListener('pointercancel', off, { once: true });
+  }, { passive: true });
+
+  // --- going somewhere: show it is happening
+  document.addEventListener('click', (e) => {
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+    const a = e.target.closest('a');
+    if (internal(a) && a.pathname + a.search !== location.pathname + location.search) startBar();
+  });
+  document.addEventListener('submit', (e) => { if (!e.defaultPrevented) startBar(); });
+  addEventListener('pageshow', stopBar);          // also fires when they come back with the back button
+  addEventListener('pagehide', stopBar);
+
+  // --- fetch the page before it is asked for
+  const seen = new Set();
+  const warm = (a) => {
+    if (!internal(a) || seen.has(a.href) || seen.size > 40) return;
+    const u = new URL(a.href);
+    if (u.pathname === location.pathname && u.search === location.search) return;
+    seen.add(a.href);
+    const l = document.createElement('link'); l.rel = 'prefetch'; l.href = a.href; l.as = 'document';
+    document.head.appendChild(l);
+  };
+  const slow = navigator.connection && (navigator.connection.saveData || /2g/.test(navigator.connection.effectiveType || ''));
+  if (!slow) {
+    document.addEventListener('mouseover', (e) => { const a = e.target.closest('a'); if (a) warm(a); }, { passive: true });
+    document.addEventListener('touchstart', (e) => { const a = e.target.closest('a'); if (a) warm(a); }, { passive: true });
+  }
+})();

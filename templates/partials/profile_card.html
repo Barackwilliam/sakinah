@@ -1,7 +1,7 @@
 {% url 'member' m.pk as u_view %}{% url 'thread' m.pk as u_chat %}{% url 'login' as u_login %}
 <article class="pcard">
   <div class="pc-ph">
-    {% if m.photo %}<img id="pc-main-{{ m.pk }}" src="{{ m.photo.url }}" alt="{{ m.name }}" loading="lazy">{% endif %}
+    {% if m.photo %}<img id="pc-main-{{ m.pk }}" src="{{ m.card_photo.url }}" alt="{{ m.name }}" loading="lazy">{% endif %}
     {% if m.verified %}<span class="pc-ver"><svg><use href="#i-check-o"/></svg>Imethibitishwa</span>{% endif %}
     {% if m.photo_total %}<span class="pc-cnt"><svg><use href="#i-camera-f"/></svg><span><span id="pc-n-{{ m.pk }}">1</span> / {{ m.photo_total }}</span></span>{% endif %}
   </div>
