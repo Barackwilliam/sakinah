@@ -4,9 +4,9 @@
     <h2>{{ art_title }}</h2>
     <p>{{ art_text }}</p>
     <ul class="aa-pts">
-      <li><svg><use href="#i-check-c"/></svg>Verified, marriage-minded members</li>
-      <li><svg><use href="#i-check-c"/></svg>Private, respectful messaging</li>
-      <li><svg><use href="#i-check-c"/></svg>Free to join, upgrade any time</li>
+      <li><svg><use href="{{ icons }}#i-check-c"/></svg>Verified, marriage-minded members</li>
+      <li><svg><use href="{{ icons }}#i-check-c"/></svg>Private, respectful messaging</li>
+      <li><svg><use href="{{ icons }}#i-check-c"/></svg>Free to join, upgrade any time</li>
     </ul>
     {% if faces %}<div class="aa-faces"><span class="stack">{% for m in faces %}<img src="{{ m.card_photo.url }}" alt="">{% endfor %}</span><small>Real, verified people<br>across Tanzania</small></div>{% endif %}
     <blockquote>&ldquo;{{ site.hero_quote }}&rdquo;</blockquote>

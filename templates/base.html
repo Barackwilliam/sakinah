@@ -5,10 +5,13 @@
 <meta name="theme-color" content="#0b4b34">
 <title>{% block title %}{{ site.brand }} - {{ site.tagline }}{% endblock %}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+{% if media_host %}<link rel="preconnect" href="{{ media_host }}" crossorigin>{% endif %}
 <link rel="stylesheet" href="{% asset 'css/main.css' %}">
+{# The web fonts arrive beside the page, not before it: words show at once in the fallback and swap when they land. #}
+<link rel="stylesheet" media="print" onload="this.media='all'"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"></noscript>
 {% include "partials/img_fallback.html" %}{% block head %}{% endblock %}</head><body class="{% block bodyclass %}{% endblock %}">
-{% include "partials/icons.html" %}
 {% include "partials/navbar.html" %}
 {% if messages %}<div class="msgs">{% for m in messages %}<p class="msg {{ m.tags }}">{{ m }}</p>{% endfor %}</div>{% endif %}
 <main>{% block content %}{% endblock %}</main>

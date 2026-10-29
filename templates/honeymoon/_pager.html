@@ -1,5 +1,5 @@
 {% if pg.paginator.num_pages > 1 %}<nav class="hm-pager" aria-label="Pages">
-  {% if pg.has_previous %}<a href="?{% if qs %}{{ qs }}&amp;{% endif %}page={{ pg.previous_page_number }}" aria-label="Previous page"><svg><use href="#i-chev-l"/></svg></a>{% else %}<span class="off"><svg><use href="#i-chev-l"/></svg></span>{% endif %}
+  {% if pg.has_previous %}<a href="?{% if qs %}{{ qs }}&amp;{% endif %}page={{ pg.previous_page_number }}" aria-label="Previous page"><svg><use href="{{ icons }}#i-chev-l"/></svg></a>{% else %}<span class="off"><svg><use href="{{ icons }}#i-chev-l"/></svg></span>{% endif %}
   {% for n in pages %}{% if n == pg.number %}<b aria-current="page">{{ n }}</b>{% elif n == pg.paginator.ELLIPSIS %}<i>&hellip;</i>{% else %}<a href="?{% if qs %}{{ qs }}&amp;{% endif %}page={{ n }}">{{ n }}</a>{% endif %}{% endfor %}
-  {% if pg.has_next %}<a href="?{% if qs %}{{ qs }}&amp;{% endif %}page={{ pg.next_page_number }}" aria-label="Next page"><svg><use href="#i-chev-r"/></svg></a>{% else %}<span class="off"><svg><use href="#i-chev-r"/></svg></span>{% endif %}
+  {% if pg.has_next %}<a href="?{% if qs %}{{ qs }}&amp;{% endif %}page={{ pg.next_page_number }}" aria-label="Next page"><svg><use href="{{ icons }}#i-chev-r"/></svg></a>{% else %}<span class="off"><svg><use href="{{ icons }}#i-chev-r"/></svg></span>{% endif %}
 </nav>{% endif %}

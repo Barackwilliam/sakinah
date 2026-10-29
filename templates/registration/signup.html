@@ -4,7 +4,7 @@
   <div class="auth-card wide">
     <div class="ac-head"><span class="eyebrow">Jisajili &middot; Join free</span><h1>Create your account</h1><p>It takes less than two minutes.</p></div>
     <form method="post" class="form">{% csrf_token %}{% include "partials/signup_fields.html" %}<input type="hidden" name="next" value="{{ next }}">
-      <button class="btn btn-s btn-lg block">Create my account <svg><use href="#i-arrow"/></svg></button></form>
+      <button class="btn btn-s btn-lg block">Create my account <svg><use href="{{ icons }}#i-arrow"/></svg></button></form>
     <p class="alt">Already a member? <a href="{% url 'login' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Login</a></p>
   </div>
 </section>{% endblock %}

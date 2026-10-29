@@ -2,30 +2,30 @@
 <article class="mc{% if locked %} blur{% endif %}">
   <a class="mc-ph" href="{% if locked %}{% url 'm_membership' %}{% else %}{{ m_url }}{% endif %}">
     {% if m.photo and m.can_see_photo %}<img src="{{ m.card_photo.url }}" alt="{{ m.name }}" loading="lazy">{% endif %}
-    {% if mode == 'liked' %}<span class="st-pill liked"><svg><use href="#m-heart"/></svg>Liked your profile</span>
+    {% if mode == 'liked' %}<span class="st-pill liked"><svg><use href="{{ micons }}#m-heart"/></svg>Liked your profile</span>
     {% elif mode == 'views' %}{% if m.is_online %}<span class="st-pill">Online</span>{% elif m.viewed_at.date == now.date %}<span class="st-pill off">Today</span>{% else %}<span class="st-pill off">{{ m.viewed_at|ago }}</span>{% endif %}
     {% else %}<span class="st-pill{% if not m.is_online %} off{% endif %}">{% if m.is_online %}Online{% else %}Offline{% endif %}</span>{% endif %}
     {% if mode == 'views' and m.is_online %}<span class="ago">{{ m.viewed_at|ago }}</span>{% elif mode == 'liked' %}<span class="ago">{{ m.liked_at|ago }}</span>{% endif %}
   </a>
-  {% if not locked %}<form method="post" action="{% url 'like' m.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}"><button class="hb" aria-label="Like"><svg><use href="#m-heart{% if not m.i_liked %}-o{% endif %}"/></svg></button></form>{% endif %}
+  {% if not locked %}<form method="post" action="{% url 'like' m.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}"><button class="hb" aria-label="Like"><svg><use href="{{ micons }}#m-heart{% if not m.i_liked %}-o{% endif %}"/></svg></button></form>{% endif %}
   <div class="mc-b">
-    <h3>{{ m.first_name }}{% if m.show_age %}, {{ m.age }}{% endif %}{% if m.verified and mode != 'match' and mode != 'views' %}<svg><use href="#m-check-c"/></svg>{% endif %}</h3>
-    <ul><li><svg><use href="#m-pin"/></svg>{{ m.city }}</li><li><svg><use href="#m-cap"/></svg>{{ m.occupation|default:"&mdash;" }}</li>
-      <li><svg><use href="#m-pray"/></svg>{{ m.practice_label }}</li>
-      {% if mode == 'match' %}<li class="mm"><svg><use href="#m-heart"/></svg>{% if m.is_mutual %}Mutual Match{% elif m.likes_me %}Likes You{% else %}You Liked{% endif %}</li>
-      {% elif mode != 'views' %}<li><svg><use href="#m-heart"/></svg>Seeking Marriage</li>{% endif %}</ul>
+    <h3>{{ m.first_name }}{% if m.show_age %}, {{ m.age }}{% endif %}{% if m.verified and mode != 'match' and mode != 'views' %}<svg><use href="{{ micons }}#m-check-c"/></svg>{% endif %}</h3>
+    <ul><li><svg><use href="{{ micons }}#m-pin"/></svg>{{ m.city }}</li><li><svg><use href="{{ micons }}#m-cap"/></svg>{{ m.occupation|default:"&mdash;" }}</li>
+      <li><svg><use href="{{ micons }}#m-pray"/></svg>{{ m.practice_label }}</li>
+      {% if mode == 'match' %}<li class="mm"><svg><use href="{{ micons }}#m-heart"/></svg>{% if m.is_mutual %}Mutual Match{% elif m.likes_me %}Likes You{% else %}You Liked{% endif %}</li>
+      {% elif mode != 'views' %}<li><svg><use href="{{ micons }}#m-heart"/></svg>Seeking Marriage</li>{% endif %}</ul>
     <div class="mc-a">
-      {% if locked %}<a class="btn block" href="{% url 'm_membership' %}"><svg><use href="#m-crown"/></svg>Upgrade to see</a>
+      {% if locked %}<a class="btn block" href="{% url 'm_membership' %}"><svg><use href="{{ micons }}#m-crown"/></svg>Upgrade to see</a>
       {% else %}
       <a class="btn g wide" href="{{ m_url }}">View Profile</a>
       <span class="mc-ic">
-      {% if msg_why %}<button class="btn ic off" type="button" title="{{ msg_why }}" data-why="{{ msg_why }}" aria-label="Message"><svg><use href="#m-chat-o"/></svg></button>
-      {% else %}<a class="btn ic" href="{% url 'm_messages_with' m.pk %}" title="Message {{ m.first_name }}" aria-label="Message"><svg><use href="#m-chat-o"/></svg></a>{% endif %}
-      {% if call_why %}<button class="btn ic off" type="button" title="{{ call_why }}" data-why="{{ call_why }}" aria-label="Voice call"><svg><use href="#m-phone"/></svg></button>
-      <button class="btn ic off" type="button" title="{{ call_why }}" data-why="{{ call_why }}" aria-label="Video call"><svg><use href="#m-video"/></svg></button>
+      {% if msg_why %}<button class="btn ic off" type="button" title="{{ msg_why }}" data-why="{{ msg_why }}" aria-label="Message"><svg><use href="{{ micons }}#m-chat-o"/></svg></button>
+      {% else %}<a class="btn ic" href="{% url 'm_messages_with' m.pk %}" title="Message {{ m.first_name }}" aria-label="Message"><svg><use href="{{ micons }}#m-chat-o"/></svg></a>{% endif %}
+      {% if call_why %}<button class="btn ic off" type="button" title="{{ call_why }}" data-why="{{ call_why }}" aria-label="Voice call"><svg><use href="{{ micons }}#m-phone"/></svg></button>
+      <button class="btn ic off" type="button" title="{{ call_why }}" data-why="{{ call_why }}" aria-label="Video call"><svg><use href="{{ micons }}#m-video"/></svg></button>
       {% else %}{% url 'm_call_start' m.pk as start_url %}
-      <button class="btn ic" type="button" data-call="voice" data-start="{{ start_url }}" title="Voice call {{ m.first_name }}" aria-label="Voice call"><svg><use href="#m-phone"/></svg></button>
-      <button class="btn ic" type="button" data-call="video" data-start="{{ start_url }}" title="Video call {{ m.first_name }}" aria-label="Video call"><svg><use href="#m-video"/></svg></button>{% endif %}
+      <button class="btn ic" type="button" data-call="voice" data-start="{{ start_url }}" title="Voice call {{ m.first_name }}" aria-label="Voice call"><svg><use href="{{ micons }}#m-phone"/></svg></button>
+      <button class="btn ic" type="button" data-call="video" data-start="{{ start_url }}" title="Video call {{ m.first_name }}" aria-label="Video call"><svg><use href="{{ micons }}#m-video"/></svg></button>{% endif %}
       </span>
       {% endif %}
     </div>

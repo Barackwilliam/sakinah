@@ -35,3 +35,42 @@ class GZipPagesMiddleware(GZipMiddleware):
         if response.get("Content-Type", "").startswith(("image/", "video/", "audio/", "application/pdf", "application/zip")):
             return response
         return super().process_response(request, response)
+
+
+class TimingMiddleware:
+    """Put how long the server took on the response, so a slow page can be told apart from a slow network.
+
+    Read it in the browser's network tab under Timing, or in the response headers as `Server-Timing`.
+    It carries no private data: a duration and a query count.
+    """
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        import time
+        from django.db import connection
+        count = _Counter()
+        start = time.perf_counter()
+        with connection.execute_wrapper(count):      # counts in production too, unlike connection.queries
+            response = self.get_response(request)
+        ms = (time.perf_counter() - start) * 1000
+        try:
+            response["Server-Timing"] = f'app;dur={ms:.0f}, db;dur={count.ms:.0f};desc="{count.n} queries"'
+        except Exception:
+            pass
+        return response
+
+
+class _Counter:
+    """Counts the queries a request makes, and how long they take in total."""
+    def __init__(self):
+        self.n = self.ms = 0
+
+    def __call__(self, execute, sql, params, many, context):
+        import time
+        self.n += 1
+        t = time.perf_counter()
+        try:
+            return execute(sql, params, many, context)
+        finally:
+            self.ms += (time.perf_counter() - t) * 1000
