@@ -5,8 +5,8 @@
   <div class="phero-in"><div class="phero-txt">
     <h1>Premium Membership</h1><h2>More Features. Better Matches. A Brighter Future.</h2>
     <p>Upgrade to Premium and unlock advanced features to connect with serious and verified members, communicate freely and increase your chances of finding the right partner.</p>
-    <ul class="phero-feats round"><li><svg><use href="#i-search"/></svg>Advanced Search</li><li><svg><use href="#i-chat"/></svg>Unlimited Messaging</li>
-      <li><svg><use href="#i-eye"/></svg>See Who Likes You</li><li><svg><use href="#i-shield-c"/></svg>Verified Members</li><li><svg><use href="#i-heart-f"/></svg>Priority Support</li></ul>
+    <ul class="phero-feats round"><li><svg><use href="{{ icons }}#i-search"/></svg>Advanced Search</li><li><svg><use href="{{ icons }}#i-chat"/></svg>Unlimited Messaging</li>
+      <li><svg><use href="{{ icons }}#i-eye"/></svg>See Who Likes You</li><li><svg><use href="{{ icons }}#i-shield-c"/></svg>Verified Members</li><li><svg><use href="{{ icons }}#i-heart-f"/></svg>Priority Support</li></ul>
   </div></div>
   <blockquote class="phero-q"><span>&ldquo;Invest in your future. Find a partner with shared values.&rdquo;</span><i></i></blockquote>
 </section>
@@ -15,30 +15,30 @@
   <div class="plans">
     {% for p in plans %}
     <article class="plan{% if p.popular %} top{% endif %}">
-      {% if p.popular %}<span class="plan-badge"><svg><use href="#i-crown"/></svg>Most Popular</span>{% endif %}
-      <span class="plan-ic">{% if p.icon %}<img loading="lazy" decoding="async" src="{{ p.icon.url }}" alt="">{% else %}<svg><use href="#i-crown"/></svg>{% endif %}</span>
+      {% if p.popular %}<span class="plan-badge"><svg><use href="{{ icons }}#i-crown"/></svg>Most Popular</span>{% endif %}
+      <span class="plan-ic">{% if p.icon %}<img loading="lazy" decoding="async" src="{{ p.icon.url }}" alt="">{% else %}<svg><use href="{{ icons }}#i-crown"/></svg>{% endif %}</span>
       <h3>{{ p.name }} Plan</h3><p class="plan-tag">{{ p.tagline }}</p>
       <div class="amt">{{ site.currency }} {{ p.price|intcomma }}<small>{{ p.period }}</small></div>
       {% if p.price %}<a class="btn {% if p.popular %}btn-s{% else %}btn-p{% endif %} block" href="#pay" data-plan="{{ p.name }}">Upgrade Now</a>
       {% elif user.is_authenticated %}<span class="btn btn-o block is-current">Your current plan</span>
       {% else %}<a class="btn btn-o block" href="{% url 'signup' %}">Join Free</a>{% endif %}
-      <ul class="plan-f">{% for ok, text in p.feature_list %}<li class="{% if not ok %}no{% endif %}"><svg><use href="#i-{% if ok %}check-c{% else %}x-c{% endif %}"/></svg>{{ text }}</li>{% endfor %}</ul>
+      <ul class="plan-f">{% for ok, text in p.feature_list %}<li class="{% if not ok %}no{% endif %}"><svg><use href="{{ icons }}#i-{% if ok %}check-c{% else %}x-c{% endif %}"/></svg>{{ text }}</li>{% endfor %}</ul>
     </article>
     {% endfor %}
   </div>
 
   <div class="benefits">
-    <div><span class="bi"><svg><use href="#i-shield-c"/></svg></span><div><h4>Verified &amp; Serious Members</h4><p>Premium members are more likely to be serious and committed.</p></div></div>
-    <div><span class="bi"><svg><use href="#i-search"/></svg></span><div><h4>Advanced Search Filters</h4><p>Find matches based on religion, location, education, profession and more.</p></div></div>
-    <div><span class="bi"><svg><use href="#i-chat"/></svg></span><div><h4>Unlimited Communication</h4><p>Chat freely with members and build meaningful relationships.</p></div></div>
-    <div><span class="bi"><svg><use href="#i-chart"/></svg></span><div><h4>Higher Success Rate</h4><p>Premium members get more views, more likes and better match recommendations.</p></div></div>
+    <div><span class="bi"><svg><use href="{{ icons }}#i-shield-c"/></svg></span><div><h4>Verified &amp; Serious Members</h4><p>Premium members are more likely to be serious and committed.</p></div></div>
+    <div><span class="bi"><svg><use href="{{ icons }}#i-search"/></svg></span><div><h4>Advanced Search Filters</h4><p>Find matches based on religion, location, education, profession and more.</p></div></div>
+    <div><span class="bi"><svg><use href="{{ icons }}#i-chat"/></svg></span><div><h4>Unlimited Communication</h4><p>Chat freely with members and build meaningful relationships.</p></div></div>
+    <div><span class="bi"><svg><use href="{{ icons }}#i-chart"/></svg></span><div><h4>Higher Success Rate</h4><p>Premium members get more views, more likes and better match recommendations.</p></div></div>
   </div>
 
   <div class="offer" id="pay">
-    <span class="offer-ic"><svg><use href="#i-gift"/></svg></span>
+    <span class="offer-ic"><svg><use href="{{ icons }}#i-gift"/></svg></span>
     <div><h3>{% if site.offer_text %}Special Offer{% else %}Ready to upgrade?{% endif %}</h3>
       <p>{% if site.offer_text %}{{ site.offer_text }}{% else %}Mobile money payments (M-Pesa, Mixx by Yas, Airtel Money) are coming soon.{% if site.contact_url %} Contact us to upgrade today.{% endif %}{% endif %}</p></div>
-    {% if site.contact_url %}<a class="btn btn-light" href="{{ site.contact_url }}" target="_blank" rel="noopener">Upgrade to Premium <svg><use href="#i-arrow"/></svg></a>
-    {% elif not user.is_authenticated %}<a class="btn btn-light" href="{% url 'signup' %}">Join Free First <svg><use href="#i-arrow"/></svg></a>{% endif %}
+    {% if site.contact_url %}<a class="btn btn-light" href="{{ site.contact_url }}" target="_blank" rel="noopener">Upgrade to Premium <svg><use href="{{ icons }}#i-arrow"/></svg></a>
+    {% elif not user.is_authenticated %}<a class="btn btn-light" href="{% url 'signup' %}">Join Free First <svg><use href="{{ icons }}#i-arrow"/></svg></a>{% endif %}
   </div>
 </div>{% endblock %}

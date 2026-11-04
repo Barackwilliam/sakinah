@@ -2,15 +2,15 @@
 {% block content %}
 {% url 'home' as home_url %}
 {% include "honeymoon/_hero.html" with t1="Honeymoon" t2="Destinations" lead="Romantic getaways for a beautiful start to your new journey together." feats=hero_feats %}
-<nav class="crumbs" aria-label="Breadcrumb"><div class="crumbs-in"><ol><li><a href="{% url 'home' %}"><svg><use href="#i-home"/></svg>Home</a></li><li aria-current="page">Honeymoon Destinations</li></ol></div></nav>
+<nav class="crumbs" aria-label="Breadcrumb"><div class="crumbs-in"><ol><li><a href="{% url 'home' %}"><svg><use href="{{ icons }}#i-home"/></svg>Home</a></li><li aria-current="page">Honeymoon Destinations</li></ol></div></nav>
 
 <div class="hm-page">
   <aside class="hm-side" id="hm-filters">
     <form method="get" class="hm-filter">
-      <div class="hm-fh"><svg><use href="#i-filter"/></svg><b>Filter Destinations</b><a href="{% url 'hm_destinations' %}">Reset</a></div>
+      <div class="hm-fh"><svg><use href="{{ icons }}#i-filter"/></svg><b>Filter Destinations</b><a href="{% url 'hm_destinations' %}">Reset</a></div>
       <div class="hm-fb">
         <fieldset><legend>Destination Type</legend>
-          {% for k, label, c in kinds %}<label class="hm-chk"><input type="checkbox" name="{% if k == 'tanzania' or k == 'east-africa' or k == 'international' %}region{% else %}type{% endif %}" value="{{ k }}" {% if k in sel_types %}checked{% endif %}><svg><use href="#i-{% cycle 'palm' 'safari' 'mountain' 'city' 'resort' 'heart' 'pin' 'route' 'globe' %}"/></svg>{{ label }} <i>({{ c }})</i></label>{% endfor %}
+          {% for k, label, c in kinds %}<label class="hm-chk"><input type="checkbox" name="{% if k == 'tanzania' or k == 'east-africa' or k == 'international' %}region{% else %}type{% endif %}" value="{{ k }}" {% if k in sel_types %}checked{% endif %}><svg><use href="{{ icons }}#i-{% cycle 'palm' 'safari' 'mountain' 'city' 'resort' 'heart' 'pin' 'route' 'globe' %}"/></svg>{{ label }} <i>({{ c }})</i></label>{% endfor %}
         </fieldset>
         <fieldset><legend>Country</legend>
           <div class="hm-sel"><select name="country"><option value="">All Countries</option>{% for c in countries %}<option {% if f.country == c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></div></fieldset>
@@ -21,28 +21,28 @@
         <fieldset><legend>Rating</legend>
           {% for k, label, c in ratings %}<label class="hm-chk round"><input type="radio" name="rating" value="{{ k }}" {% if f.rating == k %}checked{% endif %}><span class="hm-stars" style="--r:{{ label }}"></span>{{ label }} &amp; Above <i>({{ c }})</i></label>{% endfor %}</fieldset>
         {% if cat %}<input type="hidden" name="cat" value="{{ cat }}">{% endif %}<input type="hidden" name="sort" value="{{ sort }}"><input type="hidden" name="view" value="{{ view }}">
-        <button class="btn btn-s block"><svg><use href="#i-search"/></svg>Search Destinations</button>
+        <button class="btn btn-s block"><svg><use href="{{ icons }}#i-search"/></svg>Search Destinations</button>
       </div>
     </form>
   </aside>
 
   <div class="hm-main">
     <nav class="hm-strip" aria-label="Destination types">
-      <a href="{% url 'hm_destinations' %}" class="hm-all {% if not cat %}on{% endif %}"><svg><use href="#i-globe"/></svg><b>All Destinations</b></a>
+      <a href="{% url 'hm_destinations' %}" class="hm-all {% if not cat %}on{% endif %}"><svg><use href="{{ icons }}#i-globe"/></svg><b>All Destinations</b></a>
       {% for k, label, c in strip %}<a href="?cat={{ k }}" class="{% if cat == k %}on{% endif %}"><span><img src="{% static 'img/honeymoon/t_'|add:k|add:'.jpg' %}" alt="" loading="lazy"></span><b>{{ label }}</b></a>{% endfor %}
     </nav>
     <div class="hm-head">
       <div><h2>{% if cat %}{% for k, label, c in strip %}{% if k == cat %}{{ label }}{% endif %}{% endfor %}{% elif filtered %}Matching Destinations{% else %}All Honeymoon Destinations{% endif %} <span>({{ pg.paginator.count }})</span></h2>
         <p>Explore our handpicked destinations around Tanzania, East Africa and the world.</p></div>
       <div class="hm-tools">
-        <button type="button" class="btn btn-o xs hm-ftoggle" data-toggle-filters><svg><use href="#i-filter"/></svg>Filters</button>
+        <button type="button" class="btn btn-o xs hm-ftoggle" data-toggle-filters><svg><use href="{{ icons }}#i-filter"/></svg>Filters</button>
         <label class="hm-sort">Sort by: <span class="hm-sel"><select data-nav-param="sort">{% for k, label in sorts %}<option value="{{ k }}" {% if k == sort %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></span></label>
-        <div class="hm-view"><a href="?{{ qs_base }}{% if qs_base %}&amp;{% endif %}view=grid" class="{% if view != 'list' %}on{% endif %}" data-view="grid"><svg><use href="#i-grid"/></svg>Grid</a><a href="?{{ qs_base }}{% if qs_base %}&amp;{% endif %}view=list" class="{% if view == 'list' %}on{% endif %}" data-view="list"><svg><use href="#i-list"/></svg>List</a></div>
+        <div class="hm-view"><a href="?{{ qs_base }}{% if qs_base %}&amp;{% endif %}view=grid" class="{% if view != 'list' %}on{% endif %}" data-view="grid"><svg><use href="{{ icons }}#i-grid"/></svg>Grid</a><a href="?{{ qs_base }}{% if qs_base %}&amp;{% endif %}view=list" class="{% if view == 'list' %}on{% endif %}" data-view="list"><svg><use href="{{ icons }}#i-list"/></svg>List</a></div>
       </div>
     </div>
     {% if pg.object_list %}<div class="hm-grid {% if view == 'list' %}list{% endif %}">{% for d in pg.object_list %}{% include "honeymoon/_dest_card.html" %}{% endfor %}</div>
     {% include "honeymoon/_pager.html" %}
-    {% else %}<div class="hm-empty"><svg><use href="#i-palm"/></svg><h3>No destinations match these filters</h3><p>Try a wider budget or fewer filters.</p><a class="btn btn-s" href="{% url 'hm_destinations' %}">Show all destinations</a></div>{% endif %}
+    {% else %}<div class="hm-empty"><svg><use href="{{ icons }}#i-palm"/></svg><h3>No destinations match these filters</h3><p>Try a wider budget or fewer filters.</p><a class="btn btn-s" href="{% url 'hm_destinations' %}">Show all destinations</a></div>{% endif %}
   </div>
 </div>
 {% include "honeymoon/_promise.html" %}

@@ -1,7 +1,7 @@
 {% extends "members/base.html" %}{% block title %}Account {{ me.get_status_display }}{% endblock %}
 {% block content %}
 <section class="box fsec" style="max-width:640px;margin:30px auto;text-align:center;padding:32px 24px">
-  <svg style="width:56px;height:56px;color:var(--m);margin:0 auto 12px"><use href="#m-shield"/></svg>
+  <svg style="width:56px;height:56px;color:var(--m);margin:0 auto 12px"><use href="{{ micons }}#m-shield"/></svg>
   <h1 style="font-size:22px;margin-bottom:6px">Your account is {{ me.get_status_display|lower }}</h1>
   <p class="muted" style="margin-bottom:18px">{% if me.status == 'suspended' %}Your profile is temporarily hidden and you can't use matching or messaging right now.{% else %}Your profile did not meet our community guidelines, so it is not shown to other members.{% endif %} If you think this is a mistake, please contact our support team.</p>
   <a class="btn lg" href="{% url 'm_help' %}?kind=contact&amp;subject=Account%20{{ me.get_status_display|urlencode }}#ticket">Contact Support</a>

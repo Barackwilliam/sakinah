@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     "storages", "core", "dashboard", "members",
 ]
 MIDDLEWARE = [
+    "core.middleware.TimingMiddleware",      # Server-Timing header: how long the server itself took
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "core.middleware.GZipPagesMiddleware",   # pages shrink to about a fifth on the wire (static files are pre-compressed by WhiteNoise)

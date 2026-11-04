@@ -3,9 +3,9 @@
   <div class="hm-hero-in">
     {% if crumbs %}<ol class="hm-crumbs">{% for label, url in crumbs %}<li>{% if url %}<a href="{{ url }}">{{ label }}</a>{% else %}<b aria-current="page">{{ label }}</b>{% endif %}</li>{% endfor %}</ol>{% endif %}
     <h1>{% if t1 %}<span>{{ t1 }}</span>{% endif %}{% if t2 %} <em>{{ t2 }}</em>{% endif %}</h1>
-    {% if rating %}<p class="hm-hero-meta"><span><svg class="star"><use href="#i-star"/></svg>{{ rating }} ({{ reviews|intcomma }} reviews)</span><span><svg><use href="#i-pin"/></svg>{{ place }}</span></p>{% endif %}
+    {% if rating %}<p class="hm-hero-meta"><span><svg class="star"><use href="{{ icons }}#i-star"/></svg>{{ rating }} ({{ reviews|intcomma }} reviews)</span><span><svg><use href="{{ icons }}#i-pin"/></svg>{{ place }}</span></p>{% endif %}
     {% if lead %}<p class="hm-hero-lead">{{ lead }}</p>{% endif %}
-    {% if feats %}<ul class="hm-hero-feats">{% for icon, label in feats %}<li><svg><use href="#i-{{ icon }}"/></svg>{{ label }}</li>{% endfor %}</ul>{% endif %}
+    {% if feats %}<ul class="hm-hero-feats">{% for icon, label in feats %}<li><svg><use href="{{ icons }}#i-{{ icon }}"/></svg>{{ label }}</li>{% endfor %}</ul>{% endif %}
   </div>
   <div class="hm-badge" aria-hidden="true"><span>Love<br>Travel<br>Memories<br>Together</span></div>
 </section>

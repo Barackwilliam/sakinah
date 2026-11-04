@@ -5,7 +5,7 @@
 <div class="hm-page">
   <aside class="hm-side" id="hm-filters">
     <form method="get" class="hm-filter">
-      <div class="hm-fh"><svg><use href="#i-filter"/></svg><b>Filter Packages</b><a href="{% if dest %}{{ dest.get_absolute_url }}{% else %}{% url 'hm_packages' %}{% endif %}">Reset</a></div>
+      <div class="hm-fh"><svg><use href="{{ icons }}#i-filter"/></svg><b>Filter Packages</b><a href="{% if dest %}{{ dest.get_absolute_url }}{% else %}{% url 'hm_packages' %}{% endif %}">Reset</a></div>
       <div class="hm-fb">
         <fieldset><legend>Destination</legend>
           <div class="hm-sel"><select data-goto aria-label="Destination"><option value="{% url 'hm_packages' %}">All Destinations</option>
@@ -21,25 +21,25 @@
         <fieldset><legend>Special Offers</legend>
           {% for k, label, c in offers %}<label class="hm-chk"><input type="checkbox" name="offer" value="{{ k }}" {% if k in sel_offers %}checked{% endif %}>{{ label }} <i>({{ c }})</i></label>{% endfor %}</fieldset>
         <input type="hidden" name="sort" value="{{ sort }}"><input type="hidden" name="view" value="{{ view }}">
-        <button class="btn btn-s block"><svg><use href="#i-search"/></svg>Search Packages</button>
+        <button class="btn btn-s block"><svg><use href="{{ icons }}#i-search"/></svg>Search Packages</button>
       </div>
     </form>
   </aside>
 
   <div class="hm-main">
     {% if dest %}<div class="hm-dest-intro">{% if dest.image %}<img src="{{ dest.image.url }}" alt="" loading="lazy">{% endif %}
-      <div><h3>{{ dest.name }}, {{ dest.country }} <span class="hm-rate"><svg><use href="#i-star"/></svg>{{ dest.rating }} <small>({{ dest.reviews }} reviews)</small></span></h3><p>{{ dest.description|default:dest.tagline }}</p></div></div>{% endif %}
+      <div><h3>{{ dest.name }}, {{ dest.country }} <span class="hm-rate"><svg><use href="{{ icons }}#i-star"/></svg>{{ dest.rating }} <small>({{ dest.reviews }} reviews)</small></span></h3><p>{{ dest.description|default:dest.tagline }}</p></div></div>{% endif %}
     <div class="hm-head">
       <div><h2>Honeymoon Packages{% if dest %} in {{ dest.name }}{% endif %} <span>({{ pg.paginator.count }})</span></h2></div>
       <div class="hm-tools">
-        <button type="button" class="btn btn-o xs hm-ftoggle" data-toggle-filters><svg><use href="#i-filter"/></svg>Filters</button>
+        <button type="button" class="btn btn-o xs hm-ftoggle" data-toggle-filters><svg><use href="{{ icons }}#i-filter"/></svg>Filters</button>
         <label class="hm-sort">Sort by: <span class="hm-sel"><select data-nav-param="sort">{% for k, label in sorts %}<option value="{{ k }}" {% if k == sort %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></span></label>
-        <div class="hm-view"><a href="?{{ qs_base }}{% if qs_base %}&amp;{% endif %}view=grid" class="{% if view != 'list' %}on{% endif %}"><svg><use href="#i-grid"/></svg>Grid</a><a href="?{{ qs_base }}{% if qs_base %}&amp;{% endif %}view=list" class="{% if view == 'list' %}on{% endif %}"><svg><use href="#i-list"/></svg>List</a></div>
+        <div class="hm-view"><a href="?{{ qs_base }}{% if qs_base %}&amp;{% endif %}view=grid" class="{% if view != 'list' %}on{% endif %}"><svg><use href="{{ icons }}#i-grid"/></svg>Grid</a><a href="?{{ qs_base }}{% if qs_base %}&amp;{% endif %}view=list" class="{% if view == 'list' %}on{% endif %}"><svg><use href="{{ icons }}#i-list"/></svg>List</a></div>
       </div>
     </div>
     {% if pg.object_list %}<div class="hm-grid pk {% if view == 'list' %}list{% endif %}">{% for p in pg.object_list %}{% include "honeymoon/_pkg_card.html" %}{% endfor %}</div>
     {% include "honeymoon/_pager.html" %}
-    {% else %}<div class="hm-empty"><svg><use href="#i-palm"/></svg><h3>No packages match these filters</h3><p>Try another destination or remove a filter.</p><a class="btn btn-s" href="{% url 'hm_packages' %}">Show all packages</a></div>{% endif %}
+    {% else %}<div class="hm-empty"><svg><use href="{{ icons }}#i-palm"/></svg><h3>No packages match these filters</h3><p>Try another destination or remove a filter.</p><a class="btn btn-s" href="{% url 'hm_packages' %}">Show all packages</a></div>{% endif %}
   </div>
 </div>
 {% include "honeymoon/_promise.html" %}
