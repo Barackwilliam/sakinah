@@ -1,24 +1,24 @@
-{% extends "members/base.html" %}{% block title %}Verification{% endblock %}
+{% extends "members/base.html" %}{% load i18n %}{% block title %}{% translate "Verification" %}{% endblock %}
 {% block content %}
-{% include "members/_banner.html" with icon="user" title="My Profile" sub="Manage your profile information to get better matches." quote="Na Mwenyezi Mungu aliwaumba kwa jozi." ref="Qur'an 78:8" art="mosque" %}
+{% include "members/_banner.html" with icon="user" title=_("My Profile") sub=_("Manage your profile information to get better matches.") quote=_("Na Mwenyezi Mungu aliwaumba kwa jozi.") ref=_("Qur'an 78:8") art="mosque" %}
 {% include "members/_ptabs.html" %}
 <div class="page-g">
   <section class="box fsec">
-    <h3 class="bh"><svg class="ok"><use href="{{ micons }}#m-shield"/></svg>Profile Verification</h3>
+    <h3 class="bh"><svg class="ok"><use href="{{ micons }}#m-shield"/></svg>{% translate "Profile Verification" %}</h3>
     {% if me.verified %}
-    <div class="vstate ok"><svg><use href="{{ micons }}#m-check-c"/></svg><div><b>Your profile is verified</b><p>Members see the green verified badge on your profile. Thank you for helping keep {{ site.brand }} safe.</p></div></div>
+    <div class="vstate ok"><svg><use href="{{ micons }}#m-check-c"/></svg><div><b>{% translate "Your profile is verified" %}</b><p>{% blocktranslate with brand=site.brand %}Members see the green verified badge on your profile. Thank you for helping keep {{ brand }} safe.{% endblocktranslate %}</p></div></div>
     {% elif pending %}
-    <div class="vstate wait"><svg><use href="{{ micons }}#m-clock"/></svg><div><b>Request received</b><p>You sent a verification request on {{ pending.created|date:"j M Y" }}. Our team will review it and update your profile.</p></div></div>
+    <div class="vstate wait"><svg><use href="{{ micons }}#m-clock"/></svg><div><b>{% translate "Request received" %}</b><p>{% blocktranslate with created=pending.created|date:"j M Y" %}You sent a verification request on {{ created }}. Our team will review it and update your profile.{% endblocktranslate %}</p></div></div>
     {% else %}
-    <p class="fnote">Verified members get more trust and more responses. Upload a clear photo of your National ID (NIDA), passport or driving licence. It is only seen by our admin team.</p>
+    <p class="fnote">{% translate "Verified members get more trust and more responses. Upload a clear photo of your National ID (NIDA), passport or driving licence. It is only seen by our admin team." %}</p>
     <form method="post" enctype="multipart/form-data" class="fform">{% csrf_token %}
       <div class="fgrid">{% for f in form %}{% include "members/_field.html" with wide=True %}{% endfor %}</div>
-      <div class="fbtns"><button class="btn gf">Send for Verification<svg><use href="{{ micons }}#m-send"/></svg></button></div></form>
+      <div class="fbtns"><button class="btn gf">{% translate "Send for Verification" %}<svg><use href="{{ micons }}#m-send"/></svg></button></div></form>
     {% endif %}
   </section>
   <aside>
-    <div class="sumbox grn"><h3><svg class="ok"><use href="{{ micons }}#m-check-c"/></svg>Why verify?</h3>
-      <ul class="tick-list"><li>Verified badge on your profile</li><li>Appear to members who only accept verified profiles</li><li>Message members who only accept verified members</li><li>Build trust faster</li></ul></div>
+    <div class="sumbox grn"><h3><svg class="ok"><use href="{{ micons }}#m-check-c"/></svg>{% translate "Why verify?" %}</h3>
+      <ul class="tick-list"><li>{% translate "Verified badge on your profile" %}</li><li>{% translate "Appear to members who only accept verified profiles" %}</li><li>{% translate "Message members who only accept verified members" %}</li><li>{% translate "Build trust faster" %}</li></ul></div>
   </aside>
 </div>
 {% endblock %}

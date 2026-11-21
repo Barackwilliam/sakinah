@@ -1,6 +1,7 @@
 """Everything the client manages from the dashboard, described once: list columns, filters, form fields and row actions.
 The generic views in views_manage.py turn each Resource into list / add / edit / delete pages, so the client never needs
 the developer-only Django admin."""
+from django.utils.translation import gettext_lazy as _l
 from datetime import date
 from django import forms
 from django.contrib.admin.models import LogEntry
@@ -12,7 +13,7 @@ from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from core.forms import LOCATIONS
 from .forms import PaymentForm
-from core.models import (Advert, Article, ArticleCategory, Booking, Broadcast, Destination, Event, Package, PackagePhoto, PackageReview, EventCategory, EventRegistration, FeatureStrip, Inquiry,
+from core.models import (AdOrder, AdPackage, Advert, Article, ArticleCategory, Booking, Broadcast, Destination, Event, Package, PackagePhoto, PackageReview, EventCategory, EventRegistration, FeatureStrip, Inquiry,
                          Member, MessageTemplate, Notification, Payment, Plan, PremiumPerk, Report, ServiceCategory, SupportTicket, Vendor)
 
 # ---------- small column helpers ----------
@@ -25,7 +26,7 @@ def thumb(field):
 def pill(text, tone):
     return format_html('<span class="pill {}">{}</span>', tone, text)
 
-def yesno(field, yes="Yes", no="No", tone_yes="ok", tone_no="mut"):
+def yesno(field, yes=_l("Yes"), no=_l("No"), tone_yes="ok", tone_no="mut"):
     return lambda o: pill(yes, tone_yes) if getattr(o, field) else pill(no, tone_no)
 
 def money(field):
@@ -83,7 +84,7 @@ def model_form(model, fields, widgets=None, slug_from=None, help=None, labels=No
         attrs["slug_from"] = slug_from or "name"
         form = type(f"{model.__name__}Form", (SlugMixin, forms.ModelForm), attrs)
         form.base_fields["slug"].required = False
-        form.base_fields["slug"].help_text = "Leave empty to create it from the " + attrs["slug_from"] + "."
+        form.base_fields["slug"].help_text = _l("Leave empty to create it from the ") + attrs["slug_from"] + "."
         return pretty_files(form)
     return pretty_files(type(f"{model.__name__}Form", (forms.ModelForm,), attrs))
 
@@ -94,8 +95,8 @@ class MemberAdminForm(forms.ModelForm):
         fields = ["name", "age", "gender", "city", "occupation", "education", "marital_status", "religion", "practice", "phone", "headline",
                   "bio", "interests", "photo", "verified", "featured", "status", "plan", "premium_until", "compatibility"]
         widgets = {"bio": AREA(4), "premium_until": DATE}
-        help_texts = {"premium_until": "The plan is active until this date. Leave empty for a free member.",
-                      "compatibility": "Match score (0-100) shown on suggestions.", "status": "Rejected and suspended members are hidden from everyone."}
+        help_texts = {"premium_until": _l("The plan is active until this date. Leave empty for a free member."),
+                      "compatibility": _l("Match score (0-100) shown on suggestions."), "status": _l("Rejected and suspended members are hidden from everyone.")}
 pretty_files(MemberAdminForm)
 
 # ---------- resource definition ----------
@@ -142,133 +143,133 @@ def set_field(field, value, msg):
 # ---------- events ----------
 @register("events")
 class Events(Resource):
-    title, icon, nav, model = "Events", "m-cal", "events", Event
+    title, icon, nav, model = _l("Events"), "m-cal", "events", Event
     form = model_form(Event, ["title", "category", "date", "start_time", "end_time", "city", "capacity", "attendees", "tags", "description", "image"],
                       widgets={"date": DATE, "start_time": TIME, "end_time": TIME, "description": AREA(3)},
-                      help={"attendees": "People already going before online registration (walk-ins).", "capacity": "Leave empty for no limit."})
+                      help={"attendees": _l("People already going before online registration (walk-ins)."), "capacity": _l("Leave empty for no limit.")})
     search = ["title", "city", "tags"]
-    filters = [("when", "All dates", lambda: [("upcoming", "Upcoming"), ("past", "Past")],
+    filters = [("when", _l("All dates"), lambda: [("upcoming", _l("Upcoming")), ("past", _l("Past"))],
                 lambda qs, v: qs.filter(date__gte=date.today()) if v == "upcoming" else qs.filter(date__lt=date.today())),
-               ("category", "All categories", lambda: [(str(c.pk), c.name) for c in EventCategory.objects.all()], lambda qs, v: qs.filter(category_id=v))]
+               ("category", _l("All categories"), lambda: [(str(c.pk), c.name) for c in EventCategory.objects.all()], lambda qs, v: qs.filter(category_id=v))]
     ordering = ["-date"]
     def queryset(self): return Event.objects.select_related("category").annotate(reg_count=Count("registrations"))
-    columns = [("", thumb("image")), ("Event", bold("title", lambda o: o.category.name if o.category else "")), ("Date", when("date")),
-               ("Time", lambda o: f"{o.start_time:%H:%M}" if o.start_time else "—"), ("Location", lambda o: o.city),
-               ("Registrations", lambda o: format_html('<a class="va" href="{}?event={}">{}</a>', reverse("dash_manage", args=["registrations"]), o.pk, o.reg_count)),
-               ("Seats", lambda o: "Open" if o.capacity is None else f"{o.seats_left} of {o.capacity} left")]
+    columns = [("", thumb("image")), (_l("Event"), bold("title", lambda o: o.category.name if o.category else "")), (_l("Date"), when("date")),
+               (_l("Time"), lambda o: f"{o.start_time:%H:%M}" if o.start_time else "—"), (_l("Location"), lambda o: o.city),
+               (_l("Registrations"), lambda o: format_html('<a class="va" href="{}?event={}">{}</a>', reverse("dash_manage", args=["registrations"]), o.pk, o.reg_count)),
+               (_l("Seats"), lambda o: _l("Open") if o.capacity is None else f"{o.seats_left} of {o.capacity} left")]
 
 @register("event-categories")
 class EventCategories(Resource):
-    title, icon, nav, model = "Event Categories", "m-cal", "events", EventCategory
+    title, icon, nav, model = _l("Event Categories"), "m-cal", "events", EventCategory
     form = model_form(EventCategory, ["name", "slug", "order"])
     search, ordering = ["name"], ["order", "pk"]
-    columns = [("Name", bold("name")), ("Slug", lambda o: o.slug), ("Events", lambda o: o.events.count()), ("Order", lambda o: o.order)]
+    columns = [(_l("Name"), bold("name")), (_l("Slug"), lambda o: o.slug), (_l("Events"), lambda o: o.events.count()), (_l("Order"), lambda o: o.order)]
 
 @register("registrations")
 class Registrations(Resource):
-    title, icon, nav, model = "Event Registrations", "m-ticket", "events", EventRegistration
+    title, icon, nav, model = _l("Event Registrations"), "m-ticket", "events", EventRegistration
     can_add = can_edit = False
     search = ["event__title", "user__username", "user__email", "user__member__name"]
-    filters = [("event", "All events", lambda: [(str(e.pk), f"{e.title} ({e.date:%d %b})") for e in Event.objects.order_by("-date")], lambda qs, v: qs.filter(event_id=v))]
+    filters = [("event", _l("All events"), lambda: [(str(e.pk), f"{e.title} ({e.date:%d %b})") for e in Event.objects.order_by("-date")], lambda qs, v: qs.filter(event_id=v))]
     ordering = ["-created"]
     def queryset(self): return EventRegistration.objects.select_related("event", "user__member")
-    columns = [("Member", lambda o: format_html('<b class="mn">{}</b><small class="mc">{}</small>', user_label(o.user), o.user.email)),
-               ("Phone", lambda o: getattr(getattr(o.user, "member", None), "phone", "") or "—"),
-               ("Event", lambda o: o.event.title), ("Event date", lambda o: o.event.date.strftime("%d %b %Y")), ("Registered", when("created", "%d %b %Y %H:%M"))]
+    columns = [(_l("Member"), lambda o: format_html('<b class="mn">{}</b><small class="mc">{}</small>', user_label(o.user), o.user.email)),
+               (_l("Phone"), lambda o: getattr(getattr(o.user, "member", None), "phone", "") or "—"),
+               (_l("Event"), lambda o: o.event.title), (_l("Event date"), lambda o: o.event.date.strftime("%d %b %Y")), (_l("Registered"), when("created", "%d %b %Y %H:%M"))]
 
 # ---------- membership plans ----------
 @register("plans")
 class Plans(Resource):
-    title, icon, nav, model = "Membership Plans", "m-crown", "plans", Plan
+    title, icon, nav, model = _l("Membership Plans"), "m-crown", "plans", Plan
     form = model_form(Plan, ["name", "price", "period", "order", "tagline", "daily_messages", "daily_call_seconds", "features", "popular", "icon"],
                       widgets={"features": AREA(8)},
-                      help={"features": "One feature per line. Start a line with - for a feature the plan does NOT include. Write 'All Silver features' to include the previous plan.",
-                            "daily_messages": "Messages this plan may send in 24 hours. 0 = none, -1 = unlimited.",
-                            "daily_call_seconds": "Voice and video call time in 24 hours, in seconds (60 = 1 minute). 0 = none, -1 = unlimited."})
+                      help={"features": _l("One feature per line. Start a line with - for a feature the plan does NOT include. Write 'All Silver features' to include the previous plan."),
+                            "daily_messages": _l("Messages this plan may send in 24 hours. 0 = none, -1 = unlimited."),
+                            "daily_call_seconds": _l("Voice and video call time in 24 hours, in seconds (60 = 1 minute). 0 = none, -1 = unlimited.")})
     search, ordering = ["name"], ["order", "pk"]
-    columns = [("", thumb("icon")), ("Plan", bold("name", lambda o: o.tagline)), ("Price", lambda o: f"TSh {o.price:,} {o.period}"),
-               ("Per day", lambda o: f"{'Unlimited' if o.daily_messages < 0 else o.daily_messages} messages · "
-                                     f"{'Unlimited' if o.daily_call_seconds < 0 else str(o.daily_call_seconds // 60) + ' min' if o.daily_call_seconds >= 60 else str(o.daily_call_seconds) + ' sec'} calls"),
-               ("Active members", lambda o: o.members.filter(premium_until__gte=date.today()).count() if o.price else "—"),
-               ("Most popular", yesno("popular", "Yes", "—"))]
+    columns = [("", thumb("icon")), (_l("Plan"), bold("name", lambda o: o.tagline)), (_l("Price"), lambda o: f"TSh {o.price:,} {o.period}"),
+               (_l("Per day"), lambda o: f"{_l('Unlimited') if o.daily_messages < 0 else o.daily_messages} messages · "
+                                     f"{_l('Unlimited') if o.daily_call_seconds < 0 else str(o.daily_call_seconds // 60) + ' min' if o.daily_call_seconds >= 60 else str(o.daily_call_seconds) + ' sec'} calls"),
+               (_l("Active members"), lambda o: o.members.filter(premium_until__gte=date.today()).count() if o.price else "—"),
+               (_l("Most popular"), yesno("popular", _l("Yes"), "—"))]
 
 @register("perks")
 class Perks(Resource):
-    title, icon, nav, model = "Premium Perks", "m-star", "plans", PremiumPerk
+    title, icon, nav, model = _l("Premium Perks"), "m-star", "plans", PremiumPerk
     form = model_form(PremiumPerk, ["text", "order"])
     search, ordering = ["text"], ["order", "pk"]
-    columns = [("Perk", lambda o: o.text), ("Order", lambda o: o.order)]
+    columns = [(_l("Perk"), lambda o: o.text), (_l("Order"), lambda o: o.order)]
 
 # ---------- content ----------
 @register("articles")
 class Articles(Resource):
-    title, icon, nav, model = "Articles", "m-book", "content", Article
+    title, icon, nav, model = _l("Articles"), "m-book", "content", Article
     form = model_form(Article, ["title", "slug", "category", "author", "published", "featured", "image", "excerpt", "body", "tags"],
                       widgets={"published": DATE, "excerpt": AREA(2), "body": AREA(14)}, slug_from="title",
-                      help={"body": "Separate paragraphs with an empty line. Start a line with ## for a heading."})
+                      help={"body": _l("Separate paragraphs with an empty line. Start a line with ## for a heading.")})
     search = ["title", "author", "tags"]
-    filters = [("category", "All categories", lambda: [(str(c.pk), c.name) for c in ArticleCategory.objects.all()], lambda qs, v: qs.filter(category_id=v))]
+    filters = [("category", _l("All categories"), lambda: [(str(c.pk), c.name) for c in ArticleCategory.objects.all()], lambda qs, v: qs.filter(category_id=v))]
     def queryset(self): return Article.objects.select_related("category")
     ordering = ["-published", "-pk"]
-    columns = [("", thumb("image")), ("Article", bold("title", lambda o: o.category.name if o.category else "")), ("Author", lambda o: o.author or "—"),
-               ("Published", when("published")), ("Views", lambda o: f"{o.views:,}"), ("Featured", yesno("featured", "Featured", "—", "info"))]
-    actions = {"feature": ("Feature / unfeature", "", toggle("featured", "featured", "unfeatured"))}
+    columns = [("", thumb("image")), (_l("Article"), bold("title", lambda o: o.category.name if o.category else "")), (_l("Author"), lambda o: o.author or "—"),
+               (_l("Published"), when("published")), (_l("Views"), lambda o: f"{o.views:,}"), (_l("Featured"), yesno("featured", _l("Featured"), "—", "info"))]
+    actions = {"feature": (_l("Feature / unfeature"), "", toggle("featured", "featured", "unfeatured"))}
 
 @register("article-categories")
 class ArticleCategories(Resource):
-    title, icon, nav, model = "Article Categories", "m-book", "content", ArticleCategory
+    title, icon, nav, model = _l("Article Categories"), "m-book", "content", ArticleCategory
     form = model_form(ArticleCategory, ["name", "slug", "icon", "order"])
     search, ordering = ["name"], ["order", "pk"]
-    columns = [("Name", bold("name")), ("Articles", lambda o: o.articles.count()), ("Order", lambda o: o.order)]
+    columns = [(_l("Name"), bold("name")), (_l("Articles"), lambda o: o.articles.count()), (_l("Order"), lambda o: o.order)]
 
 @register("home-strips")
 class HomeStrips(Resource):
-    title, icon, nav, model = "Home Page Highlights", "m-home", "content", FeatureStrip
+    title, icon, nav, model = _l("Home Page Highlights"), "m-home", "content", FeatureStrip
     form = model_form(FeatureStrip, ["title", "text", "icon", "order"])
     ordering = ["order", "pk"]
-    note = "The short feature boxes shown on the home page."
-    columns = [("Title", bold("title")), ("Text", lambda o: o.text), ("Order", lambda o: o.order)]
+    note = _l("The short feature boxes shown on the home page.")
+    columns = [(_l("Title"), bold("title")), (_l("Text"), lambda o: o.text), (_l("Order"), lambda o: o.order)]
 
 # ---------- communication ----------
 @register("templates")
 class Templates(Resource):
-    title, icon, nav, model = "Message Templates", "m-doc", "comms", MessageTemplate
+    title, icon, nav, model = _l("Message Templates"), "m-doc", "comms", MessageTemplate
     form = model_form(MessageTemplate, ["name", "description", "subject", "body", "icon", "color", "order"], widgets={"body": AREA(8)},
-                      help={"body": "Use {name} for the member's name."})
+                      help={"body": _l("Use {name} for the member's name.")})
     search, ordering = ["name", "subject"], ["order", "pk"]
-    columns = [("Template", bold("name", lambda o: o.description)), ("Subject", lambda o: o.subject),
+    columns = [(_l("Template"), bold("name", lambda o: o.description)), (_l("Subject"), lambda o: o.subject),
                ("", lambda o: format_html('<a class="va" href="{}?template={}">Use</a>', reverse("dash_comms"), o.pk))]
 
 @register("broadcasts")
 class Broadcasts(Resource):
-    title, icon, nav, model = "Message History", "m-send", "comms", Broadcast
+    title, icon, nav, model = _l("Message History"), "m-send", "comms", Broadcast
     can_add = can_edit = False
     search = ["subject", "body"]
-    filters = [("channel", "All channels", lambda: list(Broadcast.CHANNELS), lambda qs, v: qs.filter(channel=v)),
-               ("status", "All statuses", lambda: [("sent", "Sent"), ("draft", "Draft")], lambda qs, v: qs.filter(status=v))]
+    filters = [("channel", _l("All channels"), lambda: list(Broadcast.CHANNELS), lambda qs, v: qs.filter(channel=v)),
+               ("status", _l("All statuses"), lambda: [("sent", _l("Sent")), ("draft", _l("Draft"))], lambda qs, v: qs.filter(status=v))]
     ordering = ["-created"]
-    columns = [("Subject", bold("subject", lambda o: o.get_channel_display())), ("Recipients", lambda o: f"{o.recipients:,}"),
-               ("Status", lambda o: pill(o.get_status_display(), "ok" if o.status == "sent" else "warn")),
-               ("Created", when("created", "%d %b %Y %H:%M")), ("By", lambda o: user_label(o.created_by))]
+    columns = [(_l("Subject"), bold("subject", lambda o: o.get_channel_display())), (_l("Recipients"), lambda o: f"{o.recipients:,}"),
+               (_l("Status"), lambda o: pill(o.get_status_display(), "ok" if o.status == "sent" else "warn")),
+               (_l("Created"), when("created", "%d %b %Y %H:%M")), (_l("By"), lambda o: user_label(o.created_by))]
 
 # ---------- support ----------
 @register("tickets")
 class Tickets(Resource):
-    title, icon, nav, model = "Support Tickets", "m-headset", "support", SupportTicket
+    title, icon, nav, model = _l("Support Tickets"), "m-headset", "support", SupportTicket
     can_add = False
     form = model_form(SupportTicket, ["reply", "status"], widgets={"reply": AREA(6)},
-                      help={"reply": "The member gets this answer as a notification in their dashboard."})
+                      help={"reply": _l("The member gets this answer as a notification in their dashboard.")})
     search = ["subject", "message", "user__username", "user__email"]
-    filters = [("status", "All statuses", lambda: list(SupportTicket.STATUS), lambda qs, v: qs.filter(status=v)),
-               ("kind", "All types", lambda: list(SupportTicket.KINDS), lambda qs, v: qs.filter(kind=v))]
+    filters = [("status", _l("All statuses"), lambda: list(SupportTicket.STATUS), lambda qs, v: qs.filter(status=v)),
+               ("kind", _l("All types"), lambda: list(SupportTicket.KINDS), lambda qs, v: qs.filter(kind=v))]
     ordering = ["status", "-created"]
     def queryset(self): return SupportTicket.objects.select_related("user__member")
-    columns = [("Subject", lambda o: format_html('<b class="mn">{}</b><small class="mc">{}</small>', o.subject, o.message[:90])),
-               ("Type", lambda o: o.get_kind_display()), ("From", lambda o: user_label(o.user)),
-               ("Attachment", lambda o: format_html('<a class="va" href="{}" target="_blank">Open file</a>', o.attachment.url) if o.attachment else "—"),
-               ("Received", when("created", "%d %b %Y %H:%M")),
-               ("Status", lambda o: pill("Answered" if o.reply and o.status == "closed" else o.get_status_display(), "warn" if o.status == "open" else "ok"))]
-    actions = {"close": ("Close / reopen", "", lambda o, r: (set_field("status", "closed" if o.status == "open" else "open", "updated")(o, r)))}
+    columns = [(_l("Subject"), lambda o: format_html('<b class="mn">{}</b><small class="mc">{}</small>', o.subject, o.message[:90])),
+               (_l("Type"), lambda o: o.get_kind_display()), (_l("From"), lambda o: user_label(o.user)),
+               (_l("Attachment"), lambda o: format_html('<a class="va" href="{}" target="_blank">Open file</a>', o.attachment.url) if o.attachment else "—"),
+               (_l("Received"), when("created", "%d %b %Y %H:%M")),
+               (_l("Status"), lambda o: pill(_l("Answered") if o.reply and o.status == "closed" else o.get_status_display(), "warn" if o.status == "open" else "ok"))]
+    actions = {"close": (_l("Close / reopen"), "", lambda o, r: (set_field("status", "closed" if o.status == "open" else "open", "updated")(o, r)))}
     def after_save(self, obj, request, created):
         if obj.reply and obj.user_id and not obj.replied_at:
             obj.replied_at = timezone.now(); obj.status = "closed"; obj.save(update_fields=["replied_at", "status"])
@@ -278,63 +279,120 @@ class Tickets(Resource):
 
 @register("reports")
 class Reports(Resource):
-    title, icon, nav, model = "Member Reports", "m-flag", "support", Report
+    title, icon, nav, model = _l("Member Reports"), "m-flag", "support", Report
     can_add = can_edit = False
     search = ["member__name", "details", "reporter__username"]
-    filters = [("resolved", "Open and resolved", lambda: [("0", "Open"), ("1", "Resolved")], lambda qs, v: qs.filter(resolved=v == "1"))]
+    filters = [("resolved", _l("Open and resolved"), lambda: [("0", _l("Open")), ("1", _l("Resolved"))], lambda qs, v: qs.filter(resolved=v == "1"))]
     ordering = ["resolved", "-created"]
     def queryset(self): return Report.objects.select_related("member", "reporter")
-    columns = [("Reported member", lambda o: format_html('<a href="{}" target="_blank"><b class="mn">{}</b></a><small class="mc">{}</small>', reverse("member", args=[o.member_id]), o.member.name, o.member.city)),
-               ("Reason", lambda o: o.get_reason_display()), ("Details", lambda o: (o.details or "—")[:120]), ("By", lambda o: user_label(o.reporter)),
-               ("Date", when("created")), ("Status", lambda o: pill("Resolved", "ok") if o.resolved else pill("Open", "bad"))]
-    actions = {"resolve": ("Mark resolved / open", "", toggle("resolved", "marked resolved", "reopened")),
-               "suspend": ("Suspend this member", "dang", lambda o, r: (set_field("status", "suspended", "suspended")(o.member, r)))}
+    columns = [(_l("Reported member"), lambda o: format_html('<a href="{}" target="_blank"><b class="mn">{}</b></a><small class="mc">{}</small>', reverse("member", args=[o.member_id]), o.member.name, o.member.city)),
+               (_l("Reason"), lambda o: o.get_reason_display()), (_l("Details"), lambda o: (o.details or "—")[:120]), (_l("By"), lambda o: user_label(o.reporter)),
+               (_l("Date"), when("created")), (_l("Status"), lambda o: pill(_l("Resolved"), "ok") if o.resolved else pill(_l("Open"), "bad"))]
+    actions = {"resolve": (_l("Mark resolved / open"), "", toggle("resolved", "marked resolved", "reopened")),
+               "suspend": (_l("Suspend this member"), "dang", lambda o, r: (set_field("status", "suspended", "suspended")(o.member, r)))}
 
 @register("inquiries")
 class Inquiries(Resource):
-    title, icon, nav, model = "Vendor Inquiries", "m-mail", "support", Inquiry
+    title, icon, nav, model = _l("Vendor Inquiries"), "m-mail", "support", Inquiry
     can_add = can_edit = False
     search = ["name", "phone", "message", "advert__title"]
-    filters = [("handled", "All", lambda: [("0", "New"), ("1", "Handled")], lambda qs, v: qs.filter(handled=v == "1"))]
+    filters = [("handled", _l("All"), lambda: [("0", _l("New")), ("1", _l("Handled"))], lambda qs, v: qs.filter(handled=v == "1"))]
     ordering = ["handled", "-created"]
     def queryset(self): return Inquiry.objects.select_related("advert")
-    columns = [("Customer", lambda o: format_html('<b class="mn">{}</b><small class="mc">{}</small>', o.name, o.phone)), ("Service", lambda o: o.advert.title),
-               ("Type", lambda o: o.get_kind_display()), ("Event date", when("event_date")),
-               ("Message", lambda o: (o.message or "—")[:100]), ("Received", when("created")), ("Status", lambda o: pill("Handled", "ok") if o.handled else pill("New", "warn"))]
-    actions = {"handled": ("Mark handled / new", "", toggle("handled", "marked handled", "marked new"))}
+    columns = [(_l("Customer"), lambda o: format_html('<b class="mn">{}</b><small class="mc">{}</small>', o.name, o.phone)), (_l("Service"), lambda o: o.advert.title),
+               (_l("Type"), lambda o: o.get_kind_display()), (_l("Event date"), when("event_date")),
+               (_l("Message"), lambda o: (o.message or "—")[:100]), (_l("Received"), when("created")), (_l("Status"), lambda o: pill(_l("Handled"), "ok") if o.handled else pill(_l("New"), "warn"))]
+    actions = {"handled": (_l("Mark handled / new"), "", toggle("handled", "marked handled", "marked new"))}
 
 # ---------- marketing ----------
 @register("adverts")
 class Adverts(Resource):
-    title, icon, nav, model = "Adverts", "i-mega", "marketing", Advert
+    title, icon, nav, model = _l("Adverts"), "i-mega", "marketing", Advert
     form = model_form(Advert, ["title", "slug", "category", "vendor", "city", "price", "price_unit", "negotiable", "image", "description", "highlights",
-                               "includes", "extras", "availability", "details", "map_query", "featured", "active"],
-                      widgets={"description": AREA(5), "highlights": AREA(3), "includes": AREA(3), "extras": AREA(3), "details": AREA(3)}, slug_from="title")
+                               "includes", "extras", "availability", "details", "map_query", "featured", "active", "expires", "package"],
+                      widgets={"expires": DATE, "description": AREA(5), "highlights": AREA(3), "includes": AREA(3), "extras": AREA(3), "details": AREA(3)}, slug_from="title")
     search = ["title", "city", "vendor__name"]
-    filters = [("category", "All categories", lambda: [(str(c.pk), c.name) for c in ServiceCategory.objects.all()], lambda qs, v: qs.filter(category_id=v)),
-               ("active", "All", lambda: [("1", "Active"), ("0", "Hidden")], lambda qs, v: qs.filter(active=v == "1"))]
+    filters = [("category", _l("All categories"), lambda: [(str(c.pk), c.name) for c in ServiceCategory.objects.all()], lambda qs, v: qs.filter(category_id=v)),
+               ("active", _l("All"), lambda: [("1", _l("Active")), ("0", _l("Hidden"))], lambda qs, v: qs.filter(active=v == "1"))]
     ordering = ["-created"]
     def queryset(self): return Advert.objects.select_related("vendor", "category")
     row_link = lambda self, o: reverse("advert", args=[o.slug])
-    columns = [("", thumb("image")), ("Advert", bold("title", lambda o: o.vendor.name)), ("Category", lambda o: o.category.name), ("Location", lambda o: o.city),
-               ("Price", lambda o: f"TSh {o.price:,}" if o.price else "—"), ("Views", lambda o: f"{o.views:,}"),
-               ("Status", lambda o: format_html("{} {}", pill("Active", "ok") if o.active else pill("Hidden", "mut"), pill("Featured", "info") if o.featured else ""))]
-    actions = {"active": ("Show / hide", "", toggle("active", "is now visible", "is now hidden")), "feature": ("Feature / unfeature", "", toggle("featured", "featured", "unfeatured"))}
+    columns = [("", thumb("image")), (_l("Advert"), bold("title", lambda o: o.vendor.name)), (_l("Category"), lambda o: o.category.name), (_l("Location"), lambda o: o.city),
+               (_l("Price"), lambda o: f"TSh {o.price:,}" if o.price else "—"), (_l("Views"), lambda o: f"{o.views:,}"),
+               (_l("Status"), lambda o: format_html("{} {}", pill(_l("Active"), "ok") if o.active else pill(_l("Hidden"), "mut"), pill(_l("Featured"), "info") if o.featured else ""))]
+    actions = {"active": (_l("Show / hide"), "", toggle("active", "is now visible", "is now hidden")), "feature": (_l("Feature / unfeature"), "", toggle("featured", "featured", "unfeatured"))}
+
+# ---------- Advertise with us ----------
+def approve_ad(o, r):
+    """Confirm the vendor's payment and publish (or extend) the advert."""
+    p = o.payment
+    if p is None: return "has no payment yet, so it was not published"
+    if p.status in ("failed", "refunded"): return "has a failed or refunded payment, so it was not published"
+    fresh = p.status == "pending"
+    if fresh: p.status = "completed"; p.recorded_by = r.user; p.save(update_fields=["status", "recorded_by"])
+    if o.status == "live" and not fresh: return "is already live"
+    ad = o.publish(r)
+    return f"is live until {ad.expires:%d %b %Y}"
+
+def reject_ad(o, r):
+    p = o.payment
+    if p and p.status == "pending": p.status = "failed"; p.save(update_fields=["status"])
+    if o.advert_id and o.status == "live":
+        o.advert.active = False; o.advert.save(update_fields=["active"])
+    o.status = "rejected"; o.save(update_fields=["status"])
+    if o.user_id:
+        Notification.objects.create(user=o.user, link=o.get_absolute_url(), title=f"Your advert was not approved: {o.title}"[:120], body=o.admin_note)
+    return "was not approved"
+
+AD_TONES = {"awaiting_payment": "warn", "paid": "info", "live": "ok", "rejected": "bad"}
+
+@register("ad-orders")
+class AdOrders(Resource):
+    title, icon, nav, model = _l("Advert Requests"), "i-mega", "marketing", AdOrder
+    form = model_form(AdOrder, ["package", "business_name", "contact_name", "phone", "email", "category", "city", "title", "description",
+                                "price", "price_unit", "negotiable", "image", "photo2", "photo3", "photo4", "admin_note"],
+                      widgets={"description": AREA(5), "admin_note": AREA(3)})
+    can_add = False
+    note = _l("Vendors who used Advertise with us. Confirm the payment to publish the advert; it then runs for the package's days.")
+    search = ["business_name", "title", "phone", "email"]
+    filters = [("status", _l("All statuses"), lambda: AdOrder.STATUS, lambda qs, v: qs.filter(status=v))]
+    def queryset(self): return AdOrder.objects.select_related("package", "category", "advert").prefetch_related("payments")
+    row_link = lambda self, o: o.get_absolute_url()
+    columns = [("", thumb("image")), (_l("Advert"), bold("title", lambda o: f"{o.business_name} · {o.phone}")), (_l("Package"), lambda o: o.package.name),
+               (_l("Amount"), lambda o: f"TSh {o.package.price:,}"),
+               (_l("Payment"), lambda o: pill(o.payment.get_status_display(), {"pending": "warn", "completed": "ok"}.get(o.payment.status, "bad")) if o.payment else pill(_l("Not paid"), "mut")),
+               (_l("Status"), lambda o: pill(_l("Expired"), "bad") if o.is_expired else pill(o.get_status_display(), AD_TONES.get(o.status, "mut"))),
+               (_l("Runs until"), lambda o: o.expires.strftime("%d %b %Y") if o.expires else "—")]
+    actions = {"approve": (_l("Confirm payment & publish"), "", approve_ad), "reject": (_l("Do not approve"), "dang", reject_ad)}
+    front = {"approve": lambda o: o.payment_pending}
+
+@register("ad-packages")
+class AdPackages(Resource):
+    title, icon, nav, model = _l("Advert Packages"), "i-tag", "marketing", AdPackage
+    form = model_form(AdPackage, ["name", "slug", "tagline", "price", "days", "max_photos", "features", "featured", "home_page", "popular", "active", "order"],
+                      widgets={"features": AREA(6)})
+    note = _l("The packages vendors choose on the Advertise with us page.")
+    search, ordering = ["name"], ["order", "price"]
+    columns = [(_l("Package"), bold("name", lambda o: o.tagline)), (_l("Price"), money("price")), (_l("Days"), lambda o: o.days),
+               (_l("Photos"), lambda o: o.max_photos), (_l("Requests"), lambda o: o.orders.count()),
+               (_l("Status"), lambda o: format_html("{} {} {}", pill(_l("Active"), "ok") if o.active else pill(_l("Hidden"), "mut"),
+                                                    pill(_l("Featured"), "info") if o.featured else "", pill(_l("Home page"), "info") if o.home_page else ""))]
+    actions = {"active": (_l("Show / hide"), "", toggle("active", "is now visible", "is now hidden"))}
 
 @register("vendors")
 class Vendors(Resource):
-    title, icon, nav, model = "Vendors", "m-briefcase", "marketing", Vendor
+    title, icon, nav, model = _l("Vendors"), "m-briefcase", "marketing", Vendor
     form = model_form(Vendor, ["name", "slug", "city", "phone", "logo", "verified", "member_since", "why_choose"], widgets={"member_since": DATE, "why_choose": AREA(3)})
     search, ordering = ["name", "city"], ["name"]
-    columns = [("", thumb("logo")), ("Vendor", bold("name", lambda o: o.phone)), ("City", lambda o: o.city), ("Adverts", lambda o: o.adverts.count()),
-               ("Verified", yesno("verified", "Verified", "—"))]
+    columns = [("", thumb("logo")), (_l("Vendor"), bold("name", lambda o: o.phone)), (_l("City"), lambda o: o.city), (_l("Adverts"), lambda o: o.adverts.count()),
+               (_l("Verified"), yesno("verified", _l("Verified"), "—"))]
 
 @register("service-categories")
 class ServiceCategories(Resource):
-    title, icon, nav, model = "Service Categories", "m-grid", "marketing", ServiceCategory
+    title, icon, nav, model = _l("Service Categories"), "m-grid", "marketing", ServiceCategory
     form = model_form(ServiceCategory, ["name", "slug", "blurb", "button_label", "image", "order"], widgets={"blurb": AREA(2)})
     search, ordering = ["name"], ["order", "pk"]
-    columns = [("", thumb("image")), ("Category", bold("name", lambda o: o.blurb[:60])), ("Adverts", lambda o: Advert.objects.filter(category=o).count()), ("Order", lambda o: o.order)]
+    columns = [("", thumb("image")), (_l("Category"), bold("name", lambda o: o.blurb[:60])), (_l("Adverts"), lambda o: Advert.objects.filter(category=o).count()), (_l("Order"), lambda o: o.order)]
 
 # ---------- honeymoon ----------
 def booking_status(status, msg):
@@ -343,8 +401,8 @@ def booking_status(status, msg):
         if o.user_id and status in ("confirmed", "cancelled"):
             Notification.objects.create(user=o.user, link=o.package.get_absolute_url(),
                 title=f"Honeymoon booking {'confirmed' if status == 'confirmed' else 'cancelled'}: {o.package.title}",
-                body="Hongera! Your honeymoon booking is confirmed. Our team will share the travel details with you." if status == "confirmed"
-                     else "Your honeymoon booking request was cancelled. Contact us if you would like to choose other dates.")
+                body=_l("Hongera! Your honeymoon booking is confirmed. Our team will share the travel details with you.") if status == "confirmed"
+                     else _l("Your honeymoon booking request was cancelled. Contact us if you would like to choose other dates."))
         return msg
     return fn
 
@@ -352,25 +410,25 @@ BOOKING_TONES = {"new": "warn", "contacted": "info", "confirmed": "ok", "cancell
 
 @register("bookings")
 class Bookings(Resource):
-    title, icon, nav, model = "Honeymoon Bookings", "m-cal", "honeymoon", Booking
+    title, icon, nav, model = _l("Honeymoon Bookings"), "m-cal", "honeymoon", Booking
     can_add = False
     form = model_form(Booking, ["status", "travel_date", "couples", "name", "phone", "email", "message"], widgets={"travel_date": DATE, "message": AREA(3)})
     search = ["name", "phone", "email", "package__title"]
-    filters = [("status", "All statuses", lambda: Booking.STATUS, lambda qs, v: qs.filter(status=v)),
-               ("package__destination", "All destinations", lambda: [(str(d.pk), d.name) for d in Destination.objects.all()], lambda qs, v: qs.filter(package__destination_id=v))]
+    filters = [("status", _l("All statuses"), lambda: Booking.STATUS, lambda qs, v: qs.filter(status=v)),
+               ("package__destination", _l("All destinations"), lambda: [(str(d.pk), d.name) for d in Destination.objects.all()], lambda qs, v: qs.filter(package__destination_id=v))]
     ordering = ["-created"]
     def queryset(self): return Booking.objects.select_related("package__destination", "user")
-    columns = [("Couple", lambda o: format_html('<b class="mn">{}</b><small class="mc">{}{}</small>', o.name, o.phone, f" · {o.email}" if o.email else "")),
-               ("Package", lambda o: format_html('<a class="va" href="{}" target="_blank">{}</a><small class="mc">{}</small>', o.package.get_absolute_url(), o.package.title, o.package.destination.name)),
-               ("Travel date", when("travel_date")), ("Couples", lambda o: o.couples), ("Estimated total", lambda o: f"TSh {o.total:,}"),
-               ("Received", when("created", "%d %b %Y %H:%M")), ("Status", lambda o: pill(o.get_status_display(), BOOKING_TONES[o.status]))]
-    actions = {"contacted": ("Mark contacted", "", booking_status("contacted", "marked contacted")),
-               "confirmed": ("Confirm booking", "", booking_status("confirmed", "confirmed and the member notified")),
-               "cancelled": ("Cancel booking", "dang", booking_status("cancelled", "cancelled"))}
+    columns = [(_l("Couple"), lambda o: format_html('<b class="mn">{}</b><small class="mc">{}{}</small>', o.name, o.phone, f" · {o.email}" if o.email else "")),
+               (_l("Package"), lambda o: format_html('<a class="va" href="{}" target="_blank">{}</a><small class="mc">{}</small>', o.package.get_absolute_url(), o.package.title, o.package.destination.name)),
+               (_l("Travel date"), when("travel_date")), (_l("Couples"), lambda o: o.couples), (_l("Estimated total"), lambda o: f"TSh {o.total:,}"),
+               (_l("Received"), when("created", "%d %b %Y %H:%M")), (_l("Status"), lambda o: pill(o.get_status_display(), BOOKING_TONES[o.status]))]
+    actions = {"contacted": (_l("Mark contacted"), "", booking_status("contacted", "marked contacted")),
+               "confirmed": (_l("Confirm booking"), "", booking_status("confirmed", "confirmed and the member notified")),
+               "cancelled": (_l("Cancel booking"), "dang", booking_status("cancelled", "cancelled"))}
 
 @register("packages")
 class Packages(Resource):
-    title, icon, nav, model = "Honeymoon Packages", "i-gem", "honeymoon", Package
+    title, icon, nav, model = _l("Honeymoon Packages"), "i-gem", "honeymoon", Package
     form = model_form(Package, ["title", "slug", "destination", "location", "package_type", "badge", "badge_tone", "image", "price", "days", "nights", "stars",
                                 "stay", "meals", "meals_detail", "extra", "extra_icon", "flights", "transfer", "romance", "overview", "highlights", "itinerary",
                                 "inclusions", "exclusions", "accommodation", "activities", "important_info", "ideal_for", "rating", "reviews",
@@ -378,58 +436,62 @@ class Packages(Resource):
                       widgets={k: AREA(4) for k in ("overview", "highlights", "itinerary", "inclusions", "exclusions", "accommodation", "activities", "important_info", "ideal_for")},
                       slug_from="title")
     search = ["title", "location", "destination__name"]
-    filters = [("destination", "All destinations", lambda: [(str(d.pk), d.name) for d in Destination.objects.all()], lambda qs, v: qs.filter(destination_id=v)),
-               ("active", "All", lambda: [("1", "Active"), ("0", "Hidden")], lambda qs, v: qs.filter(active=v == "1"))]
+    filters = [("destination", _l("All destinations"), lambda: [(str(d.pk), d.name) for d in Destination.objects.all()], lambda qs, v: qs.filter(destination_id=v)),
+               ("active", _l("All"), lambda: [("1", _l("Active")), ("0", _l("Hidden"))], lambda qs, v: qs.filter(active=v == "1"))]
     ordering = ["destination__order", "order", "pk"]
     def queryset(self): return Package.objects.select_related("destination").annotate(n_book=Count("bookings", distinct=True), n_photos=Count("photos", distinct=True))
     row_link = lambda self, o: o.get_absolute_url()
-    columns = [("", thumb("image")), ("Package", bold("title", lambda o: f"{o.destination.name} · {o.days} days {o.nights} nights")), ("Price", money("price")),
-               ("Badge", lambda o: o.badge or "—"),
-               ("Photos", lambda o: format_html('<a class="va" href="{}?package={}">{}</a>', reverse("dash_manage", args=["package-photos"]), o.pk, o.n_photos)),
-               ("Bookings", lambda o: format_html('<a class="va" href="{}?q={}">{}</a>', reverse("dash_manage", args=["bookings"]), o.title, o.n_book)),
-               ("Status", lambda o: format_html("{} {}", pill("Active", "ok") if o.active else pill("Hidden", "mut"), pill("Featured", "info") if o.featured else ""))]
-    actions = {"active": ("Show / hide", "", toggle("active", "is now visible", "is now hidden")), "feature": ("Feature / unfeature", "", toggle("featured", "featured", "unfeatured"))}
+    columns = [("", thumb("image")), (_l("Package"), bold("title", lambda o: f"{o.destination.name} · {o.days} days {o.nights} nights")), (_l("Price"), money("price")),
+               (_l("Badge"), lambda o: o.badge or "—"),
+               (_l("Photos"), lambda o: format_html('<a class="va" href="{}?package={}">{}</a>', reverse("dash_manage", args=["package-photos"]), o.pk, o.n_photos)),
+               (_l("Bookings"), lambda o: format_html('<a class="va" href="{}?q={}">{}</a>', reverse("dash_manage", args=["bookings"]), o.title, o.n_book)),
+               (_l("Status"), lambda o: format_html("{} {}", pill(_l("Active"), "ok") if o.active else pill(_l("Hidden"), "mut"), pill(_l("Featured"), "info") if o.featured else ""))]
+    actions = {"active": (_l("Show / hide"), "", toggle("active", "is now visible", "is now hidden")), "feature": (_l("Feature / unfeature"), "", toggle("featured", "featured", "unfeatured"))}
 
 @register("destinations")
 class Destinations(Resource):
-    title, icon, nav, model = "Honeymoon Destinations", "i-palm", "honeymoon", Destination
+    title, icon, nav, model = _l("Honeymoon Destinations"), "i-palm", "honeymoon", Destination
     form = model_form(Destination, ["name", "slug", "country", "kind", "region", "tagline", "description", "image", "from_price", "days", "nights", "features",
                                     "rating", "reviews", "featured", "active", "order"], widgets={"description": AREA(3), "features": AREA(3)})
     search, ordering = ["name", "country"], ["order", "name"]
-    filters = [("kind", "All types", lambda: Destination.KINDS, lambda qs, v: qs.filter(kind=v)),
-               ("region", "All regions", lambda: Destination.REGIONS, lambda qs, v: qs.filter(region=v))]
+    filters = [("kind", _l("All types"), lambda: Destination.KINDS, lambda qs, v: qs.filter(kind=v)),
+               ("region", _l("All regions"), lambda: Destination.REGIONS, lambda qs, v: qs.filter(region=v))]
     def queryset(self): return Destination.objects.annotate(n_pkg=Count("packages"))
     row_link = lambda self, o: o.get_absolute_url()
-    columns = [("", thumb("image")), ("Destination", bold("name", lambda o: f"{o.country} · {o.get_kind_display()}")), ("From", money("from_price")),
-               ("Packages", lambda o: format_html('<a class="va" href="{}?destination={}">{}</a>', reverse("dash_manage", args=["packages"]), o.pk, o.n_pkg)),
-               ("Rating", lambda o: f"{o.rating} ({o.reviews:,})"),
-               ("Status", lambda o: format_html("{} {}", pill("Active", "ok") if o.active else pill("Hidden", "mut"), pill("On home page", "info") if o.featured else ""))]
-    actions = {"active": ("Show / hide", "", toggle("active", "is now visible", "is now hidden")), "feature": ("Show on home page / remove", "", toggle("featured", "is on the home page", "removed from the home page"))}
+    columns = [("", thumb("image")), (_l("Destination"), bold("name", lambda o: f"{o.country} · {o.get_kind_display()}")), (_l("From"), money("from_price")),
+               (_l("Packages"), lambda o: format_html('<a class="va" href="{}?destination={}">{}</a>', reverse("dash_manage", args=["packages"]), o.pk, o.n_pkg)),
+               (_l("Rating"), lambda o: f"{o.rating} ({o.reviews:,})"),
+               (_l("Status"), lambda o: format_html("{} {}", pill(_l("Active"), "ok") if o.active else pill(_l("Hidden"), "mut"), pill(_l("On home page"), "info") if o.featured else ""))]
+    actions = {"active": (_l("Show / hide"), "", toggle("active", "is now visible", "is now hidden")), "feature": (_l("Show on home page / remove"), "", toggle("featured", "is on the home page", "removed from the home page"))}
 
 @register("package-photos")
 class PackagePhotos(Resource):
-    title, icon, nav, model = "Package Photos", "i-image", "honeymoon", PackagePhoto
+    title, icon, nav, model = _l("Package Photos"), "i-image", "honeymoon", PackagePhoto
     form = model_form(PackagePhoto, ["package", "image", "caption", "order"])
     search = ["caption", "package__title"]
-    filters = [("package", "All packages", lambda: [(str(p.pk), p.title) for p in Package.objects.all()], lambda qs, v: qs.filter(package_id=v))]
+    filters = [("package", _l("All packages"), lambda: [(str(p.pk), p.title) for p in Package.objects.all()], lambda qs, v: qs.filter(package_id=v))]
     ordering = ["package__title", "order", "pk"]
     def queryset(self): return PackagePhoto.objects.select_related("package")
-    columns = [("", thumb("image")), ("Package", lambda o: o.package.title), ("Caption", lambda o: o.caption or "—"), ("Order", lambda o: o.order)]
+    columns = [("", thumb("image")), (_l("Package"), lambda o: o.package.title), (_l("Caption"), lambda o: o.caption or "—"), (_l("Order"), lambda o: o.order)]
 
 @register("package-reviews")
 class PackageReviews(Resource):
-    title, icon, nav, model = "Package Reviews", "i-star", "honeymoon", PackageReview
+    title, icon, nav, model = _l("Package Reviews"), "i-star", "honeymoon", PackageReview
     can_add = can_edit = False
     search = ["comment", "package__title", "user__username"]
     ordering = ["-created"]
     def queryset(self): return PackageReview.objects.select_related("package", "user__member")
-    columns = [("Member", lambda o: user_label(o.user)), ("Package", lambda o: o.package.title), ("Rating", lambda o: "★" * o.rating),
-               ("Comment", lambda o: (o.comment or "—")[:120]), ("Date", when("created"))]
+    columns = [(_l("Member"), lambda o: user_label(o.user)), (_l("Package"), lambda o: o.package.title), (_l("Rating"), lambda o: "★" * o.rating),
+               (_l("Comment"), lambda o: (o.comment or "—")[:120]), (_l("Date"), when("created"))]
 
 # ---------- payments ----------
 def complete_payment(o, r):
     if o.status != "pending": return "was not pending"
-    o.status = "completed"; o.save(update_fields=["status"]); activated = o.activate()
+    o.status = "completed"; o.save(update_fields=["status"])
+    if o.kind == "advert" and o.ad_order_id:   # an Advertise with us payment: publish (or extend) the advert
+        ad = o.ad_order.publish(r)
+        return f"confirmed, and the advert is live until {ad.expires:%d %b %Y}"
+    activated = o.activate()
     if activated and o.user_id:
         Notification.objects.create(user=o.user, title=f"{o.plan.name} plan activated", link=reverse("m_membership"),
                                     body=f"Thank you! Your {o.plan.name} plan is active until {o.user.member.premium_until:%d %b %Y}.")
@@ -449,49 +511,49 @@ def refund_payment(o, r):
 
 @register("payments")
 class Payments(Resource):
-    title, icon, nav, model = "All Transactions", "i-coins", "payments", Payment
+    title, icon, nav, model = _l("All Transactions"), "i-coins", "payments", Payment
     can_add = can_delete = False
     form = PaymentForm
     search = ["invoice_no", "payer_name", "payer_phone", "reference", "description"]
-    filters = [("status", "All statuses", lambda: list(Payment.STATUS), lambda qs, v: qs.filter(status=v)),
-               ("kind", "All types", lambda: list(Payment.KINDS), lambda qs, v: qs.filter(kind=v)),
-               ("gateway", "All gateways", lambda: list(Payment.GATEWAYS), lambda qs, v: qs.filter(gateway=v))]
+    filters = [("status", _l("All statuses"), lambda: list(Payment.STATUS), lambda qs, v: qs.filter(status=v)),
+               ("kind", _l("All types"), lambda: list(Payment.KINDS), lambda qs, v: qs.filter(kind=v)),
+               ("gateway", _l("All gateways"), lambda: list(Payment.GATEWAYS), lambda qs, v: qs.filter(gateway=v))]
     ordering = ["-created"]
     per_page = 25
     def queryset(self): return Payment.objects.select_related("plan")
-    columns = [("Invoice", bold("invoice_no", lambda o: o.created.strftime("%d %b %Y %H:%M"))), ("Payer", lambda o: format_html('<b class="mn">{}</b><small class="mc">{}</small>', o.payer_name, o.payer_phone)),
-               ("For", lambda o: o.description or o.get_kind_display()), ("Gateway", lambda o: format_html("{}<small class=\"mc\">{}</small>", o.get_gateway_display(), o.reference or "")),
-               ("Amount", money("amount")),
-               ("Status", lambda o: pill(o.get_status_display(), {"completed": "ok", "pending": "warn"}.get(o.status, "bad"))),
+    columns = [(_l("Invoice"), bold("invoice_no", lambda o: o.created.strftime("%d %b %Y %H:%M"))), (_l("Payer"), lambda o: format_html('<b class="mn">{}</b><small class="mc">{}</small>', o.payer_name, o.payer_phone)),
+               (_l("For"), lambda o: o.description or o.get_kind_display()), (_l("Gateway"), lambda o: format_html("{}<small class=\"mc\">{}</small>", o.get_gateway_display(), o.reference or "")),
+               (_l("Amount"), money("amount")),
+               (_l("Status"), lambda o: pill(o.get_status_display(), {"completed": "ok", "pending": "warn"}.get(o.status, "bad"))),
                ("", lambda o: format_html('<a class="va" href="{}" target="_blank">Receipt</a>', reverse("dash_receipt", args=[o.pk])) if o.status == "completed" else "")]
-    actions = {"complete": ("Approve payment", "", complete_payment), "refund": ("Refund", "dang", refund_payment)}
+    actions = {"complete": (_l("Approve payment"), "", complete_payment), "refund": (_l("Refund"), "dang", refund_payment)}
     front = {"complete": lambda o: o.status == "pending"}        # approving is one click, not hidden in the menu
 
 # ---------- members (add / edit only; the list is the Members Management page) ----------
 @register("members")
 class Members(Resource):
-    title, icon, nav, model = "Member", "m-people", "members", Member
+    title, icon, nav, model = _l("Member"), "m-people", "members", Member
     form = MemberAdminForm
     def after_save(self, obj, request, created):
         if created and not obj.joined: obj.joined = timezone.now(); obj.save(update_fields=["joined"])
 
 # ---------- audit log (owner only, read only) ----------
-ACTIONS = {1: ("Added", "ok"), 2: ("Changed", "info"), 3: ("Deleted", "bad")}
+ACTIONS = {1: (_l("Added"), "ok"), 2: (_l("Changed"), "info"), 3: (_l("Deleted"), "bad")}
 @register("audit")
 class Audit(Resource):
-    title, icon, nav, model = "Audit Logs", "m-doc", "audit", LogEntry
+    title, icon, nav, model = _l("Audit Logs"), "m-doc", "audit", LogEntry
     can_add = can_edit = can_delete = False; owner_only = True; per_page = 30
     search = ["object_repr", "change_message", "user__username"]
-    filters = [("action", "All actions", lambda: [("1", "Added"), ("2", "Changed"), ("3", "Deleted")], lambda qs, v: qs.filter(action_flag=int(v)))]
+    filters = [("action", _l("All actions"), lambda: [("1", _l("Added")), ("2", _l("Changed")), ("3", _l("Deleted"))], lambda qs, v: qs.filter(action_flag=int(v)))]
     ordering = ["-action_time"]
     def queryset(self): return LogEntry.objects.select_related("user", "content_type")
-    columns = [("When", when("action_time", "%d %b %Y %H:%M")), ("Staff", lambda o: user_label(o.user)),
-               ("Action", lambda o: pill(*ACTIONS.get(o.action_flag, ("—", "mut")))), ("Type", lambda o: o.content_type.name.title() if o.content_type else "—"),
-               ("Item", lambda o: o.object_repr), ("Details", lambda o: o.get_change_message() or "—")]
+    columns = [(_l("When"), when("action_time", "%d %b %Y %H:%M")), (_l("Staff"), lambda o: user_label(o.user)),
+               (_l("Action"), lambda o: pill(*ACTIONS.get(o.action_flag, ("—", "mut")))), (_l("Type"), lambda o: o.content_type.name.title() if o.content_type else "—"),
+               (_l("Item"), lambda o: o.object_repr), (_l("Details"), lambda o: o.get_change_message() or "—")]
 
 SIDEBAR = {  # nav key -> resources listed together in a section header
     "events": ["events", "event-categories", "registrations"], "plans": ["plans", "perks"],
     "content": ["articles", "article-categories", "home-strips"], "comms": ["templates", "broadcasts"],
-    "support": ["tickets", "reports", "inquiries"], "marketing": ["adverts", "vendors", "service-categories"],
+    "support": ["tickets", "reports", "inquiries"], "marketing": ["ad-orders", "ad-packages", "adverts", "vendors", "service-categories"],
     "honeymoon": ["bookings", "packages", "destinations", "package-photos", "package-reviews"],
 }

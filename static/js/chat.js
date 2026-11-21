@@ -29,7 +29,7 @@
                                                    headers: { 'X-Requested-With': 'fetch' } });
         const j = await r.json();
         if (j.ok && j.html) { swap(pending, j.html, j.id); } else { failed(pending, j.error); }
-      } catch (_) { failed(pending, 'Ujumbe haukutumwa. Angalia mtandao wako.'); }
+      } catch (_) { failed(pending, gettext('Ujumbe haukutumwa. Angalia mtandao wako.')); }
     });
     $$('[data-emo]').forEach((b) => b.addEventListener('click', () => { box.value += b.dataset.emo; box.focus(); fit(); $('.ch-emo').open = false; }));
     $$('[data-say]').forEach((b) => b.addEventListener('click', () => { box.value = b.dataset.say; box.focus(); fit(); }));
@@ -43,7 +43,7 @@
       const row = document.createElement('div'); row.className = 'ch-prev';
       const img = document.createElement('img'); img.src = URL.createObjectURL(file.files[0]); row.appendChild(img);
       const name = document.createElement('span'); name.textContent = file.files[0].name; row.appendChild(name);
-      const x = document.createElement('button'); x.type = 'button'; x.textContent = '×'; x.setAttribute('aria-label', 'Ondoa picha');
+      const x = document.createElement('button'); x.type = 'button'; x.textContent = '×'; x.setAttribute('aria-label', gettext('Ondoa picha'));
       x.onclick = () => { file.value = ''; $('.ch-file').classList.remove('has'); row.remove(); };
       row.appendChild(x); form.parentNode.insertBefore(row, form);
     });
@@ -89,7 +89,7 @@
 
   function failed(pending, why) {
     pending.classList.remove('ch-wait'); pending.classList.add('ch-fail');
-    const note = document.createElement('small'); note.className = 'ch-err'; note.textContent = why || 'Ujumbe haukutumwa.';
+    const note = document.createElement('small'); note.className = 'ch-err'; note.textContent = why || gettext('Ujumbe haukutumwa.');
     $('.ch-bb', pending).appendChild(note);
   }
 
@@ -112,7 +112,7 @@
               last = j.last; if (stick) toEnd(true);
               fresh.forEach(wire);   // the ones already on the page were wired by calls.js
             }
-            if (presence) { presence.classList.toggle('on', !!j.online); if (j.online) presence.textContent = 'Yupo mtandaoni'; }
+            if (presence) { presence.classList.toggle('on', !!j.online); if (j.online) presence.textContent = gettext('Yupo mtandaoni'); }
             if (j.seen) $$('.ch-tick', body).forEach((t) => t.classList.add('seen'));
           }
         } catch (_) {}

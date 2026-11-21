@@ -1,6 +1,7 @@
 """Honeymoon destinations and packages couples can browse and request to book."""
 from django.conf import settings
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 
 def lines(text):
@@ -11,25 +12,25 @@ def icon_lines(text, default="star"):
     return [tuple(l.split("|", 1)) if "|" in l else (default, l) for l in lines(text)]
 
 class Destination(models.Model):
-    KINDS = [("beach", "Beach & Islands"), ("safari", "Safari & Nature"), ("mountains", "Mountains"), ("city", "Luxury Cities"),
-             ("resort", "Luxury Resorts"), ("romantic", "Romantic Getaways")]
-    REGIONS = [("tanzania", "Tanzania"), ("east-africa", "East Africa"), ("international", "International")]
+    KINDS = [("beach", _("Beach & Islands")), ("safari", _("Safari & Nature")), ("mountains", _("Mountains")), ("city", _("Luxury Cities")),
+             ("resort", _("Luxury Resorts")), ("romantic", _("Romantic Getaways"))]
+    REGIONS = [("tanzania", _("Tanzania")), ("east-africa", _("East Africa")), ("international", _("International"))]
     name = models.CharField(max_length=80)
     slug = models.SlugField(unique=True)
     country = models.CharField(max_length=60)
-    kind = models.CharField("Destination type", max_length=12, choices=KINDS, default="beach")
+    kind = models.CharField(_("Destination type"), max_length=12, choices=KINDS, default="beach")
     region = models.CharField(max_length=14, choices=REGIONS, default="tanzania")
-    tagline = models.CharField(max_length=140, help_text="One line on the card, e.g. White sandy beaches, turquoise waters and luxury resorts.")
+    tagline = models.CharField(max_length=140, help_text=_("One line on the card, e.g. White sandy beaches, turquoise waters and luxury resorts."))
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to="honeymoon/", blank=True)
-    from_price = models.PositiveIntegerField("From price (per couple)", default=0)
-    days = models.PositiveSmallIntegerField("Typical days", default=5)
-    nights = models.PositiveSmallIntegerField("Typical nights", default=4)
+    from_price = models.PositiveIntegerField(_("From price (per couple)"), default=0)
+    days = models.PositiveSmallIntegerField(_("Typical days"), default=5)
+    nights = models.PositiveSmallIntegerField(_("Typical nights"), default=4)
     features = models.TextField(blank=True, default="bed|Hotel\nfood|Meals\nmap|Tours",
-                                help_text="Up to three short features on the card, one per line as icon|text. Icons: bed, food, map, safari, wave, city, dive, hike, villa.")
+                                help_text=_("Up to three short features on the card, one per line as icon|text. Icons: bed, food, map, safari, wave, city, dive, hike, villa."))
     rating = models.DecimalField(max_digits=2, decimal_places=1, default=4.7)
-    reviews = models.PositiveIntegerField("Number of reviews", default=0)
-    featured = models.BooleanField(default=False, help_text="Show on the home page.")
+    reviews = models.PositiveIntegerField(_("Number of reviews"), default=0)
+    featured = models.BooleanField(default=False, help_text=_("Show on the home page."))
     active = models.BooleanField(default=True)
     order = models.PositiveSmallIntegerField(default=0)
     class Meta: ordering = ["order", "name"]
@@ -39,42 +40,42 @@ class Destination(models.Model):
     def feature_list(self): return icon_lines(self.features)[:3]
 
 class Package(models.Model):
-    TYPES = [("beach", "Beach & Island"), ("resort", "Luxury Resort"), ("safari", "Safari & Beach"), ("city", "City & Culture"), ("all-inclusive", "All Inclusive")]
-    BADGE_TONES = [("gold", "Gold"), ("green", "Green"), ("blue", "Blue"), ("pink", "Pink"), ("orange", "Orange"), ("purple", "Purple"), ("navy", "Navy")]
+    TYPES = [("beach", _("Beach & Island")), ("resort", _("Luxury Resort")), ("safari", _("Safari & Beach")), ("city", _("City & Culture")), ("all-inclusive", _("All Inclusive"))]
+    BADGE_TONES = [("gold", _("Gold")), ("green", _("Green")), ("blue", _("Blue")), ("pink", _("Pink")), ("orange", _("Orange")), ("purple", _("Purple")), ("navy", _("Navy"))]
     destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name="packages")
     title = models.CharField(max_length=120)
     slug = models.SlugField(unique=True)
-    location = models.CharField(max_length=80, help_text="e.g. Zanzibar, Tanzania")
+    location = models.CharField(max_length=80, help_text=_("e.g. Zanzibar, Tanzania"))
     package_type = models.CharField(max_length=14, choices=TYPES, default="beach")
-    badge = models.CharField(max_length=30, blank=True, help_text="Ribbon on the photo, e.g. Best Seller, Luxury, All Inclusive.")
+    badge = models.CharField(max_length=30, blank=True, help_text=_("Ribbon on the photo, e.g. Best Seller, Luxury, All Inclusive."))
     badge_tone = models.CharField(max_length=8, choices=BADGE_TONES, default="gold")
     image = models.ImageField(upload_to="honeymoon/", blank=True)
-    price = models.PositiveIntegerField("Price (per couple)", default=0)
+    price = models.PositiveIntegerField(_("Price (per couple)"), default=0)
     days = models.PositiveSmallIntegerField(default=5)
     nights = models.PositiveSmallIntegerField(default=4)
-    stars = models.PositiveSmallIntegerField("Hotel category (stars)", default=5, choices=[(3, "3 Star"), (4, "4 Star"), (5, "5 Star")])
-    stay = models.CharField("Accommodation", max_length=40, default="Luxury Resort")
-    meals = models.CharField(max_length=40, default="All Meals", help_text="e.g. All Meals, Breakfast")
+    stars = models.PositiveSmallIntegerField(_("Hotel category (stars)"), default=5, choices=[(3, _("3 Star")), (4, _("4 Star")), (5, _("5 Star"))])
+    stay = models.CharField(_("Accommodation"), max_length=40, default="Luxury Resort")
+    meals = models.CharField(max_length=40, default="All Meals", help_text=_("e.g. All Meals, Breakfast"))
     meals_detail = models.CharField(max_length=60, blank=True, default="Breakfast, Lunch & Dinner")
-    extra = models.CharField("Card extra", max_length=40, blank=True, default="Airport Transfer", help_text="Third feature on the card, e.g. Airport Transfer, Candle Dinner.")
-    extra_icon = models.CharField(max_length=10, default="car", help_text="Icon for the extra: car, plane, map, dive, heart, villa, safari, wave, hike, gift.")
-    flights = models.CharField("Flight option", max_length=60, default="Available on request")
-    transfer = models.CharField("Airport transfer", max_length=60, default="Included")
-    romance = models.CharField("Romantic activities", max_length=60, default="Included")
+    extra = models.CharField(_("Card extra"), max_length=40, blank=True, default="Airport Transfer", help_text=_("Third feature on the card, e.g. Airport Transfer, Candle Dinner."))
+    extra_icon = models.CharField(max_length=10, default="car", help_text=_("Icon for the extra: car, plane, map, dive, heart, villa, safari, wave, hike, gift."))
+    flights = models.CharField(_("Flight option"), max_length=60, default="Available on request")
+    transfer = models.CharField(_("Airport transfer"), max_length=60, default="Included")
+    romance = models.CharField(_("Romantic activities"), max_length=60, default="Included")
     overview = models.TextField(blank=True)
-    highlights = models.TextField(blank=True, help_text="Package highlights, one per line as icon|text. Icons: palm, heart, dive, boat, camera, gift, safari, wine, spa, hike, city, star.")
-    itinerary = models.TextField(blank=True, help_text="One day per line as Title|Details, e.g. Day 1 - Arrival|Airport pickup and welcome dinner.")
-    inclusions = models.TextField(blank=True, help_text="What is included, one per line.")
-    exclusions = models.TextField(blank=True, help_text="What is not included, one per line.")
-    accommodation = models.TextField(blank=True, help_text="Where the couple stays.")
-    activities = models.TextField(blank=True, help_text="Activities, one per line.")
-    important_info = models.TextField("Important information", blank=True, help_text="One per line.")
+    highlights = models.TextField(blank=True, help_text=_("Package highlights, one per line as icon|text. Icons: palm, heart, dive, boat, camera, gift, safari, wine, spa, hike, city, star."))
+    itinerary = models.TextField(blank=True, help_text=_("One day per line as Title|Details, e.g. Day 1 - Arrival|Airport pickup and welcome dinner."))
+    inclusions = models.TextField(blank=True, help_text=_("What is included, one per line."))
+    exclusions = models.TextField(blank=True, help_text=_("What is not included, one per line."))
+    accommodation = models.TextField(blank=True, help_text=_("Where the couple stays."))
+    activities = models.TextField(blank=True, help_text=_("Activities, one per line."))
+    important_info = models.TextField(_("Important information"), blank=True, help_text=_("One per line."))
     ideal_for = models.TextField(blank=True, default="heart|Honeymooners\npeople|Couples seeking romance\nsun|Beach lovers\ncamera|Adventure & exploration\nstar|Special occasions (Anniversary)",
-                                 help_text="One per line as icon|text.")
+                                 help_text=_("One per line as icon|text."))
     rating = models.DecimalField(max_digits=2, decimal_places=1, default=4.7)
-    reviews = models.PositiveIntegerField("Number of reviews", default=0)
-    discount = models.BooleanField("Honeymoon discount", default=False)
-    free_addons = models.BooleanField("Free add-ons", default=False)
+    reviews = models.PositiveIntegerField(_("Number of reviews"), default=0)
+    discount = models.BooleanField(_("Honeymoon discount"), default=False)
+    free_addons = models.BooleanField(_("Free add-ons"), default=False)
     all_inclusive = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
@@ -107,7 +108,7 @@ class PackagePhoto(models.Model):
     def __str__(self): return self.caption or f"Photo of {self.package}"
 
 class Booking(models.Model):
-    STATUS = [("new", "New"), ("contacted", "Contacted"), ("confirmed", "Confirmed"), ("cancelled", "Cancelled")]
+    STATUS = [("new", _("New")), ("contacted", _("Contacted")), ("confirmed", _("Confirmed")), ("cancelled", _("Cancelled"))]
     package = models.ForeignKey(Package, on_delete=models.CASCADE, related_name="bookings")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="honeymoon_bookings")
     name = models.CharField(max_length=80)

@@ -1,28 +1,28 @@
-{% extends "members/base.html" %}{% block title %}Help &amp; Support{% endblock %}
+{% extends "members/base.html" %}{% load i18n %}{% block title %}{% translate "Help &amp; Support" %}{% endblock %}
 {% block content %}
-{% include "members/_banner.html" with icon="help" title="Help & Support" sub="We are here to help you. Find answers, contact our support team, or get guidance on using Sakinah." quote="Na Mwenyezi Mungu aliwaumba kwa jozi." ref="Qur'an 78:8" art="lantern" %}
+{% include "members/_banner.html" with icon="help" title=_("Help & Support") sub=_("We are here to help you. Find answers, contact our support team, or get guidance on using Sakinah.") quote=_("Na Mwenyezi Mungu aliwaumba kwa jozi.") ref=_("Qur'an 78:8") art="lantern" %}
 <div class="hp4">
-  <div><span class="hic pink"><svg><use href="{{ micons }}#m-book"/></svg></span><span><b>Knowledge Base</b><small>Browse helpful articles and guides.</small><a class="hbtn pink" href="{% url 'articles' %}">Browse Articles</a></span></div>
-  <div><span class="hic grn"><svg><use href="{{ micons }}#m-chat"/></svg></span><span><b>Contact Support</b><small>Get help from our support team.</small><a class="hbtn grn" href="?kind=contact#ticket">Send a Message</a></span></div>
-  <div><span class="hic blu"><svg><use href="{{ micons }}#m-chat-o"/></svg></span><span><b>Live Chat</b><small>Chat with our support agent (when online).</small>{% if site.contact_whatsapp %}<a class="hbtn blu" href="https://wa.me/{{ site.contact_whatsapp }}" target="_blank" rel="noopener">Start Live Chat</a>{% else %}<a class="hbtn blu" href="?kind=chat#ticket">Start Live Chat</a>{% endif %}</span></div>
-  <div><span class="hic yel"><svg><use href="{{ micons }}#m-phone"/></svg></span><span><b>Report an Issue</b><small>Report problems or suspicious behaviour.</small><a class="hbtn yel" href="?kind=report#ticket">Report Now</a></span></div>
+  <div><span class="hic pink"><svg><use href="{{ micons }}#m-book"/></svg></span><span><b>{% translate "Knowledge Base" %}</b><small>{% translate "Browse helpful articles and guides." %}</small><a class="hbtn pink" href="{% url 'articles' %}">{% translate "Browse Articles" %}</a></span></div>
+  <div><span class="hic grn"><svg><use href="{{ micons }}#m-chat"/></svg></span><span><b>{% translate "Contact Support" %}</b><small>{% translate "Get help from our support team." %}</small><a class="hbtn grn" href="?kind=contact#ticket">{% translate "Send a Message" %}</a></span></div>
+  <div><span class="hic blu"><svg><use href="{{ micons }}#m-chat-o"/></svg></span><span><b>{% translate "Live Chat" %}</b><small>{% translate "Chat with our support agent (when online)." %}</small>{% if site.contact_whatsapp %}<a class="hbtn blu" href="https://wa.me/{{ site.contact_whatsapp }}" target="_blank" rel="noopener">{% translate "Start Live Chat" %}</a>{% else %}<a class="hbtn blu" href="?kind=chat#ticket">{% translate "Start Live Chat" %}</a>{% endif %}</span></div>
+  <div><span class="hic yel"><svg><use href="{{ micons }}#m-phone"/></svg></span><span><b>{% translate "Report an Issue" %}</b><small>{% translate "Report problems or suspicious behaviour." %}</small><a class="hbtn yel" href="?kind=report#ticket">{% translate "Report Now" %}</a></span></div>
 </div>
 
 {% if show_form %}
 <section class="box tkt" id="ticket">
-  <h3 class="bh"><svg class="mag"><use href="{{ micons }}#m-send"/></svg>Send a message to our team<a class="ed" href="{% url 'm_help' %}">Close</a></h3>
+  <h3 class="bh"><svg class="mag"><use href="{{ micons }}#m-send"/></svg>{% translate "Send a message to our team" %}<a class="ed" href="{% url 'm_help' %}">{% translate "Close" %}</a></h3>
   <form method="post" enctype="multipart/form-data" class="fform">{% csrf_token %}
     <div class="kchips">{% for k, label in kinds %}<label><input type="radio" name="kind" value="{{ k }}" {% if kind == k %}checked{% endif %}><span>{{ label }}</span></label>{% endfor %}</div>
     <div class="fgrid two">{% for f in form %}{% include "members/_field.html" %}{% endfor %}</div>
-    <div class="fbtns"><button class="btn">Send<svg><use href="{{ micons }}#m-send"/></svg></button></div>
+    <div class="fbtns"><button class="btn">{% translate "Send" %}<svg><use href="{{ micons }}#m-send"/></svg></button></div>
   </form>
-  {% if tickets %}<h4 class="tk-h">Your recent requests</h4><ul class="tks">{% for t in tickets %}<li><span><b>{{ t.subject }}</b><small>{{ t.get_kind_display }} &middot; {{ t.created|date:"j M Y" }}</small></span><span class="stt {% if t.status == 'open' %}pending{% else %}completed{% endif %}">{% if t.status == 'open' %}Open{% else %}Answered{% endif %}</span></li>{% endfor %}</ul>{% endif %}
+  {% if tickets %}<h4 class="tk-h">{% translate "Your recent requests" %}</h4><ul class="tks">{% for t in tickets %}<li><span><b>{{ t.subject }}</b><small>{{ t.get_kind_display }} &middot; {{ t.created|date:"j M Y" }}</small></span><span class="stt {% if t.status == 'open' %}pending{% else %}completed{% endif %}">{% if t.status == 'open' %}{% translate "Open" %}{% else %}{% translate "Answered" %}{% endif %}</span></li>{% endfor %}</ul>{% endif %}
 </section>
 {% endif %}
 
 <div class="hp-g">
   <section class="box hfaq" id="faq">
-    <h3 class="bh"><span class="bh-ic"><svg><use href="{{ micons }}#m-help"/></svg></span>Frequently Asked Questions (FAQ)<a class="ed" href="#faq" onclick="document.querySelectorAll('.hfaq details').forEach(function(d){d.open=true});return false">View All FAQs</a></h3>
+    <h3 class="bh"><span class="bh-ic"><svg><use href="{{ micons }}#m-help"/></svg></span>{% translate "Frequently Asked Questions (FAQ)" %}<a class="ed" href="#faq" onclick="document.querySelectorAll('.hfaq details').forEach(function(d){d.open=true});return false">{% translate "View All FAQs" %}</a></h3>
     {% for ic, color, title, desc, qa in faq %}
     <details id="faq-{{ forloop.counter }}"><summary><span class="fi sq" style="--c:{{ color }}"><svg><use href="{{ micons }}#m-{{ ic }}"/></svg></span><span><b>{{ title }}</b><small>{{ desc }}</small></span><svg class="chev"><use href="{{ micons }}#m-chev-r"/></svg></summary>
       <dl>{% for q, a in qa %}<dt>{{ q }}</dt><dd>{{ a }}</dd>{% endfor %}</dl></details>
@@ -30,25 +30,25 @@
   </section>
   <div class="hp-r">
     <section class="box hcontact">
-      <header class="sth grn"><svg class="ok"><use href="{{ micons }}#m-headset"/></svg><div><h3>Contact Our Support Team</h3><p>Our team is ready to assist you. Choose your preferred way to get support.</p></div></header>
+      <header class="sth grn"><svg class="ok"><use href="{{ micons }}#m-headset"/></svg><div><h3>{% translate "Contact Our Support Team" %}</h3><p>{% translate "Our team is ready to assist you. Choose your preferred way to get support." %}</p></div></header>
       <div class="hc3">
-        <div class="pink"><svg><use href="{{ micons }}#m-mail"/></svg><b>Send a Message</b><small>Fill the support form and we will respond to your email.</small><a class="btn" href="?kind=contact#ticket">Contact Us</a></div>
-        <div class="grn"><svg><use href="{{ micons }}#m-chat"/></svg><b>Live Chat</b><small>Chat with our support agent (when online).</small>{% if site.contact_whatsapp %}<a class="btn gf" href="https://wa.me/{{ site.contact_whatsapp }}" target="_blank" rel="noopener">Start Chat</a>{% else %}<a class="btn gf" href="?kind=chat#ticket">Start Chat</a>{% endif %}</div>
-        <div class="blu"><svg><use href="{{ micons }}#m-doc"/></svg><b>Submit a Ticket</b><small>Report a technical issue or request assistance.</small><a class="btn bl" href="?kind=ticket#ticket">Create Ticket</a></div>
+        <div class="pink"><svg><use href="{{ micons }}#m-mail"/></svg><b>{% translate "Send a Message" %}</b><small>{% translate "Fill the support form and we will respond to your email." %}</small><a class="btn" href="?kind=contact#ticket">{% translate "Contact Us" %}</a></div>
+        <div class="grn"><svg><use href="{{ micons }}#m-chat"/></svg><b>{% translate "Live Chat" %}</b><small>{% translate "Chat with our support agent (when online)." %}</small>{% if site.contact_whatsapp %}<a class="btn gf" href="https://wa.me/{{ site.contact_whatsapp }}" target="_blank" rel="noopener">{% translate "Start Chat" %}</a>{% else %}<a class="btn gf" href="?kind=chat#ticket">{% translate "Start Chat" %}</a>{% endif %}</div>
+        <div class="blu"><svg><use href="{{ micons }}#m-doc"/></svg><b>{% translate "Submit a Ticket" %}</b><small>{% translate "Report a technical issue or request assistance." %}</small><a class="btn bl" href="?kind=ticket#ticket">{% translate "Create Ticket" %}</a></div>
       </div>
     </section>
     <div class="hc2">
-      <section class="box hours"><h3 class="bh grnh"><svg class="ok"><use href="{{ micons }}#m-clock"/></svg><span>Support Hours<small>Our support team is available (EAT):</small></span></h3>
-        <dl><div><dt><svg><use href="{{ micons }}#m-cal"/></svg>Monday &ndash; Friday</dt><dd>8:00 AM &ndash; 8:00 PM</dd></div><div><dt><svg><use href="{{ micons }}#m-cal"/></svg>Saturday</dt><dd>9:00 AM &ndash; 5:00 PM</dd></div><div><dt><svg><use href="{{ micons }}#m-cal"/></svg>Sunday</dt><dd>9:00 AM &ndash; 5:00 PM</dd></div></dl></section>
-      <section class="box emerg"><h3 class="bh pinkh"><svg class="mag"><use href="{{ micons }}#m-shield"/></svg>Emergency &amp; Safety</h3>
-        <p>If you notice suspicious activity, inappropriate content or feel unsafe, please report immediately.</p><a class="btn block" href="?kind=report#ticket">Report Now</a></section>
+      <section class="box hours"><h3 class="bh grnh"><svg class="ok"><use href="{{ micons }}#m-clock"/></svg><span>{% translate "Support Hours" %}<small>{% translate "Our support team is available (EAT):" %}</small></span></h3>
+        <dl><div><dt><svg><use href="{{ micons }}#m-cal"/></svg>{% translate "Monday &ndash; Friday" %}</dt><dd>{% translate "8:00 AM &ndash; 8:00 PM" %}</dd></div><div><dt><svg><use href="{{ micons }}#m-cal"/></svg>{% translate "Saturday" %}</dt><dd>{% translate "9:00 AM &ndash; 5:00 PM" %}</dd></div><div><dt><svg><use href="{{ micons }}#m-cal"/></svg>{% translate "Sunday" %}</dt><dd>{% translate "9:00 AM &ndash; 5:00 PM" %}</dd></div></dl></section>
+      <section class="box emerg"><h3 class="bh pinkh"><svg class="mag"><use href="{{ micons }}#m-shield"/></svg>{% translate "Emergency &amp; Safety" %}</h3>
+        <p>{% translate "If you notice suspicious activity, inappropriate content or feel unsafe, please report immediately." %}</p><a class="btn block" href="?kind=report#ticket">{% translate "Report Now" %}</a></section>
     </div>
   </div>
 </div>
 <div class="hp4 low">
-  <div><span class="hic yel rnd"><svg><use href="{{ micons }}#m-bulb"/></svg></span><span><b>Help Topics</b><small>Find guides and tutorials on using {{ site.brand }}.</small><a class="hl" href="#faq">Browse Help Topics<svg><use href="{{ micons }}#m-arrow"/></svg></a></span></div>
-  <div><span class="hic pink rnd"><svg><use href="{{ micons }}#m-play"/></svg></span><span><b>Video Guides</b><small>Step-by-step guides and articles.</small><a class="hl" href="{% url 'articles' %}">Read Guides<svg><use href="{{ micons }}#m-arrow"/></svg></a></span></div>
-  <div><span class="hic blu rnd"><svg><use href="{{ micons }}#m-people"/></svg></span><span><b>Community Guidelines</b><small>Learn about our rules and values.</small><a class="hl" href="#faq-7" onclick="document.getElementById('faq-7').open=true">View Guidelines<svg><use href="{{ micons }}#m-arrow"/></svg></a></span></div>
-  <div><span class="hic yel rnd"><svg><use href="{{ micons }}#m-star"/></svg></span><span><b>Give Feedback</b><small>Help us improve {{ site.brand }}.</small><a class="hl" href="?kind=feedback#ticket">Send Feedback<svg><use href="{{ micons }}#m-arrow"/></svg></a></span></div>
+  <div><span class="hic yel rnd"><svg><use href="{{ micons }}#m-bulb"/></svg></span><span><b>{% translate "Help Topics" %}</b><small>{% blocktranslate with brand=site.brand %}Find guides and tutorials on using {{ brand }}.{% endblocktranslate %}</small><a class="hl" href="#faq">{% translate "Browse Help Topics" %}<svg><use href="{{ micons }}#m-arrow"/></svg></a></span></div>
+  <div><span class="hic pink rnd"><svg><use href="{{ micons }}#m-play"/></svg></span><span><b>{% translate "Video Guides" %}</b><small>{% translate "Step-by-step guides and articles." %}</small><a class="hl" href="{% url 'articles' %}">{% translate "Read Guides" %}<svg><use href="{{ micons }}#m-arrow"/></svg></a></span></div>
+  <div><span class="hic blu rnd"><svg><use href="{{ micons }}#m-people"/></svg></span><span><b>{% translate "Community Guidelines" %}</b><small>{% translate "Learn about our rules and values." %}</small><a class="hl" href="#faq-7" onclick="document.getElementById('faq-7').open=true">{% translate "View Guidelines" %}<svg><use href="{{ micons }}#m-arrow"/></svg></a></span></div>
+  <div><span class="hic yel rnd"><svg><use href="{{ micons }}#m-star"/></svg></span><span><b>{% translate "Give Feedback" %}</b><small>{% blocktranslate with brand=site.brand %}Help us improve {{ brand }}.{% endblocktranslate %}</small><a class="hl" href="?kind=feedback#ticket">{% translate "Send Feedback" %}<svg><use href="{{ micons }}#m-arrow"/></svg></a></span></div>
 </div>
 {% endblock %}

@@ -1,4 +1,6 @@
 """Honeymoon destinations, packages and booking requests."""
+from django.utils.translation import gettext_lazy as _l
+from django.utils.translation import gettext as _, ngettext
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -10,13 +12,13 @@ from .forms import BookingForm, PackageReviewForm
 from .models import Destination, HoneymoonSave, Notification, Package
 from .views import safe_next
 
-DURATIONS = [("1-3", "1 - 3 Days", Q(days__lte=3)), ("4-7", "4 - 7 Days", Q(days__gte=4, days__lte=7)),
-             ("8-10", "8 - 10 Days", Q(days__gte=8, days__lte=10)), ("10+", "More than 10 Days", Q(days__gt=10))]
+DURATIONS = [("1-3", _l("1 - 3 Days"), Q(days__lte=3)), ("4-7", _l("4 - 7 Days"), Q(days__gte=4, days__lte=7)),
+             ("8-10", _l("8 - 10 Days"), Q(days__gte=8, days__lte=10)), ("10+", _l("More than 10 Days"), Q(days__gt=10))]
 RATINGS = [("4.5", 4.5, 4.5), ("4.0", 4.0, 4.0), ("3.0", 3.0, 3.0)]   # key, minimum, stars to draw
-STRIP = [("beach", "Beach & Islands"), ("safari", "Safari & Nature"), ("mountains", "Mountains"), ("city", "Luxury Cities"), ("resort", "Luxury Resorts"),
-         ("romantic", "Romantic Getaways"), ("tanzania", "Tanzania"), ("east-africa", "East Africa"), ("international", "International")]
-OFFERS = [("discount", "Honeymoon Discount", "discount"), ("free", "Free Add-ons", "free_addons"), ("all", "All Inclusive", "all_inclusive")]
-SORTS = [("popular", "Most Popular"), ("price", "Price: Low to High"), ("-price", "Price: High to Low"), ("rating", "Top Rated"), ("short", "Shortest Trip")]
+STRIP = [("beach", _l("Beach & Islands")), ("safari", _l("Safari & Nature")), ("mountains", _l("Mountains")), ("city", _l("Luxury Cities")), ("resort", _l("Luxury Resorts")),
+         ("romantic", _l("Romantic Getaways")), ("tanzania", _l("Tanzania")), ("east-africa", _l("East Africa")), ("international", _l("International"))]
+OFFERS = [("discount", _l("Honeymoon Discount"), "discount"), ("free", _l("Free Add-ons"), "free_addons"), ("all", _l("All Inclusive"), "all_inclusive")]
+SORTS = [("popular", _l("Most Popular")), ("price", _l("Price: Low to High")), ("-price", _l("Price: High to Low")), ("rating", _l("Top Rated")), ("short", _l("Shortest Trip"))]
 
 def saved(request):
     if not request.user.is_authenticated: return set(), set()
@@ -27,8 +29,8 @@ def money(v):
     try: return int(str(v).replace(",", "").strip())
     except ValueError: return None
 
-HERO_FEATS = [("palm", "Stunning Locations"), ("gem", "Luxury Resorts"), ("people", "Curated for Couples"), ("shield-c", "Safe & Trusted"), ("heart-f", "Unforgettable Experiences")]
-PKG_FEATS = [("heart", "Romantic Experiences"), ("bed", "Luxury Accommodation"), ("plane", "Seamless Travel"), ("gem", "Special Couple Offers")]
+HERO_FEATS = [("palm", _l("Stunning Locations")), ("gem", _l("Luxury Resorts")), ("people", _l("Curated for Couples")), ("shield-c", _l("Safe & Trusted")), ("heart-f", _l("Unforgettable Experiences"))]
+PKG_FEATS = [("heart", _l("Romantic Experiences")), ("bed", _l("Luxury Accommodation")), ("plane", _l("Seamless Travel")), ("gem", _l("Special Couple Offers"))]
 
 def page_links(request, pg):
     params = request.GET.copy(); params.pop("page", None)
@@ -68,7 +70,7 @@ def destinations(request):
     durs = [k for k in checked(g, "dur") if k in {d[0] for d in DURATIONS}]
     if durs:
         q = Q()
-        for k, _, cond in DURATIONS:
+        for k, _label, cond in DURATIONS:
             if k in durs: q |= cond
         qs = qs.filter(q)
     rating = next((v for k, v, _ in RATINGS if g.get("rating") == k), None)
@@ -77,7 +79,7 @@ def destinations(request):
     sort = g.get("sort") if g.get("sort") in dict(SORTS) else "popular"
     qs = sort_by(qs.annotate(n_packages=Count("packages", filter=Q(packages__active=True))), sort, "from_price")
     pg = Paginator(qs, 10).get_page(g.get("page"))
-    saved_d, _ = saved(request)
+    saved_d, _unused = saved(request)
     pg.object_list = list(pg.object_list)
     for d in pg.object_list: d.is_saved = d.pk in saved_d
     filtered = any(g.get(k) for k in ("cat", "type", "region", "country", "min", "max", "dur", "rating", "q"))
@@ -107,7 +109,7 @@ def packages(request, slug=None):
     durs = [k for k in checked(g, "dur") if k in {d[0] for d in DURATIONS}]
     if durs:
         q = Q()
-        for k, _, cond in DURATIONS:
+        for k, _label, cond in DURATIONS:
             if k in durs: q |= cond
         qs = qs.filter(q)
     lo, hi = money(g.get("min", "")), money(g.get("max", ""))
@@ -116,16 +118,16 @@ def packages(request, slug=None):
     stars = [int(s) for s in checked(g, "stars") if s in ("3", "4", "5")]
     if stars: qs = qs.filter(stars__in=stars)
     offers = [k for k in checked(g, "offer") if k in {o[0] for o in OFFERS}]
-    for k, _, field in OFFERS:
+    for k, _label, field in OFFERS:
         if k in offers: qs = qs.filter(**{field: True})
     if g.get("q"): qs = qs.filter(Q(title__icontains=g["q"]) | Q(location__icontains=g["q"]))
     sort = g.get("sort") if g.get("sort") in dict(SORTS) else "popular"
     pg = Paginator(sort_by(qs, sort, "price"), 8).get_page(g.get("page"))
-    _, saved_p = saved(request)
+    _unused, saved_p = saved(request)
     pg.object_list = list(pg.object_list)
     for p in pg.object_list: p.is_saved = p.pk in saved_p
-    crumbs = [("Home", reverse("home")), ("Honeymoon Destinations", reverse("hm_destinations"))]
-    crumbs += [(dest.name, dest.get_absolute_url()), ("View Packages", None)] if dest else [("All Packages", None)]
+    crumbs = [(_l("Home"), reverse("home")), (_l("Honeymoon Destinations"), reverse("hm_destinations"))]
+    crumbs += [(dest.name, dest.get_absolute_url()), (_l("View Packages"), None)] if dest else [(_l("All Packages"), None)]
     dests = Destination.objects.filter(active=True).annotate(n=Count("packages", filter=Q(packages__active=True))).filter(n__gt=0)
     return render(request, "honeymoon/packages.html", {
         **page_links(request, pg), "hero_feats": PKG_FEATS, "crumbs": crumbs, "f": g, "dest": dest, "dests": dests, "n": n, "sort": sort, "sorts": SORTS, "view": g.get("view", "grid"),
@@ -148,10 +150,10 @@ def package(request, slug):
         initial.update(name=member.name if member else request.user.get_full_name(), phone=member.phone if member else "", email=request.user.email)
     reviews = list(p.member_reviews.select_related("user__member")[:20])
     mine = request.user.is_authenticated and p.member_reviews.filter(user=request.user).exists()
-    _, saved_p = saved(request)
+    _unused, saved_p = saved(request)
     p.is_saved = p.pk in saved_p
     for x in similar: x.is_saved = x.pk in saved_p
-    crumbs = [("Home", reverse("home")), ("Honeymoon Destinations", reverse("hm_destinations")),
+    crumbs = [(_l("Home"), reverse("home")), (_l("Honeymoon Destinations"), reverse("hm_destinations")),
               (p.destination.name, p.destination.get_absolute_url()), (p.title, None)]
     return render(request, "honeymoon/package.html", {
         "p": p, "crumbs": crumbs, "gallery": gallery, "photos": photos, "similar": similar, "form": BookingForm(initial=initial), "reviews": reviews,
@@ -168,10 +170,10 @@ def book(request, slug):
         if b.user:
             Notification.objects.create(user=b.user, title=f"Booking request received: {p.title}", link=p.get_absolute_url(),
                                         body=f"Asante! Our travel team will call you on {b.phone} to confirm dates and payment.")
-        messages.success(request, f"Asante! Your request for {p.title} was sent. Our travel team will contact you on {b.phone} very soon.")
+        messages.success(request, _("Asante! Your request for %(title)s was sent. Our travel team will contact you on %(phone)s very soon.") % {"title": p.title, "phone": b.phone})
         return redirect(p.get_absolute_url())
     errors = "; ".join(f"{form.fields[k].label if k in form.fields else ''}: {' '.join(v)}".strip(": ") for k, v in form.errors.items())
-    messages.error(request, f"Please check the booking form. {errors}")
+    messages.error(request, _("Please check the booking form. %(errors)s") % {"errors": errors})
     return redirect(p.get_absolute_url() + "#book")
 
 @login_required
@@ -181,7 +183,7 @@ def review(request, slug):
     form = PackageReviewForm(request.POST)
     if form.is_valid() and not p.member_reviews.filter(user=request.user).exists():
         form.instance.package, form.instance.user = p, request.user
-        form.save(); messages.success(request, "Thank you for your review.")
+        form.save(); messages.success(request, _("Thank you for your review."))
     return redirect(p.get_absolute_url() + "#reviews")
 
 @login_required
@@ -192,5 +194,5 @@ def save(request):
     obj = get_object_or_404(Destination if kind == "destination" else Package, pk=pk)
     row, created = HoneymoonSave.objects.get_or_create(user=request.user, **{kind: obj})
     if not created: row.delete()
-    messages.success(request, f"{obj} {'saved to' if created else 'removed from'} your favourites.")
+    messages.success(request, (_("%(item)s saved to your favourites.") if created else _("%(item)s removed from your favourites.")) % {"item": obj})
     return redirect(safe_next(request) or obj.get_absolute_url())

@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load assets %}{% block title %}{% if other %}{{ other.name }} - Ujumbe{% else %}Ujumbe - {{ site.brand }}{% endif %}{% endblock %}
+{% extends "base.html" %}{% load i18n %}{% load assets %}{% block title %}{% if other %}{% blocktranslate with name=other.name %}{{ name }} - Ujumbe{% endblocktranslate %}{% else %}{% blocktranslate with brand=site.brand %}Ujumbe - {{ brand }}{% endblocktranslate %}{% endif %}{% endblock %}
 {% block bodyclass %}chatpage{% if other %} chatopen{% endif %}{% endblock %}
 {% block head %}<link rel="stylesheet" href="{% asset 'css/chat.css' %}">{% endblock %}
 {% block content %}
@@ -7,24 +7,24 @@
 
     <aside class="ch-list">
       <header class="ch-lh">
-        <h1>Ujumbe{% if n_unread %} <i>{{ n_unread }}</i>{% endif %}</h1>
+        <h1>{% translate "Ujumbe" %}{% if n_unread %} <i>{{ n_unread }}</i>{% endif %}</h1>
         <form class="ch-search" method="get" role="search">
           <svg><use href="{{ icons }}#i-search"/></svg>
-          <input name="q" value="{{ f.q|default:'' }}" placeholder="Tafuta mazungumzo..." aria-label="Tafuta mazungumzo">
-          {% if f.q %}<a href="{% url 'inbox' %}" class="ch-x" aria-label="Futa utafutaji">&times;</a>{% endif %}
+          <input name="q" value="{{ f.q|default:'' }}" placeholder="{% translate 'Tafuta mazungumzo...' %}" aria-label="{% translate 'Tafuta mazungumzo' %}">
+          {% if f.q %}<a href="{% url 'inbox' %}" class="ch-x" aria-label="{% translate 'Futa utafutaji' %}">&times;</a>{% endif %}
         </form>
       </header>
       <ul class="ch-rows">
         {% for c in convos %}{% with m=c.member %}
         <li><a href="{% url 'thread' m.pk %}" class="{% if other and other.pk == m.pk %}on{% endif %}">
-          <span class="ch-av">{% if m.photo %}<img loading="lazy" decoding="async" src="{{ m.card_photo.url }}" alt="">{% else %}<b>{{ m.name|first }}</b>{% endif %}{% if m.is_online %}<em title="Yupo mtandaoni"></em>{% endif %}</span>
-          <span class="ch-rt"><b>{{ m.name }}</b><small>{% if c.last.sender_id == user.id %}<span class="ch-you">Wewe:</span> {% endif %}{{ c.last.preview|default:"Mazungumzo mapya"|truncatechars:52 }}</small></span>
-          <span class="ch-rm"><time>{% if c.last.created|date:"Ymd" == today|date:"Ymd" %}{{ c.last.created|time:"H:i" }}{% elif c.last.created|date:"Ymd" == yesterday|date:"Ymd" %}Jana{% else %}{{ c.last.created|date:"j M" }}{% endif %}</time>{% if c.unread %}<i>{{ c.unread }}</i>{% endif %}</span>
+          <span class="ch-av">{% if m.photo %}<img loading="lazy" decoding="async" src="{{ m.card_photo.url }}" alt="">{% else %}<b>{{ m.name|first }}</b>{% endif %}{% if m.is_online %}<em title="{% translate 'Yupo mtandaoni' %}"></em>{% endif %}</span>
+          <span class="ch-rt"><b>{{ m.name }}</b><small>{% if c.last.sender_id == user.id %}<span class="ch-you">{% translate "Wewe:" %}</span> {% endif %}{{ c.last.preview|default:_("Mazungumzo mapya")|truncatechars:52 }}</small></span>
+          <span class="ch-rm"><time>{% if c.last.created|date:"Ymd" == today|date:"Ymd" %}{{ c.last.created|time:"H:i" }}{% elif c.last.created|date:"Ymd" == yesterday|date:"Ymd" %}{% translate "Jana" %}{% else %}{{ c.last.created|date:"j M" }}{% endif %}</time>{% if c.unread %}<i>{{ c.unread }}</i>{% endif %}</span>
         </a></li>
         {% endwith %}{% empty %}
         <li class="ch-none"><span><svg><use href="{{ icons }}#i-chat"/></svg></span>
-          <p>{% if f.q %}Hakuna mazungumzo yanayolingana na &ldquo;{{ f.q }}&rdquo;.{% else %}Bado huna mazungumzo. Anza kwa kumsalimia mtu unayempenda.{% endif %}</p>
-          <a class="btn btn-s" href="{% url 'matches' %}"><svg><use href="{{ icons }}#i-heart"/></svg>Tafuta mwenza</a></li>
+          <p>{% if f.q %}{% blocktranslate with q=f.q %}Hakuna mazungumzo yanayolingana na &ldquo;{{ q }}&rdquo;.{% endblocktranslate %}{% else %}{% translate "Bado huna mazungumzo. Anza kwa kumsalimia mtu unayempenda." %}{% endif %}</p>
+          <a class="btn btn-s" href="{% url 'matches' %}"><svg><use href="{{ icons }}#i-heart"/></svg>{% translate "Tafuta mwenza" %}</a></li>
         {% endfor %}
       </ul>
     </aside>
@@ -33,71 +33,71 @@
       {% if other %}
       {% url 'thread' other.pk as here %}
       <header class="ch-top">
-        <a class="ch-back" href="{% url 'inbox' %}" aria-label="Rudi kwenye orodha"><svg><use href="{{ icons }}#i-chev-l"/></svg></a>
+        <a class="ch-back" href="{% url 'inbox' %}" aria-label="{% translate 'Rudi kwenye orodha' %}"><svg><use href="{{ icons }}#i-chev-l"/></svg></a>
         <a class="ch-av avlg" href="{% url 'member' other.pk %}">{% if other.photo %}<img src="{{ other.card_photo.url }}" alt="">{% else %}<b>{{ other.name|first }}</b>{% endif %}{% if other.is_online %}<em></em>{% endif %}</a>
         <div class="ch-who">
           <h2><a href="{% url 'member' other.pk %}">{{ other.name }}{% if other.show_age and other.age %}, {{ other.age }}{% endif %}</a>{% if other.verified %}<svg class="ch-vtick" title="Imethibitishwa"><use href="{{ icons }}#i-check-c"/></svg>{% endif %}</h2>
-          <p id="ch-presence" class="{% if other.is_online %}on{% endif %}">{% if other.is_online %}Yupo mtandaoni{% elif other.city %}{{ other.location_text }}{% else %}Mwanachama wa {{ site.brand }}{% endif %}</p>
+          <p id="ch-presence" class="{% if other.is_online %}on{% endif %}">{% if other.is_online %}{% translate "Yupo mtandaoni" %}{% elif other.city %}{{ other.location_text }}{% else %}{% blocktranslate with brand=site.brand %}Mwanachama wa {{ brand }}{% endblocktranslate %}{% endif %}</p>
         </div>
         <div class="ch-act">
           {% url 'm_call_start' other.pk as start_url %}
           {% if call_ok %}
-          <button class="ch-ib" type="button" title="Mpigie {{ other.first_name }} video" data-call="video" data-start="{{ start_url }}"><svg><use href="{{ icons }}#i-video"/></svg></button>
-          <button class="ch-ib" type="button" title="Mpigie {{ other.first_name }} simu" data-call="voice" data-start="{{ start_url }}"><svg><use href="{{ icons }}#i-phone"/></svg></button>
+          <button class="ch-ib" type="button" title="{% blocktranslate with first_name=other.first_name %}Mpigie {{ first_name }} video{% endblocktranslate %}" data-call="video" data-start="{{ start_url }}"><svg><use href="{{ icons }}#i-video"/></svg></button>
+          <button class="ch-ib" type="button" title="{% blocktranslate with first_name=other.first_name %}Mpigie {{ first_name }} simu{% endblocktranslate %}" data-call="voice" data-start="{{ start_url }}"><svg><use href="{{ icons }}#i-phone"/></svg></button>
           {% elif call_reason == "premium" %}
-          <a class="ch-ib up" href="{% url 'm_membership' %}" title="Simu ya video ni huduma ya Premium - bofya kujiunga"><svg><use href="{{ icons }}#i-video"/></svg></a>
-          <a class="ch-ib up" href="{% url 'm_membership' %}" title="Simu ya sauti ni huduma ya Premium - bofya kujiunga"><svg><use href="{{ icons }}#i-phone"/></svg></a>
+          <a class="ch-ib up" href="{% url 'm_membership' %}" title="{% translate 'Simu ya video ni huduma ya Premium - bofya kujiunga' %}"><svg><use href="{{ icons }}#i-video"/></svg></a>
+          <a class="ch-ib up" href="{% url 'm_membership' %}" title="{% translate 'Simu ya sauti ni huduma ya Premium - bofya kujiunga' %}"><svg><use href="{{ icons }}#i-phone"/></svg></a>
           {% else %}
           <button class="ch-ib off" type="button" title="{{ call_why }}" data-why="{{ call_why }}"><svg><use href="{{ icons }}#i-video"/></svg></button>
           <button class="ch-ib off" type="button" title="{{ call_why }}" data-why="{{ call_why }}"><svg><use href="{{ icons }}#i-phone"/></svg></button>
           {% endif %}
           <details class="ch-menu">
-            <summary class="ch-ib" aria-label="Chaguo zaidi"><svg><use href="{{ icons }}#i-dots"/></svg></summary>
+            <summary class="ch-ib" aria-label="{% translate 'Chaguo zaidi' %}"><svg><use href="{{ icons }}#i-dots"/></svg></summary>
             <div class="ch-dd">
-              <a href="{% url 'member' other.pk %}"><svg><use href="{{ icons }}#i-user"/></svg>Angalia wasifu</a>
-              <form method="post" action="{% url 'm_block' other.pk %}" data-confirm="Mzuie {{ other.name }}? Hataweza kukuona wala kukutumia ujumbe.">{% csrf_token %}<input type="hidden" name="next" value="{% url 'inbox' %}"><button><svg><use href="{{ icons }}#i-ban"/></svg>Mzuie mwanachama</button></form>
-              <a href="{% url 'm_help' %}?kind=report&amp;subject=Ripoti: {{ other.name|urlencode }}"><svg><use href="{{ icons }}#i-flag"/></svg>Ripoti mwanachama</a>
+              <a href="{% url 'member' other.pk %}"><svg><use href="{{ icons }}#i-user"/></svg>{% translate "Angalia wasifu" %}</a>
+              <form method="post" action="{% url 'm_block' other.pk %}" data-confirm="{% blocktranslate with name=other.name %}Mzuie {{ name }}? Hataweza kukuona wala kukutumia ujumbe.{% endblocktranslate %}">{% csrf_token %}<input type="hidden" name="next" value="{% url 'inbox' %}"><button><svg><use href="{{ icons }}#i-ban"/></svg>{% translate "Mzuie mwanachama" %}</button></form>
+              <a href="{% url 'm_help' %}?kind=report&amp;subject=Ripoti: {{ other.name|urlencode }}"><svg><use href="{{ icons }}#i-flag"/></svg>{% translate "Ripoti mwanachama" %}</a>
             </div>
           </details>
         </div>
       </header>
 
       <div class="ch-body" id="ch-body" data-feed="{% url 'thread_feed' other.pk %}" data-last="{{ last_id }}">
-        {% if not other.user_id %}<p class="ch-info"><svg><use href="{{ icons }}#i-info"/></svg>{{ other.name }} bado hajaanza kutumia ujumbe wa {{ site.brand }}; ujumbe wako utamfikia atakapoingia.</p>{% endif %}
+        {% if not other.user_id %}<p class="ch-info"><svg><use href="{{ icons }}#i-info"/></svg>{% blocktranslate with name=other.name brand=site.brand %}{{ name }} bado hajaanza kutumia ujumbe wa {{ brand }}; ujumbe wako utamfikia atakapoingia.{% endblocktranslate %}</p>{% endif %}
         {% for msg in msgs %}{% include "partials/chat_msg.html" %}{% empty %}
         <div class="ch-hello">
           <span class="ch-av avxl">{% if other.photo %}<img src="{{ other.card_photo.url }}" alt="">{% else %}<b>{{ other.name|first }}</b>{% endif %}</span>
-          <h3>Sema <b>Assalamu Alaikum</b> kwa {{ other.first_name }}</h3>
-          <p>Anza mazungumzo kwa heshima na unyenyekevu. Mazungumzo yenu ni ya faragha kati yenu wawili.</p>
-          {% if can_send %}<div class="ch-ice"><button type="button" class="ch-chip" data-say="Assalamu Alaikum">Assalamu Alaikum</button><button type="button" class="ch-chip" data-say="Habari za siku?">Habari za siku?</button><button type="button" class="ch-chip" data-say="Nimefurahi kukutana nawe">Nimefurahi kukutana nawe</button></div>{% endif %}
+          <h3>{% blocktranslate with first_name=other.first_name %}Sema <b>Assalamu Alaikum</b> kwa {{ first_name }}{% endblocktranslate %}</h3>
+          <p>{% translate "Anza mazungumzo kwa heshima na unyenyekevu. Mazungumzo yenu ni ya faragha kati yenu wawili." %}</p>
+          {% if can_send %}<div class="ch-ice"><button type="button" class="ch-chip" data-say="{% translate 'Assalamu Alaikum' %}">{% translate "Assalamu Alaikum" %}</button><button type="button" class="ch-chip" data-say="{% translate 'Habari za siku?' %}">{% translate "Habari za siku?" %}</button><button type="button" class="ch-chip" data-say="{% translate 'Nimefurahi kukutana nawe' %}">{% translate "Nimefurahi kukutana nawe" %}</button></div>{% endif %}
         </div>
         {% endfor %}
       </div>
 
       {% if can_send %}
-      {% if msgs_left > 0 and msgs_left <= 5 %}<p class="ch-left"><svg><use href="{{ icons }}#i-info"/></svg>Unaweza kuanzisha mazungumzo {{ msgs_left }} mapya leo. Kujibu ni bure. <a href="{% url 'm_membership' %}">Ongeza kifurushi</a></p>{% endif %}
+      {% if msgs_left > 0 and msgs_left <= 5 %}<p class="ch-left"><svg><use href="{{ icons }}#i-info"/></svg>{% blocktranslate %}Unaweza kuanzisha mazungumzo {{ msgs_left }} mapya leo. Kujibu ni bure.{% endblocktranslate %} <a href="{% url 'm_membership' %}">{% translate "Ongeza kifurushi" %}</a></p>{% endif %}
       <form class="ch-form" method="post" enctype="multipart/form-data" id="ch-form">{% csrf_token %}
-        <details class="ch-emo"><summary aria-label="Emoji"><svg><use href="{{ icons }}#i-smile"/></svg></summary><div>{% for e in emoji %}<button type="button" data-emo="{{ e }}">{{ e }}</button>{% endfor %}</div></details>
-        <textarea name="body" rows="1" id="ch-box" placeholder="Andika ujumbe..."></textarea>
-        <label class="ch-file" title="Ambatisha picha"><svg><use href="{{ icons }}#i-image"/></svg><input type="file" name="image" accept="image/*" hidden></label>
-        <button class="cmic" type="button" title="Rekodi ujumbe wa sauti (hadi dakika 2)" aria-label="Rekodi sauti" data-voice-url="{{ here }}"><svg><use href="{{ icons }}#i-mic"/></svg></button>
-        <button class="ch-send" aria-label="Tuma"><svg><use href="{{ icons }}#i-send"/></svg></button>
+        <details class="ch-emo"><summary aria-label="{% translate 'Emoji' %}"><svg><use href="{{ icons }}#i-smile"/></svg></summary><div>{% for e in emoji %}<button type="button" data-emo="{{ e }}">{{ e }}</button>{% endfor %}</div></details>
+        <textarea name="body" rows="1" id="ch-box" placeholder="{% translate 'Andika ujumbe...' %}"></textarea>
+        <label class="ch-file" title="{% translate 'Ambatisha picha' %}"><svg><use href="{{ icons }}#i-image"/></svg><input type="file" name="image" accept="image/*" hidden></label>
+        <button class="cmic" type="button" title="{% translate 'Rekodi ujumbe wa sauti (hadi dakika 2)' %}" aria-label="{% translate 'Rekodi sauti' %}" data-voice-url="{{ here }}"><svg><use href="{{ icons }}#i-mic"/></svg></button>
+        <button class="ch-send" aria-label="{% translate 'Tuma' %}"><svg><use href="{{ icons }}#i-send"/></svg></button>
         <div class="crec" hidden>
-          <button type="button" class="crec-x" aria-label="Futa"><svg><use href="{{ icons }}#i-trash"/></svg></button>
-          <span class="crec-dot"></span><b class="crec-t">0:00</b><span class="crec-bar"><i></i></span><small>Inarekodi&hellip; kiwango 2:00</small>
-          <button type="button" class="crec-send" aria-label="Tuma sauti"><svg><use href="{{ icons }}#i-send"/></svg></button>
+          <button type="button" class="crec-x" aria-label="{% translate 'Futa' %}"><svg><use href="{{ icons }}#i-trash"/></svg></button>
+          <span class="crec-dot"></span><b class="crec-t">0:00</b><span class="crec-bar"><i></i></span><small>{% translate "Inarekodi&hellip; kiwango 2:00" %}</small>
+          <button type="button" class="crec-send" aria-label="{% translate 'Tuma sauti' %}"><svg><use href="{{ icons }}#i-send"/></svg></button>
         </div>
       </form>
       {% else %}
-      <p class="ch-locked"><svg><use href="{{ icons }}#i-lock"/></svg>{% if other.pk in blocked_ids %}Umemzuia mwanachama huyu.{% elif they_blocked_me %}Huwezi kumtumia ujumbe mwanachama huyu.{% elif no_send %}{{ no_send }} <a href="{% url 'm_membership' %}">Angalia vifurushi</a>{% else %}{{ other.first_name }} anapokea ujumbe kutoka kwa {{ other.get_allow_messages_from_display|lower }} pekee.{% endif %}</p>
+      <p class="ch-locked"><svg><use href="{{ icons }}#i-lock"/></svg>{% if other.pk in blocked_ids %}{% translate "Umemzuia mwanachama huyu." %}{% elif they_blocked_me %}{% translate "Huwezi kumtumia ujumbe mwanachama huyu." %}{% elif no_send %}{{ no_send }} <a href="{% url 'm_membership' %}">{% translate "Angalia vifurushi" %}</a>{% else %}{% blocktranslate with first_name=other.first_name get_allow_messages_from_display=other.get_allow_messages_from_display|lower %}{{ first_name }} anapokea ujumbe kutoka kwa {{ get_allow_messages_from_display }} pekee.{% endblocktranslate %}{% endif %}</p>
       {% endif %}
 
       {% else %}
       <div class="ch-hello big">
         <span class="ch-logo"><svg><use href="{{ icons }}#i-chat"/></svg></span>
-        <h3>Mazungumzo yako</h3>
-        <p>Chagua mazungumzo upande wa kushoto, au tafuta mtu mpya wa kuzungumza naye.</p>
-        <a class="btn btn-s btn-lg" href="{% url 'matches' %}"><svg><use href="{{ icons }}#i-heart"/></svg>Tafuta mwenza</a>
+        <h3>{% translate "Mazungumzo yako" %}</h3>
+        <p>{% translate "Chagua mazungumzo upande wa kushoto, au tafuta mtu mpya wa kuzungumza naye." %}</p>
+        <a class="btn btn-s btn-lg" href="{% url 'matches' %}"><svg><use href="{{ icons }}#i-heart"/></svg>{% translate "Tafuta mwenza" %}</a>
       </div>
       {% endif %}
     </section>

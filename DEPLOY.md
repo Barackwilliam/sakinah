@@ -90,3 +90,25 @@ Kwenye **My Photos** na **Settings**, member anachagua mwenyewe swichi ya **Hide
 3. Kwenye Render weka `CLOUDFLARE_TURN_KEY_ID` na `CLOUDFLARE_TURN_API_TOKEN`. (GB 1,000 kwa mwezi ni bure.)
 
 Mbadala: huduma yoyote ya TURN yenye username/password (mfano metered.ca) — weka `TURN_URLS` (zitenganishwe kwa koma), `TURN_USERNAME` na `TURN_CREDENTIAL`.
+
+## Lugha nne (English, Kiswahili, العربية, Français)
+- Kila ukurasa (tovuti, eneo la wanachama na `/dashboard/`) una menyu ya lugha (kitufe cha dunia 🌐 juu). Mgeni akichagua lugha inakumbukwa kwa mwaka mmoja; mwanachama akichagua inahifadhiwa pia kwenye wasifu wake, hivyo inamfuata kwenye simu au kompyuta nyingine. Asipochagua, tovuti inatumia lugha ya kivinjari chake.
+- Kiarabu kinaonyeshwa kutoka kulia kwenda kushoto (RTL) na kwa herufi za Kiarabu (Tajawal).
+- Tafsiri ziko kwenye `locale/<sw|ar|fr|en>/LC_MESSAGES/django.po`. Faili za `.mo` zilizokusanywa zimewekwa kwenye GitHub, kwa hiyo Render haihitaji kitu cha ziada.
+- Maudhui ya mwanzo (vifurushi, aina za huduma, maandishi ya ukurasa wa mwanzo) yanatafsiriwa mradi hayajabadilishwa. Ukiyaandika upya kwenye `/dashboard/`, yanaonyeshwa kama ulivyoandika kwa lugha zote. Makala, matukio na wasifu wa wanachama vinaonyeshwa kama vilivyoandikwa.
+- Ukiongeza maandishi mapya kwenye templates au code, sasisha tafsiri (inahitaji GNU gettext: `apt install gettext`):
+  ```bash
+  python manage.py form_labels
+  python manage.py makemessages -l sw -l ar -l fr -l en --no-location --ignore=venv --ignore=staticfiles
+  ```
+  Jaza `msgstr` mpya kwenye faili za `.po`, kisha:
+  ```bash
+  python manage.py compilemessages
+  ```
+
+## Tangaza Nasi (Advertise with us)
+- Ukurasa: `/advertise/`. Mtoa huduma anachagua kifurushi, anajaza maelezo na picha (anaona tangazo likijitengeneza), kisha analipa kwa M-Pesa / Mixx by Yas / Airtel Money / benki na kuweka namba ya muamala.
+- Admin anapata taarifa na beji kwenye **Dashboard → Masoko na Matangazo → Advert Requests**. Akibofya **Confirm payment & publish**, tangazo linachapishwa mara moja kwa siku za kifurushi na kujificha lenyewe likiisha. Kuthibitisha malipo kwenye ukurasa wa Malipo kunachapisha pia.
+- Mtoa huduma anapata kiungo cha siri cha kufuatilia tangazo, kuona waliotazama na maulizo, na kuhuisha.
+- Bei ni za mfano: zibadilishe kwenye **Advert Packages**. Namba ya malipo (Lipa Namba) iandike kwenye **Mipangilio ya Tovuti → Payments → Ad payment instructions**.
+- Malipo yanathibitishwa na admin. Ukipata akaunti ya mfanyabiashara (Selcom, AzamPay, Pesapal), malipo ya moja kwa moja (push kwenye simu) yanaweza kuunganishwa baadaye bila kubadilisha kurasa hizi.

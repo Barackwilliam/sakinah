@@ -1,19 +1,19 @@
-{% extends "members/base.html" %}{% block title %}Partner Preferences{% endblock %}
+{% extends "members/base.html" %}{% load i18n %}{% block title %}{% translate "Partner Preferences" %}{% endblock %}
 {% block content %}
-{% include "members/_banner.html" with icon="user" title="My Profile" sub="Manage your profile information to get better matches." quote="Na Mwenyezi Mungu aliwaumba kwa jozi." ref="Qur'an 78:8" art="mosque" %}
+{% include "members/_banner.html" with icon="user" title=_("My Profile") sub=_("Manage your profile information to get better matches.") quote=_("Na Mwenyezi Mungu aliwaumba kwa jozi.") ref=_("Qur'an 78:8") art="mosque" %}
 {% include "members/_ptabs.html" %}
 <div class="page-g">
   <form method="post" class="fform">{% csrf_token %}
-    <section class="box fsec"><h3 class="bh"><svg class="mag"><use href="{{ micons }}#m-heart"/></svg>Partner Preferences</h3>
-      <p class="muted fnote">These settings decide who appears in your suggested matches on the dashboard and the default filters in Find a Match.</p>
+    <section class="box fsec"><h3 class="bh"><svg class="mag"><use href="{{ micons }}#m-heart"/></svg>{% translate "Partner Preferences" %}</h3>
+      <p class="muted fnote">{% translate "These settings decide who appears in your suggested matches on the dashboard and the default filters in Find a Match." %}</p>
       <div class="fgrid">{% for f in form %}{% include "members/_field.html" %}{% endfor %}</div></section>
-    <div class="fbtns"><a class="btn o" href="{% url 'm_profile' %}">Cancel</a><button class="btn">Save Preferences<svg><use href="{{ micons }}#m-arrow"/></svg></button></div>
+    <div class="fbtns"><a class="btn o" href="{% url 'm_profile' %}">{% translate "Cancel" %}</a><button class="btn">{% translate "Save Preferences" %}<svg><use href="{{ micons }}#m-arrow"/></svg></button></div>
   </form>
   <aside>
-    <div class="sumbox yel"><h3><svg class="gold"><use href="{{ micons }}#m-bulb"/></svg>Tips</h3>
-      <ol class="num-list"><li><b>1</b>Keep the age range realistic</li><li><b>2</b>Focus on values, not looks</li><li><b>3</b>Be open to nearby regions</li><li><b>4</b>Review your preferences often</li></ol></div>
-    <div class="sumbox grn"><h3><svg class="ok"><use href="{{ micons }}#m-search"/></svg>See results</h3>
-      <ul class="links"><li><a href="{% url 'm_find' %}"><svg><use href="{{ micons }}#m-search"/></svg>Find a Match<svg><use href="{{ micons }}#m-chev-r"/></svg></a></li><li><a href="{% url 'm_dashboard' %}"><svg><use href="{{ micons }}#m-heart"/></svg>Suggested Matches<svg><use href="{{ micons }}#m-chev-r"/></svg></a></li></ul></div>
+    <div class="sumbox yel"><h3><svg class="gold"><use href="{{ micons }}#m-bulb"/></svg>{% translate "Tips" %}</h3>
+      <ol class="num-list"><li><b>1</b>{% translate "Keep the age range realistic" %}</li><li><b>2</b>{% translate "Focus on values, not looks" %}</li><li><b>3</b>{% translate "Be open to nearby regions" %}</li><li><b>4</b>{% translate "Review your preferences often" %}</li></ol></div>
+    <div class="sumbox grn"><h3><svg class="ok"><use href="{{ micons }}#m-search"/></svg>{% translate "See results" %}</h3>
+      <ul class="links"><li><a href="{% url 'm_find' %}"><svg><use href="{{ micons }}#m-search"/></svg>{% translate "Find a Match" %}<svg><use href="{{ micons }}#m-chev-r"/></svg></a></li><li><a href="{% url 'm_dashboard' %}"><svg><use href="{{ micons }}#m-heart"/></svg>{% translate "Suggested Matches" %}<svg><use href="{{ micons }}#m-chev-r"/></svg></a></li></ul></div>
   </aside>
 </div>
 {% endblock %}

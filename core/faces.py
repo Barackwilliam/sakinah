@@ -1,5 +1,6 @@
 """Hide faces in member photos: find each face (YuNet detector, bundled in core/ml) and cover it with a soft frosted
 "cloud" so the person cannot be recognised. Members choose this themselves when they upload a photo."""
+from django.utils.translation import gettext_lazy as _l
 from io import BytesIO
 from pathlib import Path
 import numpy as np
@@ -63,15 +64,15 @@ def hide_faces(data):
     Image.fromarray(cloud(rgb, faces)).save(buf, "JPEG", quality=92, comment=MARK.encode() if marked else b"")
     return buf.getvalue(), len(faces)
 
-NO_FACE = "We could not find a face in this photo, so it was not saved. Use a clear photo of your face, or switch off \"Hide my face\"."
+NO_FACE = _l("We could not find a face in this photo, so it was not saved. Use a clear photo of your face, or switch off \"Hide my face\".")
 
 class HideFaceMixin:
     """Adds a "Hide my face" switch to a form with a photo upload; when it is on, faces in the new photo are clouded."""
     face_field = "photo"
     def add_hide_face(self, initial=False):
         from django import forms
-        self.fields["hide_face"] = forms.BooleanField(required=False, initial=initial, label="Hide my face",
-                                                      help_text="Cover your face with a soft blur so only people you choose can recognise you.")
+        self.fields["hide_face"] = forms.BooleanField(required=False, initial=initial, label=_l("Hide my face"),
+                                                      help_text=_l("Cover your face with a soft blur so only people you choose can recognise you."))
     def clean(self):
         from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
         data = super().clean()

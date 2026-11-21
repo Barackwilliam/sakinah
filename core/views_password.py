@@ -1,5 +1,6 @@
 """Forgot password that works in practice: find the account by email, username or phone; send a branded email; and when email
 cannot be delivered (not set up yet, provider down, or no email on the account) hand the request to the support team instead."""
+from django.utils.translation import gettext_lazy as _l
 import logging
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator

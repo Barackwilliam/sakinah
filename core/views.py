@@ -1,9 +1,11 @@
+from django.utils.translation import gettext_lazy as _l
+from django.utils.translation import gettext as _, ngettext
 from datetime import date, timedelta
 from django.contrib import messages
 from django.contrib.auth import login, views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Count, Q
+from django.db.models import Avg, Count, Q
 from django.http import Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
@@ -42,6 +44,8 @@ def home(request):
         "perks": PremiumPerk.objects.all(),
         "from_price": gold.price if gold else 0,
         "strip": FeatureStrip.objects.all(),
+        "spotlight": Advert.objects.live().filter(package__home_page=True).select_related("vendor", "category")
+                     .annotate(rating=Avg("reviews__rating"), n_reviews=Count("reviews")).order_by("?")[:4],   # the Spotlight package
         "locations": LOCATIONS,
         "liked": liked_ids(request),
     })
@@ -85,7 +89,7 @@ def shortlist(request, pk):
     m = get_object_or_404(Member, pk=pk)
     obj, created = Shortlist.objects.get_or_create(user=request.user, member=m)
     if not created: obj.delete()
-    messages.success(request, f"{m.name} {'added to' if created else 'removed from'} your shortlist.")
+    messages.success(request, (_("%(name)s added to your shortlist.") if created else _("%(name)s removed from your shortlist.")) % {"name": m.name})
     return redirect(safe_next(request) or reverse("member", args=[pk]))
 
 @login_required
@@ -95,7 +99,7 @@ def report(request, pk):
     form = ReportForm(request.POST)
     if form.is_valid():
         form.instance.member, form.instance.reporter = m, request.user; form.save()
-        messages.success(request, "Thank you. Our team will review this profile.")
+        messages.success(request, _("Thank you. Our team will review this profile."))
     return redirect(reverse("member", args=[pk]))
 
 def notify_like(user, liker, m):
@@ -114,13 +118,13 @@ def notify_like(user, liker, m):
 def like(request, pk):
     m = get_object_or_404(Member, pk=pk)
     if m == me(request):
-        messages.error(request, "You cannot like your own profile.")
+        messages.error(request, _("You cannot like your own profile."))
     else:
         obj, created = Like.objects.get_or_create(user=request.user, member=m)
         if not created: obj.delete()
         elif m.user_id:
             notify_like(request.user, me(request), m)
-        messages.success(request, f"You liked {m.name}." if created else f"Like removed for {m.name}.")
+        messages.success(request, (_("You liked %(name)s.") if created else _("Like removed for %(name)s.")) % {"name": m.name})
     return redirect(safe_next(request) or reverse("member", args=[pk]))
 
 @login_required
@@ -148,7 +152,7 @@ def signup(request):
     form = SignupForm(request.POST or None)
     if form.is_valid():
         user = form.save(); login(request, user)
-        messages.success(request, "Karibu Sakinah! Complete your profile so others can get to know you.")
+        messages.success(request, _("Karibu Sakinah! Complete your profile so others can get to know you."))
         return redirect(safe_next(request) or "m_profile_edit")
     return render(request, "registration/signup.html", {"form": form, "next": safe_next(request) or "", "faces": faces()})
 
@@ -159,7 +163,7 @@ def profile_edit(request):
     m = me(request) or Member(user_id=request.user.pk, name=request.user.get_full_name() or request.user.username, age=18)
     form = ProfileForm(request.POST or None, request.FILES or None, instance=m)
     if form.is_valid():
-        form.save(); messages.success(request, "Profile saved.")
+        form.save(); messages.success(request, _("Profile saved."))
         return redirect("member", pk=form.instance.pk)
     return render(request, "profile_edit.html", {"form": form})
 
@@ -192,11 +196,11 @@ def conversation_rows(user, mine):
 def call_why(mine, other, ok, reason):
     """Why the call buttons are off, in Swahili, so the chat can say it instead of hiding them."""
     if ok or reason == "premium": return ""
-    if mine is None: return "Kamilisha wasifu wako ili uweze kupiga simu."
-    if reason == "spent": return "Umetumia muda wako wote wa simu leo. Utapata mwingine baada ya masaa 24, au ongeza kifurushi."
+    if mine is None: return _l("Kamilisha wasifu wako ili uweze kupiga simu.")
+    if reason == "spent": return _l("Umetumia muda wako wote wa simu leo. Utapata mwingine baada ya masaa 24, au ongeza kifurushi.")
     if not other.user_id: return f"{other.first_name} bado hajaanza kutumia simu za Sakinah."
-    if reason.startswith("You can't call"): return "Huwezi kumpigia simu mwanachama huyu."
-    return "Simu haipatikani kwa akaunti hii kwa sasa."
+    if reason.startswith("You can't call"): return _l("Huwezi kumpigia simu mwanachama huyu.")
+    return _l("Simu haipatikani kwa akaunti hii kwa sasa.")
 
 
 def call_block_en(mine):
@@ -206,10 +210,10 @@ def call_block_en(mine):
 
 def call_block(mine):
     """Why this member may not place a call right now, in Swahili, or "" when they may."""
-    if mine is None: return "Kamilisha wasifu wako ili uweze kupiga simu."
+    if mine is None: return _l("Kamilisha wasifu wako ili uweze kupiga simu.")
     if mine.allowance("daily_call_seconds") == 0: return "premium"
     if mine.call_seconds_left == 0:
-        return "Umetumia muda wako wote wa simu leo. Utapata mwingine baada ya masaa 24, au ongeza kifurushi."
+        return _l("Umetumia muda wako wote wa simu leo. Utapata mwingine baada ya masaa 24, au ongeza kifurushi.")
     return ""
 
 def message_block(mine, other=None):
@@ -218,16 +222,16 @@ def message_block(mine, other=None):
     A plan buys the right to start a conversation and to keep writing in it. Without one you may
     still answer whoever wrote to you, one answer for each message they send.
     """
-    if mine is None: return "Kamilisha wasifu wako ili uweze kutuma ujumbe."
+    if mine is None: return _l("Kamilisha wasifu wako ili uweze kutuma ujumbe.")
     has_plan = mine.allowance("daily_messages") != 0
     sent, got = Message.thread_counts(mine.user, other) if other is not None else (0, 0)
     if other is not None and (sent or got):                       # the conversation is already going
         if has_plan or sent < got: return ""
         return f"Umeshajibu ujumbe wake. Subiri {other.first_name} akuandikie tena, au jiunge na kifurushi ili uandike wakati wowote."
     if not has_plan:
-        return "Kifurushi chako hakikuruhusu kuanzisha mazungumzo. Jiunge na kifurushi ili uanze; kujibu aliyekuandikia ni bure."
+        return _l("Kifurushi chako hakikuruhusu kuanzisha mazungumzo. Jiunge na kifurushi ili uanze; kujibu aliyekuandikia ni bure.")
     if mine.messages_left == 0:
-        return "Umefikia kikomo cha mazungumzo mapya ya leo. Utaweza kuanzisha mengine baada ya masaa 24, au ongeza kifurushi."
+        return _l("Umefikia kikomo cha mazungumzo mapya ya leo. Utaweza kuanzisha mengine baada ya masaa 24, au ongeza kifurushi.")
     return ""
 
 def bubble_html(request, msg, other, mine, prev=None):
@@ -273,9 +277,9 @@ def thread(request, pk):
         blocked = liked_blocked(request.user)
         they_blocked_me = bool(other.user_id and mine and Block.objects.filter(user=other.user, member=mine).exists())
         if other.pk in blocked or they_blocked_me:
-            messages.error(request, "Huwezi kumtumia ujumbe mwanachama huyu.")
+            messages.error(request, _("Huwezi kumtumia ujumbe mwanachama huyu."))
         elif not other.can_message(mine):
-            messages.error(request, f"{other.first_name} anapokea ujumbe kutoka kwa {other.get_allow_messages_from_display().lower()} pekee.")
+            messages.error(request, _("%(first_name)s anapokea ujumbe kutoka kwa %(lower)s pekee.") % {"first_name": other.first_name, "lower": other.get_allow_messages_from_display().lower()})
         elif message_block(mine, other):
             messages.error(request, message_block(mine, other))
         elif form.is_valid():
@@ -291,7 +295,7 @@ def thread(request, pk):
             return redirect("thread", pk=pk)
         if request.headers.get("x-requested-with") == "fetch":
             errs = [str(m) for m in messages.get_messages(request)] + [e for v in form.errors.values() for e in v]
-            return JsonResponse({"ok": False, "error": errs[0] if errs else "Ujumbe haukutumwa."}, status=400)
+            return JsonResponse({"ok": False, "error": errs[0] if errs else _("Ujumbe haukutumwa.")}, status=400)
     if mine and other.user_id: Message.objects.filter(sender=other.user, to=mine, read=False).update(read=True)
     return chat_page(request, other, form)
 

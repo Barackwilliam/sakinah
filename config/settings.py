@@ -27,11 +27,13 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "core.middleware.GZipPagesMiddleware",   # pages shrink to about a fifth on the wire (static files are pre-compressed by WhiteNoise)
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",    # picks the language: the visitor's choice (cookie), else what their browser asks for
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "core.lang.MemberLanguageMiddleware",       # a member's saved language follows them to new devices
     "core.middleware.LastSeenMiddleware",
     "core.middleware.HideDjangoAdminMiddleware",
 ]
@@ -43,7 +45,7 @@ TEMPLATES = [{
     "BACKEND": "django.template.backends.django.DjangoTemplates",
     "DIRS": [BASE_DIR / "templates"], "APP_DIRS": True,
     "OPTIONS": {"context_processors": [
-        "django.template.context_processors.request",
+        "django.template.context_processors.request", "django.template.context_processors.i18n",
         "django.contrib.auth.context_processors.auth",
         "django.contrib.messages.context_processors.messages",
         "core.context.site",
@@ -95,6 +97,13 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 LANGUAGE_CODE = "en"; TIME_ZONE = "Africa/Dar_es_Salaam"; USE_TZ = True
+# The site speaks four languages. Visitors pick one from the language menu; the choice is kept in a cookie for a year.
+# Translations live in locale/<code>/LC_MESSAGES/django.po; the compiled .mo files are committed, so a deploy needs no gettext.
+USE_I18N = True
+LANGUAGES = [("en", "English"), ("sw", "Kiswahili"), ("ar", "العربية"), ("fr", "Français")]
+LOCALE_PATHS = [BASE_DIR / "locale"]
+FORMAT_MODULE_PATH = ["core.formats"]   # number formats for Kiswahili and Arabic
+LANGUAGE_COOKIE_AGE = 365 * 24 * 3600
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTHENTICATION_BACKENDS = ["core.backends.EmailOrUsernameBackend"]
 LOGIN_URL = "login"; LOGIN_REDIRECT_URL = "home"; LOGOUT_REDIRECT_URL = "home"
@@ -129,7 +138,7 @@ HTTPS_ONLY = os.getenv("HTTPS_ONLY", "True" if ON_RENDER else "False") == "True"
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", str(HTTPS_ONLY)) == "True"
-    SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = HTTPS_ONLY
+    SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = LANGUAGE_COOKIE_SECURE = HTTPS_ONLY
     SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "3600" if HTTPS_ONLY else "0"))
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_REFERRER_POLICY = "same-origin"

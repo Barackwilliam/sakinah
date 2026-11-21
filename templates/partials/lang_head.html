@@ -1,0 +1,3 @@
+{% load lang %}{% js_catalog %}{% if LANGUAGE_CODE == 'ar' %}
+{# Arabic letters: the Latin web fonts have none, so Arabic pages add one that does. #}
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap">{% endif %}

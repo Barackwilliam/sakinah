@@ -1,0 +1,31 @@
+{% load i18n lang humanize %}{% with p=obj.payment %}
+<section class="apanel tdetail adorder">
+  <div class="aph"><svg><use href="#i-mega"/></svg><h2>{{ obj.business_name }}</h2><span class="muted sm-r">{{ obj.created|date:"j M Y H:i" }}</span></div>
+  <div class="ado-grid">
+    <div class="ado-photos">{% for ph in obj.photos %}<a href="{{ ph.url }}" target="_blank"><img src="{{ ph.url }}" alt=""></a>{% endfor %}</div>
+    <dl class="ado-dl">
+      <div><dt>{% translate "Status" %}</dt><dd>{% if obj.is_expired %}<span class="pill bad">{% translate "Expired" %}</span>{% else %}<span class="pill {% if obj.status == 'live' %}ok{% elif obj.status == 'paid' %}info{% elif obj.status == 'rejected' %}bad{% else %}warn{% endif %}">{{ obj.get_status_display }}</span>{% endif %}</dd></div>
+      <div><dt>{% translate "Package" %}</dt><dd>{{ obj.package.name }} &middot; TSh {{ obj.package.price|intcomma }} &middot; {% blocktranslate count days=obj.package.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}</dd></div>
+      <div><dt>{% translate "Contact" %}</dt><dd>{{ obj.contact_name }} &middot; <a class="va" href="tel:{{ obj.phone }}">{{ obj.phone }}</a>{% if obj.email %} &middot; {{ obj.email }}{% endif %}</dd></div>
+      {% if p %}<div><dt>{% translate "Payment" %}</dt><dd><b>{{ p.get_gateway_display }}</b> &middot; {% translate "Reference" %} <b>{{ p.reference }}</b> &middot; {{ p.payer_phone }} &middot; TSh {{ p.amount|intcomma }} <span class="pill {% if p.status == 'completed' %}ok{% elif p.status == 'pending' %}warn{% else %}bad{% endif %}">{{ p.get_status_display }}</span></dd></div>
+      {% else %}<div><dt>{% translate "Payment" %}</dt><dd class="muted">{% translate "The vendor has not paid yet." %}</dd></div>{% endif %}
+      {% if obj.expires %}<div><dt>{% translate "Runs until" %}</dt><dd>{{ obj.expires|date:"j M Y" }}</dd></div>{% endif %}
+    </dl>
+  </div>
+  <div class="ado-acts">
+    {% if obj.payment_pending or obj.status == 'paid' %}
+    <form method="post" action="{% url 'dash_manage_action' 'ad-orders' obj.pk %}">{% csrf_token %}<input type="hidden" name="act" value="approve"><input type="hidden" name="back" value="{{ request.get_full_path }}">
+      <button class="ab pl"><svg><use href="#a-check"/></svg>{% translate "Confirm payment & publish" %}</button></form>{% endif %}
+    {% if obj.status != 'rejected' %}
+    <form method="post" action="{% url 'dash_manage_action' 'ad-orders' obj.pk %}" data-confirm="{% translate 'Do not approve this advert? Write the reason in the note below first, the vendor will see it.' %}">{% csrf_token %}<input type="hidden" name="act" value="reject"><input type="hidden" name="back" value="{{ request.get_full_path }}">
+      <button class="ab o"><svg><use href="#m-x-c"/></svg>{% translate "Do not approve" %}</button></form>{% endif %}
+    <a class="ab o" href="{{ obj.get_absolute_url }}" target="_blank"><svg><use href="#m-eye"/></svg>{% translate "Vendor's page" %}</a>
+    {% if obj.advert %}<a class="ab o" href="{% url 'advert' obj.advert.slug %}" target="_blank"><svg><use href="#i-mega"/></svg>{% translate "Live advert" %}</a>
+      <a class="ab o" href="{% url 'dash_manage_edit' 'adverts' obj.advert.pk %}"><svg><use href="#m-edit"/></svg>{% translate "Edit live advert" %}</a>{% endif %}
+  </div>
+  {% if obj.advert %}<p class="muted">{% translate "Changes to the live advert are made on the advert itself; the form below is the vendor's original request." %}</p>{% endif %}
+</section>{% endwith %}
+<style>.adorder .ado-grid{display:grid;grid-template-columns:minmax(0,260px) 1fr;gap:18px;margin:6px 0 14px}.ado-photos{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ado-photos a:first-child{grid-column:1/-1}.ado-photos img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px}
+.ado-dl{display:flex;flex-direction:column;gap:10px;font-size:14px}.ado-dl dt{font-size:12px;color:#7a7f8c;font-weight:600}.ado-acts{display:flex;flex-wrap:wrap;gap:8px}.ado-acts form{display:inline}
+@media(max-width:700px){.adorder .ado-grid{grid-template-columns:1fr}}</style>

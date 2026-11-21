@@ -1,5 +1,5 @@
-{% if form.non_field_errors %}<div class="ferr">{{ form.non_field_errors }}</div>{% endif %}
-<p class="grp">Kuhusu wewe &middot; About you</p>
+{% load i18n %}{% if form.non_field_errors %}<div class="ferr">{{ form.non_field_errors }}</div>{% endif %}
+<p class="grp">{% translate "Kuhusu wewe &middot; About you" %}</p>
 <div class="fgrid">
   {% include "partials/field.html" with f=form.name icon="user" wide=1 %}
   {% include "partials/field.html" with f=form.gender icon="people" %}
@@ -8,11 +8,11 @@
   {% include "partials/field.html" with f=form.religion icon="moon" %}
   {% include "partials/field.html" with f=form.occupation icon="briefcase" wide=1 %}
 </div>
-<p class="grp">Akaunti &middot; Account</p>
+<p class="grp">{% translate "Akaunti &middot; Account" %}</p>
 <div class="fgrid">
   {% include "partials/field.html" with f=form.username icon="user" %}
   {% include "partials/field.html" with f=form.email icon="mail" %}
   {% include "partials/field.html" with f=form.password1 icon="lock" %}
   {% include "partials/field.html" with f=form.password2 icon="lock" %}
 </div>
-<label class="agree"><input type="checkbox" required><span>I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>, and I am 18 or older.</span></label>
+<label class="agree"><input type="checkbox" required><span>{% translate "I agree to the" %} <a href="#">{% translate "Terms" %}</a> {% translate "and" %} <a href="#">{% translate "Privacy Policy" %}</a>{% translate ", and I am 18 or older." %}</span></label>

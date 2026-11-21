@@ -1,0 +1,41 @@
+"""Words the page scripts show (toasts, call status, buttons). They reach the browser through {% js_catalog %}.
+
+Add a string here when a script in static/js shows new text, and wrap it there in gettext('...')."""
+from django.utils.translation import gettext_noop as N
+
+JS_STRINGS = [
+    N('Call ended'),
+    N("Your plan's call time for today is finished"),
+    N('Allow microphone access to make calls'),
+    N('The connection failed. Check your internet and try again.'),
+    N('Call declined'),
+    N('No answer'),
+    N('Call cancelled'),
+    N('Waiting for the network…'),
+    N('This browser does not support calls. Please use Chrome, Safari or Firefox.'),
+    N('This call has ended'),
+    N('Starting video call…'),
+    N('Calling…'),
+    N('The call could not be started.'),
+    N('No connection. Check your internet and try again.'),
+    N('Incoming video call…'),
+    N('Incoming voice call…'),
+    N('This voice message could not be played on this device.'),
+    N('The voice note could not be sent. Check your internet.'),
+    N('Allow microphone access in your browser to record a voice note.'),
+    N('Ujumbe haukutumwa. Angalia mtandao wako.'),
+    N('Ondoa picha'),
+    N('Ujumbe haukutumwa.'),
+    N('Yupo mtandaoni'),
+    N('Hide password'),
+    N('Show password'),
+    N('Link copied'),
+    N('Check availability'),
+    N('Send an inquiry'),
+    N('Admin Login'),
+    N('Welcome Back'),
+    N(' - add a caption or press send'),
+    N('Andika ujumbe wako hapa...'),
+    N('not sent'),
+    N('This package includes one photo. Choose a bigger package for up to 4.'),
+]

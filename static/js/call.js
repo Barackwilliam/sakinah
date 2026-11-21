@@ -21,7 +21,7 @@
     if (pc) pc.close(); if (local) local.getTracks().forEach((t) => t.stop());
     setTimeout(() => { location.href = D.back; }, ms);
   };
-  const hangup = () => { if (!done) { post(D.end); leave('Call ended', 900); } };
+  const hangup = () => { if (!done) { post(D.end); leave(gettext('Call ended'), 900); } };
 
   const clock = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s) % 60).padStart(2, '0')}`;
   const cap = +D.cap || 0;   // seconds this call may run on the plan's daily allowance; 0 means no limit
@@ -34,7 +34,7 @@
       const left = cap - s;
       $('timer').textContent = `${clock(s)} · ${clock(Math.max(0, left))} left`;
       $('timer').classList.toggle('low', left <= 10);
-      if (left <= 0 && !done) { post(D.end); leave('Your plan\'s call time for today is finished', 1600); }
+      if (left <= 0 && !done) { post(D.end); leave(gettext('Your plan\'s call time for today is finished'), 1600); }
     };
     show(); tick = setInterval(show, 1000);
   };
@@ -47,7 +47,7 @@
       if (video) { // no camera (or refused): fall back to a voice-only connection rather than failing the call
         try { local = await navigator.mediaDevices.getUserMedia({ audio: true }); el.classList.add('nocam'); } catch (_) {}
       }
-      if (!local) { post(D.end); leave('Allow microphone access to make calls', 3500); return false; }
+      if (!local) { post(D.end); leave(gettext('Allow microphone access to make calls'), 3500); return false; }
     }
     if (video) { $('self').srcObject = local; }
     if (video && navigator.mediaDevices.enumerateDevices) {
@@ -70,7 +70,7 @@
       const st = pc.connectionState;
       if (st === 'connected') { connected = true; status(video ? '' : 'Connected'); startTimer(); el.classList.add('connected'); }
       if (st === 'disconnected') status('Reconnecting…');
-      if (st === 'failed') { post(D.end); leave('The connection failed. Check your internet and try again.', 3500); }
+      if (st === 'failed') { post(D.end); leave(gettext('The connection failed. Check your internet and try again.'), 3500); }
     };
   }
 
@@ -95,7 +95,7 @@
       if (r.ok) {
         const j = await r.json();
         if (['declined', 'ended', 'missed', 'cancelled'].includes(j.status)) {
-          return leave({ declined: 'Call declined', missed: 'No answer', cancelled: 'Call cancelled', ended: 'Call ended' }[j.status]);
+          return leave({ declined: gettext('Call declined'), missed: gettext('No answer'), cancelled: gettext('Call cancelled'), ended: gettext('Call ended') }[j.status]);
         }
         if (isCaller && j.status === 'accepted' && !offered) {
           offered = true; status('Connecting…'); connect();
@@ -104,7 +104,7 @@
         if (isCaller && j.status === 'ringing') status('Ringing…');
         for (const s of j.signals) { lastSignal = Math.max(lastSignal, s.id); if (pc) await handle(s); }
       }
-    } catch (_) { if (!connected) status('Waiting for the network…'); }
+    } catch (_) { if (!connected) status(gettext('Waiting for the network…')); }
     pollTimer = setTimeout(poll, connected ? 2500 : 700);
   }
 
@@ -129,11 +129,11 @@
   addEventListener('pagehide', () => { if (!done) post(D.end); });   // closing the tab hangs up (keepalive lets the request finish)
 
   (async function boot() {
-    if (!window.RTCPeerConnection || !navigator.mediaDevices) { post(D.end); return leave('This browser does not support calls. Please use Chrome, Safari or Firefox.', 4000); }
+    if (!window.RTCPeerConnection || !navigator.mediaDevices) { post(D.end); return leave(gettext('This browser does not support calls. Please use Chrome, Safari or Firefox.'), 4000); }
     if (!(await media())) return;
     if (!isCaller) {
       const r = await post(D.accept);
-      if (!r.ok) return leave('This call has ended', 1500);
+      if (!r.ok) return leave(gettext('This call has ended'), 1500);
       status('Connecting…'); connect();
     }
     poll();

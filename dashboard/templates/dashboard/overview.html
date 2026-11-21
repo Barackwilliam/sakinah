@@ -1,72 +1,72 @@
-{% extends "dashboard/base.html" %}{% load humanize %}{% block title %}{% if is_owner %}Super Admin Dashboard{% else %}Admin Dashboard{% endif %}{% endblock %}
+{% extends "dashboard/base.html" %}{% load i18n lang %}{% load humanize %}{% block title %}{% if is_owner %}{% translate "Super Admin Dashboard" %}{% else %}{% translate "Admin Dashboard" %}{% endif %}{% endblock %}
 {% block content %}
 {% if is_owner %}
-{% include "dashboard/_banner.html" with icon="m-user" title="Welcome, Super Admin" sub="Manage Sakinah platform, members, content, payments and all activities." %}
+{% include "dashboard/_banner.html" with icon="m-user" title=_("Welcome, Super Admin") sub=_("Manage Sakinah platform, members, content, payments and all activities.") %}
 {% else %}
-{% include "dashboard/_banner.html" with icon="m-chart" title="Admin Dashboard" sub="Monitor, manage and grow the Sakinah platform." %}
+{% include "dashboard/_banner.html" with icon="m-chart" title=_("Admin Dashboard") sub=_("Monitor, manage and grow the Sakinah platform.") %}
 {% endif %}
 {% include "dashboard/_acards.html" %}
 <div class="ag3">
-  <section class="apanel trendp"><div class="aph"><svg><use href="#m-chart"/></svg><h2>Member Registration Trend</h2>
-    <form method="get"><select name="range" onchange="this.form.submit()" aria-label="Period"><option value="12">Last 12 Months</option><option value="6" {% if span == 6 %}selected{% endif %}>Last 6 Months</option></select></form></div>
+  <section class="apanel trendp"><div class="aph"><svg><use href="#m-chart"/></svg><h2>{% translate "Member Registration Trend" %}</h2>
+    <form method="get"><select name="range" onchange="this.form.submit()" aria-label="{% translate 'Period' %}"><option value="12">{% translate "Last 12 Months" %}</option><option value="6" {% if span == 6 %}selected{% endif %}>{% translate "Last 6 Months" %}</option></select></form></div>
     {% include "dashboard/_trend.html" with c=trend %}</section>
-  <section class="apanel"><div class="aph"><svg><use href="#m-heart"/></svg><h2>{% if is_owner %}Member Distribution by Gender{% else %}Members by Gender{% endif %}</h2></div>
-    <div class="gender"><div class="m"><svg><use href="#m-user"/></svg><span class="lb">Male</span><b>{{ gender.m|intcomma }}</b><small>{{ gender.mp }}%</small></div>
-      <div class="ring2" style="background:conic-gradient(#3b82f6 0 {{ gender.mp }}%,#e2557a {{ gender.mp }}% 100%)"><div><b>{{ gender.total|intcomma }}</b><small>Members</small></div></div>
-      <div class="f"><svg><use href="#m-user"/></svg><span class="lb">Female</span><b>{{ gender.f|intcomma }}</b><small>{{ gender.fp }}%</small></div></div>
-    <div class="glgd"><span><i style="background:#3b82f6"></i>Male</span><span><i style="background:#e2557a"></i>Female</span></div></section>
-  <section class="apanel"><div class="aph"><svg><use href="#m-people"/></svg><h2>Members by Age Group</h2></div>
-    <div class="ages">{% for a in ages %}<div><b>{{ a.n|intcomma }}</b><i style="height:{{ a.h }}%;background:{{ a.color }}"></i><span>{{ a.label }}</span><small>{{ a.pct }}%</small></div>{% endfor %}</div></section>
+  <section class="apanel"><div class="aph"><svg><use href="#m-heart"/></svg><h2>{% if is_owner %}{% translate "Member Distribution by Gender" %}{% else %}{% translate "Members by Gender" %}{% endif %}</h2></div>
+    <div class="gender"><div class="m"><svg><use href="#m-user"/></svg><span class="lb">{% translate "Male" %}</span><b>{{ gender.m|intcomma }}</b><small>{{ gender.mp }}%</small></div>
+      <div class="ring2" style="background:conic-gradient(#3b82f6 0 {{ gender.mp }}%,#e2557a {{ gender.mp }}% 100%)"><div><b>{{ gender.total|intcomma }}</b><small>{% translate "Members" %}</small></div></div>
+      <div class="f"><svg><use href="#m-user"/></svg><span class="lb">{% translate "Female" %}</span><b>{{ gender.f|intcomma }}</b><small>{{ gender.fp }}%</small></div></div>
+    <div class="glgd"><span><i style="background:#3b82f6"></i>{% translate "Male" %}</span><span><i style="background:#e2557a"></i>{% translate "Female" %}</span></div></section>
+  <section class="apanel"><div class="aph"><svg><use href="#m-people"/></svg><h2>{% translate "Members by Age Group" %}</h2></div>
+    <div class="ages">{% for a in ages %}<div><b>{{ a.n|intcomma }}</b><i style="height:{{ a.h }}%;background:{{ a.color }}"></i><span>{{ a.label|tr }}</span><small>{{ a.pct }}%</small></div>{% endfor %}</div></section>
 </div>
 <div class="ag3 tables">
   {% if is_owner %}
-  <section class="apanel"><div class="aph"><svg><use href="#m-people"/></svg><h2>Active Members (Last 7 Days)</h2><a class="va" href="{% url 'dash_members' %}">View All</a></div>
-    <div class="atw"><table class="atab"><thead><tr><th class="n">#</th><th>Name</th><th class="g">Gender</th><th>Location</th><th class="la">Last Active</th></tr></thead><tbody>
+  <section class="apanel"><div class="aph"><svg><use href="#m-people"/></svg><h2>{% translate "Active Members (Last 7 Days)" %}</h2><a class="va" href="{% url 'dash_members' %}">{% translate "View All" %}</a></div>
+    <div class="atw"><table class="atab"><thead><tr><th class="n">#</th><th>{% translate "Name" %}</th><th class="g">{% translate "Gender" %}</th><th>{% translate "Location" %}</th><th class="la">{% translate "Last Active" %}</th></tr></thead><tbody>
     {% for m in actives %}<tr><td>{{ forloop.counter }}</td><td class="nw el">{{ m.name }}</td><td>{% include "dashboard/_gender.html" %}</td><td class="nw el">{{ m.city }}</td><td><span class="dotc{% if m.online %} on{% endif %}"><i></i>{{ m.seen_text }}</span></td></tr>
-    {% empty %}<tr><td colspan="5" class="muted">Nobody was active this week.</td></tr>{% endfor %}</tbody></table></div></section>
-  <section class="apanel"><div class="aph"><svg><use href="#m-cal"/></svg><h2>Latest Registrations</h2><a class="va" href="{% url 'dash_members' %}">View All</a></div>
-    <div class="atw"><table class="atab"><thead><tr><th>Name</th><th class="g">Gender</th><th>Location</th><th class="d">Date</th></tr></thead><tbody>
+    {% empty %}<tr><td colspan="5" class="muted">{% translate "Nobody was active this week." %}</td></tr>{% endfor %}</tbody></table></div></section>
+  <section class="apanel"><div class="aph"><svg><use href="#m-cal"/></svg><h2>{% translate "Latest Registrations" %}</h2><a class="va" href="{% url 'dash_members' %}">{% translate "View All" %}</a></div>
+    <div class="atw"><table class="atab"><thead><tr><th>{% translate "Name" %}</th><th class="g">{% translate "Gender" %}</th><th>{% translate "Location" %}</th><th class="d">{% translate "Date" %}</th></tr></thead><tbody>
     {% for m in latest %}<tr><td class="nw el">{{ m.name }}</td><td>{% include "dashboard/_gender.html" %}</td><td class="nw el">{{ m.city }}</td><td class="nw">{{ m.joined|date:"j M y" }}</td></tr>
-    {% empty %}<tr><td colspan="4" class="muted">No members yet.</td></tr>{% endfor %}</tbody></table></div></section>
+    {% empty %}<tr><td colspan="4" class="muted">{% translate "No members yet." %}</td></tr>{% endfor %}</tbody></table></div></section>
   {% else %}
-  <section class="apanel"><div class="aph"><svg><use href="#m-people"/></svg><h2>Latest Members</h2><a class="va" href="{% url 'dash_members' %}">View All</a></div>
-    <div class="atw"><table class="atab"><thead><tr><th class="n">#</th><th>Name</th><th class="g">Gender</th><th>Location</th><th class="d">Date</th><th class="s">Status</th></tr></thead><tbody>
+  <section class="apanel"><div class="aph"><svg><use href="#m-people"/></svg><h2>{% translate "Latest Members" %}</h2><a class="va" href="{% url 'dash_members' %}">{% translate "View All" %}</a></div>
+    <div class="atw"><table class="atab"><thead><tr><th class="n">#</th><th>{% translate "Name" %}</th><th class="g">{% translate "Gender" %}</th><th>{% translate "Location" %}</th><th class="d">{% translate "Date" %}</th><th class="s">{% translate "Status" %}</th></tr></thead><tbody>
     {% for m in latest %}<tr><td>{{ forloop.counter }}</td><td class="nw el">{{ m.name }}</td><td>{% include "dashboard/_gender.html" %}</td><td class="nw el">{{ m.city }}</td><td class="nw">{{ m.joined|date:"j M y" }}</td>
-      <td><span class="pill {% if m.state.1 == 'ok' %}ok{% elif m.state.1 == 'warn' %}warn{% else %}bad{% endif %}">{% if m.state.0 == 'Verified' %}Active{% else %}{{ m.state.0 }}{% endif %}</span></td></tr>
-    {% empty %}<tr><td colspan="6" class="muted">No members yet.</td></tr>{% endfor %}</tbody></table></div></section>
-  <section class="apanel"><div class="aph"><svg><use href="#m-heart"/></svg><h2>Latest Matches</h2><a class="va" href="{% url 'dash_matches' %}?tab=all">View All</a></div>
-    <div class="atw"><table class="atab"><thead><tr><th class="n">#</th><th>Member</th><th>Match</th><th class="d">Date</th><th class="s">Status</th></tr></thead><tbody>
+      <td><span class="pill {% if m.state.1 == 'ok' %}ok{% elif m.state.1 == 'warn' %}warn{% else %}bad{% endif %}">{% if m.state.0 == 'Verified' %}{% translate "Active" %}{% else %}{{ m.state.0 }}{% endif %}</span></td></tr>
+    {% empty %}<tr><td colspan="6" class="muted">{% translate "No members yet." %}</td></tr>{% endfor %}</tbody></table></div></section>
+  <section class="apanel"><div class="aph"><svg><use href="#m-heart"/></svg><h2>{% translate "Latest Matches" %}</h2><a class="va" href="{% url 'dash_matches' %}?tab=all">{% translate "View All" %}</a></div>
+    <div class="atw"><table class="atab"><thead><tr><th class="n">#</th><th>{% translate "Member" %}</th><th>{% translate "Match" %}</th><th class="d">{% translate "Date" %}</th><th class="s">{% translate "Status" %}</th></tr></thead><tbody>
     {% for x in matches %}<tr><td>{{ forloop.counter }}</td><td class="nw">{{ x.a.short_name }}</td><td><span class="pair"><svg><use href="#m-heart-o"/></svg>{{ x.b.short_name }}</span></td><td class="nw">{{ x.t|date:"j M y" }}</td>
-      <td><a class="pill {% if x.contacted %}info{% else %}ok{% endif %}" href="{% url 'dash_matches' %}?tab=messages&amp;a={{ x.a.pk }}&amp;b={{ x.b.pk }}">{% if x.contacted %}Contacted{% else %}New{% endif %}</a></td></tr>
-    {% empty %}<tr><td colspan="5" class="muted">No mutual matches yet.</td></tr>{% endfor %}</tbody></table></div></section>
+      <td><a class="pill {% if x.contacted %}info{% else %}ok{% endif %}" href="{% url 'dash_matches' %}?tab=messages&amp;a={{ x.a.pk }}&amp;b={{ x.b.pk }}">{% if x.contacted %}{% translate "Contacted" %}{% else %}{% translate "New" %}{% endif %}</a></td></tr>
+    {% empty %}<tr><td colspan="5" class="muted">{% translate "No mutual matches yet." %}</td></tr>{% endfor %}</tbody></table></div></section>
   {% endif %}
-  <section class="apanel"><div class="aph"><svg><use href="#i-coins"/></svg><h2>Recent Payments</h2><a class="va" href="{% url 'dash_payments' %}">View All</a></div>
-    <div class="atw"><table class="atab"><thead><tr>{% if not is_owner %}<th class="n">#</th>{% endif %}<th>{% if is_owner %}Name{% else %}Member{% endif %}</th><th>Plan</th><th class="am">Amount</th><th class="d">Date</th><th class="s">Status</th></tr></thead><tbody>
+  <section class="apanel"><div class="aph"><svg><use href="#i-coins"/></svg><h2>{% translate "Recent Payments" %}</h2><a class="va" href="{% url 'dash_payments' %}">{% translate "View All" %}</a></div>
+    <div class="atw"><table class="atab"><thead><tr>{% if not is_owner %}<th class="n">#</th>{% endif %}<th>{% if is_owner %}{% translate "Name" %}{% else %}{% translate "Member" %}{% endif %}</th><th>{% translate "Plan" %}</th><th class="am">{% translate "Amount" %}</th><th class="d">{% translate "Date" %}</th><th class="s">{% translate "Status" %}</th></tr></thead><tbody>
     {% for p in payments %}<tr>{% if not is_owner %}<td>{{ forloop.counter }}</td>{% endif %}<td class="nw el">{% if is_owner %}{{ p.who }}{% else %}{{ p.who_short }}{% endif %}</td>
       <td class="nw el">{{ p.plan.name|default:p.get_kind_display }}</td><td class="nw">{{ site.currency }} {{ p.amount|intcomma }}</td><td class="nw">{{ p.created|date:"j M y" }}</td>
-      <td><span class="pill {% if p.status == 'completed' %}ok{% elif p.status == 'pending' %}warn{% else %}bad{% endif %}">{% if p.status == 'completed' %}Paid{% else %}{{ p.get_status_display }}{% endif %}</span></td></tr>
-    {% empty %}<tr><td colspan="6" class="muted">No payments yet.</td></tr>{% endfor %}</tbody></table></div></section>
+      <td><span class="pill {% if p.status == 'completed' %}ok{% elif p.status == 'pending' %}warn{% else %}bad{% endif %}">{% if p.status == 'completed' %}{% translate "Paid" %}{% else %}{{ p.get_status_display }}{% endif %}</span></td></tr>
+    {% empty %}<tr><td colspan="6" class="muted">{% translate "No payments yet." %}</td></tr>{% endfor %}</tbody></table></div></section>
 </div>
 {% if is_owner %}
 <div class="qlinks seven">
-  <div class="ql"><svg style="--c:#a0123c"><use href="#m-people"/></svg><b>Manage Members</b><small>View, approve or suspend members</small><a href="{% url 'dash_members' %}">Open</a></div>
-  <div class="ql"><svg style="--c:#a0123c"><use href="#m-heart"/></svg><b>Manage Matches</b><small>Monitor matches and reports</small><a href="{% url 'dash_matches' %}">Open</a></div>
-  <div class="ql"><svg style="--c:#a0123c"><use href="#m-cal"/></svg><b>Manage Events</b><small>Create and manage events</small><a href="{% url 'dash_manage' 'events' %}">Open</a></div>
-  <div class="ql"><svg style="--c:#d4950f"><use href="#i-coins"/></svg><b>Payments &amp; Finance</b><small>View payments and reports</small><a href="{% url 'dash_payments' %}">Open</a></div>
-  <div class="ql"><svg style="--c:#1d4ed8"><use href="#m-send"/></svg><b>Communication</b><small>Send emails and notifications</small><a href="{% url 'dash_comms' %}">Open</a></div>
-  <div class="ql"><svg style="--c:#1d4ed8"><use href="#m-doc"/></svg><b>Content Management</b><small>Manage pages, articles and media</small><a href="{% url 'dash_manage' 'articles' %}">Open</a></div>
-  <div class="ql"><svg style="--c:#a0123c"><use href="#m-chart"/></svg><b>Reports &amp; Analytics</b><small>Detailed reports and platform insights</small><a href="{% url 'dash_report' %}">Open</a></div>
+  <div class="ql"><svg style="--c:#a0123c"><use href="#m-people"/></svg><b>{% translate "Manage Members" %}</b><small>{% translate "View, approve or suspend members" %}</small><a href="{% url 'dash_members' %}">{% translate "Open" %}</a></div>
+  <div class="ql"><svg style="--c:#a0123c"><use href="#m-heart"/></svg><b>{% translate "Manage Matches" %}</b><small>{% translate "Monitor matches and reports" %}</small><a href="{% url 'dash_matches' %}">{% translate "Open" %}</a></div>
+  <div class="ql"><svg style="--c:#a0123c"><use href="#m-cal"/></svg><b>{% translate "Manage Events" %}</b><small>{% translate "Create and manage events" %}</small><a href="{% url 'dash_manage' 'events' %}">{% translate "Open" %}</a></div>
+  <div class="ql"><svg style="--c:#d4950f"><use href="#i-coins"/></svg><b>{% translate "Payments &amp; Finance" %}</b><small>{% translate "View payments and reports" %}</small><a href="{% url 'dash_payments' %}">{% translate "Open" %}</a></div>
+  <div class="ql"><svg style="--c:#1d4ed8"><use href="#m-send"/></svg><b>{% translate "Communication" %}</b><small>{% translate "Send emails and notifications" %}</small><a href="{% url 'dash_comms' %}">{% translate "Open" %}</a></div>
+  <div class="ql"><svg style="--c:#1d4ed8"><use href="#m-doc"/></svg><b>{% translate "Content Management" %}</b><small>{% translate "Manage pages, articles and media" %}</small><a href="{% url 'dash_manage' 'articles' %}">{% translate "Open" %}</a></div>
+  <div class="ql"><svg style="--c:#a0123c"><use href="#m-chart"/></svg><b>{% translate "Reports &amp; Analytics" %}</b><small>{% translate "Detailed reports and platform insights" %}</small><a href="{% url 'dash_report' %}">{% translate "Open" %}</a></div>
 </div>
 {% else %}
 <div class="qlinks">
-  <div class="ql t" style="--bgc:#fdf0f3"><svg style="--c:#a0123c"><use href="#m-people"/></svg><b>Manage Members</b><small>View, approve or suspend members</small><a href="{% url 'dash_members' %}">Open</a></div>
-  <div class="ql t" style="--bgc:#fdf0f3"><svg style="--c:#a0123c"><use href="#m-heart"/></svg><b>Manage Matches</b><small>Monitor matches and reports</small><a href="{% url 'dash_matches' %}">Open</a></div>
-  <div class="ql t" style="--bgc:#fdf0f3"><svg style="--c:#a0123c"><use href="#m-cal"/></svg><b>Manage Events</b><small>Create and manage events</small><a href="{% url 'dash_manage' 'events' %}">Open</a></div>
-  <div class="ql t" style="--bgc:#fdf6e6"><svg style="--c:#d4950f"><use href="#i-coins"/></svg><b>Payments &amp; Finance</b><small>View payments and reports</small><a href="{% url 'dash_payments' %}">Open</a></div>
-  <div class="ql t" style="--bgc:#edf3fd"><svg style="--c:#1d4ed8"><use href="#m-doc"/></svg><b>Content Management</b><small>Manage pages, articles and media</small><a href="{% url 'dash_manage' 'articles' %}">Open</a></div>
-  <div class="ql t" style="--bgc:#edf3fd"><svg style="--c:#1d4ed8"><use href="#m-send"/></svg><b>Communications</b><small>Send emails and notifications</small><a href="{% url 'dash_comms' %}">Open</a></div>
-  <div class="ql t" style="--bgc:#fdf0f3"><svg style="--c:#a0123c"><use href="#m-chart"/></svg><b>Reports &amp; Analytics</b><small>Detailed reports and platform insights</small><a href="{% url 'dash_report' %}">Open</a></div>
-  {% if is_owner %}<div class="ql t" style="--bgc:#edf3fd"><svg style="--c:#1e3a8a"><use href="#m-gear"/></svg><b>User Management</b><small>Manage admin and staff accounts</small><a href="{% url 'dash_staff' %}">Open</a></div>{% else %}<div class="ql t" style="--bgc:#edf3fd"><svg style="--c:#1e3a8a"><use href="#m-headset"/></svg><b>Support Tickets</b><small>Answer member questions and reports</small><a href="{% url 'dash_manage' 'tickets' %}">Open</a></div>{% endif %}
+  <div class="ql t" style="--bgc:#fdf0f3"><svg style="--c:#a0123c"><use href="#m-people"/></svg><b>{% translate "Manage Members" %}</b><small>{% translate "View, approve or suspend members" %}</small><a href="{% url 'dash_members' %}">{% translate "Open" %}</a></div>
+  <div class="ql t" style="--bgc:#fdf0f3"><svg style="--c:#a0123c"><use href="#m-heart"/></svg><b>{% translate "Manage Matches" %}</b><small>{% translate "Monitor matches and reports" %}</small><a href="{% url 'dash_matches' %}">{% translate "Open" %}</a></div>
+  <div class="ql t" style="--bgc:#fdf0f3"><svg style="--c:#a0123c"><use href="#m-cal"/></svg><b>{% translate "Manage Events" %}</b><small>{% translate "Create and manage events" %}</small><a href="{% url 'dash_manage' 'events' %}">{% translate "Open" %}</a></div>
+  <div class="ql t" style="--bgc:#fdf6e6"><svg style="--c:#d4950f"><use href="#i-coins"/></svg><b>{% translate "Payments &amp; Finance" %}</b><small>{% translate "View payments and reports" %}</small><a href="{% url 'dash_payments' %}">{% translate "Open" %}</a></div>
+  <div class="ql t" style="--bgc:#edf3fd"><svg style="--c:#1d4ed8"><use href="#m-doc"/></svg><b>{% translate "Content Management" %}</b><small>{% translate "Manage pages, articles and media" %}</small><a href="{% url 'dash_manage' 'articles' %}">{% translate "Open" %}</a></div>
+  <div class="ql t" style="--bgc:#edf3fd"><svg style="--c:#1d4ed8"><use href="#m-send"/></svg><b>{% translate "Communications" %}</b><small>{% translate "Send emails and notifications" %}</small><a href="{% url 'dash_comms' %}">{% translate "Open" %}</a></div>
+  <div class="ql t" style="--bgc:#fdf0f3"><svg style="--c:#a0123c"><use href="#m-chart"/></svg><b>{% translate "Reports &amp; Analytics" %}</b><small>{% translate "Detailed reports and platform insights" %}</small><a href="{% url 'dash_report' %}">{% translate "Open" %}</a></div>
+  {% if is_owner %}<div class="ql t" style="--bgc:#edf3fd"><svg style="--c:#1e3a8a"><use href="#m-gear"/></svg><b>{% translate "User Management" %}</b><small>{% translate "Manage admin and staff accounts" %}</small><a href="{% url 'dash_staff' %}">{% translate "Open" %}</a></div>{% else %}<div class="ql t" style="--bgc:#edf3fd"><svg style="--c:#1e3a8a"><use href="#m-headset"/></svg><b>{% translate "Support Tickets" %}</b><small>{% translate "Answer member questions and reports" %}</small><a href="{% url 'dash_manage' 'tickets' %}">{% translate "Open" %}</a></div>{% endif %}
 </div>
 {% endif %}
 {% endblock %}

@@ -1,4 +1,5 @@
 """Shared queries for the member area."""
+from django.utils.translation import gettext_lazy as _l
 from datetime import timedelta
 from django.db.models import Count, Q
 from django.utils import timezone
@@ -54,19 +55,19 @@ def period_counts(qs, field="created"):
     return qs.aggregate(n_all=Count("pk"), **{f"n_{k}": Count("pk", filter=Q(**{f"{field}__gte": v})) for k, v in since.items()})
 
 COMPLETION = [  # (section, label, test)
-    ("Basic Information", "name, age, city and occupation", lambda m: all([m.name, m.age, m.city, m.occupation])),
-    ("Basic Information", "education", lambda m: bool(m.education)),
-    ("Basic Information", "height", lambda m: bool(m.height_cm)),
-    ("Basic Information", "languages", lambda m: bool(m.languages)),
-    ("Photos", "profile photo", lambda m: bool(m.photo)),
-    ("Photos", "at least 3 more photos", lambda m: photo_count(m) >= 3),
-    ("About Me", "about me", lambda m: len(m.bio) >= 40),
-    ("About Me", "interests", lambda m: bool(m.interests)),
-    ("About Me", "religion & values", lambda m: bool(m.prayer or m.values)),
-    ("About Me", "family background", lambda m: bool(m.father_status or m.family_type)),
-    ("Partner Preferences", "preferred age", lambda m: bool(m.pref_age_min and m.pref_age_max)),
-    ("Partner Preferences", "preferred location", lambda m: bool(m.pref_location)),
-    ("Verification", "verified profile", lambda m: m.verified),
+    (_l("Basic Information"), _l("name, age, city and occupation"), lambda m: all([m.name, m.age, m.city, m.occupation])),
+    (_l("Basic Information"), _l("education"), lambda m: bool(m.education)),
+    (_l("Basic Information"), _l("height"), lambda m: bool(m.height_cm)),
+    (_l("Basic Information"), _l("languages"), lambda m: bool(m.languages)),
+    (_l("Photos"), _l("profile photo"), lambda m: bool(m.photo)),
+    (_l("Photos"), _l("at least 3 more photos"), lambda m: photo_count(m) >= 3),
+    (_l("About Me"), _l("about me"), lambda m: len(m.bio) >= 40),
+    (_l("About Me"), _l("interests"), lambda m: bool(m.interests)),
+    (_l("About Me"), _l("religion & values"), lambda m: bool(m.prayer or m.values)),
+    (_l("About Me"), _l("family background"), lambda m: bool(m.father_status or m.family_type)),
+    (_l("Partner Preferences"), _l("preferred age"), lambda m: bool(m.pref_age_min and m.pref_age_max)),
+    (_l("Partner Preferences"), _l("preferred location"), lambda m: bool(m.pref_location)),
+    (_l("Verification"), _l("verified profile"), lambda m: m.verified),
 ]
 
 def completion(member):
