@@ -733,7 +733,9 @@ class PhotoWeightTests(TestCase):
 class LanguageTests(TestCase):
     """The site in English, Kiswahili, Arabic and French."""
     def setUp(self):
-        self.user = User.objects.create_user("fatma", "fatma@example.com", "S3cure-pass-123")
+        import secrets
+        self.pw = secrets.token_urlsafe(16)   # made up for each run; no password lives in the code
+        self.user = User.objects.create_user("fatma", "fatma@example.com", self.pw)
         self.me = Member.objects.create(user=self.user, name="Fatma", age=29, gender="F", city="Arusha", occupation="Nurse")
 
     def home(self, lang):
@@ -757,7 +759,7 @@ class LanguageTests(TestCase):
         self.assertContains(r, '<html lang="fr"')
 
     def test_the_language_menu_sets_the_cookie_and_saves_it_on_the_profile(self):
-        self.client.login(username="fatma", password="S3cure-pass-123")
+        self.client.login(username="fatma", password=self.pw)
         r = self.client.post(reverse("set_language"), {"language": "ar", "next": reverse("home")})
         self.assertRedirects(r, reverse("home"), fetch_redirect_response=False)
         self.assertEqual(r.cookies["django_language"].value, "ar")
@@ -766,13 +768,13 @@ class LanguageTests(TestCase):
 
     def test_a_saved_language_follows_the_member_to_a_new_device(self):
         Member.objects.filter(pk=self.me.pk).update(ui_language="sw")
-        self.client.login(username="fatma", password="S3cure-pass-123")     # a fresh client has no language cookie
+        self.client.login(username="fatma", password=self.pw)     # a fresh client has no language cookie
         r = self.client.get(reverse("home"))
         self.assertContains(r, '<html lang="sw"')
         self.assertEqual(r.cookies["django_language"].value, "sw")
 
     def test_a_member_who_never_chose_keeps_the_browser_language(self):
-        self.client.login(username="fatma", password="S3cure-pass-123")
+        self.client.login(username="fatma", password=self.pw)
         r = self.client.get(reverse("home"), HTTP_ACCEPT_LANGUAGE="ar")
         self.assertContains(r, '<html lang="ar"')
 
@@ -782,7 +784,7 @@ class LanguageTests(TestCase):
         self.assertContains(self.home("en"), "Message not sent.")      # the scripts' Swahili wording, in English
 
     def test_messages_from_the_server_are_translated(self):
-        self.client.login(username="fatma", password="S3cure-pass-123")
+        self.client.login(username="fatma", password=self.pw)
         self.client.cookies["django_language"] = "fr"
         r = self.client.post(reverse("m_settings"), {"section": "notify", "notify-notify_messages": "on"}, follow=True)
         self.assertContains(r, "Paramètres enregistrés.")
@@ -806,7 +808,8 @@ class AdvertiseTests(TestCase):
         self.basic = AdPackage.objects.create(name="Starter", slug="starter", price=25000, days=30, max_photos=1)
         self.spot = AdPackage.objects.create(name="Spotlight", slug="spotlight", price=150000, days=60, max_photos=4,
                                              featured=True, home_page=True, popular=True)
-        self.staff = User.objects.create_user("boss", "boss@example.com", "S3cure-pass-123", is_staff=True)
+        import secrets
+        self.staff = User.objects.create_user("boss", "boss@example.com", secrets.token_urlsafe(16), is_staff=True)
 
     def tearDown(self):
         self._media.disable(); self._tmp.cleanup()
