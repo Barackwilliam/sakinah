@@ -26,7 +26,7 @@
       {% if user.is_authenticated %}<form method="post" action="{% url 'wishlist' ad.slug %}" class="likef">{% csrf_token %}<button class="lnk-btn"><svg class="mag"><use href="{{ icons }}#i-heart{% if ad.pk in wished %}-f{% endif %}"/></svg>{% if ad.pk in wished %}{% translate "In Wishlist" %}{% else %}{% translate "Add to Wishlist" %}{% endif %}</button></form>
       {% else %}<a class="lnk-btn" href="{% url 'login' %}?next={{ ad_url|urlencode }}" data-auth="{{ ad_url }}"><svg class="mag"><use href="{{ icons }}#i-heart"/></svg>{% translate "Add to Wishlist" %}</a>{% endif %}
     </div>
-    <div class="ad-price"><div><b>{{ site.currency }} {{ ad.price|intcomma }}</b><small>{{ ad.price_unit }}</small></div>{% if ad.negotiable %}<span class="pill soft">{% translate "Negotiable" %}</span>{% endif %}</div>
+    <div class="ad-price"><div><b>{{ site.currency }} {{ ad.price|intcomma }}</b><small>{{ ad.price_unit|tr }}</small></div>{% if ad.negotiable %}<span class="pill soft">{% translate "Negotiable" %}</span>{% endif %}</div>
     {% if ad.highlight_list %}<ul class="ad-hl">{% for icon, text in ad.highlight_list %}<li><svg><use href="{{ icons }}#i-{{ icon }}"/></svg>{{ text }}</li>{% endfor %}</ul>{% endif %}
     <div class="ad-cta"><button type="button" class="btn btn-s btn-lg" data-inq="availability"><svg><use href="{{ icons }}#i-cal-f"/></svg>{% translate "Check Availability" %}</button>
       <button type="button" class="btn btn-p btn-lg" data-inq="inquiry">{% translate "Inquire Now" %}</button></div>

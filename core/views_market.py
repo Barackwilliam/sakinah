@@ -11,11 +11,11 @@ from .views import safe_next
 
 def services(request):
     q, cat, vendor = request.GET.get("q", ""), request.GET.get("cat", ""), request.GET.get("vendor", "")
-    ads = Advert.objects.filter(active=True).select_related("vendor", "category").annotate(rating=Avg("reviews__rating"), n_reviews=Count("reviews")).order_by("-featured", "-created")
+    ads = Advert.objects.live().select_related("vendor", "category").annotate(rating=Avg("reviews__rating"), n_reviews=Count("reviews")).order_by("-featured", "-created")
     if cat: ads = ads.filter(category__slug=cat)
     if vendor: ads = ads.filter(vendor__slug=vendor)
     if q: ads = ads.filter(Q(title__icontains=q) | Q(vendor__name__icontains=q) | Q(city__icontains=q))
-    return render(request, "services.html", {"categories": ServiceCategory.objects.annotate(n=Count("adverts", filter=Q(adverts__active=True))).order_by("order", "pk"),
+    return render(request, "services.html", {"categories": ServiceCategory.objects.annotate(n=Count("adverts", filter=Q(adverts__in=Advert.objects.live()))).order_by("order", "pk"),
         "ads": ads, "cat": cat, "q": q, "vendor": Vendor.objects.filter(slug=vendor).first() if vendor else None,
         "wished": wished_ids(request)})
 
@@ -23,7 +23,7 @@ def wished_ids(request):
     return set(request.user.wishlist.values_list("advert_id", flat=True)) if request.user.is_authenticated else set()
 
 def advert(request, slug):
-    ad = get_object_or_404(Advert.objects.select_related("vendor", "category"), slug=slug, active=True)
+    ad = get_object_or_404(Advert.objects.live().select_related("vendor", "category"), slug=slug)
     Advert.objects.filter(pk=ad.pk).update(views=F("views") + 1)
     stats = ad.reviews.aggregate(avg=Avg("rating"), n=Count("id"))
     vstats = AdvertReview.objects.filter(advert__vendor=ad.vendor).aggregate(avg=Avg("rating"), n=Count("id"))
@@ -31,7 +31,7 @@ def advert(request, slug):
     my_review = ad.reviews.filter(user=request.user).first() if request.user.is_authenticated else None
     return render(request, "advert.html", {
         "ad": ad, "photos": ad.photos.all(), "stats": stats, "vstats": vstats, "views": ad.views + 1,
-        "related": Advert.objects.filter(category=ad.category, active=True).exclude(pk=ad.pk)
+        "related": Advert.objects.live().filter(category=ad.category).exclude(pk=ad.pk)
                    .annotate(rating=Avg("reviews__rating"), n_reviews=Count("reviews")).order_by("-featured", "-created")[:3],
         "reviews": ad.reviews.select_related("user__member")[:20], "wished": wished_ids(request),
         "inquiry_form": InquiryForm(initial={"name": member.name if member else "", "phone": member.phone if member else ""}),
@@ -48,7 +48,7 @@ def wishlist(request, slug):
 
 @require_POST
 def inquire(request, slug):
-    ad = get_object_or_404(Advert, slug=slug, active=True)
+    ad = get_object_or_404(Advert.objects.live(), slug=slug)
     form = InquiryForm(request.POST)
     if form.is_valid():
         inquiry = form.save(commit=False)
@@ -62,7 +62,7 @@ def inquire(request, slug):
 @login_required
 @require_POST
 def review(request, slug):
-    ad = get_object_or_404(Advert, slug=slug, active=True)
+    ad = get_object_or_404(Advert.objects.live(), slug=slug)
     form = ReviewForm(request.POST)
     if form.is_valid() and not ad.reviews.filter(user=request.user).exists():
         form.instance.advert, form.instance.user = ad, request.user

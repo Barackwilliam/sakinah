@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sakinah\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-21 03:04+0300\n"
+"POT-Creation-Date: 2026-11-21 04:38+0300\n"
 "PO-Revision-Date: 2026-11-20 00:00+0300\n"
 "Last-Translator: Sakinah\n"
 "Language-Team: Sakinah\n"
@@ -400,15 +400,116 @@ msgid "Stunning landscapes, wine tours and romantic getaways."
 msgstr ""
 "Mandhari ya kuvutia, ziara za mashamba ya zabibu na mapumziko ya kimapenzi."
 
+#| msgid ""
+#| "Lipa kwa M-Pesa, Mixx by Yas au Airtel Money, kisha weka namba ya muamala "
+#| "(transaction reference) hapa chini. Tutathibitisha malipo na kuwasha mpango "
+#| "wako."
+msgid ""
+"Lipa kwa M-Pesa, Mixx by Yas au Airtel Money kwa namba yetu ya malipo (Lipa "
+"Namba), kisha weka namba ya simu uliyotumia na namba ya muamala hapa chini. "
+"Tutathibitisha malipo na tangazo lako litaanza kuonekana mara moja."
+msgstr ""
+"Lipa kwa M-Pesa, Mixx by Yas au Airtel Money kwa namba yetu ya malipo (Lipa "
+"Namba), kisha weka namba ya simu uliyotumia na namba ya muamala hapa chini. "
+"Tutathibitisha malipo na tangazo lako litaanza kuonekana mara moja."
+
+msgid "Per Event / Day"
+msgstr "Kwa tukio / siku"
+
+#| msgid "Start time"
+msgid "Starter"
+msgstr "Mwanzo"
+
+msgid "Get your service seen by couples."
+msgstr "Fanya huduma yako ionekane kwa wanandoa."
+
+msgid "Your advert in its category for 30 days"
+msgstr "Tangazo lako kwenye aina yake kwa siku 30"
+
+msgid "Inquiries and WhatsApp button"
+msgstr "Maulizo na kitufe cha WhatsApp"
+
+#| msgid "Education &amp; Career"
+msgid "Location map and reviews"
+msgstr "Ramani ya mahali na maoni"
+
+#| msgid "Main photo"
+msgid "1 photo"
+msgstr "Picha 1"
+
+#| msgid "Featured matches"
+msgid "Featured badge"
+msgstr "Beji ya Kuangaziwa"
+
+#| msgid "Home Page Highlights"
+msgid "Home page spotlight"
+msgstr "Kuonyeshwa ukurasa wa mwanzo"
+
+msgid "Featured"
+msgstr "Ameangaziwa"
+
+msgid "Stand out at the top of your category."
+msgstr "Jitokeze juu kabisa ya aina yako."
+
+#| msgid "Getting Started"
+msgid "Everything in Starter"
+msgstr "Kila kitu cha Mwanzo"
+
+#| msgid "Get a copy of your data"
+msgid "Top of your category"
+msgstr "Juu kabisa ya aina yako"
+
+#| msgid "Up to 6 photos"
+msgid "Up to 4 photos"
+msgstr "Hadi picha 4"
+
+msgid "Spotlight"
+msgstr "Kivutio Kikuu"
+
+#| msgid "Maximum visibility and serious connections."
+msgid "Maximum visibility for serious businesses."
+msgstr "Kuonekana zaidi kabisa kwa biashara makini."
+
+msgid "Everything in Business"
+msgstr "Kila kitu cha Biashara"
+
+msgid "Runs for 60 days"
+msgstr "Linadumu siku 60"
+
+#| msgid "Show on the home page."
+msgid "Shown on the home page"
+msgstr "Linaonyeshwa ukurasa wa mwanzo"
+
+#| msgid "Priority support"
+msgid "Priority support from our team"
+msgstr "Msaada wa kipaumbele kutoka timu yetu"
+
+#| msgid "Business details"
+msgid "Business"
+msgstr "Biashara"
+
+#| msgid "person"
+msgid "Per Person"
+msgstr "Kwa mtu"
+
+msgid "Per Hour"
+msgstr "Kwa saa"
+
+#| msgid "View Package"
+msgid "Per Package"
+msgstr "Kwa kifurushi"
+
+#| msgid "Start time"
+msgid "Starting price"
+msgstr "Bei ya kuanzia"
+
 #, python-format
-#| msgid "%(age)s years"
 msgid "%(num)d year"
 msgid_plural "%(num)d years"
 msgstr[0] "mwaka %(num)d"
 msgstr[1] "miaka %(num)d"
 
 #, python-format
-#| msgid "1 month"
 msgid "%(num)d month"
 msgid_plural "%(num)d months"
 msgstr[0] "mwezi %(num)d"
@@ -466,6 +567,10 @@ msgstr "Hai"
 
 msgid "Activities"
 msgstr "Shughuli"
+
+#| msgid "Payment instructions"
+msgid "Ad payment instructions"
+msgstr "Maelekezo ya malipo ya matangazo"
 
 msgid "Advert image"
 msgstr "Picha ya tangazo"
@@ -599,6 +704,10 @@ msgstr "Visivyojumuishwa"
 msgid "Exercise"
 msgstr "Mazoezi"
 
+#| msgid "(expired)"
+msgid "Expires"
+msgstr "Mwisho"
+
 msgid "Extra icon"
 msgstr "Ikoni ya ziada"
 
@@ -613,9 +722,6 @@ msgstr "Aina ya familia"
 
 msgid "Father status"
 msgstr "Hali ya baba"
-
-msgid "Featured"
-msgstr "Ameangaziwa"
 
 msgid "Features"
 msgstr "Vipengele"
@@ -652,6 +758,9 @@ msgstr "Mambo muhimu"
 
 msgid "Hobbies"
 msgstr "Mambo Anayopenda"
+
+msgid "Home page"
+msgstr "Ukurasa wa mwanzo"
 
 msgid "Icon"
 msgstr "Ikoni"
@@ -706,6 +815,10 @@ msgstr "Utafutaji wa ramani"
 
 msgid "Marital status"
 msgstr "Hali ya ndoa"
+
+#| msgid "Main photo"
+msgid "Max photos"
+msgstr "Idadi ya picha"
 
 msgid "Meals detail"
 msgstr "Maelezo ya milo"
@@ -790,6 +903,18 @@ msgstr "Picha"
 
 msgid "Photo visibility"
 msgstr "Mwonekano wa picha"
+
+#| msgid "Photo"
+msgid "Photo2"
+msgstr "Picha ya 2"
+
+#| msgid "Photo"
+msgid "Photo3"
+msgstr "Picha ya 3"
+
+#| msgid "Photo"
+msgid "Photo4"
+msgstr "Picha ya 4"
 
 msgid "Plan"
 msgstr "Kifurushi"
@@ -1049,6 +1174,76 @@ msgstr "Barua pepe, jina la mtumiaji au namba ya simu"
 msgid "e.g. amina@example.com or 0712 345 678"
 msgstr "mfano amina@example.com au 0712 345 678"
 
+#| msgid "Per day"
+msgid "Per event / day"
+msgstr "Kwa tukio / siku"
+
+#| msgid "person"
+msgid "Per person"
+msgstr "Kwa mtu"
+
+msgid "Per hour"
+msgstr "Kwa saa"
+
+#| msgid "Package"
+msgid "Per package"
+msgstr "Kwa kifurushi"
+
+#| msgid "Show all packages"
+msgid "Choose your package"
+msgstr "Chagua kifurushi chako"
+
+#| msgid "Price unit"
+msgid "Price is per"
+msgstr "Bei ni kwa"
+
+#| msgid "View All Events"
+msgid "e.g. Al-Noor Events"
+msgstr "mfano Al-Noor Events"
+
+#| msgid "e.g. amina_28"
+msgid "e.g. Amina Hassan"
+msgstr "mfano Amina Hassan"
+
+#| msgid "e.g. amina@example.com or 0712 345 678"
+msgid "e.g. 0712 345 678"
+msgstr "mfano 0712 345 678"
+
+msgid "e.g. Elegant wedding hall for 300 guests"
+msgstr "mfano Ukumbi wa kifahari wa harusi kwa wageni 300"
+
+msgid ""
+"What you offer, what is included, where you work and why couples choose you."
+msgstr ""
+"Unachotoa, kilichojumuishwa, unapofanya kazi na kwa nini wanandoa "
+"wanakuchagua."
+
+msgid "e.g. 500000"
+msgstr "mfano 500000"
+
+#| msgid "Category"
+msgid "Choose a category"
+msgstr "Chagua aina"
+
+msgid "Photos can be up to 8 MB each."
+msgstr "Kila picha inaweza kuwa hadi MB 8."
+
+msgid "Paid with"
+msgstr "Imelipwa kwa"
+
+msgid "Phone number used"
+msgstr "Namba ya simu iliyotumika"
+
+msgid "Transaction reference"
+msgstr "Namba ya muamala"
+
+msgid "e.g. QK71ABC2XY"
+msgstr "mfano QK71ABC2XY"
+
+#| msgid "This reset link is invalid or has already been used."
+msgid "This transaction reference has already been used."
+msgstr "Namba hii ya muamala imeshatumika."
+
 msgid "Call ended"
 msgstr "Simu imeisha"
 
@@ -1149,6 +1344,10 @@ msgstr " - ongeza maelezo au bonyeza tuma"
 msgid "not sent"
 msgstr "haukutumwa"
 
+msgid "This package includes one photo. Choose a bigger package for up to 4."
+msgstr ""
+"Kifurushi hiki kina picha moja. Chagua kifurushi kikubwa upate hadi picha 4."
+
 msgid "Couple photo on the Go Premium card"
 msgstr "Picha ya wanandoa kwenye kadi ya Go Premium"
 
@@ -1164,6 +1363,15 @@ msgid ""
 msgstr ""
 "Huonyeshwa kwa wanachama kwenye ukurasa wa Uanachama wanapopandisha "
 "kifurushi, mfano Lipa Namba yako."
+
+#| msgid ""
+#| "Shown to members on the Membership page when they upgrade, e.g. your Lipa "
+#| "Namba / till number."
+msgid ""
+"Shown to vendors when they pay for an advert, e.g. your Lipa Namba / till "
+"number."
+msgstr ""
+"Huonyeshwa kwa watoa huduma wanapolipia tangazo, mfano Lipa Namba yako."
 
 msgid "WhatsApp number with country code, e.g. 255712345678"
 msgstr "Namba ya WhatsApp pamoja na msimbo wa nchi, mfano 255712345678"
@@ -1401,26 +1609,21 @@ msgstr "Ndoa yenye utulivu, upendo, heshima na misingi ya Kiislamu."
 msgid "Ndoa yenye utulivu, upendo, heshima na misingi ya Kikristo."
 msgstr "Ndoa yenye utulivu, upendo, heshima na misingi ya Kikristo."
 
-#| msgid "Practising"
 msgid "Practising Muslim"
 msgstr "Muislamu anayeshika dini"
 
-#| msgid "Moderately practising"
 msgid "Moderately practising Muslim"
 msgstr "Muislamu anayeshika dini kwa wastani"
 
 msgid "Learning Muslim"
 msgstr "Muislamu anayejifunza"
 
-#| msgid "Practising"
 msgid "Practising Christian"
 msgstr "Mkristo anayeshika dini"
 
-#| msgid "Moderately practising"
 msgid "Moderately practising Christian"
 msgstr "Mkristo anayeshika dini kwa wastani"
 
-#| msgid "Christian"
 msgid "Learning Christian"
 msgstr "Mkristo anayejifunza"
 
@@ -1484,6 +1687,11 @@ msgstr "Maelezo ya ziada, moja kwa kila mstari kama Kichwa|Thamani."
 
 msgid "Address used for the map, e.g. Kariakoo, Dar es Salaam"
 msgstr "Anwani inayotumika kwa ramani, mfano Kariakoo, Dar es Salaam"
+
+#| msgid ""
+#| "The plan is active until this date. Leave empty for a free member."
+msgid "Last day on the site. Leave empty for no end date."
+msgstr "Siku ya mwisho kwenye tovuti. Acha wazi kama halina mwisho."
 
 msgid "Inquiry"
 msgstr "Maulizo"
@@ -1594,6 +1802,79 @@ msgstr "Imefungwa"
 msgid "Answer from the support team; the member sees it as a notification."
 msgstr ""
 "Jibu kutoka timu ya huduma kwa wateja; mwanachama huliona kama taarifa."
+
+msgid "Price for the whole period, in TSh."
+msgstr "Bei kwa kipindi chote, kwa TSh."
+
+msgid "How many days the advert stays on the site."
+msgstr "Idadi ya siku tangazo linakaa kwenye tovuti."
+
+#| msgid ""
+#| "One feature per line. Start a line with - for a feature the plan does not "
+#| "include."
+msgid ""
+"One per line. Start a line with - for something the package does not "
+"include."
+msgstr ""
+"Moja kwa kila mstari. Anza mstari kwa - kwa kitu ambacho kifurushi hakina."
+
+msgid "Featured badge and first place in its category."
+msgstr "Beji ya kuangaziwa na nafasi ya kwanza kwenye aina yake."
+
+#| msgid "The short feature boxes shown on the home page."
+msgid "Also shown in Featured Vendors on the home page."
+msgstr "Pia linaonyeshwa kwenye Watoa Huduma Maalum ukurasa wa mwanzo."
+
+msgid "Photos the vendor may upload (1 to 4)."
+msgstr "Picha ambazo mtoa huduma anaweza kupakia (1 hadi 4)."
+
+#| msgid "Pending payment"
+msgid "Awaiting payment"
+msgstr "Inasubiri malipo"
+
+msgid "Payment sent - being confirmed"
+msgstr "Malipo yametumwa - yanathibitishwa"
+
+#| msgid "Lives in"
+msgid "Live"
+msgstr "Hewani"
+
+msgid "Not approved"
+msgstr "Halikuidhinishwa"
+
+#| msgid "Business details"
+msgid "Business name"
+msgstr "Jina la biashara"
+
+#| msgid "Service Categories"
+msgid "Service category"
+msgstr "Aina ya huduma"
+
+#| msgid "Advert image"
+msgid "Advert title"
+msgstr "Kichwa cha tangazo"
+
+#| msgid "Share your experience"
+msgid "Describe your service"
+msgstr "Eleza huduma yako"
+
+msgid "Starting price (TSh)"
+msgstr "Bei ya kuanzia (TSh)"
+
+#| msgid "(negotiable)"
+msgid "Price is negotiable"
+msgstr "Bei inajadilika"
+
+msgid "Main photo"
+msgstr "Picha kuu"
+
+msgid "Note to the vendor"
+msgstr "Ujumbe kwa mtoa huduma"
+
+msgid "Shown on the vendor's order page, e.g. why it was not approved."
+msgstr ""
+"Huonyeshwa kwenye ukurasa wa oda wa mtoa huduma, mfano kwa nini "
+"halikuidhinishwa."
 
 msgid "Voice call"
 msgstr "Simu ya sauti"
@@ -1893,6 +2174,31 @@ msgstr "Huwezi kumtumia ujumbe mwanachama huyu."
 msgid "%(first_name)s anapokea ujumbe kutoka kwa %(lower)s pekee."
 msgstr "%(first_name)s anapokea ujumbe kutoka kwa %(lower)s pekee."
 
+msgid "Advert packages are being prepared. Please check back soon."
+msgstr "Vifurushi vya matangazo vinaandaliwa. Tafadhali rudi baadaye."
+
+msgid "Your advert is ready. One last step: pay to publish it."
+msgstr ""
+"Tangazo lako liko tayari. Hatua moja ya mwisho: lipia ili lichapishwe."
+
+#| msgid "Please check the highlighted settings."
+msgid "Please check the highlighted fields."
+msgstr "Tafadhali kagua sehemu zilizowekewa alama."
+
+#| msgid ""
+#| "Asante! We received your payment details. Your plan will be activated once "
+#| "our team confirms the payment."
+msgid ""
+"Asante! We received your payment details. Your advert goes live as soon as "
+"our team confirms the payment."
+msgstr ""
+"Asante! Tumepokea maelezo ya malipo yako. Tangazo lako litaanza kuonekana "
+"mara timu yetu itakapothibitisha malipo."
+
+#| msgid "Please correct the payment form."
+msgid "Please check the payment details."
+msgstr "Tafadhali kagua maelezo ya malipo."
+
 msgid "Comment posted."
 msgstr "Maoni yamechapishwa."
 
@@ -1918,7 +2224,6 @@ msgstr "Siku 1 - 3"
 msgid "4 - 7 Days"
 msgstr "Siku 4 - 7"
 
-#| msgid "More than 10 Days"
 msgid "8 - 10 Days"
 msgstr "Siku 8 - 10"
 
@@ -2285,6 +2590,56 @@ msgstr "Tangazo"
 msgid "Show / hide"
 msgstr "Onyesha / ficha"
 
+#| msgid "Advert Revenue"
+msgid "Advert Requests"
+msgstr "Maombi ya Matangazo"
+
+msgid ""
+"Vendors who used Advertise with us. Confirm the payment to publish the "
+"advert; it then runs for the package's days."
+msgstr ""
+"Watoa huduma waliotumia Tangaza Nasi. Thibitisha malipo ili tangazo "
+"lichapishwe; kisha linadumu kwa siku za kifurushi."
+
+msgid "Amount"
+msgstr "Kiasi"
+
+#| msgid "Payments"
+msgid "Payment"
+msgstr "Malipo"
+
+#| msgid "Not verified"
+msgid "Not paid"
+msgstr "Halijalipiwa"
+
+#| msgid "(expired)"
+msgid "Expired"
+msgstr "Limeisha muda"
+
+#| msgid "Premium until"
+msgid "Runs until"
+msgstr "Linadumu hadi"
+
+msgid "Confirm payment & publish"
+msgstr "Thibitisha malipo na chapisha"
+
+msgid "Do not approve"
+msgstr "Usiidhinishe"
+
+#| msgid "All Packages"
+msgid "Advert Packages"
+msgstr "Vifurushi vya Matangazo"
+
+msgid "The packages vendors choose on the Advertise with us page."
+msgstr "Vifurushi wanavyochagua watoa huduma kwenye ukurasa wa Tangaza Nasi."
+
+msgid "Photos"
+msgstr "Picha"
+
+#| msgid "Send Request"
+msgid "Requests"
+msgstr "Maombi"
+
 msgid "Vendors"
 msgstr "Watoa Huduma"
 
@@ -2329,9 +2684,6 @@ msgstr "Ghairi safari"
 msgid "Honeymoon Packages"
 msgstr "Vifurushi vya Fungate"
 
-msgid "Photos"
-msgstr "Picha"
-
 msgid "Bookings"
 msgstr "Maombi ya safari"
 
@@ -2370,9 +2722,6 @@ msgstr "Mlipaji"
 
 msgid "For"
 msgstr "Kwa ajili ya"
-
-msgid "Amount"
-msgstr "Kiasi"
 
 msgid "Approve payment"
 msgstr "Idhinisha malipo"
@@ -3274,6 +3623,43 @@ msgid "Print / Save as PDF"
 msgstr "Chapisha / Hifadhi kama PDF"
 
 #, python-format
+#| msgid "%(ads)s advert"
+#| msgid_plural "%(ads)s adverts"
+msgid "%(days)s day"
+msgid_plural "%(days)s days"
+msgstr[0] "Siku %(days)s"
+msgstr[1] "Siku %(days)s"
+
+#| msgid "Tell the vendor about your event"
+msgid "The vendor has not paid yet."
+msgstr "Mtoa huduma bado hajalipa."
+
+msgid ""
+"Do not approve this advert? Write the reason in the note below first, the "
+"vendor will see it."
+msgstr ""
+"Usiidhinishe tangazo hili? Andika sababu kwenye ujumbe hapa chini kwanza, "
+"mtoa huduma ataiona."
+
+#| msgid "Vendors"
+msgid "Vendor's page"
+msgstr "Ukurasa wa mtoa huduma"
+
+#| msgid "New adverts"
+msgid "Live advert"
+msgstr "Tangazo lililo hewani"
+
+msgid "Edit live advert"
+msgstr "Hariri tangazo lililo hewani"
+
+msgid ""
+"Changes to the live advert are made on the advert itself; the form below is "
+"the vendor's original request."
+msgstr ""
+"Mabadiliko ya tangazo lililo hewani hufanywa kwenye tangazo lenyewe; fomu "
+"hapa chini ni ombi la asili la mtoa huduma."
+
+#, python-format
 msgid "%(get_kind_display)s from"
 msgstr "%(get_kind_display)s kutoka kwa"
 
@@ -3427,18 +3813,14 @@ msgid "Online"
 msgstr "Mtandaoni"
 
 #, python-format
-#| msgid "%(n)s message"
-#| msgid_plural "%(n)s messages"
 msgid "%(n)d mins ago"
 msgstr "Dakika %(n)d zilizopita"
 
 #, python-format
-#| msgid "Today: %(n)s"
 msgid "Today %(time)s"
 msgstr "Leo %(time)s"
 
 #, python-format
-#| msgid "Yesterday"
 msgid "Yesterday %(time)s"
 msgstr "Jana %(time)s"
 
@@ -3805,9 +4187,6 @@ msgstr "%(name)s amefutwa."
 msgid "Business details"
 msgstr "Maelezo ya biashara"
 
-msgid "Home page"
-msgstr "Ukurasa wa mwanzo"
-
 msgid "Images"
 msgstr "Picha"
 
@@ -3933,15 +4312,6 @@ msgstr "Miezi 6"
 
 msgid "12 months"
 msgstr "Miezi 12"
-
-msgid "Paid with"
-msgstr "Imelipwa kwa"
-
-msgid "Phone number used"
-msgstr "Namba ya simu iliyotumika"
-
-msgid "Transaction reference"
-msgstr "Namba ya muamala"
 
 msgid "Verified Only"
 msgstr "Waliothibitishwa Pekee"
@@ -5168,9 +5538,6 @@ msgstr ""
 "Washa hii kabla ya kuongeza picha: uso wako hufunikwa kwa ukungu laini ili "
 "usitambulike. Uamuzi ni wako."
 
-msgid "Main photo"
-msgstr "Picha kuu"
-
 msgid ""
 "Hide your face on this photo? This cannot be undone; upload the photo again "
 "to show your face."
@@ -5849,7 +6216,6 @@ msgid "Just now"
 msgstr "Sasa hivi"
 
 #, python-format
-#| msgid "%(created)s ago"
 msgid "%(time)s ago"
 msgstr "%(time)s zilizopita"
 
@@ -5992,7 +6358,6 @@ msgstr "Shughuli Zote"
 msgid "Search Activity"
 msgstr "Shughuli za Utafutaji"
 
-#| msgid "Search events by title, location, or topic..."
 msgid "Search events, topics, locations..."
 msgstr "Tafuta matukio, mada, maeneo..."
 
@@ -6081,7 +6446,6 @@ msgstr "Msaada Maalum"
 msgid "Get priority assistance"
 msgstr "Pata msaada wa kipaumbele"
 
-#| msgid "Search members..."
 msgid "Search members, events, topics..."
 msgstr "Tafuta wanachama, matukio, mada..."
 
@@ -6289,7 +6653,6 @@ msgstr ""
 "Asante! Timu yetu ya msaada imepokea ujumbe wako na itajibu kwa barua pepe "
 "au taarifa."
 
-#| msgid "Search members, matches, messages, events, payments..."
 msgid "Search members, topics, or help articles..."
 msgstr "Tafuta wanachama, mada au makala za msaada..."
 
@@ -6403,6 +6766,545 @@ msgid "Send Request"
 msgstr "Tuma Ombi"
 
 #, python-format
+#| msgid "Events - %(brand)s"
+msgid "Advertise with us - %(brand)s"
+msgstr "Tangaza Nasi - %(brand)s"
+
+#| msgid "Advertise Now"
+msgid "Advertise with us"
+msgstr "Tangaza Nasi"
+
+msgid ""
+"Put your wedding business in front of couples <em>planning their Nikah</em>"
+msgstr ""
+"Weka biashara yako ya harusi mbele ya wanandoa <em>wanaopanga Nikah yao</em>"
+
+#, python-format
+msgid ""
+"%(brand)s is where serious, marriage-minded people meet and plan. Show them "
+"your venue, catering, décor, photography or any wedding service, and let "
+"them reach you directly."
+msgstr ""
+"%(brand)s ni mahali ambapo watu makini wanaotafuta ndoa hukutana na kupanga."
+" Waonyeshe ukumbi wako, chakula, mapambo, picha au huduma yoyote ya harusi, "
+"na uwaache wakufikie moja kwa moja."
+
+#| msgid "Start time"
+msgid "Start my advert"
+msgstr "Anza tangazo langu"
+
+#| msgid "All packages"
+msgid "See packages"
+msgstr "Tazama vifurushi"
+
+msgid "Live within hours"
+msgstr "Hewani ndani ya saa chache"
+
+msgid "Pay by mobile money"
+msgstr "Lipa kwa pesa ya simu"
+
+#| msgid "Not contacted"
+msgid "No contract"
+msgstr "Hakuna mkataba"
+
+#| msgid "Your full name"
+msgid "Your business name"
+msgstr "Jina la biashara yako"
+
+msgid "advert views so far"
+msgstr "mara matangazo yametazamwa"
+
+#| msgid "Featured matches"
+msgid "with a Featured package"
+msgstr "kwa kifurushi chenye Kuangaziwa"
+
+#| msgid "Send an inquiry"
+msgid "New inquiry"
+msgstr "Ulizo jipya"
+
+msgid "Is 12 June available?"
+msgstr "Tarehe 12 Juni inapatikana?"
+
+#| msgid "Seeking Marriage"
+msgid "members planning marriage"
+msgstr "wanachama wanaopanga ndoa"
+
+#| msgid "Reported member"
+msgid "Registered members"
+msgstr "Wanachama waliosajiliwa"
+
+#| msgid "Advert image"
+msgid "Advert views"
+msgstr "Waliotazama matangazo"
+
+#| msgid "Registered"
+msgid "Regions we reach"
+msgstr "Mikoa tunayofikia"
+
+msgid "Vendors on the platform"
+msgstr "Watoa huduma kwenye jukwaa"
+
+#| msgid "Service Categories"
+msgid "Service categories"
+msgstr "Aina za huduma"
+
+#| msgid "New adverts"
+msgid "Your adverts"
+msgstr "Matangazo yako"
+
+#, python-format
+msgid "until %(d)s"
+msgstr "hadi %(d)s"
+
+#| msgid "No adverts here yet."
+msgid "Why advertise here"
+msgstr "Kwa nini utangaze hapa"
+
+msgid "The right audience, at the right moment"
+msgstr "Hadhira sahihi, kwa wakati sahihi"
+
+msgid ""
+"Our members are not just browsing. They are getting ready to marry, and they"
+" need trusted services that respect their values."
+msgstr ""
+"Wanachama wetu hawapiti tu. Wanajiandaa kuoa au kuolewa, na wanahitaji "
+"huduma za kuaminika zinazoheshimu maadili yao."
+
+msgid "Couples ready to book"
+msgstr "Wanandoa walio tayari kuweka nafasi"
+
+msgid ""
+"Reach people who are actively planning a Nikah and Walima, not a general "
+"crowd."
+msgstr ""
+"Wafikie watu wanaopanga Nikah na Walima kwa dhati, si umati wa kawaida."
+
+msgid "Inquiries straight to you"
+msgstr "Maulizo yanakufikia moja kwa moja"
+
+msgid ""
+"Couples check availability and send requests from your advert, with their "
+"name and phone number."
+msgstr ""
+"Wanandoa huuliza upatikanaji na kutuma maombi kutoka kwenye tangazo lako, "
+"wakiwa na jina na namba ya simu."
+
+msgid "A beautiful advert page"
+msgstr "Ukurasa mzuri wa tangazo"
+
+msgid ""
+"Photos, price, location map, reviews and a WhatsApp button, all on one page "
+"that looks great on phones."
+msgstr ""
+"Picha, bei, ramani ya mahali, maoni na kitufe cha WhatsApp, vyote kwenye "
+"ukurasa mmoja unaopendeza kwenye simu."
+
+msgid "Reviews build trust"
+msgstr "Maoni hujenga uaminifu"
+
+msgid ""
+"Happy couples leave star ratings and reviews, and new customers see them "
+"first."
+msgstr ""
+"Wanandoa walioridhika huacha nyota na maoni, na wateja wapya huyaona kwanza."
+
+#| msgid "See results"
+msgid "See your results"
+msgstr "Ona matokeo yako"
+
+msgid ""
+"Your advert page shows how many people viewed it and how many sent "
+"inquiries."
+msgstr ""
+"Ukurasa wa tangazo lako unaonyesha watu wangapi wamelitazama na wangapi "
+"wametuma maulizo."
+
+msgid "A trusted, halal platform"
+msgstr "Jukwaa la kuaminika na halali"
+
+msgid ""
+"Be seen next to services that share Islamic and family values, on a "
+"respectful platform."
+msgstr ""
+"Onekana pamoja na huduma zinazoshiriki maadili ya Kiislamu na ya familia, "
+"kwenye jukwaa la heshima."
+
+#| msgid "How It Works"
+msgid "How it works"
+msgstr "Jinsi inavyofanya kazi"
+
+msgid "Live in four simple steps"
+msgstr "Hewani kwa hatua nne rahisi"
+
+#| msgid "Show all packages"
+msgid "Choose a package"
+msgstr "Chagua kifurushi"
+
+msgid "Pick how long and how prominently you want to appear."
+msgstr "Chagua muda na jinsi unavyotaka kuonekana."
+
+msgid ""
+"Add a title, description, price and your best photos. You see the advert as "
+"you type."
+msgstr ""
+"Ongeza kichwa, maelezo, bei na picha zako bora. Unaliona tangazo kadri "
+"unavyoandika."
+
+#| msgid ""
+#| "Open Membership, choose a plan, pay by mobile money and enter the "
+#| "transaction reference."
+msgid ""
+"M-Pesa, Mixx by Yas, Airtel Money or bank. Enter the transaction reference."
+msgstr "M-Pesa, Mixx by Yas, Airtel Money au benki. Weka namba ya muamala."
+
+#| msgid "No likes"
+msgid "Go live"
+msgstr "Kuwa hewani"
+
+msgid ""
+"We confirm the payment and your advert appears straight away, usually within"
+" a few hours."
+msgstr ""
+"Tunathibitisha malipo na tangazo lako linaonekana mara moja, kwa kawaida "
+"ndani ya saa chache."
+
+msgid "Simple prices, no surprises"
+msgstr "Bei rahisi, bila mshangao"
+
+msgid "Pay once for the whole period. Renew any time from your advert page."
+msgstr ""
+"Lipa mara moja kwa kipindi chote. Huisha wakati wowote kwenye ukurasa wa "
+"tangazo lako."
+
+#, python-format
+msgid "for %(days)s day"
+msgid_plural "for %(days)s days"
+msgstr[0] "kwa siku %(days)s"
+msgstr[1] "kwa siku %(days)s"
+
+#, python-format
+#| msgid "From %(currency)s %(from_price)s"
+msgid "about %(currency)s %(per)s a day"
+msgstr "takriban %(currency)s %(per)s kwa siku"
+
+#, python-format
+#| msgid "Contact %(name)s"
+msgid "Choose %(name)s"
+msgstr "Chagua %(name)s"
+
+msgid "Pay safely with"
+msgstr "Lipa kwa usalama kwa"
+
+msgid "Categories"
+msgstr "Aina"
+
+msgid "Every wedding service has a place"
+msgstr "Kila huduma ya harusi ina nafasi"
+
+#| msgid "All adverts"
+msgid "Real adverts"
+msgstr "Matangazo halisi"
+
+msgid "This is how your advert looks"
+msgstr "Hivi ndivyo tangazo lako litakavyoonekana"
+
+#| msgid "Destinations"
+msgid "Questions"
+msgstr "Maswali"
+
+#| msgid "Frequently Asked Questions (FAQ)"
+msgid "Frequently asked questions"
+msgstr "Maswali yanayoulizwa mara kwa mara"
+
+msgid "How soon does my advert appear?"
+msgstr "Tangazo langu litaonekana baada ya muda gani?"
+
+#| msgid ""
+#| "As soon as our team confirms your payment, usually within a few hours. You "
+#| "will get a notification."
+msgid ""
+"As soon as our team confirms your payment, usually within a few hours during"
+" the day. You can follow every step on your advert page."
+msgstr ""
+"Mara tu timu yetu inapothibitisha malipo yako, kwa kawaida ndani ya saa "
+"chache mchana. Unaweza kufuatilia kila hatua kwenye ukurasa wa tangazo lako."
+
+msgid ""
+"After you submit your advert you see the amount and our payment number. Pay "
+"with M-Pesa, Mixx by Yas, Airtel Money or bank, then enter the transaction "
+"reference."
+msgstr ""
+"Ukishawasilisha tangazo lako unaona kiasi na namba yetu ya malipo. Lipa kwa "
+"M-Pesa, Mixx by Yas, Airtel Money au benki, kisha weka namba ya muamala."
+
+#| msgid "Don't have an account?"
+msgid "Do I need an account?"
+msgstr "Je, ninahitaji akaunti?"
+
+msgid ""
+"No. You get a private link to your advert page; keep it to pay, follow "
+"progress and renew. If you are logged in, your adverts are also listed here."
+msgstr ""
+"Hapana. Unapata kiungo cha siri cha ukurasa wa tangazo lako; kihifadhi ili "
+"ulipe, ufuatilie na uhuishe. Ukiwa umeingia, matangazo yako pia yanaonyeshwa"
+" hapa."
+
+#| msgid "What happens when I report someone?"
+msgid "What happens when my package ends?"
+msgstr "Nini hutokea kifurushi changu kikiisha?"
+
+msgid ""
+"Your advert is hidden automatically on its last day. Renew from your advert "
+"page before or after it ends, and the new days are added on."
+msgstr ""
+"Tangazo lako linafichwa lenyewe siku yake ya mwisho. Huisha kwenye ukurasa "
+"wa tangazo lako kabla au baada ya kuisha, na siku mpya zinaongezwa."
+
+#| msgid "Can I change my plan?"
+msgid "Can I change my advert later?"
+msgstr "Naweza kubadilisha tangazo langu baadaye?"
+
+msgid "Yes. Contact our team with the changes and we will update it for you."
+msgstr ""
+"Ndiyo. Wasiliana na timu yetu ukiwa na mabadiliko nasi tutalisasisha kwa "
+"ajili yako."
+
+#| msgid "What is not allowed?"
+msgid "What if my advert is not approved?"
+msgstr "Je, tangazo langu lisipoidhinishwa?"
+
+msgid ""
+"We only publish services that suit a family, halal platform. If we cannot "
+"publish yours, we tell you why on your advert page and refund the payment."
+msgstr ""
+"Tunachapisha huduma zinazofaa jukwaa la familia na halali pekee. Tusipoweza "
+"kuchapisha lako, tunakueleza sababu kwenye ukurasa wa tangazo lako na "
+"kurejesha malipo."
+
+msgid "Ready to meet your next customers?"
+msgstr "Uko tayari kukutana na wateja wako wapya?"
+
+msgid "It takes about five minutes to create your advert."
+msgstr "Kutengeneza tangazo lako huchukua takriban dakika tano."
+
+#| msgid "Send a message to our team"
+msgid "Questions? Talk to our team"
+msgstr "Una maswali? Ongea na timu yetu"
+
+#| msgid "Your name"
+msgid "Your advert"
+msgstr "Tangazo lako"
+
+#, python-format
+#| msgid "%(created)s ago"
+msgid "created %(d)s"
+msgstr "lilitengenezwa %(d)s"
+
+#| msgid "Advert image"
+msgid "Advert created"
+msgstr "Tangazo limetengenezwa"
+
+#| msgid "Conversation"
+msgid "Confirmation"
+msgstr "Uthibitisho"
+
+msgid "Your advert was not approved"
+msgstr "Tangazo lako halikuidhinishwa"
+
+msgid "Our team could not publish this advert. Please contact us for details."
+msgstr ""
+"Timu yetu haikuweza kuchapisha tangazo hili. Tafadhali wasiliana nasi kwa "
+"maelezo."
+
+msgid "One last step: pay to publish"
+msgstr "Hatua moja ya mwisho: lipia ili lichapishwe"
+
+#, python-format
+msgid ""
+"Pay %(currency)s %(amount)s for %(days)s days on the site, then enter the "
+"payment details below."
+msgstr ""
+"Lipa %(currency)s %(amount)s kwa siku %(days)s kwenye tovuti, kisha weka "
+"maelezo ya malipo hapa chini."
+
+msgid "Payment received, we are confirming it"
+msgstr "Malipo yamepokelewa, tunayathibitisha"
+
+msgid ""
+"Our team is checking your payment. Your advert goes live as soon as it is "
+"confirmed, usually within a few hours. You can close this page; it updates "
+"on its own."
+msgstr ""
+"Timu yetu inakagua malipo yako. Tangazo lako litaonekana mara "
+"yatakapothibitishwa, kwa kawaida ndani ya saa chache. Unaweza kufunga "
+"ukurasa huu; unajisasisha wenyewe."
+
+#| msgid "This event has ended"
+msgid "Your advert has ended"
+msgstr "Tangazo lako limeisha"
+
+#, python-format
+msgid ""
+"It stopped showing on %(d)s. Renew below to bring it back straight away."
+msgstr ""
+"Liliacha kuonekana tarehe %(d)s. Huisha hapa chini ili lirudi mara moja."
+
+#| msgid "Your Data is Secure"
+msgid "Your advert is live!"
+msgstr "Tangazo lako liko hewani!"
+
+#, python-format
+msgid "Couples can see it until %(d)s."
+msgstr "Wanandoa wanaweza kuliona hadi %(d)s."
+
+#| msgid "Your payment is safe and secure"
+msgid "Your renewal payment is being confirmed."
+msgstr "Malipo yako ya kuhuisha yanathibitishwa."
+
+#| msgid "View Advert"
+msgid "View my advert"
+msgstr "Tazama tangazo langu"
+
+#| msgid "Inquiry"
+msgid "Inquiries"
+msgstr "Maulizo"
+
+#| msgid "Days"
+msgid "Days left"
+msgstr "Siku zilizobaki"
+
+#| msgid "Renew"
+msgid "Renew early"
+msgstr "Huisha mapema"
+
+#| msgid "New adverts"
+msgid "Renew your advert"
+msgstr "Huisha tangazo lako"
+
+#| msgid "Thank you for your review."
+msgid "Pay for your advert"
+msgstr "Lipia tangazo lako"
+
+#, python-format
+msgid "%(days)s more days are added to the end of your current period."
+msgstr "Siku %(days)s zaidi zinaongezwa mwishoni mwa kipindi chako cha sasa."
+
+msgid "Mobile money or bank transfer."
+msgstr "Pesa ya simu au uhamisho wa benki."
+
+#| msgid "How to pay"
+msgid "Amount to pay"
+msgstr "Kiasi cha kulipa"
+
+msgid "I have paid - submit"
+msgstr "Nimelipa - wasilisha"
+
+#| msgid "Enter the phone number and the transaction reference below."
+msgid ""
+"Our team checks every payment against the transaction reference before "
+"publishing."
+msgstr ""
+"Timu yetu inakagua kila malipo kwa namba ya muamala kabla ya kuchapisha."
+
+#| msgid "Next page"
+msgid "Keep this page"
+msgstr "Hifadhi ukurasa huu"
+
+msgid ""
+"This private link is how you pay, follow progress and renew. Save it or send"
+" it to yourself on WhatsApp."
+msgstr ""
+"Kiungo hiki cha siri ndicho unachotumia kulipa, kufuatilia na kuhuisha. "
+"Kihifadhi au ujitumie kwenye WhatsApp."
+
+#| msgid "Your conversations"
+msgid "Your advert link"
+msgstr "Kiungo cha tangazo lako"
+
+msgid "Copied"
+msgstr "Kimenakiliwa"
+
+msgid "Copy"
+msgstr "Nakili"
+
+#| msgid "Phone / WhatsApp"
+msgid "Send to my WhatsApp"
+msgstr "Nitumie kwenye WhatsApp"
+
+#| msgid "Send a message to our team"
+msgid "Need help? Talk to our team"
+msgstr "Unahitaji msaada? Ongea na timu yetu"
+
+#, python-format
+#| msgid "Check your email - %(brand)s"
+msgid "Create your advert - %(brand)s"
+msgstr "Tengeneza tangazo lako - %(brand)s"
+
+#| msgid "Create your account"
+msgid "Create your advert"
+msgstr "Tengeneza tangazo lako"
+
+msgid "You can renew or upgrade later."
+msgstr "Unaweza kuhuisha au kupandisha baadaye."
+
+#, python-format
+#| msgid "Main photo"
+msgid "%(n)s photo"
+msgid_plural "%(n)s photos"
+msgstr[0] "Picha %(n)s"
+msgstr[1] "Picha %(n)s"
+
+#| msgid "Your name"
+msgid "Your business"
+msgstr "Biashara yako"
+
+msgid "So couples and our team can reach you."
+msgstr "Ili wanandoa na timu yetu wakufikie."
+
+msgid "Clear, honest details get more inquiries."
+msgstr "Maelezo yaliyo wazi na ya kweli huleta maulizo zaidi."
+
+msgid "Bright, real photos of your work. The first one is the cover."
+msgstr "Picha angavu na halisi za kazi yako. Ya kwanza ndiyo picha kuu."
+
+#| msgid "Change photo"
+msgid "Cover photo"
+msgstr "Picha kuu"
+
+#| msgid "Add Photo"
+msgid "Add photo"
+msgstr "Ongeza picha"
+
+msgid "We review every advert. Services must suit a family, halal platform."
+msgstr ""
+"Tunakagua kila tangazo. Huduma lazima zifae jukwaa la familia na halali."
+
+#| msgid "Overview"
+msgid "Live preview"
+msgstr "Mwonekano wa moja kwa moja"
+
+#| msgid "Your profile"
+msgid "Your advert title"
+msgstr "Kichwa cha tangazo lako"
+
+msgid "Runs for"
+msgstr "Linadumu kwa"
+
+msgid "days"
+msgstr "siku"
+
+#| msgid "How to pay"
+msgid "Total to pay"
+msgstr "Jumla ya kulipa"
+
+#| msgid "Content Management"
+msgid "Continue to payment"
+msgstr "Endelea kwenye malipo"
+
+msgid "Nothing is charged yet. You pay on the next step."
+msgstr "Hakuna kinachotozwa bado. Unalipa hatua inayofuata."
+
+#, python-format
 msgid "Comments (%(comments)s)"
 msgstr "Maoni (%(comments)s)"
 
@@ -6509,18 +7411,15 @@ msgstr ""
 "Jiunge na matukio, warsha na semina zetu zilizoandaliwa kuongoza, kusaidia "
 "na kuwaleta watu pamoja kwa mahusiano yenye maana na ndoa zenye mafanikio."
 
-#| msgid "Expert Advice"
 msgid "Expert guidance"
 msgstr "Mwongozo wa wataalamu"
 
-#| msgid "Practical Tips"
 msgid "Practical skills"
 msgstr "Ujuzi wa vitendo"
 
 msgid "Meet verified members"
 msgstr "Kutana na wanachama waliothibitishwa"
 
-#| msgid "Your conversations"
 msgid "Build connections"
 msgstr "Jenga mahusiano"
 
@@ -6652,6 +7551,17 @@ msgstr "Gundua watoa huduma wa kuaminika ili siku yako maalum iwe kamili."
 
 msgid "View All Services"
 msgstr "Tazama Huduma Zote"
+
+#| msgid "Featured matches"
+msgid "Featured vendors"
+msgstr "Watoa huduma maalum"
+
+msgid "Trusted for your big day"
+msgstr "Wa kuaminika kwa siku yako kuu"
+
+msgid "Hand-picked wedding services from our advertising partners."
+msgstr ""
+"Huduma za harusi zilizochaguliwa kutoka kwa washirika wetu wa matangazo."
 
 msgid "Romantic getaways for a beautiful start to your new journey together."
 msgstr "Mapumziko ya kimapenzi kwa mwanzo mzuri wa safari yenu mpya pamoja."
@@ -7853,9 +8763,6 @@ msgid ""
 msgstr ""
 "&ldquo;Ndoa yenye baraka zaidi ni ile yenye gharama ndogo zaidi.&rdquo;"
 
-msgid "Categories"
-msgstr "Aina"
-
 #, python-format
 msgid "Adverts by %(name)s"
 msgstr "Matangazo ya %(name)s"
@@ -7876,9 +8783,12 @@ msgstr "yanayolingana na &ldquo;%(q)s&rdquo;"
 msgid "No adverts here yet."
 msgstr "Bado hakuna matangazo hapa."
 
+#| msgid ""
+#| "Reach members who are planning their Nikah. Contact our team to list your "
+#| "business."
 msgid ""
-"Reach members who are planning their Nikah. Contact our team to list your "
-"business."
+"Reach couples who are planning their Nikah. Create your advert in minutes "
+"and pay by mobile money."
 msgstr ""
-"Wafikie wanachama wanaopanga Nikah yao. Wasiliana na timu yetu kuorodhesha "
-"biashara yako."
+"Wafikie wanandoa wanaopanga Nikah yao. Tengeneza tangazo lako kwa dakika "
+"chache na ulipe kwa pesa ya simu."

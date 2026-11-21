@@ -105,3 +105,10 @@ Mbadala: huduma yoyote ya TURN yenye username/password (mfano metered.ca) — we
   ```bash
   python manage.py compilemessages
   ```
+
+## Tangaza Nasi (Advertise with us)
+- Ukurasa: `/advertise/`. Mtoa huduma anachagua kifurushi, anajaza maelezo na picha (anaona tangazo likijitengeneza), kisha analipa kwa M-Pesa / Mixx by Yas / Airtel Money / benki na kuweka namba ya muamala.
+- Admin anapata taarifa na beji kwenye **Dashboard → Masoko na Matangazo → Advert Requests**. Akibofya **Confirm payment & publish**, tangazo linachapishwa mara moja kwa siku za kifurushi na kujificha lenyewe likiisha. Kuthibitisha malipo kwenye ukurasa wa Malipo kunachapisha pia.
+- Mtoa huduma anapata kiungo cha siri cha kufuatilia tangazo, kuona waliotazama na maulizo, na kuhuisha.
+- Bei ni za mfano: zibadilishe kwenye **Advert Packages**. Namba ya malipo (Lipa Namba) iandike kwenye **Mipangilio ya Tovuti → Payments → Ad payment instructions**.
+- Malipo yanathibitishwa na admin. Ukipata akaunti ya mfanyabiashara (Selcom, AzamPay, Pesapal), malipo ya moja kwa moja (push kwenye simu) yanaweza kuunganishwa baadaye bila kubadilisha kurasa hizi.

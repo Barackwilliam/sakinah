@@ -102,6 +102,7 @@ LANGUAGE_CODE = "en"; TIME_ZONE = "Africa/Dar_es_Salaam"; USE_TZ = True
 USE_I18N = True
 LANGUAGES = [("en", "English"), ("sw", "Kiswahili"), ("ar", "العربية"), ("fr", "Français")]
 LOCALE_PATHS = [BASE_DIR / "locale"]
+FORMAT_MODULE_PATH = ["core.formats"]   # number formats for Kiswahili and Arabic
 LANGUAGE_COOKIE_AGE = 365 * 24 * 3600
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTHENTICATION_BACKENDS = ["core.backends.EmailOrUsernameBackend"]

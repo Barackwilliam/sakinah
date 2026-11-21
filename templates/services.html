@@ -17,6 +17,6 @@
     <p>{% blocktranslate count ads=ads|length %}{{ ads }} advert{% plural %}{{ ads }} adverts{% endblocktranslate %}{% if q %} {% blocktranslate %}matching &ldquo;{{ q }}&rdquo;{% endblocktranslate %}{% endif %}</p></div></div>
   {% if ads %}<div class="ad-grid">{% for a in ads %}{% include "partials/ad_card.html" %}{% endfor %}</div>
   {% else %}<div class="empty box"><p>{% translate "No adverts here yet." %}</p></div>{% endif %}
-  <div class="adv cta"><div class="adv-t"><h3>{% translate "Advertise Your Marriage Service" %}</h3><p>{% translate "Reach members who are planning their Nikah. Contact our team to list your business." %}</p>
-    {% if site.contact_url %}<a class="btn btn-o xs" href="{{ site.contact_url }}" target="_blank" rel="noopener"><svg class="gold"><use href="{{ icons }}#i-mega"/></svg>{% translate "Advertise Now" %}</a>{% endif %}</div></div>
+  <div class="adv cta"><div class="adv-t"><h3>{% translate "Advertise Your Marriage Service" %}</h3><p>{% translate "Reach couples who are planning their Nikah. Create your advert in minutes and pay by mobile money." %}</p>
+    <a class="btn btn-o xs" href="{% url 'advertise' %}"><svg class="gold"><use href="{{ icons }}#i-mega"/></svg>{% translate "Advertise Now" %}</a></div></div>
 </div>{% endblock %}

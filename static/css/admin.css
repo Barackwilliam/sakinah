@@ -221,3 +221,4 @@ html[lang=ar] :is(em,i,blockquote,.lead){font-style:normal}
 html[lang=ar] *{letter-spacing:0!important}
 [dir=rtl] svg:has(>use[href$="#i-arrow"],>use[href$="#i-chev-l"],>use[href$="#i-chev-r"],>use[href$="#m-arrow"],>use[href$="#m-chev-l"],>use[href$="#m-chev-r"],>use[href$="#i-send"],>use[href$="#m-send"]){transform:scaleX(-1)}
 @media(max-width:1000px){[dir=rtl] .asb{transform:translateX(100%)}[dir=rtl] .asb.open{transform:none}}
+.sb-n{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;margin-inline-start:6px;border-radius:9px;background:#e11d48;color:#fff;font:700 11px/1 var(--sans,inherit);font-style:normal}

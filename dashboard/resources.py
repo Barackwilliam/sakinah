@@ -13,7 +13,7 @@ from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from core.forms import LOCATIONS
 from .forms import PaymentForm
-from core.models import (Advert, Article, ArticleCategory, Booking, Broadcast, Destination, Event, Package, PackagePhoto, PackageReview, EventCategory, EventRegistration, FeatureStrip, Inquiry,
+from core.models import (AdOrder, AdPackage, Advert, Article, ArticleCategory, Booking, Broadcast, Destination, Event, Package, PackagePhoto, PackageReview, EventCategory, EventRegistration, FeatureStrip, Inquiry,
                          Member, MessageTemplate, Notification, Payment, Plan, PremiumPerk, Report, ServiceCategory, SupportTicket, Vendor)
 
 # ---------- small column helpers ----------
@@ -309,8 +309,8 @@ class Inquiries(Resource):
 class Adverts(Resource):
     title, icon, nav, model = _l("Adverts"), "i-mega", "marketing", Advert
     form = model_form(Advert, ["title", "slug", "category", "vendor", "city", "price", "price_unit", "negotiable", "image", "description", "highlights",
-                               "includes", "extras", "availability", "details", "map_query", "featured", "active"],
-                      widgets={"description": AREA(5), "highlights": AREA(3), "includes": AREA(3), "extras": AREA(3), "details": AREA(3)}, slug_from="title")
+                               "includes", "extras", "availability", "details", "map_query", "featured", "active", "expires", "package"],
+                      widgets={"expires": DATE, "description": AREA(5), "highlights": AREA(3), "includes": AREA(3), "extras": AREA(3), "details": AREA(3)}, slug_from="title")
     search = ["title", "city", "vendor__name"]
     filters = [("category", _l("All categories"), lambda: [(str(c.pk), c.name) for c in ServiceCategory.objects.all()], lambda qs, v: qs.filter(category_id=v)),
                ("active", _l("All"), lambda: [("1", _l("Active")), ("0", _l("Hidden"))], lambda qs, v: qs.filter(active=v == "1"))]
@@ -321,6 +321,63 @@ class Adverts(Resource):
                (_l("Price"), lambda o: f"TSh {o.price:,}" if o.price else "—"), (_l("Views"), lambda o: f"{o.views:,}"),
                (_l("Status"), lambda o: format_html("{} {}", pill(_l("Active"), "ok") if o.active else pill(_l("Hidden"), "mut"), pill(_l("Featured"), "info") if o.featured else ""))]
     actions = {"active": (_l("Show / hide"), "", toggle("active", "is now visible", "is now hidden")), "feature": (_l("Feature / unfeature"), "", toggle("featured", "featured", "unfeatured"))}
+
+# ---------- Advertise with us ----------
+def approve_ad(o, r):
+    """Confirm the vendor's payment and publish (or extend) the advert."""
+    p = o.payment
+    if p is None: return "has no payment yet, so it was not published"
+    if p.status in ("failed", "refunded"): return "has a failed or refunded payment, so it was not published"
+    fresh = p.status == "pending"
+    if fresh: p.status = "completed"; p.recorded_by = r.user; p.save(update_fields=["status", "recorded_by"])
+    if o.status == "live" and not fresh: return "is already live"
+    ad = o.publish(r)
+    return f"is live until {ad.expires:%d %b %Y}"
+
+def reject_ad(o, r):
+    p = o.payment
+    if p and p.status == "pending": p.status = "failed"; p.save(update_fields=["status"])
+    if o.advert_id and o.status == "live":
+        o.advert.active = False; o.advert.save(update_fields=["active"])
+    o.status = "rejected"; o.save(update_fields=["status"])
+    if o.user_id:
+        Notification.objects.create(user=o.user, link=o.get_absolute_url(), title=f"Your advert was not approved: {o.title}"[:120], body=o.admin_note)
+    return "was not approved"
+
+AD_TONES = {"awaiting_payment": "warn", "paid": "info", "live": "ok", "rejected": "bad"}
+
+@register("ad-orders")
+class AdOrders(Resource):
+    title, icon, nav, model = _l("Advert Requests"), "i-mega", "marketing", AdOrder
+    form = model_form(AdOrder, ["package", "business_name", "contact_name", "phone", "email", "category", "city", "title", "description",
+                                "price", "price_unit", "negotiable", "image", "photo2", "photo3", "photo4", "admin_note"],
+                      widgets={"description": AREA(5), "admin_note": AREA(3)})
+    can_add = False
+    note = _l("Vendors who used Advertise with us. Confirm the payment to publish the advert; it then runs for the package's days.")
+    search = ["business_name", "title", "phone", "email"]
+    filters = [("status", _l("All statuses"), lambda: AdOrder.STATUS, lambda qs, v: qs.filter(status=v))]
+    def queryset(self): return AdOrder.objects.select_related("package", "category", "advert").prefetch_related("payments")
+    row_link = lambda self, o: o.get_absolute_url()
+    columns = [("", thumb("image")), (_l("Advert"), bold("title", lambda o: f"{o.business_name} · {o.phone}")), (_l("Package"), lambda o: o.package.name),
+               (_l("Amount"), lambda o: f"TSh {o.package.price:,}"),
+               (_l("Payment"), lambda o: pill(o.payment.get_status_display(), {"pending": "warn", "completed": "ok"}.get(o.payment.status, "bad")) if o.payment else pill(_l("Not paid"), "mut")),
+               (_l("Status"), lambda o: pill(_l("Expired"), "bad") if o.is_expired else pill(o.get_status_display(), AD_TONES.get(o.status, "mut"))),
+               (_l("Runs until"), lambda o: o.expires.strftime("%d %b %Y") if o.expires else "—")]
+    actions = {"approve": (_l("Confirm payment & publish"), "", approve_ad), "reject": (_l("Do not approve"), "dang", reject_ad)}
+    front = {"approve": lambda o: o.payment_pending}
+
+@register("ad-packages")
+class AdPackages(Resource):
+    title, icon, nav, model = _l("Advert Packages"), "i-tag", "marketing", AdPackage
+    form = model_form(AdPackage, ["name", "slug", "tagline", "price", "days", "max_photos", "features", "featured", "home_page", "popular", "active", "order"],
+                      widgets={"features": AREA(6)})
+    note = _l("The packages vendors choose on the Advertise with us page.")
+    search, ordering = ["name"], ["order", "price"]
+    columns = [(_l("Package"), bold("name", lambda o: o.tagline)), (_l("Price"), money("price")), (_l("Days"), lambda o: o.days),
+               (_l("Photos"), lambda o: o.max_photos), (_l("Requests"), lambda o: o.orders.count()),
+               (_l("Status"), lambda o: format_html("{} {} {}", pill(_l("Active"), "ok") if o.active else pill(_l("Hidden"), "mut"),
+                                                    pill(_l("Featured"), "info") if o.featured else "", pill(_l("Home page"), "info") if o.home_page else ""))]
+    actions = {"active": (_l("Show / hide"), "", toggle("active", "is now visible", "is now hidden"))}
 
 @register("vendors")
 class Vendors(Resource):
@@ -430,7 +487,11 @@ class PackageReviews(Resource):
 # ---------- payments ----------
 def complete_payment(o, r):
     if o.status != "pending": return "was not pending"
-    o.status = "completed"; o.save(update_fields=["status"]); activated = o.activate()
+    o.status = "completed"; o.save(update_fields=["status"])
+    if o.kind == "advert" and o.ad_order_id:   # an Advertise with us payment: publish (or extend) the advert
+        ad = o.ad_order.publish(r)
+        return f"confirmed, and the advert is live until {ad.expires:%d %b %Y}"
+    activated = o.activate()
     if activated and o.user_id:
         Notification.objects.create(user=o.user, title=f"{o.plan.name} plan activated", link=reverse("m_membership"),
                                     body=f"Thank you! Your {o.plan.name} plan is active until {o.user.member.premium_until:%d %b %Y}.")
@@ -493,6 +554,6 @@ class Audit(Resource):
 SIDEBAR = {  # nav key -> resources listed together in a section header
     "events": ["events", "event-categories", "registrations"], "plans": ["plans", "perks"],
     "content": ["articles", "article-categories", "home-strips"], "comms": ["templates", "broadcasts"],
-    "support": ["tickets", "reports", "inquiries"], "marketing": ["adverts", "vendors", "service-categories"],
+    "support": ["tickets", "reports", "inquiries"], "marketing": ["ad-orders", "ad-packages", "adverts", "vendors", "service-categories"],
     "honeymoon": ["bookings", "packages", "destinations", "package-photos", "package-reviews"],
 }

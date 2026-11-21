@@ -14,6 +14,15 @@ PLANS = [  # name, price, period, tagline, popular, features ("-" = not included
      "All Gold features\nUnlimited profile boosts\nPersonal match recommendations\nDedicated account support\nEarly access to new features\nInvitation to premium events\nProfile verification badge\nVIP priority support"),
 ]
 
+AD_PACKAGES = [  # slug, name, tagline, price, days, photos, featured, home page, popular, features (sample prices; edit them in the dashboard)
+    ("starter", "Starter", "Get your service seen by couples.", 25000, 30, 1, False, False, False,
+     "Your advert in its category for 30 days\nInquiries and WhatsApp button\nLocation map and reviews\n1 photo\n-Featured badge\n-Home page spotlight"),
+    ("featured", "Business", "Stand out at the top of your category.", 60000, 30, 4, True, False, True,
+     "Everything in Starter\nFeatured badge\nTop of your category\nUp to 4 photos\n-Home page spotlight"),
+    ("spotlight", "Spotlight", "Maximum visibility for serious businesses.", 150000, 60, 4, True, True, False,
+     "Everything in Business\nRuns for 60 days\nShown on the home page\nPriority support from our team"),
+]
+
 EVENT_CATEGORIES = [("Seminars", "seminars"), ("Workshops", "workshops"), ("Meetups", "meetups"), ("Community Events", "community-events")]
 
 EVENTS = [  # title, date, start, end, city, category slug, description, image

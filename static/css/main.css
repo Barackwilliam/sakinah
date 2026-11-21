@@ -805,3 +805,4 @@ html[lang=ar] *{letter-spacing:0!important}
 [dir=rtl] svg:has(>use[href$="#i-arrow"],>use[href$="#i-chev-l"],>use[href$="#i-chev-r"],>use[href$="#m-arrow"],>use[href$="#m-chev-l"],>use[href$="#m-chev-r"],>use[href$="#i-send"],>use[href$="#m-send"]){transform:scaleX(-1)}
 @media(max-width:1100px){[dir=rtl] .nav-links{transform:translateX(-105%)}[dir=rtl] .nav-links.open{transform:none}}
 [dir=rtl] :is(.more:hover,.svc:hover .svc-go,.hm-go:hover) svg{transform:scaleX(-1) translateX(3px)}
+[dir=rtl] .fld select{background-position:left 12px center}

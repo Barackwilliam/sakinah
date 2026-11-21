@@ -24,6 +24,8 @@ class SiteSetting(models.Model):
     offer_text = models.CharField(max_length=160, blank=True, help_text=_("Premium page special offer. Leave blank to hide the offer."))
     payment_instructions = models.TextField(blank=True, default="Lipa kwa M-Pesa, Mixx by Yas au Airtel Money, kisha weka namba ya muamala (transaction reference) hapa chini. Tutathibitisha malipo na kuwasha mpango wako.",
         help_text=_("Shown to members on the Membership page when they upgrade, e.g. your Lipa Namba / till number."))
+    ad_payment_instructions = models.TextField(blank=True, default="Lipa kwa M-Pesa, Mixx by Yas au Airtel Money kwa namba yetu ya malipo (Lipa Namba), kisha weka namba ya simu uliyotumia na namba ya muamala hapa chini. Tutathibitisha malipo na tangazo lako litaanza kuonekana mara moja.",
+        help_text=_("Shown to vendors when they pay for an advert, e.g. your Lipa Namba / till number."))
     contact_email = models.EmailField(blank=True)
     contact_whatsapp = models.CharField(max_length=20, blank=True, help_text=_("WhatsApp number with country code, e.g. 255712345678"))
     @property
@@ -456,7 +458,13 @@ class Vendor(models.Model):
     @property
     def reasons(self): return [l.strip() for l in self.why_choose.splitlines() if l.strip()]
 
+class AdvertQuerySet(models.QuerySet):
+    def live(self):
+        """Shown on the site: switched on, and its paid period (if it has one) not over."""
+        return self.filter(active=True).filter(models.Q(expires__isnull=True) | models.Q(expires__gte=timezone.localdate()))
+
 class Advert(models.Model):
+    objects = AdvertQuerySet.as_manager()
     category = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, related_name="adverts")
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name="adverts")
     title = models.CharField(max_length=120)
@@ -476,9 +484,13 @@ class Advert(models.Model):
     map_query = models.CharField(max_length=160, blank=True, help_text=_("Address used for the map, e.g. Kariakoo, Dar es Salaam"))
     views = models.PositiveIntegerField(default=0)
     active = models.BooleanField(default=True)
+    expires = models.DateField(null=True, blank=True, help_text=_("Last day on the site. Leave empty for no end date."))
+    package = models.ForeignKey("core.AdPackage", on_delete=models.SET_NULL, null=True, blank=True, related_name="adverts")
     created = models.DateTimeField(auto_now_add=True)
     class Meta: ordering = ["-featured", "-created"]
     def __str__(self): return self.title
+    @property
+    def is_live(self): return self.active and (self.expires is None or self.expires >= timezone.localdate())
     def _lines(self, text): return [l.strip() for l in text.splitlines() if l.strip()]
     @property
     def highlight_list(self): return [(l.split("|", 1) + [""])[:2] if "|" in l else ["star", l] for l in self._lines(self.highlights)]
@@ -581,6 +593,7 @@ class Payment(models.Model):
     status = models.CharField(max_length=10, choices=STATUS, default="completed")
     created = models.DateTimeField(default=timezone.now)
     recorded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+")
+    ad_order = models.ForeignKey("core.AdOrder", on_delete=models.SET_NULL, null=True, blank=True, related_name="payments")
     class Meta: ordering = ["-created", "-pk"]
     def __str__(self): return f"{self.invoice_no} {self.payer_name} {self.amount}"
 
@@ -695,11 +708,13 @@ from django.dispatch import receiver  # noqa: E402
 
 from .models_calls import Call, CallSignal  # noqa: E402,F401
 from .models_honeymoon import Booking, Destination, HoneymoonSave, Package, PackagePhoto, PackageReview  # noqa: E402,F401
+from .models_ads import AdOrder, AdPackage  # noqa: E402,F401
 
 @receiver([post_save, post_delete], sender=Booking)
 @receiver([post_save, post_delete], sender=SupportTicket)
 @receiver([post_save, post_delete], sender=Report)
 @receiver([post_save, post_delete], sender=Inquiry)
+@receiver([post_save, post_delete], sender=AdOrder)
 def _refresh_admin_badges(**kwargs):
     from django.core.cache import cache
     cache.delete("admin-badges")

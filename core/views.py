@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import login, views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Count, Q
+from django.db.models import Avg, Count, Q
 from django.http import Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
@@ -44,6 +44,8 @@ def home(request):
         "perks": PremiumPerk.objects.all(),
         "from_price": gold.price if gold else 0,
         "strip": FeatureStrip.objects.all(),
+        "spotlight": Advert.objects.live().filter(package__home_page=True).select_related("vendor", "category")
+                     .annotate(rating=Avg("reviews__rating"), n_reviews=Count("reviews")).order_by("?")[:4],   # the Spotlight package
         "locations": LOCATIONS,
         "liked": liked_ids(request),
     })

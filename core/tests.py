@@ -793,3 +793,130 @@ class LanguageTests(TestCase):
         SiteSetting.objects.filter(pk=1).update(tagline="Our own words")
         from django.core.cache import cache; cache.clear()
         self.assertContains(self.home("fr"), "Our own words")
+
+
+class AdvertiseTests(TestCase):
+    """Advertise with us: a vendor picks a package, describes the service, pays, and goes live once staff confirm."""
+    def setUp(self):
+        import tempfile
+        self._tmp = tempfile.TemporaryDirectory()
+        self._media = override_settings(MEDIA_ROOT=self._tmp.name, WATERMARK_TEXT="")
+        self._media.enable()
+        self.cat = ServiceCategory.objects.create(name="Catering", slug="catering", blurb="Food")
+        self.basic = AdPackage.objects.create(name="Starter", slug="starter", price=25000, days=30, max_photos=1)
+        self.spot = AdPackage.objects.create(name="Spotlight", slug="spotlight", price=150000, days=60, max_photos=4,
+                                             featured=True, home_page=True, popular=True)
+        self.staff = User.objects.create_user("boss", "boss@example.com", "S3cure-pass-123", is_staff=True)
+
+    def tearDown(self):
+        self._media.disable(); self._tmp.cleanup()
+
+    def photo(self, name="p.jpg"):
+        from io import BytesIO
+        from PIL import Image
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        buf = BytesIO(); Image.new("RGB", (60, 40), (200, 80, 90)).save(buf, "JPEG")
+        return SimpleUploadedFile(name, buf.getvalue(), "image/jpeg")
+
+    def submit(self, package=None, **extra):
+        data = dict(package=(package or self.spot).pk, business_name="Baraka Catering", contact_name="Asha", phone="0713 222 333",
+                    category=self.cat.pk, city="Arusha", title="Halal wedding catering", description="Pilau, biryani and more.",
+                    price=12000, price_unit="Per Person", image=self.photo(), photo2=self.photo("b.jpg"), **extra)
+        return self.client.post(reverse("advertise_start"), data)
+
+    def pay(self, order, ref="QK71ABC2XY"):
+        return self.client.post(order.get_absolute_url(), {"gateway": "mpesa", "phone": "0713222333", "reference": ref})
+
+    def approve(self, order):
+        self.client.force_login(self.staff)
+        r = self.client.post(reverse("dash_manage_action", args=["ad-orders", order.pk]), {"act": "approve"})
+        self.client.logout()
+        return r
+
+    def test_the_landing_page_shows_packages_and_every_button_leads_to_it(self):
+        r = self.client.get(reverse("advertise"))
+        self.assertContains(r, "Spotlight"); self.assertContains(r, "150,000")
+        self.assertContains(r, reverse("advertise_start") + "?package=spotlight")
+        for name in ["home", "services"]:
+            self.assertContains(self.client.get(reverse(name)), reverse("advertise"))
+
+    def test_a_vendor_creates_an_advert_pays_and_goes_live_after_confirmation(self):
+        r = self.submit()
+        order = AdOrder.objects.get()
+        self.assertRedirects(r, order.get_absolute_url())
+        self.assertEqual((order.status, order.city, order.package), ("awaiting_payment", "Arusha", self.spot))
+        self.assertContains(self.client.get(order.get_absolute_url()), "150,000")
+
+        self.pay(order)
+        order.refresh_from_db()
+        self.assertEqual(order.status, "paid")
+        p = order.payment
+        self.assertEqual((p.kind, p.status, p.amount, p.reference), ("advert", "pending", 150000, "QK71ABC2XY"))
+        self.assertTrue(Notification.objects.filter(user=self.staff, title__contains="Baraka Catering").exists())
+        self.assertNotContains(self.client.get(reverse("services")), "Halal wedding catering")   # not before confirmation
+
+        self.approve(order)
+        order.refresh_from_db(); p.refresh_from_db()
+        self.assertEqual((order.status, p.status), ("live", "completed"))
+        ad = order.advert
+        self.assertEqual(ad.expires, timezone.localdate() + timedelta(days=60))
+        self.assertTrue(ad.featured); self.assertEqual(ad.vendor.phone, "0713 222 333"); self.assertEqual(ad.photos.count(), 1)
+        self.assertContains(self.client.get(reverse("services")), "Halal wedding catering")
+        self.assertContains(self.client.get(reverse("home")), "Halal wedding catering")       # Spotlight shows on the home page
+        self.assertContains(self.client.get(order.get_absolute_url()), reverse("advert", args=[ad.slug]))
+
+    def test_confirming_the_payment_from_the_payments_list_also_publishes(self):
+        self.submit(); order = AdOrder.objects.get(); self.pay(order)
+        self.client.force_login(self.staff)
+        self.client.post(reverse("dash_manage_action", args=["payments", order.payment.pk]), {"act": "complete"})
+        order.refresh_from_db()
+        self.assertEqual(order.status, "live"); self.assertTrue(order.advert.is_live)
+
+    def test_photos_beyond_the_package_are_not_kept_and_bots_are_turned_away(self):
+        self.submit(package=self.basic)
+        self.assertFalse(AdOrder.objects.get().photo2)
+        self.submit(website="http://spam.example")
+        self.assertEqual(AdOrder.objects.count(), 1)
+
+    def test_a_transaction_reference_cannot_be_used_twice(self):
+        self.submit(); self.submit()
+        a, b = AdOrder.objects.order_by("pk")
+        self.pay(a)
+        r = self.pay(b)
+        self.assertContains(r, "already been used")
+        b.refresh_from_db(); self.assertEqual(b.status, "awaiting_payment")
+
+    def test_an_advert_ends_on_its_own_and_a_renewal_brings_it_back(self):
+        self.submit(); order = AdOrder.objects.get(); self.pay(order); self.approve(order)
+        ad = AdOrder.objects.get().advert
+        Advert.objects.filter(pk=ad.pk).update(expires=timezone.localdate() - timedelta(days=1))
+        self.assertNotContains(self.client.get(reverse("services")), "Halal wedding catering")
+        self.assertEqual(self.client.get(reverse("advert", args=[ad.slug])).status_code, 404)
+        self.assertContains(self.client.get(order.get_absolute_url()), "has ended")
+        self.pay(order, ref="RENEW1"); self.approve(AdOrder.objects.get())
+        ad.refresh_from_db()
+        self.assertEqual(ad.expires, timezone.localdate() + timedelta(days=60))   # from today, not from the old end
+        self.assertEqual(AdOrder.objects.get().payments.count(), 2)
+
+    def test_renewing_early_adds_the_days_after_the_current_end(self):
+        self.submit(); order = AdOrder.objects.get(); self.pay(order); self.approve(order)
+        end = AdOrder.objects.get().advert.expires
+        self.pay(order, ref="EARLY1"); self.approve(AdOrder.objects.get())
+        self.assertEqual(AdOrder.objects.get().advert.expires, end + timedelta(days=60))
+
+    def test_an_advert_that_is_not_approved_says_why(self):
+        self.submit(); order = AdOrder.objects.get(); self.pay(order)
+        AdOrder.objects.filter(pk=order.pk).update(admin_note="Please send clearer photos.")
+        self.client.force_login(self.staff)
+        self.client.post(reverse("dash_manage_action", args=["ad-orders", order.pk]), {"act": "reject"})
+        self.client.logout()
+        order.refresh_from_db()
+        self.assertEqual((order.status, order.payment.status), ("rejected", "failed"))
+        self.assertContains(self.client.get(order.get_absolute_url()), "Please send clearer photos.")
+
+    def test_staff_see_requests_in_the_dashboard(self):
+        self.submit(); self.pay(AdOrder.objects.get())
+        self.client.force_login(self.staff)
+        r = self.client.get(reverse("dash_manage", args=["ad-orders"]))
+        self.assertContains(r, "Halal wedding catering")
+        self.assertContains(self.client.get(reverse("dash_manage_edit", args=["ad-orders", AdOrder.objects.get().pk])), "QK71ABC2XY")

@@ -58,6 +58,12 @@
   </div>
 </section>
 
+{% if spotlight %}<section class="wrap sect reveal av-spot">
+  <div class="sec-h"><div><span class="eyebrow"><svg><use href="{{ icons }}#i-star"/></svg>{% translate "Featured vendors" %}</span><h2>{% translate "Trusted for your big day" %}</h2>
+    <p>{% translate "Hand-picked wedding services from our advertising partners." %}</p></div><a class="more" href="{% url 'advertise' %}">{% translate "Advertise with us" %} <svg><use href="{{ icons }}#i-arrow"/></svg></a></div>
+  <div class="ad-grid">{% for a in spotlight %}{% include "partials/ad_card.html" %}{% endfor %}</div>
+</section>{% endif %}
+
 {% if destinations %}<section class="hm-home reveal">
   <div class="wrap sect">
     <div class="sec-h"><div class="hm-home-t"><span class="hm-home-ic"><svg><use href="{{ icons }}#i-palm"/></svg></span><div><h2><span>{% translate "Honeymoon" %}</span> {% translate "Destinations" %}</h2><p>{% translate "Romantic getaways for a beautiful start to your new journey together." %}</p></div></div>
@@ -86,7 +92,7 @@
       {% empty %}<p class="empty">{% translate "New events coming soon." %}</p>{% endfor %}
     </div>
     <div class="adv"><div class="adv-t"><h3>{% translate "Advertise Your Marriage Service" %}</h3><p>{% translate "Reach thousands of members looking for trusted wedding services." %}</p>
-      <a class="btn btn-o xs" href="{% url 'services' %}"><svg class="gold"><use href="{{ icons }}#i-mega"/></svg>{% translate "Advertise Now" %}</a></div>
+      <a class="btn btn-o xs" href="{% url 'advertise' %}"><svg class="gold"><use href="{{ icons }}#i-mega"/></svg>{% translate "Advertise Now" %}</a></div>
       {% if site.advert_image %}<img class="adv-img" src="{{ site.advert_image.url }}" alt="" loading="lazy">{% endif %}</div>
   </aside>
 </div>

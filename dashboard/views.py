@@ -103,7 +103,9 @@ def badge_counts():
         inquiries, tickets = Inquiry.objects.filter(handled=False).count(), SupportTicket.objects.filter(status="open").count()
         data = {"n_alerts": Report.objects.filter(resolved=False).count() + inquiries + tickets, "n_inbox": inquiries, "n_tickets": tickets,
                 "n_msgs": Message.objects.filter(created__date=timezone.localdate()).count(), "n_bookings": Booking.objects.filter(status="new").count()}
-        data["n_alerts"] += data["n_bookings"]
+        from core.models import AdOrder
+        data["n_ads"] = AdOrder.objects.filter(status="paid").count()   # payments waiting to be confirmed
+        data["n_alerts"] += data["n_bookings"] + data["n_ads"]
         cache.set("admin-badges", data, 30)
     return data
 

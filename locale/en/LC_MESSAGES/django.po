@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sakinah\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-21 03:04+0300\n"
+"POT-Creation-Date: 2026-11-21 04:38+0300\n"
 "PO-Revision-Date: 2026-11-20 00:00+0300\n"
 "Last-Translator: Sakinah\n"
 "Language-Team: Sakinah\n"
@@ -397,6 +397,95 @@ msgstr ""
 msgid "Stunning landscapes, wine tours and romantic getaways."
 msgstr ""
 
+#| msgid ""
+#| "Lipa kwa M-Pesa, Mixx by Yas au Airtel Money, kisha weka namba ya muamala "
+#| "(transaction reference) hapa chini. Tutathibitisha malipo na kuwasha mpango "
+#| "wako."
+msgid ""
+"Lipa kwa M-Pesa, Mixx by Yas au Airtel Money kwa namba yetu ya malipo (Lipa "
+"Namba), kisha weka namba ya simu uliyotumia na namba ya muamala hapa chini. "
+"Tutathibitisha malipo na tangazo lako litaanza kuonekana mara moja."
+msgstr ""
+"Pay with M-Pesa, Mixx by Yas or Airtel Money to our payment number (Lipa "
+"Namba), then enter the phone number you used and the transaction reference "
+"below. We will confirm the payment and your advert will appear straight "
+"away."
+
+msgid "Per Event / Day"
+msgstr ""
+
+msgid "Starter"
+msgstr ""
+
+msgid "Get your service seen by couples."
+msgstr ""
+
+msgid "Your advert in its category for 30 days"
+msgstr ""
+
+msgid "Inquiries and WhatsApp button"
+msgstr ""
+
+msgid "Location map and reviews"
+msgstr ""
+
+msgid "1 photo"
+msgstr ""
+
+msgid "Featured badge"
+msgstr ""
+
+msgid "Home page spotlight"
+msgstr ""
+
+msgid "Featured"
+msgstr ""
+
+msgid "Stand out at the top of your category."
+msgstr ""
+
+msgid "Everything in Starter"
+msgstr ""
+
+msgid "Top of your category"
+msgstr ""
+
+msgid "Up to 4 photos"
+msgstr ""
+
+msgid "Spotlight"
+msgstr ""
+
+msgid "Maximum visibility for serious businesses."
+msgstr ""
+
+msgid "Everything in Business"
+msgstr ""
+
+msgid "Runs for 60 days"
+msgstr ""
+
+msgid "Shown on the home page"
+msgstr ""
+
+msgid "Priority support from our team"
+msgstr ""
+
+msgid "Business"
+msgstr ""
+
+msgid "Per Person"
+msgstr ""
+
+msgid "Per Hour"
+msgstr ""
+
+msgid "Per Package"
+msgstr ""
+
+msgid "Starting price"
+msgstr ""
+
 #, python-format
 msgid "%(num)d year"
 msgid_plural "%(num)d years"
@@ -456,6 +545,9 @@ msgid "Active"
 msgstr ""
 
 msgid "Activities"
+msgstr ""
+
+msgid "Ad payment instructions"
 msgstr ""
 
 msgid "Advert image"
@@ -590,6 +682,9 @@ msgstr ""
 msgid "Exercise"
 msgstr ""
 
+msgid "Expires"
+msgstr ""
+
 msgid "Extra icon"
 msgstr ""
 
@@ -603,9 +698,6 @@ msgid "Family type"
 msgstr ""
 
 msgid "Father status"
-msgstr ""
-
-msgid "Featured"
 msgstr ""
 
 msgid "Features"
@@ -642,6 +734,9 @@ msgid "Highlights"
 msgstr ""
 
 msgid "Hobbies"
+msgstr ""
+
+msgid "Home page"
 msgstr ""
 
 msgid "Icon"
@@ -696,6 +791,9 @@ msgid "Map query"
 msgstr ""
 
 msgid "Marital status"
+msgstr ""
+
+msgid "Max photos"
 msgstr ""
 
 msgid "Meals detail"
@@ -780,6 +878,15 @@ msgid "Photo"
 msgstr ""
 
 msgid "Photo visibility"
+msgstr ""
+
+msgid "Photo2"
+msgstr ""
+
+msgid "Photo3"
+msgstr ""
+
+msgid "Photo4"
 msgstr ""
 
 msgid "Plan"
@@ -1038,6 +1145,64 @@ msgstr ""
 msgid "e.g. amina@example.com or 0712 345 678"
 msgstr ""
 
+msgid "Per event / day"
+msgstr ""
+
+msgid "Per person"
+msgstr ""
+
+msgid "Per hour"
+msgstr ""
+
+msgid "Per package"
+msgstr ""
+
+msgid "Choose your package"
+msgstr ""
+
+msgid "Price is per"
+msgstr ""
+
+msgid "e.g. Al-Noor Events"
+msgstr ""
+
+msgid "e.g. Amina Hassan"
+msgstr ""
+
+msgid "e.g. 0712 345 678"
+msgstr ""
+
+msgid "e.g. Elegant wedding hall for 300 guests"
+msgstr ""
+
+msgid ""
+"What you offer, what is included, where you work and why couples choose you."
+msgstr ""
+
+msgid "e.g. 500000"
+msgstr ""
+
+msgid "Choose a category"
+msgstr ""
+
+msgid "Photos can be up to 8 MB each."
+msgstr ""
+
+msgid "Paid with"
+msgstr ""
+
+msgid "Phone number used"
+msgstr ""
+
+msgid "Transaction reference"
+msgstr ""
+
+msgid "e.g. QK71ABC2XY"
+msgstr ""
+
+msgid "This transaction reference has already been used."
+msgstr ""
+
 msgid "Call ended"
 msgstr ""
 
@@ -1135,6 +1300,9 @@ msgstr ""
 msgid "not sent"
 msgstr ""
 
+msgid "This package includes one photo. Choose a bigger package for up to 4."
+msgstr ""
+
 msgid "Couple photo on the Go Premium card"
 msgstr ""
 
@@ -1147,6 +1315,11 @@ msgstr ""
 msgid ""
 "Shown to members on the Membership page when they upgrade, e.g. your Lipa "
 "Namba / till number."
+msgstr ""
+
+msgid ""
+"Shown to vendors when they pay for an advert, e.g. your Lipa Namba / till "
+"number."
 msgstr ""
 
 msgid "WhatsApp number with country code, e.g. 255712345678"
@@ -1450,6 +1623,9 @@ msgstr ""
 msgid "Address used for the map, e.g. Kariakoo, Dar es Salaam"
 msgstr ""
 
+msgid "Last day on the site. Leave empty for no end date."
+msgstr ""
+
 msgid "Inquiry"
 msgstr ""
 
@@ -1557,6 +1733,65 @@ msgid "Closed"
 msgstr ""
 
 msgid "Answer from the support team; the member sees it as a notification."
+msgstr ""
+
+msgid "Price for the whole period, in TSh."
+msgstr ""
+
+msgid "How many days the advert stays on the site."
+msgstr ""
+
+msgid ""
+"One per line. Start a line with - for something the package does not "
+"include."
+msgstr ""
+
+msgid "Featured badge and first place in its category."
+msgstr ""
+
+msgid "Also shown in Featured Vendors on the home page."
+msgstr ""
+
+msgid "Photos the vendor may upload (1 to 4)."
+msgstr ""
+
+msgid "Awaiting payment"
+msgstr ""
+
+msgid "Payment sent - being confirmed"
+msgstr ""
+
+msgid "Live"
+msgstr ""
+
+msgid "Not approved"
+msgstr ""
+
+msgid "Business name"
+msgstr ""
+
+msgid "Service category"
+msgstr ""
+
+msgid "Advert title"
+msgstr ""
+
+msgid "Describe your service"
+msgstr ""
+
+msgid "Starting price (TSh)"
+msgstr ""
+
+msgid "Price is negotiable"
+msgstr ""
+
+msgid "Main photo"
+msgstr ""
+
+msgid "Note to the vendor"
+msgstr ""
+
+msgid "Shown on the vendor's order page, e.g. why it was not approved."
 msgstr ""
 
 msgid "Voice call"
@@ -1840,6 +2075,23 @@ msgstr "You can't message this member."
 #, python-format
 msgid "%(first_name)s anapokea ujumbe kutoka kwa %(lower)s pekee."
 msgstr "%(first_name)s only accepts messages from %(lower)s."
+
+msgid "Advert packages are being prepared. Please check back soon."
+msgstr ""
+
+msgid "Your advert is ready. One last step: pay to publish it."
+msgstr ""
+
+msgid "Please check the highlighted fields."
+msgstr ""
+
+msgid ""
+"Asante! We received your payment details. Your advert goes live as soon as "
+"our team confirms the payment."
+msgstr ""
+
+msgid "Please check the payment details."
+msgstr ""
 
 msgid "Comment posted."
 msgstr ""
@@ -2218,6 +2470,47 @@ msgstr ""
 msgid "Show / hide"
 msgstr ""
 
+msgid "Advert Requests"
+msgstr ""
+
+msgid ""
+"Vendors who used Advertise with us. Confirm the payment to publish the "
+"advert; it then runs for the package's days."
+msgstr ""
+
+msgid "Amount"
+msgstr ""
+
+msgid "Payment"
+msgstr ""
+
+msgid "Not paid"
+msgstr ""
+
+msgid "Expired"
+msgstr ""
+
+msgid "Runs until"
+msgstr ""
+
+msgid "Confirm payment & publish"
+msgstr ""
+
+msgid "Do not approve"
+msgstr ""
+
+msgid "Advert Packages"
+msgstr ""
+
+msgid "The packages vendors choose on the Advertise with us page."
+msgstr ""
+
+msgid "Photos"
+msgstr ""
+
+msgid "Requests"
+msgstr ""
+
 msgid "Vendors"
 msgstr ""
 
@@ -2258,9 +2551,6 @@ msgstr ""
 msgid "Honeymoon Packages"
 msgstr ""
 
-msgid "Photos"
-msgstr ""
-
 msgid "Bookings"
 msgstr ""
 
@@ -2298,9 +2588,6 @@ msgid "Payer"
 msgstr ""
 
 msgid "For"
-msgstr ""
-
-msgid "Amount"
 msgstr ""
 
 msgid "Approve payment"
@@ -3174,6 +3461,34 @@ msgid "Print / Save as PDF"
 msgstr ""
 
 #, python-format
+msgid "%(days)s day"
+msgid_plural "%(days)s days"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "The vendor has not paid yet."
+msgstr ""
+
+msgid ""
+"Do not approve this advert? Write the reason in the note below first, the "
+"vendor will see it."
+msgstr ""
+
+msgid "Vendor's page"
+msgstr ""
+
+msgid "Live advert"
+msgstr ""
+
+msgid "Edit live advert"
+msgstr ""
+
+msgid ""
+"Changes to the live advert are made on the advert itself; the form below is "
+"the vendor's original request."
+msgstr ""
+
+#, python-format
 msgid "%(get_kind_display)s from"
 msgstr ""
 
@@ -3686,9 +4001,6 @@ msgstr ""
 msgid "Business details"
 msgstr ""
 
-msgid "Home page"
-msgstr ""
-
 msgid "Images"
 msgstr ""
 
@@ -3807,15 +4119,6 @@ msgid "6 months"
 msgstr ""
 
 msgid "12 months"
-msgstr ""
-
-msgid "Paid with"
-msgstr ""
-
-msgid "Phone number used"
-msgstr ""
-
-msgid "Transaction reference"
 msgstr ""
 
 msgid "Verified Only"
@@ -5012,9 +5315,6 @@ msgid ""
 " you cannot be recognised. You decide."
 msgstr ""
 
-msgid "Main photo"
-msgstr ""
-
 msgid ""
 "Hide your face on this photo? This cannot be undone; upload the photo again "
 "to show your face."
@@ -6179,6 +6479,433 @@ msgid "Send Request"
 msgstr ""
 
 #, python-format
+msgid "Advertise with us - %(brand)s"
+msgstr ""
+
+msgid "Advertise with us"
+msgstr ""
+
+msgid ""
+"Put your wedding business in front of couples <em>planning their Nikah</em>"
+msgstr ""
+
+#, python-format
+msgid ""
+"%(brand)s is where serious, marriage-minded people meet and plan. Show them "
+"your venue, catering, décor, photography or any wedding service, and let "
+"them reach you directly."
+msgstr ""
+
+msgid "Start my advert"
+msgstr ""
+
+msgid "See packages"
+msgstr ""
+
+msgid "Live within hours"
+msgstr ""
+
+msgid "Pay by mobile money"
+msgstr ""
+
+msgid "No contract"
+msgstr ""
+
+msgid "Your business name"
+msgstr ""
+
+msgid "advert views so far"
+msgstr ""
+
+msgid "with a Featured package"
+msgstr ""
+
+msgid "New inquiry"
+msgstr ""
+
+msgid "Is 12 June available?"
+msgstr ""
+
+msgid "members planning marriage"
+msgstr ""
+
+msgid "Registered members"
+msgstr ""
+
+msgid "Advert views"
+msgstr ""
+
+msgid "Regions we reach"
+msgstr ""
+
+msgid "Vendors on the platform"
+msgstr ""
+
+msgid "Service categories"
+msgstr ""
+
+msgid "Your adverts"
+msgstr ""
+
+#, python-format
+msgid "until %(d)s"
+msgstr ""
+
+msgid "Why advertise here"
+msgstr ""
+
+msgid "The right audience, at the right moment"
+msgstr ""
+
+msgid ""
+"Our members are not just browsing. They are getting ready to marry, and they"
+" need trusted services that respect their values."
+msgstr ""
+
+msgid "Couples ready to book"
+msgstr ""
+
+msgid ""
+"Reach people who are actively planning a Nikah and Walima, not a general "
+"crowd."
+msgstr ""
+
+msgid "Inquiries straight to you"
+msgstr ""
+
+msgid ""
+"Couples check availability and send requests from your advert, with their "
+"name and phone number."
+msgstr ""
+
+msgid "A beautiful advert page"
+msgstr ""
+
+msgid ""
+"Photos, price, location map, reviews and a WhatsApp button, all on one page "
+"that looks great on phones."
+msgstr ""
+
+msgid "Reviews build trust"
+msgstr ""
+
+msgid ""
+"Happy couples leave star ratings and reviews, and new customers see them "
+"first."
+msgstr ""
+
+msgid "See your results"
+msgstr ""
+
+msgid ""
+"Your advert page shows how many people viewed it and how many sent "
+"inquiries."
+msgstr ""
+
+msgid "A trusted, halal platform"
+msgstr ""
+
+msgid ""
+"Be seen next to services that share Islamic and family values, on a "
+"respectful platform."
+msgstr ""
+
+msgid "How it works"
+msgstr ""
+
+msgid "Live in four simple steps"
+msgstr ""
+
+msgid "Choose a package"
+msgstr ""
+
+msgid "Pick how long and how prominently you want to appear."
+msgstr ""
+
+msgid ""
+"Add a title, description, price and your best photos. You see the advert as "
+"you type."
+msgstr ""
+
+msgid ""
+"M-Pesa, Mixx by Yas, Airtel Money or bank. Enter the transaction reference."
+msgstr ""
+
+msgid "Go live"
+msgstr ""
+
+msgid ""
+"We confirm the payment and your advert appears straight away, usually within"
+" a few hours."
+msgstr ""
+
+msgid "Simple prices, no surprises"
+msgstr ""
+
+msgid "Pay once for the whole period. Renew any time from your advert page."
+msgstr ""
+
+#, python-format
+msgid "for %(days)s day"
+msgid_plural "for %(days)s days"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "about %(currency)s %(per)s a day"
+msgstr ""
+
+#, python-format
+msgid "Choose %(name)s"
+msgstr ""
+
+msgid "Pay safely with"
+msgstr ""
+
+msgid "Categories"
+msgstr ""
+
+msgid "Every wedding service has a place"
+msgstr ""
+
+msgid "Real adverts"
+msgstr ""
+
+msgid "This is how your advert looks"
+msgstr ""
+
+msgid "Questions"
+msgstr ""
+
+msgid "Frequently asked questions"
+msgstr ""
+
+msgid "How soon does my advert appear?"
+msgstr ""
+
+msgid ""
+"As soon as our team confirms your payment, usually within a few hours during"
+" the day. You can follow every step on your advert page."
+msgstr ""
+
+msgid ""
+"After you submit your advert you see the amount and our payment number. Pay "
+"with M-Pesa, Mixx by Yas, Airtel Money or bank, then enter the transaction "
+"reference."
+msgstr ""
+
+msgid "Do I need an account?"
+msgstr ""
+
+msgid ""
+"No. You get a private link to your advert page; keep it to pay, follow "
+"progress and renew. If you are logged in, your adverts are also listed here."
+msgstr ""
+
+msgid "What happens when my package ends?"
+msgstr ""
+
+msgid ""
+"Your advert is hidden automatically on its last day. Renew from your advert "
+"page before or after it ends, and the new days are added on."
+msgstr ""
+
+msgid "Can I change my advert later?"
+msgstr ""
+
+msgid "Yes. Contact our team with the changes and we will update it for you."
+msgstr ""
+
+msgid "What if my advert is not approved?"
+msgstr ""
+
+msgid ""
+"We only publish services that suit a family, halal platform. If we cannot "
+"publish yours, we tell you why on your advert page and refund the payment."
+msgstr ""
+
+msgid "Ready to meet your next customers?"
+msgstr ""
+
+msgid "It takes about five minutes to create your advert."
+msgstr ""
+
+msgid "Questions? Talk to our team"
+msgstr ""
+
+msgid "Your advert"
+msgstr ""
+
+#, python-format
+msgid "created %(d)s"
+msgstr ""
+
+msgid "Advert created"
+msgstr ""
+
+msgid "Confirmation"
+msgstr ""
+
+msgid "Your advert was not approved"
+msgstr ""
+
+msgid "Our team could not publish this advert. Please contact us for details."
+msgstr ""
+
+msgid "One last step: pay to publish"
+msgstr ""
+
+#, python-format
+msgid ""
+"Pay %(currency)s %(amount)s for %(days)s days on the site, then enter the "
+"payment details below."
+msgstr ""
+
+msgid "Payment received, we are confirming it"
+msgstr ""
+
+msgid ""
+"Our team is checking your payment. Your advert goes live as soon as it is "
+"confirmed, usually within a few hours. You can close this page; it updates "
+"on its own."
+msgstr ""
+
+msgid "Your advert has ended"
+msgstr ""
+
+#, python-format
+msgid ""
+"It stopped showing on %(d)s. Renew below to bring it back straight away."
+msgstr ""
+
+msgid "Your advert is live!"
+msgstr ""
+
+#, python-format
+msgid "Couples can see it until %(d)s."
+msgstr ""
+
+msgid "Your renewal payment is being confirmed."
+msgstr ""
+
+msgid "View my advert"
+msgstr ""
+
+msgid "Inquiries"
+msgstr ""
+
+msgid "Days left"
+msgstr ""
+
+msgid "Renew early"
+msgstr ""
+
+msgid "Renew your advert"
+msgstr ""
+
+msgid "Pay for your advert"
+msgstr ""
+
+#, python-format
+msgid "%(days)s more days are added to the end of your current period."
+msgstr ""
+
+msgid "Mobile money or bank transfer."
+msgstr ""
+
+msgid "Amount to pay"
+msgstr ""
+
+msgid "I have paid - submit"
+msgstr ""
+
+msgid ""
+"Our team checks every payment against the transaction reference before "
+"publishing."
+msgstr ""
+
+msgid "Keep this page"
+msgstr ""
+
+msgid ""
+"This private link is how you pay, follow progress and renew. Save it or send"
+" it to yourself on WhatsApp."
+msgstr ""
+
+msgid "Your advert link"
+msgstr ""
+
+msgid "Copied"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Send to my WhatsApp"
+msgstr ""
+
+msgid "Need help? Talk to our team"
+msgstr ""
+
+#, python-format
+msgid "Create your advert - %(brand)s"
+msgstr ""
+
+msgid "Create your advert"
+msgstr ""
+
+msgid "You can renew or upgrade later."
+msgstr ""
+
+#, python-format
+msgid "%(n)s photo"
+msgid_plural "%(n)s photos"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Your business"
+msgstr ""
+
+msgid "So couples and our team can reach you."
+msgstr ""
+
+msgid "Clear, honest details get more inquiries."
+msgstr ""
+
+msgid "Bright, real photos of your work. The first one is the cover."
+msgstr ""
+
+msgid "Cover photo"
+msgstr ""
+
+msgid "Add photo"
+msgstr ""
+
+msgid "We review every advert. Services must suit a family, halal platform."
+msgstr ""
+
+msgid "Live preview"
+msgstr ""
+
+msgid "Your advert title"
+msgstr ""
+
+msgid "Runs for"
+msgstr ""
+
+msgid "days"
+msgstr ""
+
+msgid "Total to pay"
+msgstr ""
+
+msgid "Continue to payment"
+msgstr ""
+
+msgid "Nothing is charged yet. You pay on the next step."
+msgstr ""
+
+#, python-format
 msgid "Comments (%(comments)s)"
 msgstr ""
 
@@ -6418,6 +7145,15 @@ msgid ""
 msgstr ""
 
 msgid "View All Services"
+msgstr ""
+
+msgid "Featured vendors"
+msgstr ""
+
+msgid "Trusted for your big day"
+msgstr ""
+
+msgid "Hand-picked wedding services from our advertising partners."
 msgstr ""
 
 msgid "Romantic getaways for a beautiful start to your new journey together."
@@ -7567,9 +8303,6 @@ msgid ""
 "&ldquo;The most blessed marriage is the one with the least burden.&rdquo;"
 msgstr ""
 
-msgid "Categories"
-msgstr ""
-
 #, python-format
 msgid "Adverts by %(name)s"
 msgstr ""
@@ -7591,6 +8324,6 @@ msgid "No adverts here yet."
 msgstr ""
 
 msgid ""
-"Reach members who are planning their Nikah. Contact our team to list your "
-"business."
+"Reach couples who are planning their Nikah. Create your advert in minutes "
+"and pay by mobile money."
 msgstr ""

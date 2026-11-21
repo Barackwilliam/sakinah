@@ -37,4 +37,5 @@ JS_STRINGS = [
     N(' - add a caption or press send'),
     N('Andika ujumbe wako hapa...'),
     N('not sent'),
+    N('This package includes one photo. Choose a bigger package for up to 4.'),
 ]
