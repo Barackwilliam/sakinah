@@ -1,3 +1,5 @@
+from django.utils.translation import gettext_lazy as _l
+from django.utils.translation import gettext as _, ngettext
 import json
 from datetime import date, timedelta
 from django.contrib import messages
@@ -65,10 +67,10 @@ def dashboard(request):
     me = me_or_create(request)
     comp = data.completion(me)
     c = data.counts(request.user, me)
-    acts = [("heart", "People who liked you", data.liked_me(me).count(), "m_liked"), ("eye", "Profile views", me.profile_views.count(), "m_views"),
-            ("chat", "New messages", c["unread"], "m_messages"),
-            ("people", "Mutual matches", data.mutual(request.user, me).count(), "m_matches"),
-            ("bell", "New notifications", c["n_notes"], "m_notifications")]
+    acts = [("heart", _l("People who liked you"), data.liked_me(me).count(), "m_liked"), ("eye", _l("Profile views"), me.profile_views.count(), "m_views"),
+            ("chat", _l("New messages"), c["unread"], "m_messages"),
+            ("people", _l("Mutual matches"), data.mutual(request.user, me).count(), "m_matches"),
+            ("bell", _l("New notifications"), c["n_notes"], "m_notifications")]
     perks = list(PremiumPerk.objects.all()[:6])
     return page(request, "members/dashboard.html", {"me": me, "comp": comp, "acts": acts, "perks": perks,
         "suggested": decorate(data.suggestions(request.user, me, 8), request, me),
@@ -109,7 +111,7 @@ def find(request):
         "pages": pg.paginator.get_elided_page_range(pg.number, on_each_side=2, on_ends=1)}, "find", no_sidebar=True, no_search=True)
 
 # ---------- my matches ----------
-MATCH_TABS = [("all", "All Matches"), ("mutual", "Mutual Matches"), ("liked_you", "People Who Liked You"), ("you_liked", "You Liked"), ("shortlisted", "Shortlisted")]
+MATCH_TABS = [("all", _l("All Matches")), ("mutual", _l("Mutual Matches")), ("liked_you", _l("People Who Liked You")), ("you_liked", _l("You Liked")), ("shortlisted", _l("Shortlisted"))]
 
 @login_required
 def matches(request):
@@ -151,25 +153,25 @@ def message_block_en(me, other=None):
     A plan buys the right to start a conversation and to keep writing in it. Without one you may
     still answer whoever wrote to you, one answer for each message they send.
     """
-    if me is None: return "Complete your profile before sending messages."
+    if me is None: return _l("Complete your profile before sending messages.")
     has_plan = me.allowance("daily_messages") != 0
     sent, got = Message.thread_counts(me.user, other) if other is not None else (0, 0)
     if other is not None and (sent or got):                       # the conversation is already going
         if has_plan or sent < got: return ""
         return f"You have answered their message. Wait for {other.first_name} to write again, or upgrade to write whenever you like."
     if not has_plan:
-        return "Your plan cannot start a conversation. Upgrade to write first - answering someone is always free."
+        return _l("Your plan cannot start a conversation. Upgrade to write first - answering someone is always free.")
     if me.messages_left == 0:
-        return "You have started all of today's conversations. More in 24 hours, or upgrade for a bigger plan."
+        return _l("You have started all of today's conversations. More in 24 hours, or upgrade for a bigger plan.")
     return ""
 
 def call_block_en(me):
     """Why this member may not place a call right now, or "" when they may."""
-    if me is None: return "Complete your profile before calling."
+    if me is None: return _l("Complete your profile before calling.")
     if me.allowance("daily_call_seconds") == 0:
-        return "Your plan does not include calls. Upgrade to call other members."
+        return _l("Your plan does not include calls. Upgrade to call other members.")
     if me.call_seconds_left == 0:
-        return "You have used today's call time. It comes back in 24 hours, or upgrade for more."
+        return _l("You have used today's call time. It comes back in 24 hours, or upgrade for more.")
     return ""
 
 def messages_page(request, pk=None):
@@ -185,14 +187,14 @@ def messages_page(request, pk=None):
         q = g["q"].lower(); shown = [c for c in shown if q in c["member"].name.lower() or q in c["last"].preview.lower()]
     other = Member.objects.filter(pk=pk).first() if pk else (shown[0]["member"] if shown else None)
     if pk and other is None:   # e.g. an old notification about someone who has since deleted their account
-        messages.info(request, "This member is no longer on Sakinah.")
+        messages.info(request, _("This member is no longer on Sakinah."))
         return redirect("m_messages")
     form = ConversationForm(request.POST or None, request.FILES or None)
     if other and request.method == "POST":
         if other.pk in blocked or (other.user_id and Block.objects.filter(user=other.user, member=me).exists()):
-            messages.error(request, "You can't message this member.")
+            messages.error(request, _("You can't message this member."))
         elif not other.can_message(me):
-            messages.error(request, f"{other.name} only accepts messages from {other.get_allow_messages_from_display().lower()}.")
+            messages.error(request, _("%(name)s only accepts messages from %(lower)s.") % {"name": other.name, "lower": other.get_allow_messages_from_display().lower()})
         elif message_block_en(me, other):
             messages.error(request, message_block_en(me, other))
         elif form.is_valid():
@@ -210,7 +212,7 @@ def messages_page(request, pk=None):
             return redirect("m_messages_with", pk=other.pk)
         if request.headers.get("x-requested-with") == "fetch":
             errs = [str(m) for m in messages.get_messages(request)] + [e for v in form.errors.values() for e in v]
-            return JsonResponse({"ok": False, "error": errs[0] if errs else "The voice note could not be sent."}, status=400)
+            return JsonResponse({"ok": False, "error": errs[0] if errs else _("The voice note could not be sent.")}, status=400)
     thread = []
     if other:
         thread = Message.objects.filter(Q(sender=request.user, to=other) | (Q(sender=other.user, to=me) if other.user_id else Q(pk__in=[]))).order_by("created")
@@ -229,7 +231,7 @@ def messages_page(request, pk=None):
 @require_POST
 def conversation_action(request, pk):
     other = get_object_or_404(Member, pk=pk)
-    s, _ = ConversationState.objects.get_or_create(user=request.user, member=other)
+    s, _created = ConversationState.objects.get_or_create(user=request.user, member=other)
     act = request.POST.get("act")
     if act == "fav": s.favorite = not s.favorite
     elif act == "archive": s.archived = not s.archived
@@ -243,15 +245,15 @@ def profile(request):
     n_photos = (1 if me.photo else 0) + data.photo_count(me)
     return page(request, "members/profile.html", {"me": me, "comp": data.completion(me), "photos": me.photos.all()[:5], "tab": "overview",
         "n_photos": min(n_photos, 6), "empty_slots": range(max(0, 6 - n_photos)),
-        "visibility_choices": [("all", "Show my profile to all members"), ("verified", "Show only to verified members"),
-                               ("premium", "Show only to premium members"), ("hidden", "Hide my profile")]}, "profile")
+        "visibility_choices": [("all", _l("Show my profile to all members")), ("verified", _l("Show only to verified members")),
+                               ("premium", _l("Show only to premium members")), ("hidden", _l("Hide my profile"))]}, "profile")
 
 @login_required
 def profile_edit(request):
     me = me_or_create(request)
     form = MemberProfileForm(request.POST or None, instance=me)
     if form.is_valid():
-        form.save(); messages.success(request, "Profile saved.")
+        form.save(); messages.success(request, _("Profile saved."))
         return redirect("m_profile")
     return page(request, "members/profile_edit.html", {"me": me, "form": form, "tab": "edit"}, "profile")
 
@@ -261,13 +263,13 @@ def photos(request):
     form = PhotoForm(request.POST or None, request.FILES or None, hide_face=me.hide_face)
     if request.method == "POST":
         if (1 if me.photo else 0) + me.photos.count() >= 6:
-            messages.error(request, "You can have up to 6 photos. Remove one first.")
+            messages.error(request, _("You can have up to 6 photos. Remove one first."))
         elif form.is_valid():
             hidden = form.cleaned_data["hide_face"]
             if not me.photo: me.photo = form.cleaned_data["image"]
             else: MemberPhoto.objects.create(member=me, image=form.cleaned_data["image"], order=me.photos.count() + 2)
             me.hide_face = hidden; me.save(update_fields=["photo", "hide_face"])   # the switch stays as the member left it
-            messages.success(request, "Photo added with your face hidden." if hidden else "Photo added.")
+            messages.success(request, _("Photo added with your face hidden.") if hidden else _("Photo added."))
             return redirect(safe_next(request) or "m_photos")
     return page(request, "members/photos.html", {"me": me, "form": form, "photos": me.photos.all(), "tab": "photos",
         "n_photos": (1 if me.photo else 0) + data.photo_count(me)}, "profile")
@@ -278,15 +280,15 @@ def hide_face_on(request, field):
     from core.faces import hide_faces
     try:
         with field.open("rb") as fh: data = fh.read()
-        hidden, _ = hide_faces(data)
+        hidden, _faces = hide_faces(data)
     except Exception:
         hidden = None
     if not hidden:
-        messages.error(request, "We could not find a face in this photo, so it was left as it is."); return
+        messages.error(request, _("We could not find a face in this photo, so it was left as it is.")); return
     old = field.name
     field.save(old.rsplit("/", 1)[-1].rsplit(".", 1)[0] + ".jpg", ContentFile(hidden), save=True)
     if field.name != old: field.storage.delete(old)
-    messages.success(request, "Your face is now hidden on this photo.")
+    messages.success(request, _("Your face is now hidden on this photo."))
 
 @login_required
 @require_POST
@@ -315,19 +317,19 @@ def photo_action(request, pk=None):
 def preferences(request):
     me = me_or_create(request)
     form = PreferencesForm(request.POST or None, instance=me)
-    if form.is_valid(): form.save(); messages.success(request, "Partner preferences saved."); return redirect(safe_next(request) or "m_prefs")
+    if form.is_valid(): form.save(); messages.success(request, _("Partner preferences saved.")); return redirect(safe_next(request) or "m_prefs")
     return page(request, "members/preferences.html", {"me": me, "form": form, "tab": "prefs"}, "profile")
 
 @login_required
 def verification(request):
     me = me_or_create(request)
-    form = TicketForm(request.POST or None, request.FILES or None, initial={"subject": "Please verify my profile"})
+    form = TicketForm(request.POST or None, request.FILES or None, initial={"subject": _l("Please verify my profile")})
     pending = SupportTicket.objects.filter(user=request.user, kind="verification", status="open").first()
     if request.method == "POST" and form.is_valid() and not form.cleaned_data.get("attachment"):
-        form.add_error("attachment", "Attach a photo of your ID so we can verify you.")
+        form.add_error("attachment", _("Attach a photo of your ID so we can verify you."))
     if request.method == "POST" and form.is_valid() and not me.verified and not pending:
         t = form.save(commit=False); t.user, t.kind = request.user, "verification"; t.save()
-        messages.success(request, "Verification request sent. Our team will review it soon.")
+        messages.success(request, _("Verification request sent. Our team will review it soon."))
         return redirect("m_verify")
     return page(request, "members/verification.html", {"me": me, "form": form, "pending": pending, "tab": "verify"}, "profile")
 
@@ -337,7 +339,7 @@ def visibility(request):
     me = me_or_create(request)
     v = request.POST.get("profile_visibility")
     if v in dict(Member.VISIBILITY):
-        me.profile_visibility = v; me.save(update_fields=["profile_visibility"]); messages.success(request, "Profile visibility updated.")
+        me.profile_visibility = v; me.save(update_fields=["profile_visibility"]); messages.success(request, _("Profile visibility updated."))
     return redirect(safe_next(request) or "m_profile")
 
 # ---------- profile views ----------
@@ -366,13 +368,13 @@ def views(request):
     now = timezone.now()
     pc = data.period_counts(base)
     counts = dict(base.values_list("viewer").annotate(n=Count("id")).order_by())   # one grouped query instead of two per viewer
-    summary = [("eye", "Total Profile Views", pc["n_all"]), ("cal", "This Week", pc["n_7"]), ("cal", "This Month", pc["n_month"]),
-               ("cal", "Last 3 Months", pc["n_90"]), ("people", "Unique Visitors", len(counts))]
+    summary = [("eye", _l("Total Profile Views"), pc["n_all"]), ("cal", _l("This Week"), pc["n_7"]), ("cal", _l("This Month"), pc["n_month"]),
+               ("cal", _l("Last 3 Months"), pc["n_90"]), ("people", _l("Unique Visitors"), len(counts))]
     top = sorted(Member.objects.filter(user__in=counts.keys()), key=lambda m: -counts[m.user_id])[:5]
     for m in top: m.view_count = counts[m.user_id]
     return page(request, "members/views.html", {"me": me, "members": decorate(items, request, me), "tab": tab, "f": g, "summary": summary, "top": top,
-        "tabs": [("all", "All Views", pc["n_all"], "eye"), ("recent", "Recent (7 days)", pc["n_7"], "cal"),
-                 ("month", "This Month", pc["n_month"], "cal"), ("90", "Last 3 Months", pc["n_90"], "cal")],
+        "tabs": [("all", _l("All Views"), pc["n_all"], "eye"), ("recent", _l("Recent (7 days)"), pc["n_7"], "cal"),
+                 ("month", _l("This Month"), pc["n_month"], "cal"), ("90", _l("Last 3 Months"), pc["n_90"], "cal")],
         "locations": LOCATIONS, "age_opts": AGE_OPTS, "now": now}, "views", header="notify")
 
 # ---------- who liked me ----------
@@ -396,7 +398,7 @@ def liked(request):
     pc = data.period_counts(base)
     n = {"all": pc["n_all"], "new": new.count() if seen else pc["n_all"], "week": pc["n_7"], "month": pc["n_month"]}
     resp = page(request, "members/liked.html", {"me": me, "members": decorate(items, request, me), "tab": tab, "n": n, "f": g, "locations": LOCATIONS, "age_opts": AGE_OPTS,
-        "locked": not me.is_premium, "perks": ["See who liked you", "Get more profile views", "Priority in search results", "Advanced filters"]}, "liked")
+        "locked": not me.is_premium, "perks": [_l("See who liked you"), _l("Get more profile views"), _l("Priority in search results"), _l("Advanced filters")]}, "liked")
     if me.is_premium:
         me.likes_seen_at = timezone.now(); me.save(update_fields=["likes_seen_at"])
     return resp
@@ -407,28 +409,28 @@ def activity_feed(user, me, kind="all", limit=40):
     if kind in ("all", "views"):
         for v in me.profile_views.exclude(viewer=user).select_related("viewer__member")[:limit]:
             m = getattr(v.viewer, "member", None)
-            if m: items.append({"t": v.created, "kind": "view", "icon": "eye", "color": "#2563eb", "m": m, "text": "viewed your profile"})
+            if m: items.append({"t": v.created, "kind": "view", "icon": "eye", "color": "#2563eb", "m": m, "text": _l("viewed your profile")})
     if kind in ("all", "likes"):
         for lk in Like.objects.filter(member=me).exclude(user=user).select_related("user__member")[:limit]:
             m = getattr(lk.user, "member", None)
-            if m: items.append({"t": lk.created, "kind": "like", "icon": "heart", "color": "#d61f45", "m": m, "text": "liked your profile"})
+            if m: items.append({"t": lk.created, "kind": "like", "icon": "heart", "color": "#d61f45", "m": m, "text": _l("liked your profile")})
     if kind in ("all", "matches"):
         mutual_ids = set(data.mutual(user, me).values_list("pk", flat=True))
         backs = dict(Like.objects.filter(member=me, user__member__in=mutual_ids).values_list("user__member", "created"))
         for lk in Like.objects.filter(user=user, member__in=mutual_ids).select_related("member"):
             back = backs.get(lk.member_id)
             t = max(lk.created, back) if back else lk.created
-            items.append({"t": t, "kind": "match", "icon": "people", "color": "#2b4fb8", "m": lk.member, "text": "mutual", "pre": "You got a"})
+            items.append({"t": t, "kind": "match", "icon": "people", "color": "#2b4fb8", "m": lk.member, "text": "mutual"})
     if kind in ("all", "messages"):
         for msg in Message.objects.filter(to=me).select_related("sender__member")[:limit]:
             m = getattr(msg.sender, "member", None)
-            if m: items.append({"t": msg.created, "kind": "message", "icon": "chat", "color": "#2b6ed9", "m": m, "text": "sent you a message", "quote": msg.body[:40]})
+            if m: items.append({"t": msg.created, "kind": "message", "icon": "chat", "color": "#2b6ed9", "m": m, "text": _l("sent you a message"), "quote": msg.body[:40]})
     if kind in ("all", "saved"):
         for s in Shortlist.objects.filter(user=user).select_related("member")[:limit]:
-            items.append({"t": s.created, "kind": "saved", "icon": "bookmark", "color": "#1e3a8a", "m": s.member, "text": "saved", "pre": "You saved"})
+            items.append({"t": s.created, "kind": "saved", "icon": "bookmark", "color": "#1e3a8a", "m": s.member, "text": "saved"})
     if kind in ("all", "search"):
         for s in SearchLog.objects.filter(user=user)[:limit]:
-            items.append({"t": s.created, "kind": "search", "icon": "search", "color": "#0f5a39", "m": None, "text": s.summary or "All members", "n": s.results})
+            items.append({"t": s.created, "kind": "search", "icon": "search", "color": "#0f5a39", "m": None, "text": s.summary or _l("All members"), "n": s.results})
     return sorted(items, key=lambda i: i["t"], reverse=True)[:limit]
 
 def nice_ticks(top):
@@ -451,11 +453,11 @@ def activity(request):
     v, lk, sv = stats(views_qs), stats(likes_qs), stats(saved_qs)
     ms = stats(msgs_qs, unread=Count("pk", filter=Q(read=False)))
     n_mutual = data.mutual(request.user, me).count()
-    cards = [("eye", "Profile Views", v["total"], wk(v), "pink", "#a0123c"), ("heart", "People Who Liked Me", lk["total"], wk(lk), "grn", "#0f7a45"),
-             ("people", "Mutual Matches", n_mutual, None, "blu", "#2b4fb8"), ("chat", "New Messages", ms["unread"], wk(ms), "yel", "#b8741a"),
-             ("bookmark", "Saved Profiles", sv["total"], wk(sv), "pur", "#7c3aed")]
-    bars = [("Profile Views", v["month"], "#a0123c"), ("Likes", lk["month"], "#f472b6"),
-            ("Matches", n_mutual, "#16a34a"), ("Messages", ms["month"], "#3b82f6"), ("Saved", sv["month"], "#8b5cf6")]
+    cards = [("eye", _l("Profile Views"), v["total"], wk(v), "pink", "#a0123c"), ("heart", _l("People Who Liked Me"), lk["total"], wk(lk), "grn", "#0f7a45"),
+             ("people", _l("Mutual Matches"), n_mutual, None, "blu", "#2b4fb8"), ("chat", _l("New Messages"), ms["unread"], wk(ms), "yel", "#b8741a"),
+             ("bookmark", _l("Saved Profiles"), sv["total"], wk(sv), "pur", "#7c3aed")]
+    bars = [(_l("Profile Views"), v["month"], "#a0123c"), (_l("Likes"), lk["month"], "#f472b6"),
+            (_l("Matches"), n_mutual, "#16a34a"), (_l("Messages"), ms["month"], "#3b82f6"), (_l("Saved"), sv["month"], "#8b5cf6")]
     top_n = nice_ticks(max([b[1] for b in bars] + [1]))[0]
     bars = [{"label": l, "n": n, "h": round(n * 100 / top_n), "c": c} for l, n, c in bars]
     scores = {}
@@ -472,7 +474,7 @@ def activity(request):
         best = max(("views", "eye", "view"), ("likes", "heart", "like"), ("msgs", "chat", "message"), key=lambda k: s[k[0]])
         m.top_icon, m.top_text = best[1], f"{s[best[0]]} {best[2]}{'s' if s[best[0]] != 1 else ''}"
         tops.append(m)
-    tabs = [("all", "All Activities"), ("views", "Profile Views"), ("likes", "Likes"), ("matches", "Matches"), ("messages", "Messages"), ("saved", "Saved Profiles"), ("search", "Search Activity")]
+    tabs = [("all", _l("All Activities")), ("views", _l("Profile Views")), ("likes", _l("Likes")), ("matches", _l("Matches")), ("messages", _l("Messages")), ("saved", _l("Saved Profiles")), ("search", _l("Search Activity"))]
     feed = Paginator(activity_feed(request.user, me, tab, limit=80), 8).get_page(request.GET.get("page"))
     return page(request, "members/activity.html", {"me": me, "cards": cards, "feed": feed, "tab": tab, "tabs": tabs,
         "bars": bars, "ticks": nice_ticks(top_n), "tops": tops}, "activity")
@@ -506,7 +508,7 @@ def events(request):
         "cal": cal.Calendar(firstweekday=6).monthdayscalendar(y, mth), "cal_title": date(y, mth, 1), "cal_days": days,
         "today": today.day if (today.year, today.month) == (y, mth) else 0, "prev_month": prev_m.strftime("%Y-%m"), "next_month": next_m.strftime("%Y-%m"),
         "my_regs": EventRegistration.objects.filter(user=request.user).select_related("event").order_by("-event__date")[:3], "today_date": today},
-        "events", search_hint="Search events, topics, locations...")
+        "events", search_hint=_l("Search events, topics, locations..."))
 
 @login_required
 def event_detail(request, pk):
@@ -541,16 +543,16 @@ def membership(request):
         Payment.objects.create(user=request.user, payer_name=me.name, payer_phone=d["phone"], kind="premium", plan=d["plan"], months=d["months"],
             amount=d["plan"].price * d["months"], gateway=d["gateway"], reference=d["reference"], status="pending",
             description=f"{d['plan'].name} plan, {d['months']} month(s) (member request)")
-        messages.success(request, "Asante! We received your payment details. Your plan will be activated once our team confirms the payment.")
+        messages.success(request, _("Asante! We received your payment details. Your plan will be activated once our team confirms the payment."))
         return redirect(reverse("m_membership") + "?tab=history")
-    faq = [("How do I pay?", SiteSetting.load().payment_instructions),
-           ("When is my plan activated?", "As soon as our team confirms your payment, usually within a few hours. You will get a notification."),
-           ("Does my plan renew automatically?", "No. Plans do not renew automatically, so you are never charged without asking. Renew any time from this page."),
-           ("Can I change my plan?", "Yes. Pay for the new plan and it starts after confirmation. Remaining time on a paid plan is kept.")]
-    benefits = [("search", "Advanced Search", "Find matches with detailed preferences", "pink"), ("eye", "See Who Liked You", "Know who is interested in you", "grn"),
-                ("chat", "Unlimited Messages", "Chat without limits", "blu"), ("star", "Featured Profile", "Get more visibility", "yel"),
-                ("heart", "Priority in Search", "Appear at the top", "pur"), ("people", "Access to Premium Events", "Join exclusive events", "pink"),
-                ("shield", "Verified Badge", "Build trust and credibility", "grn"), ("headset", "Dedicated Support", "Get priority assistance", "blu")]
+    faq = [(_l("How do I pay?"), SiteSetting.load().payment_instructions),
+           (_l("When is my plan activated?"), _l("As soon as our team confirms your payment, usually within a few hours. You will get a notification.")),
+           (_l("Does my plan renew automatically?"), _l("No. Plans do not renew automatically, so you are never charged without asking. Renew any time from this page.")),
+           (_l("Can I change my plan?"), _l("Yes. Pay for the new plan and it starts after confirmation. Remaining time on a paid plan is kept."))]
+    benefits = [("search", _l("Advanced Search"), _l("Find matches with detailed preferences"), "pink"), ("eye", _l("See Who Liked You"), _l("Know who is interested in you"), "grn"),
+                ("chat", _l("Unlimited Messages"), _l("Chat without limits"), "blu"), ("star", _l("Featured Profile"), _l("Get more visibility"), "yel"),
+                ("heart", _l("Priority in Search"), _l("Appear at the top"), "pur"), ("people", _l("Access to Premium Events"), _l("Join exclusive events"), "pink"),
+                ("shield", _l("Verified Badge"), _l("Build trust and credibility"), "grn"), ("headset", _l("Dedicated Support"), _l("Get priority assistance"), "blu")]
     feats, included, prev = [], [], set()
     for p in plans:   # "All Gold features" means the plan includes everything the previous plan has
         own = {t for ok, t in p.feature_list if ok and not t.lower().startswith("all ")}
@@ -560,7 +562,7 @@ def membership(request):
     compare = [(t, [t in inc for inc in included]) for t in feats]
     return page(request, "members/membership.html", {"me": me, "plans": plans, "tab": tab, "form": form, "faq": faq, "benefits": benefits,
         "history": Payment.objects.filter(user=request.user).select_related("plan"), "compare": compare, "show_pay": request.method == "POST" or "pay" in request.GET,
-        "current": current, "prices": {str(p.pk): p.price for p in plans}, "pending": Payment.objects.filter(user=request.user, status="pending").select_related("plan").first()}, "membership", search_hint="Search members, events, topics...")
+        "current": current, "prices": {str(p.pk): p.price for p in plans}, "pending": Payment.objects.filter(user=request.user, status="pending").select_related("plan").first()}, "membership", search_hint=_l("Search members, events, topics..."))
 
 @login_required
 def receipt(request, pk):
@@ -572,7 +574,7 @@ def safety(request):
     me, tab = me_or_create(request), request.GET.get("tab", "overview")
     form = PrivacyForm(request.POST or None, instance=me)
     if request.method == "POST" and form.is_valid():
-        form.save(); messages.success(request, "Privacy settings saved.")
+        form.save(); messages.success(request, _("Privacy settings saved."))
         return redirect(reverse("m_safety") + (f"?tab={tab}" if tab != "overview" else ""))
     report = TicketForm(initial={"subject": request.GET.get("subject", "")})
     return page(request, "members/safety.html", {"me": me, "form": form, "tab": tab, "report": report,
@@ -586,7 +588,7 @@ def block(request, pk):
     if m == me: return redirect("m_safety")
     b, created = Block.objects.get_or_create(user=request.user, member=m)
     if not created: b.delete()
-    messages.success(request, f"{m.name} {'blocked. They can no longer see or message you' if created else 'unblocked'}.")
+    messages.success(request, (_("%(name)s blocked. They can no longer see or message you.") if created else _("%(name)s unblocked.")) % {"name": m.name})
     return redirect(safe_next(request) or reverse("m_safety") + "?tab=blocked")
 
 # ---------- settings ----------
@@ -598,7 +600,14 @@ def settings_page(request):
     section = request.POST.get("section")
     forms = {k: F(request.POST if section == k else None, request.FILES if section == k else None, instance=me, prefix=k) for k, F in SETTINGS_FORMS.items()}
     if section in forms and forms[section].is_valid():
-        forms[section].save(); messages.success(request, "Settings saved.")
+        forms[section].save()
+        if section == "look" and me.ui_language:   # the new language takes over at once, starting with this confirmation
+            from django.utils import translation
+            from core.lang import remember
+            translation.activate(me.ui_language)
+            messages.success(request, _("Settings saved."))
+            return remember(redirect(reverse("m_settings") + f"#{section}"), me.ui_language)
+        messages.success(request, _("Settings saved."))
         return redirect(reverse("m_settings") + f"#{section}")
     others = 0
     for s in Session.objects.filter(expire_date__gte=timezone.now()):
@@ -610,7 +619,7 @@ def password(request):
     me = me_or_create(request)
     form = PasswordChangeForm(request.user, request.POST or None)
     if form.is_valid():
-        update_session_auth_hash(request, form.save()); messages.success(request, "Password changed.")
+        update_session_auth_hash(request, form.save()); messages.success(request, _("Password changed."))
         return redirect("m_settings")
     return page(request, "members/password.html", {"me": me, "form": form}, "settings")
 
@@ -620,7 +629,7 @@ def end_sessions(request):
     n = 0
     for s in Session.objects.filter(expire_date__gte=timezone.now()):
         if s.get_decoded().get("_auth_user_id") == str(request.user.pk) and s.session_key != request.session.session_key: s.delete(); n += 1
-    messages.success(request, f"Logged out of {n} other session{'s' if n != 1 else ''}.")
+    messages.success(request, ngettext("Logged out of %(n)d other session.", "Logged out of %(n)d other sessions.", n) % {"n": n})
     return redirect("m_settings")
 
 @login_required
@@ -642,9 +651,9 @@ def export(request):
 def deactivate(request):
     me = me_or_create(request)
     if me.profile_visibility == "hidden":
-        me.profile_visibility, me.show_in_search = "all", True; messages.success(request, "Welcome back! Your profile is visible again.")
+        me.profile_visibility, me.show_in_search = "all", True; messages.success(request, _("Welcome back! Your profile is visible again."))
     else:
-        me.profile_visibility, me.show_in_search = "hidden", False; messages.success(request, "Your account is deactivated. Your profile is hidden until you reactivate it.")
+        me.profile_visibility, me.show_in_search = "hidden", False; messages.success(request, _("Your account is deactivated. Your profile is hidden until you reactivate it."))
     me.save(update_fields=["profile_visibility", "show_in_search"])
     return redirect("m_settings")
 
@@ -652,35 +661,35 @@ def deactivate(request):
 @require_POST
 def delete_account(request):
     if not request.user.check_password(request.POST.get("password", "")):
-        messages.error(request, "Password is incorrect. Your account was not deleted."); return redirect(reverse("m_settings") + "#actions")
+        messages.error(request, _("Password is incorrect. Your account was not deleted.")); return redirect(reverse("m_settings") + "#actions")
     if request.user.is_staff:
-        messages.error(request, "Staff accounts can't be deleted here."); return redirect("m_settings")
+        messages.error(request, _("Staff accounts can't be deleted here.")); return redirect("m_settings")
     user = request.user; logout(request); user.delete()
-    messages.success(request, "Your account and profile were deleted. Kwaheri.")
+    messages.success(request, _("Your account and profile were deleted. Kwaheri."))
     return redirect("home")
 
 # ---------- help & support ----------
-FAQ = [("user", "#b4233f", "Getting Started", "Learn how to create an account, complete your profile and start searching.", [
-          ("How do I start?", "Join free, complete your profile with a clear photo, set your partner preferences, then use Find a Match."),
-          ("Is Sakinah free?", "Yes. Creating a profile, searching and sending likes are free. Premium plans add more features.")]),
-       ("idcard", "#16a34a", "Profile & Verification", "How to verify your profile, upload photos and keep your account safe.", [
-          ("How do I get verified?", "Go to My Profile > Verification and send a request with a photo of your ID. Our team reviews it."),
-          ("How many photos can I add?", "Up to 6 photos. Use clear, recent and modest photos.")]),
-       ("heart", "#d61f45", "Finding a Match", "Tips on using search filters, likes, messages and matches.", [
-          ("What is a mutual match?", "When you like someone and they like you back, it becomes a mutual match."),
-          ("Why can't I message someone?", "Some members only accept messages from verified or matched members. Check their profile.")]),
-       ("star", "#c8902f", "Membership & Payments", "Information about membership plans, payments and benefits.", [
-          ("How do I upgrade?", "Open Membership, choose a plan, pay by mobile money and enter the transaction reference."),
-          ("Do plans renew automatically?", "No. You choose when to renew.")]),
-       ("shield", "#16a34a", "Safety & Privacy", "How we protect your information and keep the community safe.", [
-          ("Who can see my profile?", "You decide in Safety & Privacy: everyone, verified members, premium members, or hidden."),
-          ("How do I block someone?", "Open their profile or conversation and choose Block. Manage blocked users in Safety & Privacy.")]),
-       ("wrench", "#2563eb", "Technical Support", "Help with login, password, errors and other technical issues.", [
-          ("I forgot my password", "Use 'Forgot password?' on the login page to get a reset link by email."),
-          ("The site is not working", "Refresh the page or try another browser. If it continues, submit a ticket below.")]),
-       ("people", "#d61f45", "Community Guidelines", "Our rules for a respectful and Islamic community.", [
-          ("What is not allowed?", "Fake profiles, inappropriate photos, harassment, asking for money and sharing contact details too early."),
-          ("What happens when I report someone?", "Our team reviews every report privately and may warn or remove the member.")])]
+FAQ = [("user", "#b4233f", _l("Getting Started"), _l("Learn how to create an account, complete your profile and start searching."), [
+          (_l("How do I start?"), _l("Join free, complete your profile with a clear photo, set your partner preferences, then use Find a Match.")),
+          (_l("Is Sakinah free?"), _l("Yes. Creating a profile, searching and sending likes are free. Premium plans add more features."))]),
+       ("idcard", "#16a34a", _l("Profile & Verification"), _l("How to verify your profile, upload photos and keep your account safe."), [
+          (_l("How do I get verified?"), _l("Go to My Profile > Verification and send a request with a photo of your ID. Our team reviews it.")),
+          (_l("How many photos can I add?"), _l("Up to 6 photos. Use clear, recent and modest photos."))]),
+       ("heart", "#d61f45", _l("Finding a Match"), _l("Tips on using search filters, likes, messages and matches."), [
+          (_l("What is a mutual match?"), _l("When you like someone and they like you back, it becomes a mutual match.")),
+          (_l("Why can't I message someone?"), _l("Some members only accept messages from verified or matched members. Check their profile."))]),
+       ("star", "#c8902f", _l("Membership & Payments"), _l("Information about membership plans, payments and benefits."), [
+          (_l("How do I upgrade?"), _l("Open Membership, choose a plan, pay by mobile money and enter the transaction reference.")),
+          (_l("Do plans renew automatically?"), _l("No. You choose when to renew."))]),
+       ("shield", "#16a34a", _l("Safety & Privacy"), _l("How we protect your information and keep the community safe."), [
+          (_l("Who can see my profile?"), _l("You decide in Safety & Privacy: everyone, verified members, premium members, or hidden.")),
+          (_l("How do I block someone?"), _l("Open their profile or conversation and choose Block. Manage blocked users in Safety & Privacy."))]),
+       ("wrench", "#2563eb", _l("Technical Support"), _l("Help with login, password, errors and other technical issues."), [
+          (_l("I forgot my password"), _l("Use 'Forgot password?' on the login page to get a reset link by email.")),
+          (_l("The site is not working"), _l("Refresh the page or try another browser. If it continues, submit a ticket below."))]),
+       ("people", "#d61f45", _l("Community Guidelines"), _l("Our rules for a respectful and Islamic community."), [
+          (_l("What is not allowed?"), _l("Fake profiles, inappropriate photos, harassment, asking for money and sharing contact details too early.")),
+          (_l("What happens when I report someone?"), _l("Our team reviews every report privately and may warn or remove the member."))])]
 
 @login_required
 def help_page(request):
@@ -690,12 +699,12 @@ def help_page(request):
     form = TicketForm(request.POST or None, request.FILES or None, initial={"subject": request.GET.get("subject", "")})
     if request.method == "POST" and kind in dict(SupportTicket.KINDS) and form.is_valid():
         t = form.save(commit=False); t.user, t.kind = request.user, kind; t.save()
-        messages.success(request, "Asante! Our support team received your message and will reply by email or notification.")
+        messages.success(request, _("Asante! Our support team received your message and will reply by email or notification."))
         return redirect("m_help")
     kinds = [(k, v) for k, v in SupportTicket.KINDS if k != "verification"]
     return page(request, "members/help.html", {"me": me, "faq": FAQ, "form": form, "kind": kind, "kinds": kinds,
         "show_form": request.method == "POST" or "kind" in request.GET,
-        "tickets": SupportTicket.objects.filter(user=request.user)[:5]}, "help", search_hint="Search members, topics, or help articles...")
+        "tickets": SupportTicket.objects.filter(user=request.user)[:5]}, "help", search_hint=_l("Search members, topics, or help articles..."))
 
 # ---------- notifications ----------
 @login_required

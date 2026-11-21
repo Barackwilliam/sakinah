@@ -25,7 +25,7 @@
     }
     delete w.dataset.off;
     $('.cw-ic', w).innerHTML = `<use href="#${document.getElementById('m-video') ? 'm' : 'i'}-${kind === 'video' ? 'video' : 'phone'}"/>`;
-    $('p', w).textContent = kind === 'video' ? 'Starting video call\u2026' : 'Calling\u2026';
+    $('p', w).textContent = kind === 'video' ? gettext('Starting video call\u2026') : gettext('Calling\u2026');
     w.classList.add('show');
     return w;
   };
@@ -45,8 +45,8 @@
       if (stream) stream.getTracks().forEach((t) => t.stop());   // the call screen opens its own; just prove it works
       if (w.dataset.off) { if (j.ok && j.end) post(j.end, new FormData()); }   // they changed their mind while waiting
       else if (j.ok) location.href = j.url;
-      else { w.classList.remove('show'); if (j.premium) { toast(j.error); setTimeout(() => location.href = j.url, 1500); } else toast(j.error || 'The call could not be started.'); }
-    } catch (_) { w.classList.remove('show'); toast('No connection. Check your internet and try again.'); }
+      else { w.classList.remove('show'); if (j.premium) { toast(j.error); setTimeout(() => location.href = j.url, 1500); } else toast(j.error || gettext('The call could not be started.')); }
+    } catch (_) { w.classList.remove('show'); toast(gettext('No connection. Check your internet and try again.')); }
     b.disabled = false;
   });
 
@@ -67,7 +67,7 @@
     };
     const hide = () => { box.hidden = true; ring(false); document.title = document.title.replace(/^📞 [^|]*\| /, ''); shown = null; };
     const show = (c) => {
-      shown = c.id; $('.ic-name', box).textContent = c.name; $('.ic-kind', box).textContent = c.kind === 'video' ? 'Incoming video call…' : 'Incoming voice call…';
+      shown = c.id; $('.ic-name', box).textContent = c.name; $('.ic-kind', box).textContent = c.kind === 'video' ? gettext('Incoming video call…') : gettext('Incoming voice call…');
       const img = $(".ic-photo", box), letter = $(".ic-letter", box); img.hidden = !c.photo; if (c.photo) img.src = c.photo; letter.hidden = !!c.photo; letter.textContent = (c.name || "?")[0];
       $('.ic-accept', box).href = c.url; $('.ic-accept', box).classList.toggle('video', c.kind === 'video'); box.dataset.decline = c.decline;
       box.hidden = false; ring(true); document.title = '📞 ' + c.name + ' | ' + document.title;
@@ -92,7 +92,7 @@
     t.textContent = fmt(dur);
     $('.vplay', v).addEventListener('click', () => {
       $$('[data-voice] audio').forEach((o) => { if (o !== a) o.pause(); });
-      if (a.paused) a.play().catch(() => toast('This voice message could not be played on this device.')); else a.pause();
+      if (a.paused) a.play().catch(() => toast(gettext('This voice message could not be played on this device.'))); else a.pause();
     });
     a.addEventListener('play', () => v.classList.add('on')); a.addEventListener('pause', () => v.classList.remove('on'));
     a.addEventListener('timeupdate', () => { const d = isFinite(a.duration) && a.duration ? a.duration : dur; bar.style.width = (d ? a.currentTime / d * 100 : 0) + '%'; t.textContent = fmt(a.currentTime || 0); });
@@ -117,12 +117,12 @@
         if (!j.ok) toast(j.error);
         else if (j.html && window.chatAppend) window.chatAppend(j.html, j.id);   // the chat puts it straight on screen
         else location.reload();                                                  // older page: fall back to a reload
-      } catch (_) { toast('The voice note could not be sent. Check your internet.'); }
+      } catch (_) { toast(gettext('The voice note could not be sent. Check your internet.')); }
       mic.disabled = false;
     };
     mic.addEventListener('click', async () => {
       try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); }
-      catch (_) { toast('Allow microphone access in your browser to record a voice note.'); return; }
+      catch (_) { toast(gettext('Allow microphone access in your browser to record a voice note.')); return; }
       chunks = []; cancelled = false; recorder = new MediaRecorder(stream, type ? { mimeType: type, audioBitsPerSecond: 32000 } : undefined);
       recorder.ondataavailable = (e) => e.data.size && chunks.push(e.data);
       recorder.onstop = () => { const secs = (Date.now() - started) / 1000; stopAll(); if (!cancelled && secs >= 1) send(new Blob(chunks, { type: recorder.mimeType || type || 'audio/webm' }), Math.min(secs, MAX)); };

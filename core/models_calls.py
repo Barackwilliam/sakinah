@@ -3,14 +3,15 @@ person and passes the connection details (offer, answer and network candidates) 
 from datetime import timedelta
 from django.conf import settings
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
 RING_SECONDS = 45   # an unanswered call becomes a missed call after this long
 
 class Call(models.Model):
-    KINDS = [("voice", "Voice call"), ("video", "Video call")]
-    STATUS = [("ringing", "Ringing"), ("accepted", "In progress"), ("declined", "Declined"), ("ended", "Ended"),
-              ("missed", "Missed"), ("cancelled", "Cancelled")]
+    KINDS = [("voice", _("Voice call")), ("video", _("Video call"))]
+    STATUS = [("ringing", _("Ringing")), ("accepted", _("In progress")), ("declined", _("Declined")), ("ended", _("Ended")),
+              ("missed", _("Missed")), ("cancelled", _("Cancelled"))]
     caller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="calls_made")
     callee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="calls_received")
     kind = models.CharField(max_length=5, choices=KINDS, default="voice")
@@ -18,7 +19,7 @@ class Call(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     answered_at = models.DateTimeField(null=True, blank=True)
     ended_at = models.DateTimeField(null=True, blank=True)
-    billed_seconds = models.PositiveIntegerField(default=0, help_text="How long the call ran, kept for the caller's daily allowance.")
+    billed_seconds = models.PositiveIntegerField(default=0, help_text=_("How long the call ran, kept for the caller's daily allowance."))
     class Meta:
         ordering = ["-created"]
         indexes = [models.Index(fields=["callee", "status"]), models.Index(fields=["caller", "status"])]
@@ -38,7 +39,7 @@ class Call(models.Model):
 
 class CallSignal(models.Model):
     """One message between the two browsers while they connect (offer, answer or a network candidate)."""
-    KINDS = [("offer", "Offer"), ("answer", "Answer"), ("ice", "Network candidate")]
+    KINDS = [("offer", _("Offer")), ("answer", _("Answer")), ("ice", _("Network candidate"))]
     call = models.ForeignKey(Call, on_delete=models.CASCADE, related_name="signals")
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+")
     kind = models.CharField(max_length=6, choices=KINDS)

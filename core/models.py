@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
 from django.urls import reverse
 import calendar
@@ -17,14 +18,14 @@ class SiteSetting(models.Model):
     hero_quote = models.CharField(max_length=200, default="Zaidi ya uchumba, ni safari ya maisha na mwenye kheri.")
     hero_image = models.ImageField(upload_to="site/", blank=True)
     logo = models.ImageField(upload_to="site/logo/", blank=True)   # its own folder: logos are not watermarked
-    premium_image = models.ImageField(upload_to="site/", blank=True, help_text="Couple photo on the Go Premium card")
-    advert_image = models.ImageField(upload_to="site/", blank=True, help_text="Photo on the Advertise Your Marriage Service card")
+    premium_image = models.ImageField(upload_to="site/", blank=True, help_text=_("Couple photo on the Go Premium card"))
+    advert_image = models.ImageField(upload_to="site/", blank=True, help_text=_("Photo on the Advertise Your Marriage Service card"))
     currency = models.CharField(max_length=10, default="TSh")
-    offer_text = models.CharField(max_length=160, blank=True, help_text="Premium page special offer. Leave blank to hide the offer.")
+    offer_text = models.CharField(max_length=160, blank=True, help_text=_("Premium page special offer. Leave blank to hide the offer."))
     payment_instructions = models.TextField(blank=True, default="Lipa kwa M-Pesa, Mixx by Yas au Airtel Money, kisha weka namba ya muamala (transaction reference) hapa chini. Tutathibitisha malipo na kuwasha mpango wako.",
-        help_text="Shown to members on the Membership page when they upgrade, e.g. your Lipa Namba / till number.")
+        help_text=_("Shown to members on the Membership page when they upgrade, e.g. your Lipa Namba / till number."))
     contact_email = models.EmailField(blank=True)
-    contact_whatsapp = models.CharField(max_length=20, blank=True, help_text="WhatsApp number with country code, e.g. 255712345678")
+    contact_whatsapp = models.CharField(max_length=20, blank=True, help_text=_("WhatsApp number with country code, e.g. 255712345678"))
     @property
     def contact_url(self):
         digits = "".join(c for c in self.contact_whatsapp if c.isdigit())
@@ -54,26 +55,30 @@ class Plan(models.Model):
     order = models.PositiveSmallIntegerField(default=0)
     tagline = models.CharField(max_length=100, blank=True)
     period = models.CharField(max_length=30, default="per month")
-    features = models.TextField(blank=True, help_text="One feature per line. Start a line with - for a feature the plan does not include.")
-    popular = models.BooleanField(default=False, verbose_name="Most popular")
+    features = models.TextField(blank=True, help_text=_("One feature per line. Start a line with - for a feature the plan does not include."))
+    popular = models.BooleanField(default=False, verbose_name=_("Most popular"))
     icon = models.ImageField(upload_to="plans/", blank=True)
-    daily_messages = models.IntegerField(default=0, verbose_name="Messages per day",
-                                         help_text="How many messages this plan may send in 24 hours. 0 = none, -1 = unlimited.")
-    daily_call_seconds = models.IntegerField(default=0, verbose_name="Call seconds per day",
-                                             help_text="Voice and video call time allowed in 24 hours, in seconds. 0 = none, -1 = unlimited.")
+    daily_messages = models.IntegerField(default=0, verbose_name=_("Messages per day"),
+                                         help_text=_("How many messages this plan may send in 24 hours. 0 = none, -1 = unlimited."))
+    daily_call_seconds = models.IntegerField(default=0, verbose_name=_("Call seconds per day"),
+                                             help_text=_("Voice and video call time allowed in 24 hours, in seconds. 0 = none, -1 = unlimited."))
     @property
     def allowance_lines(self):
         """The daily messaging and call allowance, written out for the plan cards."""
+        from django.utils.translation import gettext, ngettext
         n, secs = self.daily_messages, self.daily_call_seconds
-        msgs = "Start as many chats as you like" if n < 0 else f"Start {n} new chats a day" if n else "Cannot start a chat"
-        if secs < 0: calls = "Unlimited voice and video calls"
-        elif not secs: calls = "No voice or video calls"
-        elif secs % 60 == 0: calls = f"{secs // 60} minute{'s' if secs >= 120 else ''} of calls a day"
-        else: calls = f"{secs} seconds of calls a day"
+        msgs = (gettext("Start as many chats as you like") if n < 0 else
+                ngettext("Start %(n)d new chat a day", "Start %(n)d new chats a day", n) % {"n": n} if n else gettext("Cannot start a chat"))
+        if secs < 0: calls = gettext("Unlimited voice and video calls")
+        elif not secs: calls = gettext("No voice or video calls")
+        elif secs % 60 == 0: calls = ngettext("%(n)d minute of calls a day", "%(n)d minutes of calls a day", secs // 60) % {"n": secs // 60}
+        else: calls = gettext("%(n)d seconds of calls a day") % {"n": secs}
         return [(n != 0, msgs), (secs != 0, calls)]
     @property
     def feature_list(self):
-        return self.allowance_lines + [(not l.startswith("-"), l.lstrip("-+ ").strip()) for l in self.features.splitlines() if l.strip()]
+        """Features as written by the admin. The starter wording is translated (core/content_strings.py); new wording shows as typed."""
+        from django.utils.translation import gettext
+        return self.allowance_lines + [(not l.startswith("-"), gettext(l.lstrip("-+ ").strip())) for l in self.features.splitlines() if l.strip()]
     class Meta: ordering = ["order"]
     def __str__(self): return self.name
 
@@ -84,9 +89,9 @@ class PremiumPerk(models.Model):
     def __str__(self): return self.text
 
 class Member(models.Model):
-    GENDER = [("F", "Woman"), ("M", "Man")]
-    RELIGION = [("Islam", "Muislamu"), ("Christian", "Mkristo")]
-    MARITAL = [("single", "Single"), ("divorced", "Divorced"), ("widowed", "Widowed")]
+    GENDER = [("F", _("Woman")), ("M", _("Man"))]
+    RELIGION = [("Islam", _("Muislamu")), ("Christian", _("Mkristo"))]
+    MARITAL = [("single", _("Single")), ("divorced", _("Divorced")), ("widowed", _("Widowed"))]
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name="member")
     name = models.CharField(max_length=80)
     age = models.PositiveSmallIntegerField()
@@ -98,34 +103,34 @@ class Member(models.Model):
     origin = models.CharField(max_length=40, default="Mtanzania")
     intention = models.CharField(max_length=60, default="Marriage-oriented")
     religion = models.CharField(max_length=30, choices=RELIGION, default="Islam")
-    goal = models.CharField(max_length=160, blank=True, help_text="Lengo. Leave blank for the default text.")
+    goal = models.CharField(max_length=160, blank=True, help_text=_("Lengo. Leave blank for the default text."))
     bio = models.TextField(max_length=600, blank=True)
     photo = models.ImageField(upload_to="members/", blank=True)
-    phone = models.CharField(max_length=20, blank=True, help_text="WhatsApp number with country code, e.g. 255712345678")
-    whatsapp_ok = models.BooleanField(default=False, verbose_name="Allow WhatsApp messages")
+    phone = models.CharField(max_length=20, blank=True, help_text=_("WhatsApp number with country code, e.g. 255712345678"))
+    whatsapp_ok = models.BooleanField(default=False, verbose_name=_("Allow WhatsApp messages"))
     verified = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)
     compatibility = models.PositiveSmallIntegerField(default=80)
     joined = models.DateTimeField(default=timezone.now)
     last_seen = models.DateTimeField(null=True, blank=True)
     plan = models.ForeignKey("Plan", on_delete=models.SET_NULL, null=True, blank=True, related_name="members")
-    PRACTICE = [("practising", "Practising"), ("moderate", "Moderately practising"), ("learning", "Learning / revert")]
-    practice = models.CharField(max_length=12, choices=PRACTICE, default="practising", verbose_name="Religiosity")
+    PRACTICE = [("practising", _("Practising")), ("moderate", _("Moderately practising")), ("learning", _("Learning / revert"))]
+    practice = models.CharField(max_length=12, choices=PRACTICE, default="practising", verbose_name=_("Religiosity"))
     headline = models.CharField(max_length=120, blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    interests = models.CharField(max_length=250, blank=True, help_text="Comma separated, e.g. Qur'an, Travel, Reading")
-    lifestyle = models.CharField(max_length=250, blank=True, help_text="Comma separated, e.g. Healthy lifestyle, Open-minded")
+    interests = models.CharField(max_length=250, blank=True, help_text=_("Comma separated, e.g. Qur'an, Travel, Reading"))
+    lifestyle = models.CharField(max_length=250, blank=True, help_text=_("Comma separated, e.g. Healthy lifestyle, Open-minded"))
     # privacy (Safety & Privacy page)
-    VISIBILITY = [("all", "All Members"), ("verified", "Verified Members Only"), ("premium", "Premium Members Only"), ("hidden", "Hidden")]
-    MESSAGES_FROM = [("all", "All Members"), ("verified", "Verified Members Only"), ("matched", "Matched Members Only")]
-    LOCATION_SHOW = [("city", "City/Region Only"), ("country", "Country Only")]
+    VISIBILITY = [("all", _("All Members")), ("verified", _("Verified Members Only")), ("premium", _("Premium Members Only")), ("hidden", _("Hidden"))]
+    MESSAGES_FROM = [("all", _("All Members")), ("verified", _("Verified Members Only")), ("matched", _("Matched Members Only"))]
+    LOCATION_SHOW = [("city", _("City/Region Only")), ("country", _("Country Only"))]
     profile_visibility = models.CharField(max_length=10, choices=VISIBILITY, default="all")
     photo_visibility = models.CharField(max_length=10, choices=VISIBILITY[:3], default="all")
     show_online = models.BooleanField(default=True)
     thumb = models.ImageField(upload_to="members/thumbs/", blank=True,
-                              help_text="A small copy of the photo, made automatically, for cards and avatars.")
-    hide_face = models.BooleanField("Hide my face on new photos", default=False,
-                                    help_text="The member's choice when uploading: faces are covered with a soft blur before the photo is saved.")
+                              help_text=_("A small copy of the photo, made automatically, for cards and avatars."))
+    hide_face = models.BooleanField(_("Hide my face on new photos"), default=False,
+                                    help_text=_("The member's choice when uploading: faces are covered with a soft blur before the photo is saved."))
     show_age = models.BooleanField(default=True)
     location_display = models.CharField(max_length=10, choices=LOCATION_SHOW, default="city")
     allow_messages_from = models.CharField(max_length=10, choices=MESSAGES_FROM, default="all")
@@ -136,17 +141,18 @@ class Member(models.Model):
     notify_matches = models.BooleanField(default=True)
     notify_events = models.BooleanField(default=True)
     notify_system = models.BooleanField(default=True)
-    LANGUAGES = [("en", "English"), ("sw", "Kiswahili")]
-    THEMES = [("light", "Light Mode"), ("dark", "Dark Mode")]
-    ui_language = models.CharField(max_length=2, choices=LANGUAGES, default="en", verbose_name="Language")
-    ui_theme = models.CharField(max_length=5, choices=THEMES, default="light", verbose_name="Theme")
+    # each language in its own name, so a member can always find theirs; blank = not chosen, the browser's language is used
+    LANGUAGES = [("", _("Automatic (my browser's language)"))] + list(settings.LANGUAGES)
+    THEMES = [("light", _("Light Mode")), ("dark", _("Dark Mode"))]
+    ui_language = models.CharField(max_length=2, choices=LANGUAGES, default="", blank=True, verbose_name=_("Language"))
+    ui_theme = models.CharField(max_length=5, choices=THEMES, default="light", verbose_name=_("Theme"))
     likes_seen_at = models.DateTimeField(null=True, blank=True)
     premium_until = models.DateField(null=True, blank=True)
-    STATUS = [("active", "Active"), ("rejected", "Rejected"), ("suspended", "Suspended")]
+    STATUS = [("active", _("Active")), ("rejected", _("Rejected")), ("suspended", _("Suspended"))]
     status = models.CharField(max_length=10, choices=STATUS, default="active", db_index=True,
-                              help_text="Rejected and suspended members are hidden from everyone and cannot use the member area.")
+                              help_text=_("Rejected and suspended members are hidden from everyone and cannot use the member area."))
     # quick info and lifestyle
-    height_cm = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name="Height (cm)")
+    height_cm = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name=_("Height (cm)"))
     body_type = models.CharField(max_length=40, blank=True)
     languages = models.CharField(max_length=120, default="Swahili, English", blank=True)
     workplace = models.CharField(max_length=120, blank=True)
@@ -159,39 +165,46 @@ class Member(models.Model):
     exercise = models.CharField(max_length=60, blank=True)
     # religion and values
     prayer = models.CharField(max_length=80, blank=True)
-    hijab = models.CharField(max_length=40, blank=True, verbose_name="Hijab / dress")
-    quran_reading = models.CharField(max_length=60, blank=True, verbose_name="Qur'an / scripture reading")
+    hijab = models.CharField(max_length=40, blank=True, verbose_name=_("Hijab / dress"))
+    quran_reading = models.CharField(max_length=60, blank=True, verbose_name=_("Qur'an / scripture reading"))
     values = models.CharField(max_length=200, blank=True)
     # family
     father_status = models.CharField(max_length=40, blank=True)
     mother_status = models.CharField(max_length=40, blank=True)
-    siblings = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name="Number of siblings")
+    siblings = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name=_("Number of siblings"))
     family_type = models.CharField(max_length=40, blank=True)
     family_location = models.CharField(max_length=80, blank=True)
     about_family = models.CharField(max_length=200, blank=True)
     # partner preferences
-    pref_age_min = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name="Preferred age from")
-    pref_age_max = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name="Preferred age to")
-    pref_marital = models.CharField(max_length=60, blank=True, verbose_name="Preferred marital status")
-    pref_location = models.CharField(max_length=80, blank=True, verbose_name="Preferred location")
-    pref_education = models.CharField(max_length=80, blank=True, verbose_name="Preferred education")
-    pref_occupation = models.CharField(max_length=80, blank=True, verbose_name="Preferred occupation")
-    pref_prayer = models.CharField(max_length=80, blank=True, verbose_name="Preferred prayer habit")
-    pref_values = models.CharField(max_length=200, blank=True, verbose_name="Preferred values")
-    pref_relocate = models.CharField(max_length=40, blank=True, verbose_name="Partner willing to relocate")
-    pref_more = models.CharField(max_length=200, blank=True, verbose_name="Additional preferences")
+    pref_age_min = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name=_("Preferred age from"))
+    pref_age_max = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name=_("Preferred age to"))
+    pref_marital = models.CharField(max_length=60, blank=True, verbose_name=_("Preferred marital status"))
+    pref_location = models.CharField(max_length=80, blank=True, verbose_name=_("Preferred location"))
+    pref_education = models.CharField(max_length=80, blank=True, verbose_name=_("Preferred education"))
+    pref_occupation = models.CharField(max_length=80, blank=True, verbose_name=_("Preferred occupation"))
+    pref_prayer = models.CharField(max_length=80, blank=True, verbose_name=_("Preferred prayer habit"))
+    pref_values = models.CharField(max_length=200, blank=True, verbose_name=_("Preferred values"))
+    pref_relocate = models.CharField(max_length=40, blank=True, verbose_name=_("Partner willing to relocate"))
+    pref_more = models.CharField(max_length=200, blank=True, verbose_name=_("Additional preferences"))
     class Meta: ordering = ["-featured", "-verified", "-joined"]
     def __str__(self): return f"{self.name}, {self.age}"
 
     @property
-    def seeking(self): return "Mke wa Ndoa" if self.gender == "M" else "Mume wa Ndoa"
+    def seeking(self):
+        from django.utils.translation import gettext
+        return gettext("Mke wa Ndoa") if self.gender == "M" else gettext("Mume wa Ndoa")
     @property
     def marital(self):
-        return {"single": "Hajaoa" if self.gender == "M" else "Hajaolewa", "divorced": "Ameachika",
-                "widowed": "Mgane" if self.gender == "M" else "Mjane"}[self.marital_status]
+        from django.utils.translation import gettext
+        man = self.gender == "M"
+        if self.marital_status == "divorced": return gettext("Ameachika")
+        if self.marital_status == "widowed": return gettext("Mgane") if man else gettext("Mjane")
+        return gettext("Hajaoa") if man else gettext("Hajaolewa")
     @property
     def goal_text(self):
-        return self.goal or f"Ndoa yenye utulivu, upendo, heshima na misingi ya {'Kiislamu' if self.religion == 'Islam' else 'Kikristo'}."
+        from django.utils.translation import gettext
+        return self.goal or (gettext("Ndoa yenye utulivu, upendo, heshima na misingi ya Kiislamu.") if self.religion == "Islam"
+                             else gettext("Ndoa yenye utulivu, upendo, heshima na misingi ya Kikristo."))
     @property
     def is_online(self): return bool(self.show_online and self.last_seen and timezone.now() - self.last_seen < timedelta(minutes=5))
     @property
@@ -209,8 +222,12 @@ class Member(models.Model):
     def first_name(self): return (self.name.split() or [""])[0]
     @property
     def practice_label(self):
-        faith = "Muslim" if self.religion == "Islam" else "Christian"
-        return {"practising": f"Practising {faith}", "moderate": f"Moderately practising {faith}", "learning": f"Learning {faith}"}[self.practice]
+        from django.utils.translation import gettext
+        if self.religion == "Islam":
+            return {"practising": gettext("Practising Muslim"), "moderate": gettext("Moderately practising Muslim"),
+                    "learning": gettext("Learning Muslim")}[self.practice]
+        return {"practising": gettext("Practising Christian"), "moderate": gettext("Moderately practising Christian"),
+                "learning": gettext("Learning Christian")}[self.practice]
     @property
     def interest_list(self): return [t.strip() for t in self.interests.split(",") if t.strip()]
     @property
@@ -347,9 +364,9 @@ class Event(models.Model):
     city = models.CharField(max_length=60)
     description = models.CharField(max_length=200, blank=True)
     image = models.ImageField(upload_to="events/", blank=True)
-    attendees = models.PositiveIntegerField(default=0, help_text="People already going before online registration (e.g. walk-ins).")
-    capacity = models.PositiveIntegerField(null=True, blank=True, help_text="Number of seats. Leave blank for no limit.")
-    tags = models.CharField(max_length=120, blank=True, help_text="Comma separated, e.g. Seminar, Education")
+    attendees = models.PositiveIntegerField(default=0, help_text=_("People already going before online registration (e.g. walk-ins)."))
+    capacity = models.PositiveIntegerField(null=True, blank=True, help_text=_("Number of seats. Leave blank for no limit."))
+    tags = models.CharField(max_length=120, blank=True, help_text=_("Comma separated, e.g. Seminar, Education"))
     @property
     def tag_list(self): return [t.strip() for t in self.tags.split(",") if t.strip()]
     @property
@@ -374,10 +391,10 @@ class Message(models.Model):
     to = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="inbox")
     body = models.TextField(max_length=1000, blank=True)
     image = models.ImageField(upload_to="messages/", blank=True)
-    audio = models.FileField(upload_to="voice/", blank=True, help_text="Voice note")
-    duration = models.PositiveSmallIntegerField(default=0, help_text="Voice note length in seconds")
-    kind = models.CharField(max_length=5, default="text", choices=[("text", "Message"), ("call", "Call log")])
-    opens = models.BooleanField(default=False, help_text="This message started the conversation, so it counts against the sender's daily allowance.")
+    audio = models.FileField(upload_to="voice/", blank=True, help_text=_("Voice note"))
+    duration = models.PositiveSmallIntegerField(default=0, help_text=_("Voice note length in seconds"))
+    kind = models.CharField(max_length=5, default="text", choices=[("text", _("Message")), ("call", _("Call log"))])
+    opens = models.BooleanField(default=False, help_text=_("This message started the conversation, so it counts against the sender's daily allowance."))
     created = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
     class Meta: ordering = ["created"]
@@ -416,7 +433,7 @@ class Shortlist(models.Model):
     class Meta: constraints = [models.UniqueConstraint(fields=["user", "member"], name="unique_shortlist")]
 
 class Report(models.Model):
-    REASONS = [("fake", "Fake profile"), ("rude", "Rude or offensive"), ("scam", "Scam or asking for money"), ("other", "Other")]
+    REASONS = [("fake", _("Fake profile")), ("rude", _("Rude or offensive")), ("scam", _("Scam or asking for money")), ("other", _("Other"))]
     reporter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reports")
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="reports")
     reason = models.CharField(max_length=10, choices=REASONS)
@@ -434,7 +451,7 @@ class Vendor(models.Model):
     verified = models.BooleanField(default=False)
     member_since = models.DateField(default=timezone.now)
     phone = models.CharField(max_length=20, blank=True)
-    why_choose = models.TextField(blank=True, help_text="One reason per line.")
+    why_choose = models.TextField(blank=True, help_text=_("One reason per line."))
     def __str__(self): return self.name
     @property
     def reasons(self): return [l.strip() for l in self.why_choose.splitlines() if l.strip()]
@@ -451,12 +468,12 @@ class Advert(models.Model):
     negotiable = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)
     description = models.TextField(blank=True)
-    highlights = models.TextField(blank=True, help_text="One per line as icon|text, e.g. people|Up to 300 Guests. Icons: people, parking, snow, food, camera, star.")
-    includes = models.TextField(blank=True, help_text="Package includes, one per line.")
-    extras = models.TextField(blank=True, help_text="Optional additional services, one per line.")
+    highlights = models.TextField(blank=True, help_text=_("One per line as icon|text, e.g. people|Up to 300 Guests. Icons: people, parking, snow, food, camera, star."))
+    includes = models.TextField(blank=True, help_text=_("Package includes, one per line."))
+    extras = models.TextField(blank=True, help_text=_("Optional additional services, one per line."))
     availability = models.CharField(max_length=200, blank=True)
-    details = models.TextField(blank=True, help_text="Extra details, one per line as Label|Value.")
-    map_query = models.CharField(max_length=160, blank=True, help_text="Address used for the map, e.g. Kariakoo, Dar es Salaam")
+    details = models.TextField(blank=True, help_text=_("Extra details, one per line as Label|Value."))
+    map_query = models.CharField(max_length=160, blank=True, help_text=_("Address used for the map, e.g. Kariakoo, Dar es Salaam"))
     views = models.PositiveIntegerField(default=0)
     active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -495,7 +512,7 @@ class Wishlist(models.Model):
     class Meta: constraints = [models.UniqueConstraint(fields=["user", "advert"], name="unique_wishlist")]
 
 class Inquiry(models.Model):
-    KINDS = [("availability", "Check availability"), ("inquiry", "Inquiry")]
+    KINDS = [("availability", _("Check availability")), ("inquiry", _("Inquiry"))]
     advert = models.ForeignKey(Advert, on_delete=models.CASCADE, related_name="inquiries")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     kind = models.CharField(max_length=12, choices=KINDS, default="inquiry")
@@ -526,7 +543,7 @@ class Article(models.Model):
     image = models.ImageField(upload_to="articles/", blank=True)
     excerpt = models.CharField(max_length=240)
     body = models.TextField()
-    tags = models.CharField(max_length=200, blank=True, help_text="Comma separated, e.g. Nikah, Communication")
+    tags = models.CharField(max_length=200, blank=True, help_text=_("Comma separated, e.g. Nikah, Communication"))
     published = models.DateField(default=timezone.now)
     featured = models.BooleanField(default=False)
     views = models.PositiveIntegerField(default=0)
@@ -546,10 +563,10 @@ class ArticleComment(models.Model):
 
 # ----- payments, notifications and admin communications -----
 class Payment(models.Model):
-    KINDS = [("premium", "Premium plan"), ("advert", "Advert listing"), ("event", "Event registration"), ("membership", "Membership fee"), ("other", "Other")]
-    GATEWAYS = [("mpesa", "M-Pesa"), ("mixx", "Mixx by Yas"), ("airtel", "Airtel Money"), ("selcom", "Selcom"), ("pesapal", "Pesapal"),
-                ("dpo", "DPO"), ("card", "Visa / Mastercard"), ("paypal", "PayPal"), ("bank", "Bank transfer"), ("cash", "Cash")]
-    STATUS = [("pending", "Pending"), ("completed", "Completed"), ("failed", "Failed"), ("refunded", "Refunded")]
+    KINDS = [("premium", _("Premium plan")), ("advert", _("Advert listing")), ("event", _("Event registration")), ("membership", _("Membership fee")), ("other", _("Other"))]
+    GATEWAYS = [("mpesa", _("M-Pesa")), ("mixx", _("Mixx by Yas")), ("airtel", _("Airtel Money")), ("selcom", _("Selcom")), ("pesapal", _("Pesapal")),
+                ("dpo", _("DPO")), ("card", _("Visa / Mastercard")), ("paypal", _("PayPal")), ("bank", _("Bank transfer")), ("cash", _("Cash"))]
+    STATUS = [("pending", _("Pending")), ("completed", _("Completed")), ("failed", _("Failed")), ("refunded", _("Refunded"))]
     invoice_no = models.CharField(max_length=20, unique=True, editable=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="payments")
     payer_name = models.CharField(max_length=100)
@@ -560,7 +577,7 @@ class Payment(models.Model):
     description = models.CharField(max_length=160, blank=True)
     amount = models.PositiveIntegerField()
     gateway = models.CharField(max_length=10, choices=GATEWAYS, default="mpesa")
-    reference = models.CharField(max_length=60, blank=True, help_text="Transaction / receipt number from the gateway")
+    reference = models.CharField(max_length=60, blank=True, help_text=_("Transaction / receipt number from the gateway"))
     status = models.CharField(max_length=10, choices=STATUS, default="completed")
     created = models.DateTimeField(default=timezone.now)
     recorded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+")
@@ -600,7 +617,7 @@ class MessageTemplate(models.Model):
     name = models.CharField(max_length=80)
     description = models.CharField(max_length=140, blank=True)
     subject = models.CharField(max_length=150)
-    body = models.TextField(help_text="You can use {name} for the member's name.")
+    body = models.TextField(help_text=_("You can use {name} for the member's name."))
     icon = models.CharField(max_length=30, default="mail")
     color = models.CharField(max_length=10, default="#2546a8")
     order = models.PositiveSmallIntegerField(default=0)
@@ -608,8 +625,8 @@ class MessageTemplate(models.Model):
     def __str__(self): return self.name
 
 class Broadcast(models.Model):
-    CHANNELS = [("email", "Email"), ("inapp", "In-App Message"), ("notification", "Notification")]
-    STATUS = [("draft", "Draft"), ("sent", "Sent")]
+    CHANNELS = [("email", _("Email")), ("inapp", _("In-App Message")), ("notification", _("Notification"))]
+    STATUS = [("draft", _("Draft")), ("sent", _("Sent"))]
     channel = models.CharField(max_length=12, choices=CHANNELS)
     subject = models.CharField(max_length=150)
     body = models.TextField()
@@ -656,9 +673,9 @@ class SearchLog(models.Model):
     class Meta: ordering = ["-created"]
 
 class SupportTicket(models.Model):
-    KINDS = [("contact", "Message to support"), ("ticket", "Technical ticket"), ("report", "Report an issue"), ("verification", "Verification request"),
-             ("feedback", "Feedback"), ("discount", "Discount code"), ("chat", "Live chat request")]
-    STATUS = [("open", "Open"), ("closed", "Closed")]
+    KINDS = [("contact", _("Message to support")), ("ticket", _("Technical ticket")), ("report", _("Report an issue")), ("verification", _("Verification request")),
+             ("feedback", _("Feedback")), ("discount", _("Discount code")), ("chat", _("Live chat request"))]
+    STATUS = [("open", _("Open")), ("closed", _("Closed"))]
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="tickets")
     kind = models.CharField(max_length=12, choices=KINDS, default="contact")
     subject = models.CharField(max_length=150)
@@ -666,7 +683,7 @@ class SupportTicket(models.Model):
     attachment = models.FileField(upload_to="support/", blank=True)
     status = models.CharField(max_length=6, choices=STATUS, default="open")
     created = models.DateTimeField(auto_now_add=True)
-    reply = models.TextField(blank=True, help_text="Answer from the support team; the member sees it as a notification.")
+    reply = models.TextField(blank=True, help_text=_("Answer from the support team; the member sees it as a notification."))
     replied_at = models.DateTimeField(null=True, blank=True)
     class Meta: ordering = ["-created"]
     def __str__(self): return f"{self.get_kind_display()}: {self.subject}"

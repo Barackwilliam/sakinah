@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from datetime import date, timedelta
 from .models import *
@@ -80,6 +80,7 @@ class FlowTests(TestCase):
         self.assertRedirects(self.client.post(reverse("logout")), reverse("home"))
         self.assertContains(self.client.get(reverse("home")), "Join Free")
 
+    @override_settings(LANGUAGE_CODE="sw")
     def test_anonymous_card_buttons_open_auth_modal(self):
         r = self.client.get(reverse("matches"))
         self.assertContains(r, 'id="amodal"')
@@ -124,6 +125,7 @@ class FlowTests(TestCase):
         self.amina.whatsapp_ok = True; self.amina.save()
         self.assertContains(self.client.get(reverse("member", args=[self.amina.pk])), "https://wa.me/255712000111")
 
+    @override_settings(LANGUAGE_CODE="sw")
     def test_swahili_labels(self):
         self.assertEqual((self.amina.seeking, self.amina.marital), ("Mume wa Ndoa", "Hajaolewa"))
         self.assertEqual((self.omar.seeking, self.omar.marital), ("Mke wa Ndoa", "Hajaoa"))
@@ -432,6 +434,7 @@ class PasswordResetTests(TestCase):
         self.assertEqual((body["sender"]["email"], body["to"], body["htmlContent"]), ("no-reply@sakinah.co.tz", [{"email": "a@example.com"}], "<b>hi</b>"))
 
 
+@override_settings(LANGUAGE_CODE="sw")   # these check the Swahili wording, so they browse the site in Swahili
 class PublicChatTests(TestCase):
     def setUp(self):
         self.me = User.objects.create_user("juma")
@@ -447,6 +450,7 @@ class PublicChatTests(TestCase):
     def url(self, m=None):
         return reverse("thread", args=[m.pk]) if m else reverse("inbox")
 
+    @override_settings(LANGUAGE_CODE="en")
     def test_the_profile_page_carries_call_buttons(self):
         plan = Plan.objects.create(name="Profile plan", price=20000, daily_messages=10, daily_call_seconds=300)
         Member.objects.filter(pk=self.mine.pk).update(plan=plan, premium_until=timezone.localdate() + timedelta(days=30))
@@ -458,13 +462,14 @@ class PublicChatTests(TestCase):
         self.assertNotContains(r, 'data-call="video"')
         self.assertContains(r, "btn-vid up")                       # it points at the plans instead
 
+    @override_settings(LANGUAGE_CODE="en")
     def test_the_match_cards_carry_call_buttons(self):
         plan = Plan.objects.create(name="Call plan", price=20000, daily_messages=10, daily_call_seconds=300)
         Member.objects.filter(pk=self.mine.pk).update(plan=plan, premium_until=timezone.localdate() + timedelta(days=30))
         r = self.client.get(reverse("matches"))
         self.assertContains(r, 'data-call="voice"')
         self.assertContains(r, 'data-call="video"')
-        self.assertContains(r, "Piga Simu"); self.assertContains(r, "Video Call")
+        self.assertContains(r, '#i-phone"/></svg>Call'); self.assertContains(r, "Video Call")   # "Piga Simu" in Swahili
         self.assertNotContains(r, "Tuma Ujumbe")        # WhatsApp duplicated the chat button; it lives on the profile page
         Plan.objects.filter(pk=plan.pk).update(daily_call_seconds=0)        # no call time on the plan
         r = self.client.get(reverse("matches"))
@@ -556,6 +561,7 @@ class PublicChatTests(TestCase):
         self.assertEqual([m.show_av for m in msgs], [True, True, True])        # b starts the day, c changes sender
 
 
+@override_settings(LANGUAGE_CODE="sw")   # these check the Swahili wording, so they browse the site in Swahili
 class PlanAllowanceTests(TestCase):
     """What each plan may send and call in 24 hours."""
     def setUp(self):
@@ -627,6 +633,7 @@ class PlanAllowanceTests(TestCase):
         call.refresh_from_db()
         self.assertGreaterEqual(call.billed_seconds, 5)
 
+    @override_settings(LANGUAGE_CODE="en")
     def test_the_plan_card_prints_the_allowance(self):
         plan = Plan.objects.create(name="Gold test", price=50000, daily_messages=100, daily_call_seconds=300)
         self.assertEqual(plan.allowance_lines, [(True, "Start 100 new chats a day"), (True, "5 minutes of calls a day")])
@@ -634,6 +641,7 @@ class PlanAllowanceTests(TestCase):
         self.assertEqual(free.allowance_lines, [(False, "Cannot start a chat"), (False, "No voice or video calls")])
 
 
+@override_settings(LANGUAGE_CODE="sw")   # these check the Swahili wording, so they browse the site in Swahili
 class ReplyRuleTests(TestCase):
     """Starting a conversation needs a plan; answering one does not, but it is one answer per message."""
     def setUp(self):
@@ -720,3 +728,68 @@ class PhotoWeightTests(TestCase):
         m = Member.objects.create(name="Juma", age=30, gender="M", city="Arusha")
         self.assertFalse(m.thumb)
         self.assertEqual(m.card_photo, m.photo)                           # falsy, so templates skip the image
+
+
+class LanguageTests(TestCase):
+    """The site in English, Kiswahili, Arabic and French."""
+    def setUp(self):
+        self.user = User.objects.create_user("fatma", "fatma@example.com", "S3cure-pass-123")
+        self.me = Member.objects.create(user=self.user, name="Fatma", age=29, gender="F", city="Arusha", occupation="Nurse")
+
+    def home(self, lang):
+        self.client.cookies["django_language"] = lang
+        return self.client.get(reverse("home"))
+
+    def test_every_language_renders_with_its_own_words_and_direction(self):
+        for lang, words, direction in [("en", "Find a Match", "ltr"), ("sw", "Tafuta Mwenza", "ltr"),
+                                       ("ar", "ابحث عن شريك", "rtl"), ("fr", "Trouver un partenaire", "ltr")]:
+            r = self.home(lang)
+            self.assertContains(r, f'<html lang="{lang}" dir="{direction}"', msg_prefix=lang)
+            self.assertContains(r, words, msg_prefix=lang)
+
+    def test_swahili_written_in_the_templates_stays_swahili_and_english_gets_english(self):
+        self.assertContains(self.home("sw"), "Imethibitishwa")     # written in Swahili; must not fall back to English
+        self.assertContains(self.home("en"), "Verified members")
+        self.assertNotContains(self.home("en"), "Imethibitishwa")
+
+    def test_the_browser_language_is_used_until_a_visitor_chooses(self):
+        r = self.client.get(reverse("home"), HTTP_ACCEPT_LANGUAGE="fr-FR,fr;q=0.9")
+        self.assertContains(r, '<html lang="fr"')
+
+    def test_the_language_menu_sets_the_cookie_and_saves_it_on_the_profile(self):
+        self.client.login(username="fatma", password="S3cure-pass-123")
+        r = self.client.post(reverse("set_language"), {"language": "ar", "next": reverse("home")})
+        self.assertRedirects(r, reverse("home"), fetch_redirect_response=False)
+        self.assertEqual(r.cookies["django_language"].value, "ar")
+        self.me.refresh_from_db(); self.assertEqual(self.me.ui_language, "ar")
+        self.assertContains(self.client.get(reverse("home")), 'dir="rtl"')
+
+    def test_a_saved_language_follows_the_member_to_a_new_device(self):
+        Member.objects.filter(pk=self.me.pk).update(ui_language="sw")
+        self.client.login(username="fatma", password="S3cure-pass-123")     # a fresh client has no language cookie
+        r = self.client.get(reverse("home"))
+        self.assertContains(r, '<html lang="sw"')
+        self.assertEqual(r.cookies["django_language"].value, "sw")
+
+    def test_a_member_who_never_chose_keeps_the_browser_language(self):
+        self.client.login(username="fatma", password="S3cure-pass-123")
+        r = self.client.get(reverse("home"), HTTP_ACCEPT_LANGUAGE="ar")
+        self.assertContains(r, '<html lang="ar"')
+
+    def test_page_scripts_get_their_words_in_the_page_language(self):
+        self.assertContains(self.home("fr"), "window.I18N=")
+        self.assertContains(self.home("fr"), "Lien copié")
+        self.assertContains(self.home("en"), "Message not sent.")      # the scripts' Swahili wording, in English
+
+    def test_messages_from_the_server_are_translated(self):
+        self.client.login(username="fatma", password="S3cure-pass-123")
+        self.client.cookies["django_language"] = "fr"
+        r = self.client.post(reverse("m_settings"), {"section": "notify", "notify-notify_messages": "on"}, follow=True)
+        self.assertContains(r, "Paramètres enregistrés.")
+
+    def test_starter_content_is_translated_until_the_admin_rewrites_it(self):
+        SiteSetting.objects.update_or_create(pk=1, defaults={"tagline": "Imani • Mapenzi • Ndoa"})
+        self.assertContains(self.home("fr"), "Foi • Amour • Mariage")
+        SiteSetting.objects.filter(pk=1).update(tagline="Our own words")
+        from django.core.cache import cache; cache.clear()
+        self.assertContains(self.home("fr"), "Our own words")

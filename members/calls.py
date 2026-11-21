@@ -1,4 +1,6 @@
 """Voice and video calls: start, ring, answer, exchange connection details and hang up. See core/models_calls.py."""
+from django.utils.translation import gettext_lazy as _l
+from django.utils.translation import gettext as _, ngettext
 import json
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -12,10 +14,10 @@ from core.models import Block, Call, CallSignal, Member, Message, Notification
 
 def call_permission(me, other):
     """(allowed, reason) for `me` calling `other`: a plan with call time left, and no block either way."""
-    if other is None or not other.user_id or other.pk == me.pk: return False, "This member can't receive calls."
-    if not me.is_active_member or not other.is_active_member: return False, "Calls are not available for this account."
+    if other is None or not other.user_id or other.pk == me.pk: return False, _l("This member can't receive calls.")
+    if not me.is_active_member or not other.is_active_member: return False, _l("Calls are not available for this account.")
     if Block.objects.filter(Q(user=me.user, member=other) | Q(user=other.user, member=me)).exists():
-        return False, "You can't call this member."
+        return False, _l("You can't call this member.")
     if me.allowance("daily_call_seconds") == 0: return False, "premium"
     if me.call_seconds_left == 0: return False, "spent"
     return True, ""
@@ -61,19 +63,19 @@ def my_call(request, pk):
 def start(request, pk):
     me, other = getattr(request.user, "member", None), Member.objects.filter(pk=pk).select_related("user").first()
     kind = "video" if request.POST.get("kind") == "video" else "voice"
-    if me is None: return JsonResponse({"ok": False, "error": "Complete your profile first."}, status=400)
+    if me is None: return JsonResponse({"ok": False, "error": _("Complete your profile first.")}, status=400)
     ok, reason = call_permission(me, other)
     if not ok:
         if reason == "premium":
             return JsonResponse({"ok": False, "premium": True, "url": reverse("m_membership"),
-                                 "error": "Your plan does not include calls. Upgrade to call other members."}, status=403)
+                                 "error": _("Your plan does not include calls. Upgrade to call other members.")}, status=403)
         if reason == "spent":
             return JsonResponse({"ok": False, "premium": True, "url": reverse("m_membership"),
-                                 "error": "You have used today's call time. It comes back in 24 hours, or upgrade for more."}, status=403)
+                                 "error": _("You have used today's call time. It comes back in 24 hours, or upgrade for more.")}, status=403)
         return JsonResponse({"ok": False, "error": reason}, status=403)
     tidy(Call.objects.filter(Q(caller=other.user) | Q(callee=other.user) | Q(caller=request.user) | Q(callee=request.user)))
     if Call.objects.filter(Q(caller=other.user) | Q(callee=other.user), status__in=["ringing", "accepted"]).exists():
-        return JsonResponse({"ok": False, "error": f"{other.first_name} is on another call. Try again in a few minutes."}, status=409)
+        return JsonResponse({"ok": False, "error": _("%(first_name)s is on another call. Try again in a few minutes.") % {"first_name": other.first_name}}, status=409)
     Call.objects.filter(Q(caller=request.user) | Q(callee=request.user), status__in=["ringing", "accepted"]).update(status="ended", ended_at=timezone.now())
     call = Call.objects.create(caller=request.user, callee=other.user, kind=kind)
     return JsonResponse({"ok": True, "id": call.pk, "url": reverse("m_call", args=[call.pk]),

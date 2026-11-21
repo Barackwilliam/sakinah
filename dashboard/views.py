@@ -1,3 +1,5 @@
+from django.utils.translation import gettext_lazy as _l
+from django.utils.translation import gettext as _, ngettext
 import csv
 from datetime import date, timedelta
 from functools import wraps
@@ -33,7 +35,7 @@ def owner_required(view):
         if not request.user.is_authenticated or not request.user.is_staff:
             return redirect(f"{reverse('login')}?next={reverse('dashboard')}")
         if not is_owner(request.user):
-            messages.error(request, "Only the Super Admin can open that page.")
+            messages.error(request, _("Only the Super Admin can open that page."))
             return redirect("dashboard")
         return view(request, *args, **kwargs)
     return wrapper
@@ -44,7 +46,7 @@ def staff_required(view):
         if not request.user.is_authenticated:
             return redirect(f"{reverse('login')}?next={reverse('dashboard')}")
         if not request.user.is_staff:
-            messages.error(request, "That area is for Sakinah administrators only.")
+            messages.error(request, _("That area is for Sakinah administrators only."))
             return redirect("home")
         return view(request, *args, **kwargs)
     return wrapper
@@ -144,24 +146,24 @@ def contacted_pairs(pairs):
     """{(a.pk, b.pk)} for the pairs that have exchanged at least one message, found with one query."""
     if not pairs: return set()
     q = Q(pk__in=[])
-    for a, b, _ in pairs: q |= Q(sender__member=a, to=b) | Q(sender__member=b, to=a)
+    for a, b, _t in pairs: q |= Q(sender__member=a, to=b) | Q(sender__member=b, to=a)
     sent = set(Message.objects.filter(q).values_list("sender__member", "to").distinct())
     return {(a.pk, b.pk) for a, b, _ in pairs if (a.pk, b.pk) in sent or (b.pk, a.pk) in sent}
 
 def last_active(m):
-    if not m.last_seen: return ("Never", False)
+    if not m.last_seen: return (_l("Never"), False)
     delta = timezone.now() - m.last_seen
-    if delta < timedelta(minutes=5): return ("Online", True)
-    if delta < timedelta(hours=1): return (f"{int(delta.total_seconds() // 60)} mins ago", False)
+    if delta < timedelta(minutes=5): return (_l("Online"), True)
+    if delta < timedelta(hours=1): return (_("%(n)d mins ago") % {"n": delta.total_seconds() // 60}, False)
     t = timezone.localtime(m.last_seen); today = timezone.localdate()
-    if t.date() == today: return (f"Today {t:%H:%M}", False)
-    if t.date() == today - timedelta(days=1): return (f"Yesterday {t:%H:%M}", False)
+    if t.date() == today: return (_("Today %(time)s") % {"time": f"{t:%H:%M}"}, False)
+    if t.date() == today - timedelta(days=1): return (_("Yesterday %(time)s") % {"time": f"{t:%H:%M}"}, False)
     return (f"{t:%d %b %Y}", False)
 
 def member_state(m):
-    if m.status == "suspended": return ("Suspended", "bad")
-    if m.status == "rejected": return ("Rejected", "bad")
-    return ("Verified", "ok") if m.verified else ("Pending", "warn")
+    if m.status == "suspended": return (_l("Suspended"), "bad")
+    if m.status == "rejected": return (_l("Rejected"), "bad")
+    return (_l("Verified"), "ok") if m.verified else (_l("Pending"), "warn")
 
 # ---------- overview ----------
 @staff_required
@@ -194,17 +196,17 @@ def overview(request):
                                  this=Count("pk", filter=Q(date__gte=this, date__lte=today.replace(day=28) + timedelta(days=4))),
                                  last=Count("pk", filter=Q(date__gte=last, date__lt=this)))
     cards = [
-        ("Total Members", f"{total:,}", change(mc["new_this"], mc["new_last"]), f"New this month: {mc['new_this']:,}", "m-people", "#0f6b43", ""),
-        ("Active Members", f"{mc['active']:,}", change(mc["active"], mc["active_prev"]), f"Online now: {mc['online']:,}", "m-heart", "#a0123c", "online"),
-        ("Premium Members", f"{mc['premium']:,}", change(pc["prem_this"], pc["prem_last"]), f"{round(mc['premium'] * 100 / (total or 1), 1)}% of total", "i-crown", "#d4950f", ""),
-        ("Total Messages", f"{msg['total']:,}", change(msg["this"], msg["last"]), f"Today: {msg['today']:,}", "m-chat", "#1d63d8", ""),
-        ("Upcoming Events", f"{ev['upcoming']:,}", change(ev["this"], ev["last"]), "This month", "m-cal", "#9b1a4d", ""),
-        ("Total Revenue", f"{SiteSetting.load().currency} {rev_this:,}", change(rev_this, rev_last), "This month", "i-coins", "#c58a12", ""),
+        (_l("Total Members"), f"{total:,}", change(mc["new_this"], mc["new_last"]), _("New this month: %(n)s") % {"n": f"{mc['new_this']:,}"}, "m-people", "#0f6b43", ""),
+        (_l("Active Members"), f"{mc['active']:,}", change(mc["active"], mc["active_prev"]), _("Online now: %(n)s") % {"n": f"{mc['online']:,}"}, "m-heart", "#a0123c", "online"),
+        (_l("Premium Members"), f"{mc['premium']:,}", change(pc["prem_this"], pc["prem_last"]), _("%(pct)s%% of total") % {"pct": round(mc['premium'] * 100 / (total or 1), 1)}, "i-crown", "#d4950f", ""),
+        (_l("Total Messages"), f"{msg['total']:,}", change(msg["this"], msg["last"]), _("Today: %(n)s") % {"n": f"{msg['today']:,}"}, "m-chat", "#1d63d8", ""),
+        (_l("Upcoming Events"), f"{ev['upcoming']:,}", change(ev["this"], ev["last"]), _l("This month"), "m-cal", "#9b1a4d", ""),
+        (_l("Total Revenue"), f"{SiteSetting.load().currency} {rev_this:,}", change(rev_this, rev_last), _l("This month"), "i-coins", "#c58a12", ""),
     ]
     reg = per_month(members.filter(joined__date__gte=start), "joined", months)
     prem = per_month(prem_pay.filter(created__date__gte=start), "created", months)
-    trend = line_chart([m.strftime("%b") for m in months], [("New Members" if is_owner(request.user) else "All Members", "#16824f", reg),
-                                                            ("Premium Members", "#d61f5a", prem)], width=420, height=210, pad_l=34)
+    trend = line_chart([m.strftime("%b") for m in months], [(_l("New Members") if is_owner(request.user) else _l("All Members"), "#16824f", reg),
+                                                            (_l("Premium Members"), "#d61f5a", prem)], width=420, height=210, pad_l=34)
     trend["tip"] = {"label": months[-1].strftime("%b %Y"), "new": reg[-1], "prem": prem[-1]}
     males, females = mc["males"], mc["females"]
     mp = round(males * 100 / (total or 1), 1)
@@ -272,32 +274,32 @@ def members(request):
     st = group_stats(Member.objects.all(), "joined", {"all": Q(pk__isnull=False), **{k: MEMBER_FILTERS[k] for k in ("pending", "verified", "rejected", "suspended")}})
     total = st["all"][0]
     pend, ver, rej, sus = (st[k] for k in ("pending", "verified", "rejected", "suspended"))
-    cards = [("Total Members", f"{total:,}", st["all"][1], f"New this month: {st['all'][2]:,}", "m-people", "#0f6b43", "", "up"),
-             ("Pending Approval", f"{pend[0]:,}", pend[1], "Awaiting verification", "m-clock", "#e2a83a", "", "am"),
-             ("Verified Members", f"{ver[0]:,}", None, f"{round(ver[0] * 100 / (total or 1), 1)}% active and verified", "a-check", "#16a34a", "", "up"),
-             ("Rejected Members", f"{rej[0]:,}", rej[1], "Did not meet criteria", "a-user-x", "#d61f5a", "", "dn"),
-             ("Suspended Members", f"{sus[0]:,}", sus[1], "Temporarily suspended", "a-pause", "#1d63d8", "", "up")]
+    cards = [(_l("Total Members"), f"{total:,}", st["all"][1], _("New this month: %(n)s") % {"n": f"{st['all'][2]:,}"}, "m-people", "#0f6b43", "", "up"),
+             (_l("Pending Approval"), f"{pend[0]:,}", pend[1], _l("Awaiting verification"), "m-clock", "#e2a83a", "", "am"),
+             (_l("Verified Members"), f"{ver[0]:,}", None, _("%(pct)s%% active and verified") % {"pct": round(ver[0] * 100 / (total or 1), 1)}, "a-check", "#16a34a", "", "up"),
+             (_l("Rejected Members"), f"{rej[0]:,}", rej[1], _l("Did not meet criteria"), "a-user-x", "#d61f5a", "", "dn"),
+             (_l("Suspended Members"), f"{sus[0]:,}", sus[1], _l("Temporarily suspended"), "a-pause", "#1d63d8", "", "up")]
     params = g.copy(); params.pop("page", None)
     keep = params.copy(); keep.pop("f", None)
     return page(request, "dashboard/members.html", {"nav": "members", "sub": g.get("f", ""), "pg": pg, "rows": rows, "f": g, "cards": cards,
-        "tabs": [("", "All Members", total), ("pending", "Pending", pend[0]), ("verified", "Verified", ver[0]), ("rejected", "Rejected", rej[0]), ("suspended", "Suspended", sus[0])],
+        "tabs": [("", _l("All Members"), total), ("pending", _l("Pending"), pend[0]), ("verified", _l("Verified"), ver[0]), ("rejected", _l("Rejected"), rej[0]), ("suspended", _l("Suspended"), sus[0])],
         "qs": params.urlencode(), "keep": keep.urlencode(), "per": per, "locations": LOCATIONS, "plans": Plan.objects.filter(price__gt=0), "ages": AGE_FILTERS,
         "page_range": pg.paginator.get_elided_page_range(pg.number, on_each_side=2, on_ends=1), "show_import": "import" in g,
-        "search_hint": "Search members by name, email, phone, location...",
+        "search_hint": _l("Search members by name, email, phone, location..."),
         "reports": Report.objects.filter(resolved=False).select_related("member", "reporter")[:6]})
 
 def apply_member_action(m, act, request):
     """One place for single and bulk member actions. Returns a short past-tense label or None."""
     if act == "verify":
         m.verified = True; m.status = "active"; m.save(update_fields=["verified", "status"])
-        if m.user_id: Notification.objects.create(user=m.user, title="Your profile is verified", body="Your profile now shows the verified badge.", link=reverse("m_profile"))
+        if m.user_id: Notification.objects.create(user=m.user, title=_l("Your profile is verified"), body=_l("Your profile now shows the verified badge."), link=reverse("m_profile"))
         return "verified"
     if act == "unverify": m.verified = False; m.save(update_fields=["verified"]); return "unverified"
     if act == "feature": m.featured = not m.featured; m.save(update_fields=["featured"]); return "featured" if m.featured else "unfeatured"
     if act in ("activate", "suspend", "reject"):
         m.status = {"activate": "active", "suspend": "suspended", "reject": "rejected"}[act]; m.save(update_fields=["status"])
         if m.user_id and act != "activate":
-            Notification.objects.create(user=m.user, title=f"Your account was {m.get_status_display().lower()}", body="Contact support if you think this is a mistake.", link=reverse("m_help"))
+            Notification.objects.create(user=m.user, title=f"Your account was {m.get_status_display().lower()}", body=_l("Contact support if you think this is a mistake."), link=reverse("m_help"))
         return {"activate": "activated", "suspend": "suspended", "reject": "rejected"}[act]
     if act == "resolve": m.reports.update(resolved=True); return "reports resolved"
     if act == "delete":
@@ -315,17 +317,17 @@ def member_action(request, pk):
     if request.POST.get("act") == "reset_link":
         # for members who cannot receive email: staff copy this link and send it on WhatsApp or SMS
         if not m.user_id or m.user.is_staff:
-            messages.error(request, "Password links are only for member accounts.")
+            messages.error(request, _("Password links are only for member accounts."))
         else:
             from django.contrib.admin.models import CHANGE, LogEntry
             from core.views_password import reset_link
             LogEntry.objects.log_actions(request.user.pk, [m], CHANGE, change_message="Created a password reset link", single_object=True)
             SupportTicket.objects.filter(user=m.user, subject__startswith="Password reset help", status="open").update(status="closed")
-            messages.success(request, f"Password reset link for {m.name} (works once, for 3 days). Copy it and send it to them: {reset_link(request, m.user)}")
+            messages.success(request, _("Password reset link for %(name)s (works once, for 3 days). Copy it and send it to them: %(user)s") % {"name": m.name, "user": reset_link(request, m.user)})
         return redirect(back if back.startswith("/") else reverse("dash_members"))
     name, done = m.name, apply_member_action(m, request.POST.get("act"), request)
-    if done: messages.success(request, f"{name} {done}.")
-    else: messages.error(request, "That action is not allowed for this member.")
+    if done: messages.success(request, _("%(name)s %(done)s.") % {"name": name, "done": _(done)})
+    else: messages.error(request, _("That action is not allowed for this member."))
     return redirect(back if back.startswith("/") else reverse("dash_members"))
 
 @staff_required
@@ -338,21 +340,22 @@ def members_bulk(request):
     if act == "export":
         return members_csv(request, ids=ids)
     if not ids:
-        messages.error(request, "Select at least one member first."); return redirect(back)
+        messages.error(request, _("Select at least one member first.")); return redirect(back)
     chosen = Member.objects.filter(pk__in=ids).select_related("user")
     if act == "message":
         title, body = request.POST.get("subject", "").strip(), request.POST.get("body", "").strip()
         if not title:
-            messages.error(request, "Write a subject for the message."); return redirect(back)
+            messages.error(request, _("Write a subject for the message.")); return redirect(back)
         sent = [Notification(user=m.user, title=title[:120], body=body.replace("{name}", m.first_name)) for m in chosen if m.user_id]
         Notification.objects.bulk_create(sent)
         skipped = len(ids) - len(sent)
-        messages.success(request, f"Message sent to {len(sent)} member{'s' if len(sent) != 1 else ''}." + (f" {skipped} without a login account were skipped." if skipped else ""))
+        messages.success(request, ngettext("Message sent to %(n)d member.", "Message sent to %(n)d members.", len(sent)) % {"n": len(sent)}
+                         + (" " + ngettext("%(n)d without a login account was skipped.", "%(n)d without a login account were skipped.", skipped) % {"n": skipped} if skipped else ""))
         return redirect(back)
     done = [apply_member_action(m, act, request) for m in chosen]
     n = sum(1 for d in done if d)
-    if n: messages.success(request, f"{n} member{'s' if n != 1 else ''} {next(d for d in done if d)}.")
-    if n < len(done): messages.error(request, f"{len(done) - n} member{'s' if len(done) - n != 1 else ''} skipped (staff accounts cannot be changed here).")
+    if n: messages.success(request, ngettext("%(n)d member %(done)s.", "%(n)d members %(done)s.", n) % {"n": n, "done": _(next(d for d in done if d))})
+    if n < len(done): messages.error(request, ngettext("%(n)d member skipped (staff accounts cannot be changed here).", "%(n)d members skipped (staff accounts cannot be changed here).", len(done) - n) % {"n": len(done) - n})
     return redirect(back)
 
 @staff_required
@@ -361,10 +364,10 @@ def members_csv(request, ids=None):
     resp = HttpResponse(content_type="text/csv")
     resp["Content-Disposition"] = f'attachment; filename="sakinah-members-{timezone.localdate()}.csv"'
     w = csv.writer(resp)
-    w.writerow(["Member ID", "Name", "Email", "Phone", "Gender", "Age", "City", "Occupation", "Plan", "Premium until", "Verified", "Status", "Joined", "Last active"])
+    w.writerow([_l("Member ID"), _l("Name"), _l("Email"), _l("Phone"), _l("Gender"), _l("Age"), _l("City"), _l("Occupation"), _l("Plan"), _l("Premium until"), _l("Verified"), _l("Status"), _l("Joined"), _l("Last active")])
     for m in qs:
         w.writerow([m.code, m.name, m.user.email if m.user_id else "", m.phone, m.get_gender_display(), m.age, m.city, m.occupation,
-                    m.plan.name if m.is_premium else "Free", m.premium_until or "", "yes" if m.verified else "no", m.get_status_display(),
+                    m.plan.name if m.is_premium else _l("Free"), m.premium_until or "", "yes" if m.verified else "no", m.get_status_display(),
                     f"{m.joined:%Y-%m-%d}", f"{m.last_seen:%Y-%m-%d %H:%M}" if m.last_seen else ""])
     return resp
 
@@ -374,10 +377,10 @@ def members_import(request):
     """CSV with a header row: name, age, gender (M/F), city, occupation; optional phone, education, bio."""
     f = request.FILES.get("file")
     if not f or not f.name.lower().endswith(".csv"):
-        messages.error(request, "Choose a .csv file to import."); return redirect(reverse("dash_members") + "?import=1#import")
+        messages.error(request, _("Choose a .csv file to import.")); return redirect(reverse("dash_members") + "?import=1#import")
     try: rows = list(csv.DictReader(f.read().decode("utf-8-sig").splitlines()))
     except UnicodeDecodeError:
-        messages.error(request, "The file must be saved as UTF-8 CSV."); return redirect(reverse("dash_members") + "?import=1#import")
+        messages.error(request, _("The file must be saved as UTF-8 CSV.")); return redirect(reverse("dash_members") + "?import=1#import")
     created, errors = 0, []
     for n, r in enumerate(rows, start=2):
         r = {(k or "").strip().lower(): (v or "").strip() for k, v in r.items()}
@@ -388,8 +391,9 @@ def members_import(request):
         Member.objects.create(name=r["name"][:80], age=int(age), gender=gender, city=r["city"][:60], occupation=r.get("occupation", "")[:80],
                               phone=r.get("phone", "")[:20], education=r.get("education", "")[:80], bio=r.get("bio", "")[:600])
         created += 1
-    if created: messages.success(request, f"Imported {created} member{'s' if created != 1 else ''}.")
-    if errors: messages.error(request, f"Skipped {len(errors)} row{'s' if len(errors) != 1 else ''} with missing or invalid name, age, gender or city (rows {', '.join(map(str, errors[:10]))}{'...' if len(errors) > 10 else ''}).")
+    if created: messages.success(request, ngettext("Imported %(n)d member.", "Imported %(n)d members.", created) % {"n": created})
+    if errors: messages.error(request, ngettext("Skipped %(n)d row with missing or invalid name, age, gender or city (rows %(rows)s).", "Skipped %(n)d rows with missing or invalid name, age, gender or city (rows %(rows)s).", len(errors))
+                           % {"n": len(errors), "rows": ", ".join(map(str, errors[:10])) + ("..." if len(errors) > 10 else "")})
     return redirect("dash_members")
 
 # ---------- match and activities ----------
@@ -425,11 +429,11 @@ def matches(request):
     new_matches = sum(1 for *_, t in pairs if timezone.localtime(t).date() >= this)
     old_matches = sum(1 for *_, t in pairs if last <= timezone.localtime(t).date() < this)
     ms = group_stats(members, "joined", {"n": Q(pk__isnull=False)})["n"]
-    cards = [("Total Members", f"{ms[0]:,}", ms[1], f"New this month: {ms[2]:,}", "m-people", "#a0123c"),
-             ("Total Matches", f"{len(pairs):,}", change(new_matches, old_matches), "New matches this month", "m-heart", "#e11d63"),
-             ("Messages Exchanged", f"{msgs[2]:,}", msgs[1], "This month", "m-chat", "#a0123c"),
-             ("Upcoming Events", f"{Event.objects.filter(date__gte=today).count():,}", None, "Scheduled", "m-cal", "#a0123c"),
-             ("Total Activities", f"{acts_this:,}", change(acts_this, acts_last), "This month", "m-people", "#16824f")]
+    cards = [(_l("Total Members"), f"{ms[0]:,}", ms[1], _("New this month: %(n)s") % {"n": f"{ms[2]:,}"}, "m-people", "#a0123c"),
+             (_l("Total Matches"), f"{len(pairs):,}", change(new_matches, old_matches), _l("New matches this month"), "m-heart", "#e11d63"),
+             (_l("Messages Exchanged"), f"{msgs[2]:,}", msgs[1], _l("This month"), "m-chat", "#a0123c"),
+             (_l("Upcoming Events"), f"{Event.objects.filter(date__gte=today).count():,}", None, _l("Scheduled"), "m-cal", "#a0123c"),
+             (_l("Total Activities"), f"{acts_this:,}", change(acts_this, acts_last), _l("This month"), "m-people", "#16824f")]
     # find potential matches
     sq = members.filter(status="active")
     gender = g.get("gender", "F")
@@ -445,30 +449,30 @@ def matches(request):
     feed = []
     for lk in Like.objects.select_related("user__member", "member").order_by("-created")[:8]:
         m = getattr(lk.user, "member", None)
-        if m: feed.append((lk.created, m, "liked a profile", "Like", "m-heart", "#d61f45"))
+        if m: feed.append((lk.created, m, _l("liked a profile"), _l("Like"), "m-heart", "#d61f45"))
     for r in EventRegistration.objects.select_related("user__member", "event").order_by("-created")[:6]:
         m = getattr(r.user, "member", None)
-        if m: feed.append((r.created, m, f"joined an event: {r.event.title}", "Event Registration", "m-cal", "#16824f"))
+        if m: feed.append((r.created, m, _("joined an event: %(title)s") % {"title": r.event.title}, _l("Event Registration"), "m-cal", "#16824f"))
     for msg in Message.objects.select_related("sender__member").order_by("-created")[:6]:
         m = getattr(msg.sender, "member", None)
-        if m: feed.append((msg.created, m, "sent a message", "Message", "m-chat", "#7c3aed"))
+        if m: feed.append((msg.created, m, _l("sent a message"), _l("Message"), "m-chat", "#7c3aed"))
     for a, b, t in pairs[:4]:
-        feed.append((t, b, "received a new match", "New Match", "m-heart", "#d61f45"))
+        feed.append((t, b, _l("received a new match"), _l("New Match"), "m-heart", "#d61f45"))
     for m in members.order_by("-joined")[:4]:
-        feed.append((m.joined, m, "joined Sakinah", "New Member", "m-user", "#1d63d8"))
+        feed.append((m.joined, m, _l("joined Sakinah"), _l("New Member"), "m-user", "#1d63d8"))
     feed = sorted(feed, key=lambda r: r[0], reverse=True)[:6]
     events = list(Event.objects.filter(date__gte=today).annotate(reg_count=Count("registrations")).order_by("date")[:4])
     # match statistics
     start = (today.replace(day=1) - timedelta(days=31 * 11)).replace(day=1); months = months_between(start, today)[-12:]
     match_months = [sum(1 for *_, t in pairs if (timezone.localtime(t).year, timezone.localtime(t).month) == (mo.year, mo.month)) for mo in months]
     chart = bar_chart([mo.strftime("%b") for mo in months], [
-        ("New Members", "#16824f", per_month(members.filter(joined__date__gte=start), "joined", months)),
-        ("Matches", "#e2557a", match_months),
-        ("Messages", "#3b82f6", per_month(Message.objects.filter(created__date__gte=start), "created", months)),
-        ("Event Participants", "#f5b31b", per_month(EventRegistration.objects.filter(created__date__gte=start), "created", months))], width=460, height=170)
+        (_l("New Members"), "#16824f", per_month(members.filter(joined__date__gte=start), "joined", months)),
+        (_l("Matches"), "#e2557a", match_months),
+        (_l("Messages"), "#3b82f6", per_month(Message.objects.filter(created__date__gte=start), "created", months)),
+        (_l("Event Participants"), "#f5b31b", per_month(EventRegistration.objects.filter(created__date__gte=start), "created", months))], width=460, height=170)
     return page(request, "dashboard/matches.html", {"nav": "matches", "sub": "", "cards": cards, "f": g, "gender": gender, "suggestions": suggestions,
         "recent": recent, "feed": feed, "events": events, "chart": chart, "locations": LOCATIONS, "ages": AGE_FILTERS,
-        "search_hint": "Search members by name, email, location..."})
+        "search_hint": _l("Search members by name, email, location...")})
 
 @staff_required
 def report_csv(request):
@@ -477,12 +481,12 @@ def report_csv(request):
     resp["Content-Disposition"] = f'attachment; filename="sakinah-report-{start}-{end}.csv"'
     w = csv.writer(resp)
     paid = Payment.objects.filter(status="completed", created__date__range=(start, end))
-    w.writerow(["Sakinah report", f"{start} to {end}"]); w.writerow([])
-    for label, value in [("New members", Member.objects.filter(joined__date__range=(start, end)).count()),
-                         ("Total members", Member.objects.count()), ("New adverts", Advert.objects.filter(created__date__range=(start, end)).count()),
-                         ("Events", Event.objects.filter(date__range=(start, end)).count()),
-                         ("Event registrations", EventRegistration.objects.filter(created__date__range=(start, end)).count()),
-                         ("Payments", paid.count()), ("Revenue", paid.aggregate(s=Sum("amount"))["s"] or 0)]:
+    w.writerow([_l("Sakinah report"), f"{start} to {end}"]); w.writerow([])
+    for label, value in [(_l("New members"), Member.objects.filter(joined__date__range=(start, end)).count()),
+                         (_l("Total members"), Member.objects.count()), (_l("New adverts"), Advert.objects.filter(created__date__range=(start, end)).count()),
+                         (_l("Events"), Event.objects.filter(date__range=(start, end)).count()),
+                         (_l("Event registrations"), EventRegistration.objects.filter(created__date__range=(start, end)).count()),
+                         (_l("Payments"), paid.count()), (_l("Revenue"), paid.aggregate(s=Sum("amount"))["s"] or 0)]:
         w.writerow([label, value])
     return resp
 
@@ -529,10 +533,10 @@ def communications(request):
     if request.method == "POST" and "preview" not in request.POST and form.is_valid():
         b = form.save(commit=False); b.created_by = request.user; b.filters = form.filters()
         if request.POST.get("draft"):
-            b.save(); messages.success(request, "Saved as draft.")
+            b.save(); messages.success(request, _("Saved as draft."))
         else:
-            try: n = deliver(b, request.user); messages.success(request, f"Sent to {n} member{'s' if n != 1 else ''}.")
-            except Exception as e: b.save(); messages.error(request, f"Could not send: {e}. Saved as draft.")
+            try: n = deliver(b, request.user); messages.success(request, ngettext("Sent to %(n)d member.", "Sent to %(n)d members.", n) % {"n": n})
+            except Exception as e: b.save(); messages.error(request, _("Could not send: %(e)s. Saved as draft.") % {"e": e})
         return redirect("dash_comms")
     start = timezone.localdate() - timedelta(days=27)
     days = [start + timedelta(days=7 * i) for i in range(4)]
@@ -547,19 +551,19 @@ def communications(request):
     weekly = lambda c: [r[f"{c}_w{i}"] for i in range(len(days))]
     monthly = lambda c="m": (r[f"{c}_a"], change(r[f"{c}_a"], r[f"{c}_b"]))
     member_msgs = Message.objects.filter(created__date__gte=this).count()
-    cards = [("Total Messages", *monthly(), "mail", "#e23d5a"), ("Emails Sent", *monthly("email"), "send", "#2f6fe4"),
-             ("In-App Messages", *monthly("inapp"), "chat", "#22a052"), ("Notifications", *monthly("notification"), "bell", "#e0a21a"),
-             ("Member Messages", member_msgs, None, "people", "#8b5cf6")]
+    cards = [(_l("Total Messages"), *monthly(), "mail", "#e23d5a"), (_l("Emails Sent"), *monthly("email"), "send", "#2f6fe4"),
+             (_l("In-App Messages"), *monthly("inapp"), "chat", "#22a052"), (_l("Notifications"), *monthly("notification"), "bell", "#e0a21a"),
+             (_l("Member Messages"), member_msgs, None, "people", "#8b5cf6")]
     rc = recipients({}).aggregate(n_all=Count("pk"), n_verified=Count("pk", filter=Q(verified=True)),
                                   n_premium=Count("pk", filter=Q(premium_until__gte=timezone.localdate())),
                                   n_women=Count("pk", filter=Q(gender="F")), n_men=Count("pk", filter=Q(gender="M")))
-    groups = [("All Members", rc["n_all"]), ("Verified Members", rc["n_verified"]), ("Premium Members", rc["n_premium"]), ("Women", rc["n_women"]), ("Men", rc["n_men"])]
+    groups = [(_l("All Members"), rc["n_all"]), (_l("Verified Members"), rc["n_verified"]), (_l("Premium Members"), rc["n_premium"]), (_l("Women"), rc["n_women"]), (_l("Men"), rc["n_men"])]
     groups += [(c["city"], c["n"]) for c in Member.objects.filter(user__isnull=False).values("city").annotate(n=Count("pk")).order_by("-n")[:4]]
     return page(request, "dashboard/communications.html", {"nav": "comms", "form": form, "cards": cards,
         "templates": MessageTemplate.objects.all(), "history": Broadcast.objects.select_related("created_by")[:8],
         "estimate": recipients(raw_filters(request.POST if request.method == "POST" else request.GET)).count(),
-        "chart": bar_chart([d.strftime("%d %b") for d in days], [("Emails", "#e23d5a", weekly("email")), ("In-App", "#2f6fe4", weekly("inapp")),
-                                                                 ("Notifications", "#22a052", weekly("notification"))]),
+        "chart": bar_chart([d.strftime("%d %b") for d in days], [(_l("Emails"), "#e23d5a", weekly("email")), (_l("In-App"), "#2f6fe4", weekly("inapp")),
+                                                                 (_l("Notifications"), "#22a052", weekly("notification"))]),
         "groups": groups, "email_live": "console" not in settings.EMAIL_BACKEND, "channels": Broadcast.CHANNELS})
 
 # ---------- payments ----------
@@ -572,9 +576,9 @@ def payments(request):
             p = form.save(commit=False); p.recorded_by = request.user; p.save()
             activated = p.activate()
             if activated: Notification.objects.create(user=p.user, title=f"{p.plan.name} plan activated", body=f"Thank you! Your {p.plan.name} plan is active until {p.user.member.premium_until:%d %b %Y}.", link=reverse("premium"))
-            messages.success(request, f"Payment {p.invoice_no} recorded." + (f" {p.plan.name} activated for {p.payer_name}." if activated else ""))
+            messages.success(request, _("Payment %(invoice_no)s recorded.") % {"invoice_no": p.invoice_no} + (" " + _("%(plan)s activated for %(payer)s.") % {"plan": p.plan.name, "payer": p.payer_name} if activated else ""))
             return redirect("dash_payments")
-        messages.error(request, "Please correct the payment form.")
+        messages.error(request, _("Please correct the payment form."))
     all_paid = Payment.objects.filter(status="completed")
     paid = all_paid.filter(created__date__range=(start, end))
     months = months_between(start, end)
@@ -583,23 +587,23 @@ def payments(request):
     in_period, m_a, m_b = Q(created__date__range=(start, end)), Q(created__date__gte=this), Q(created__date__gte=last, created__date__lt=this)
     agg = {"total": amt(in_period), "count": Count("pk", filter=in_period), "a": amt(m_a), "b": amt(m_b),
            "n_a": Count("pk", filter=m_a), "n_b": Count("pk", filter=m_b)}
-    for k, _ in Payment.KINDS:
+    for k, _label in Payment.KINDS:
         agg[f"k_{k}"] = amt(in_period & Q(kind=k)); agg[f"{k}_a"] = amt(m_a & Q(kind=k)); agg[f"{k}_b"] = amt(m_b & Q(kind=k))
     r = {k: v or 0 for k, v in all_paid.aggregate(**agg).items()}   # every card and the type split in one query
     total, by_kind = r["total"], {k: r[f"k_{k}"] for k, _ in Payment.KINDS}
     cur = SiteSetting.load().currency
-    cards = [("Total Revenue", f"{cur} {total:,}", change(r["a"], r["b"]), "coins", "#e23d5a"),
-             ("Total Transactions", f"{r['count']:,}", change(r["n_a"], r["n_b"]), "cart", "#2f6fe4"),
-             ("Paying Members", f"{paid.exclude(user=None).values('user').distinct().count():,}", None, "people", "#22a052"),
-             ("Premium Revenue", f"{cur} {by_kind['premium']:,}", change(r["premium_a"], r["premium_b"]), "crown", "#e0a21a"),
-             ("Advert Revenue", f"{cur} {by_kind['advert']:,}", change(r["advert_a"], r["advert_b"]), "doc", "#8b5cf6")]
+    cards = [(_l("Total Revenue"), f"{cur} {total:,}", change(r["a"], r["b"]), "coins", "#e23d5a"),
+             (_l("Total Transactions"), f"{r['count']:,}", change(r["n_a"], r["n_b"]), "cart", "#2f6fe4"),
+             (_l("Paying Members"), f"{paid.exclude(user=None).values('user').distinct().count():,}", None, "people", "#22a052"),
+             (_l("Premium Revenue"), f"{cur} {by_kind['premium']:,}", change(r["premium_a"], r["premium_b"]), "crown", "#e0a21a"),
+             (_l("Advert Revenue"), f"{cur} {by_kind['advert']:,}", change(r["advert_a"], r["advert_b"]), "doc", "#8b5cf6")]
     colors = {"membership": "#e23d5a", "premium": "#2f6fe4", "advert": "#22a052", "event": "#f0a020", "other": "#8b5cf6"}
     by_month = {}
     for row in paid.annotate(m=TruncMonth("created")).values("kind", "m").annotate(v=Sum("amount")).order_by():
         if row["m"]: by_month[(row["kind"], row["m"].year, row["m"].month)] = row["v"] or 0
     trend = line_chart([m.strftime("%b") for m in months],
         [(label, colors[k], [by_month.get((k, m.year, m.month), 0) / 1000 for m in months]) for k, label in Payment.KINDS])
-    kinds = donut([(label, colors[k], by_kind[k]) for k, label in Payment.KINDS if by_kind[k]] or [("No payments", "#eceef3", 0)])
+    kinds = donut([(label, colors[k], by_kind[k]) for k, label in Payment.KINDS if by_kind[k]] or [(_l("No payments"), "#eceef3", 0)])
     gw = dict(Payment.GATEWAYS)
     gateways = list(paid.values("gateway").annotate(s=Sum("amount"), n=Count("pk")).order_by("-s"))
     for g in gateways: g["name"], g["pct"] = gw.get(g["gateway"], g["gateway"]), round(g["s"] * 100 / (total or 1))
@@ -618,7 +622,7 @@ def payments(request):
         "kinds": kinds, "total": total, "gateways": gateways, "plans": plans,
         "plan_totals": (sum(p["subs"] for p in plans), sum(p["revenue"] for p in plans)),
         "recent": Payment.objects.select_related("plan")[:6], "form": form, "show_form": request.method == "POST" or "new" in request.GET,
-        "summary": [("Collected in period", total, "ok"), ("Pending payments", pending, "warn"), ("Refunds", refunds, "bad"), ("Net revenue", total - refunds, "ok")]})
+        "summary": [(_l("Collected in period"), total, "ok"), (_l("Pending payments"), pending, "warn"), (_l("Refunds"), refunds, "bad"), (_l("Net revenue"), total - refunds, "ok")]})
 
 @staff_required
 @require_POST
@@ -628,7 +632,7 @@ def payment_action(request, pk):
     p = get_object_or_404(Payment, pk=pk)
     act = {"complete": complete_payment, "refund": refund_payment}.get(request.POST.get("act"))
     if act is None: raise Http404
-    messages.success(request, f"{p.invoice_no} {act(p, request)}.")
+    messages.success(request, _("%(invoice_no)s %(result)s.") % {"invoice_no": p.invoice_no, "result": _(act(p, request))})
     return redirect("dash_payments")
 
 @staff_required
@@ -637,7 +641,7 @@ def payments_csv(request):
     resp = HttpResponse(content_type="text/csv")
     resp["Content-Disposition"] = f'attachment; filename="sakinah-payments-{start}-{end}.csv"'
     w = csv.writer(resp)
-    w.writerow(["Invoice", "Date", "Payer", "Phone", "Type", "Plan", "Months", "Description", "Gateway", "Reference", "Amount", "Status"])
+    w.writerow([_l("Invoice"), _l("Date"), _l("Payer"), _l("Phone"), _l("Type"), _l("Plan"), _l("Months"), _l("Description"), _l("Gateway"), _l("Reference"), _l("Amount"), _l("Status")])
     for p in Payment.objects.filter(created__date__range=(start, end)).select_related("plan").order_by("created"):
         w.writerow([p.invoice_no, p.created.strftime("%Y-%m-%d %H:%M"), p.payer_name, p.payer_phone, p.get_kind_display(),
                     p.plan.name if p.plan else "", p.months, p.description, p.get_gateway_display(), p.reference, p.amount, p.get_status_display()])

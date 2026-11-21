@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _, ngettext
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Count, F, Q
@@ -42,7 +43,7 @@ def wishlist(request, slug):
     ad = get_object_or_404(Advert, slug=slug)
     obj, created = Wishlist.objects.get_or_create(user=request.user, advert=ad)
     if not created: obj.delete()
-    messages.success(request, f"{ad.title} {'added to' if created else 'removed from'} your wishlist.")
+    messages.success(request, (_("%(title)s added to your wishlist.") if created else _("%(title)s removed from your wishlist.")) % {"title": ad.title})
     return redirect(safe_next(request) or reverse("advert", args=[slug]))
 
 @require_POST
@@ -53,9 +54,9 @@ def inquire(request, slug):
         inquiry = form.save(commit=False)
         inquiry.advert, inquiry.user = ad, request.user if request.user.is_authenticated else None
         inquiry.save()
-        messages.success(request, f"Asante! Your request was sent to {ad.vendor.name}. They will contact you soon.")
+        messages.success(request, _("Asante! Your request was sent to %(name)s. They will contact you soon.") % {"name": ad.vendor.name})
     else:
-        messages.error(request, "Please add your name and phone number so the vendor can reach you.")
+        messages.error(request, _("Please add your name and phone number so the vendor can reach you."))
     return redirect(reverse("advert", args=[slug]))
 
 @login_required
@@ -66,5 +67,5 @@ def review(request, slug):
     if form.is_valid() and not ad.reviews.filter(user=request.user).exists():
         form.instance.advert, form.instance.user = ad, request.user
         form.save()
-        messages.success(request, "Thank you for your review.")
+        messages.success(request, _("Thank you for your review."))
     return redirect(reverse("advert", args=[slug]) + "#reviews")

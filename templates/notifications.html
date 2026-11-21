@@ -1,9 +1,9 @@
-{% extends "base.html" %}{% block title %}Notifications - {{ site.brand }}{% endblock %}
+{% extends "base.html" %}{% load i18n %}{% block title %}{% blocktranslate with brand=site.brand %}Notifications - {{ brand }}{% endblocktranslate %}{% endblock %}
 {% block content %}
-{% include "partials/crumbs.html" with here="Notifications" %}
+{% include "partials/crumbs.html" with here=_("Notifications") %}
 <div class="wrap page narrow">
-  <div class="sec-h"><div><h2>Notifications</h2><p>Updates from the {{ site.brand }} team.</p></div></div>
+  <div class="sec-h"><div><h2>{% translate "Notifications" %}</h2><p>{% blocktranslate with brand=site.brand %}Updates from the {{ brand }} team.{% endblocktranslate %}</p></div></div>
   {% if notes %}<ul class="box notes">{% for n in notes %}<li class="{% if not n.read %}new{% endif %}"><span class="ni"><svg><use href="{{ icons }}#i-bell"/></svg></span>
-    <div><b>{{ n.title }}</b>{% if n.body %}<p>{{ n.body|linebreaksbr }}</p>{% endif %}<small>{{ n.created|timesince }} ago{% if n.link %} &middot; <a class="lnk" href="{{ n.link }}">Open</a>{% endif %}</small></div></li>{% endfor %}</ul>
-  {% else %}<p class="empty">No notifications yet.</p>{% endif %}
+    <div><b>{{ n.title }}</b>{% if n.body %}<p>{{ n.body|linebreaksbr }}</p>{% endif %}<small>{% blocktranslate with created=n.created|timesince %}{{ created }} ago{% endblocktranslate %}{% if n.link %} &middot; <a class="lnk" href="{{ n.link }}">{% translate "Open" %}</a>{% endif %}</small></div></li>{% endfor %}</ul>
+  {% else %}<p class="empty">{% translate "No notifications yet." %}</p>{% endif %}
 </div>{% endblock %}

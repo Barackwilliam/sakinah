@@ -1,6 +1,6 @@
-{% extends "members/base.html" %}{% block title %}Edit Profile{% endblock %}
+{% extends "members/base.html" %}{% load i18n %}{% block title %}{% translate "Edit Profile" %}{% endblock %}
 {% block content %}
-{% include "members/_banner.html" with icon="user" title="My Profile" sub="Manage your profile information to get better matches." quote="Na Mwenyezi Mungu aliwaumba kwa jozi." ref="Qur'an 78:8" art="mosque" %}
+{% include "members/_banner.html" with icon="user" title=_("My Profile") sub=_("Manage your profile information to get better matches.") quote=_("Na Mwenyezi Mungu aliwaumba kwa jozi.") ref=_("Qur'an 78:8") art="mosque" %}
 {% include "members/_ptabs.html" %}
 <form method="post" class="fform">{% csrf_token %}
   {% if form.non_field_errors %}<p class="ferr">{{ form.non_field_errors|join:" " }}</p>{% endif %}
@@ -10,6 +10,6 @@
     <div class="fgrid">{% for f in fields %}{% include "members/_field.html" %}{% endfor %}</div>
   </section>
   {% endfor %}
-  <div class="fbtns"><a class="btn o" href="{% url 'm_profile' %}">Cancel</a><button class="btn">Save Profile<svg><use href="{{ micons }}#m-arrow"/></svg></button></div>
+  <div class="fbtns"><a class="btn o" href="{% url 'm_profile' %}">{% translate "Cancel" %}</a><button class="btn">{% translate "Save Profile" %}<svg><use href="{{ micons }}#m-arrow"/></svg></button></div>
 </form>
 {% endblock %}

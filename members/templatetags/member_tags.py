@@ -7,5 +7,7 @@ register = template.Library()
 def ago(value):
     """'2 hours ago' / '3 days ago' - only the largest unit of timesince."""
     if not value: return ""
-    first = timesince(value).split(",")[0].replace("\xa0", " ")
-    return "Just now" if first.startswith("0 ") else f"{first} ago"
+    import re
+    first = re.split("[,،]", timesince(value))[0].replace("\xa0", " ").strip()   # Arabic uses its own comma
+    from django.utils.translation import gettext
+    return gettext("Just now") if first.startswith("0 ") else gettext("%(time)s ago") % {"time": first}

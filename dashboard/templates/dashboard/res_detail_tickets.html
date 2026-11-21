@@ -1,6 +1,6 @@
-<section class="apanel tdetail"><div class="aph"><svg><use href="#m-headset"/></svg><h2>{{ obj.get_kind_display }} from {% if obj.user.member %}{{ obj.user.member.name }}{% else %}{{ obj.user.get_username|default:"a visitor" }}{% endif %}</h2><span class="muted sm-r">{{ obj.created|date:"j M Y H:i" }}</span></div>
+{% load i18n %}<section class="apanel tdetail"><div class="aph"><svg><use href="#m-headset"/></svg><h2>{% blocktranslate with get_kind_display=obj.get_kind_display %}{{ get_kind_display }} from{% endblocktranslate %} {% if obj.user.member %}{{ obj.user.member.name }}{% else %}{{ obj.user.get_username|default:_("a visitor") }}{% endif %}</h2><span class="muted sm-r">{{ obj.created|date:"j M Y H:i" }}</span></div>
   <p class="tmsg">{{ obj.message|linebreaksbr }}</p>
-  {% if obj.attachment %}<p><a class="ab o sm" href="{{ obj.attachment.url }}" target="_blank"><svg><use href="#m-clip"/></svg>Open attachment</a></p>{% endif %}
-  {% if obj.user %}<p class="muted">Email: {{ obj.user.email|default:"—" }}{% if obj.user.member %} &middot; <a class="va" href="{% url 'member' obj.user.member.pk %}" target="_blank">View profile</a>{% endif %}</p>{% endif %}
-  {% if obj.replied_at %}<p class="pill ok">Replied {{ obj.replied_at|date:"j M Y H:i" }}</p>{% endif %}
+  {% if obj.attachment %}<p><a class="ab o sm" href="{{ obj.attachment.url }}" target="_blank"><svg><use href="#m-clip"/></svg>{% translate "Open attachment" %}</a></p>{% endif %}
+  {% if obj.user %}<p class="muted">{% blocktranslate with email=obj.user.email|default:"—" %}Email: {{ email }}{% endblocktranslate %}{% if obj.user.member %} &middot; <a class="va" href="{% url 'member' obj.user.member.pk %}" target="_blank">{% translate "View profile" %}</a>{% endif %}</p>{% endif %}
+  {% if obj.replied_at %}<p class="pill ok">{% blocktranslate with replied_at=obj.replied_at|date:"j M Y H:i" %}Replied {{ replied_at }}{% endblocktranslate %}</p>{% endif %}
 </section>

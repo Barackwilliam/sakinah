@@ -1,0 +1,7853 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Sakinah\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-21 03:04+0300\n"
+"PO-Revision-Date: 2026-11-20 00:00+0300\n"
+"Last-Translator: Sakinah\n"
+"Language-Team: Sakinah\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+
+msgid "Imani • Mapenzi • Ndoa"
+msgstr "إيمان • محبة • زواج"
+
+msgid "Find Someone Special."
+msgstr "اعثر على شخص مميز."
+
+msgid "Build a Marriage."
+msgstr "ابنِ زواجًا."
+
+msgid ""
+"Connect with verified people who are looking for meaningful relationships "
+"and marriage."
+msgstr "تواصل مع أشخاص موثّقين يبحثون عن علاقات هادفة وزواج."
+
+msgid "Zaidi ya uchumba, ni safari ya maisha na mwenye kheri."
+msgstr "أكثر من خِطبة، إنها رحلة حياة مع الشخص الصالح."
+
+msgid ""
+"Lipa kwa M-Pesa, Mixx by Yas au Airtel Money, kisha weka namba ya muamala "
+"(transaction reference) hapa chini. Tutathibitisha malipo na kuwasha mpango "
+"wako."
+msgstr ""
+"ادفع عبر M-Pesa أو Mixx by Yas أو Airtel Money، ثم أدخل رقم المعاملة أدناه. "
+"سنؤكد الدفع ونفعّل باقتك."
+
+msgid "Bridal Fashion"
+msgstr "أزياء العرائس"
+
+msgid "Dresses, hijab, suits & accessories"
+msgstr "فساتين وحجاب وبدلات وإكسسوارات"
+
+msgid "Beauty & Makeup"
+msgstr "التجميل والمكياج"
+
+msgid "Bridal makeup, henna & beauty services"
+msgstr "مكياج العروس والحناء وخدمات التجميل"
+
+msgid "Photography & Video"
+msgstr "التصوير والفيديو"
+
+msgid "Capture your special moments"
+msgstr "وثّق لحظاتك المميزة"
+
+msgid "Decoration & Flowers"
+msgstr "الديكور والزهور"
+
+msgid "Stages, décor, flowers & design"
+msgstr "المنصات والديكور والزهور والتصميم"
+
+msgid "Catering"
+msgstr "التموين"
+
+msgid "Wedding meals, cakes & refreshments"
+msgstr "وجبات الزفاف والكعك والمرطبات"
+
+msgid "Wedding Venues"
+msgstr "قاعات الأفراح"
+
+msgid "Halls, hotels & venues"
+msgstr "قاعات وفنادق وأماكن"
+
+msgid "Wedding Transport"
+msgstr "نقل الأعراس"
+
+msgid "Bridal cars & transportation"
+msgstr "سيارات الزفاف والنقل"
+
+msgid "Invitations"
+msgstr "بطاقات الدعوة"
+
+msgid "Digital & printed invitations"
+msgstr "دعوات رقمية ومطبوعة"
+
+msgid "View Venues"
+msgstr "عرض القاعات"
+
+msgid "View Advert"
+msgstr "عرض الإعلان"
+
+msgid "Free"
+msgstr "مجاني"
+
+msgid "Forever"
+msgstr "للأبد"
+
+msgid "Get started and explore Sakinah."
+msgstr "ابدأ واستكشف سكينة."
+
+msgid "Create profile"
+msgstr "إنشاء ملف شخصي"
+
+msgid "Browse profiles (limited)"
+msgstr "تصفّح الملفات (محدود)"
+
+msgid "Send likes (limited)"
+msgstr "إرسال الإعجابات (محدود)"
+
+msgid "View basic profiles"
+msgstr "عرض الملفات الأساسية"
+
+msgid "Messaging (limited)"
+msgstr "المراسلة (محدودة)"
+
+msgid "Advanced search"
+msgstr "بحث متقدم"
+
+msgid "See who likes you"
+msgstr "اعرف من أُعجب بك"
+
+msgid "Priority support"
+msgstr "دعم ذو أولوية"
+
+msgid "Basic"
+msgstr "أساسي"
+
+msgid "per month"
+msgstr "شهريًا"
+
+msgid "More visibility and better connections."
+msgstr "ظهور أكبر وتواصل أفضل."
+
+msgid "All Free features"
+msgstr "جميع ميزات المجاني"
+
+msgid "Full profile access"
+msgstr "وصول كامل إلى الملفات"
+
+msgid "Send and receive messages"
+msgstr "إرسال واستقبال الرسائل"
+
+msgid "Advanced search filters"
+msgstr "فلاتر بحث متقدمة"
+
+msgid "Profile boost (limited)"
+msgstr "تعزيز الملف (محدود)"
+
+msgid "Featured in search"
+msgstr "الظهور المميز في البحث"
+
+msgid "Silver"
+msgstr "فضي"
+
+msgid "Connect more and get better matches."
+msgstr "تواصل أكثر واحصل على تطابقات أفضل."
+
+msgid "All Basic features"
+msgstr "جميع ميزات الأساسي"
+
+msgid "Priority in search results"
+msgstr "أولوية في نتائج البحث"
+
+msgid "5 Profile boosts per month"
+msgstr "5 تعزيزات للملف شهريًا"
+
+msgid "Read receipts (message seen)"
+msgstr "إشعار القراءة (تمت رؤية الرسالة)"
+
+msgid "Featured profile"
+msgstr "ملف مميّز"
+
+msgid "Incognito mode"
+msgstr "وضع التخفي"
+
+msgid "Gold"
+msgstr "ذهبي"
+
+msgid "Maximum visibility and serious connections."
+msgstr "أقصى ظهور وعلاقات جادة."
+
+msgid "All Silver features"
+msgstr "جميع ميزات الفضي"
+
+msgid "Unlimited messages"
+msgstr "رسائل غير محدودة"
+
+msgid "Featured profile (top results)"
+msgstr "ملف مميّز (أعلى النتائج)"
+
+msgid "10 Profile boosts per month"
+msgstr "10 تعزيزات للملف شهريًا"
+
+msgid "Advanced matching filters"
+msgstr "فلاتر تطابق متقدمة"
+
+msgid "Incognito mode (browse privately)"
+msgstr "وضع التخفي (تصفّح بخصوصية)"
+
+msgid "See who viewed your profile"
+msgstr "اعرف من شاهد ملفك"
+
+msgid "Tanzanite"
+msgstr "تنزانيت"
+
+msgid "Ultimate experience for serious marriage seekers."
+msgstr "التجربة القصوى للباحثين الجادّين عن الزواج."
+
+msgid "All Gold features"
+msgstr "جميع ميزات الذهبي"
+
+msgid "Unlimited profile boosts"
+msgstr "تعزيزات غير محدودة للملف"
+
+msgid "Personal match recommendations"
+msgstr "توصيات تطابق شخصية"
+
+msgid "Dedicated account support"
+msgstr "دعم مخصص للحساب"
+
+msgid "Early access to new features"
+msgstr "وصول مبكر إلى الميزات الجديدة"
+
+msgid "Invitation to premium events"
+msgstr "دعوة إلى فعاليات بريميوم"
+
+msgid "Profile verification badge"
+msgstr "شارة توثيق الملف"
+
+msgid "VIP priority support"
+msgstr "دعم VIP ذو أولوية"
+
+msgid "Advanced matching"
+msgstr "تطابق متقدم"
+
+msgid "Unlimited messaging"
+msgstr "مراسلة غير محدودة"
+
+msgid "Voice & video calls"
+msgstr "مكالمات صوتية ومرئية"
+
+msgid "Seminars"
+msgstr "الندوات"
+
+msgid "Workshops"
+msgstr "ورش العمل"
+
+msgid "Meetups"
+msgstr "اللقاءات"
+
+msgid "Community Events"
+msgstr "فعاليات مجتمعية"
+
+msgid "Marriage Guidance"
+msgstr "الإرشاد الزوجي"
+
+msgid "Relationships"
+msgstr "العلاقات"
+
+msgid "Islamic Teachings"
+msgstr "تعاليم إسلامية"
+
+msgid "Family Life"
+msgstr "الحياة الأسرية"
+
+msgid "Personal Development"
+msgstr "التطوير الشخصي"
+
+msgid "Health & Wellbeing"
+msgstr "الصحة والعافية"
+
+msgid "Success Stories"
+msgstr "قصص النجاح"
+
+msgid "Tips & How To"
+msgstr "نصائح وإرشادات"
+
+msgid "News & Updates"
+msgstr "أخبار وتحديثات"
+
+msgid "Islamic Lectures"
+msgstr "محاضرات إسلامية"
+
+msgid "Marriage Seminars"
+msgstr "ندوات الزواج"
+
+msgid "Counselling Sessions"
+msgstr "جلسات استشارية"
+
+msgid "Men's Programs"
+msgstr "برامج الرجال"
+
+msgid "Women's Programs"
+msgstr "برامج النساء"
+
+msgid "Find a Match"
+msgstr "ابحث عن شريك"
+
+msgid "Verified & genuine members"
+msgstr "أعضاء موثّقون وحقيقيون"
+
+msgid "Marriage Services"
+msgstr "خدمات الزواج"
+
+msgid "Trusted wedding vendors"
+msgstr "مزوّدو أعراس موثوقون"
+
+msgid "Events & Workshops"
+msgstr "الفعاليات وورش العمل"
+
+msgid "Get guidance and meet people"
+msgstr "احصل على الإرشاد وتعرّف على الناس"
+
+msgid "Articles & Advice"
+msgstr "مقالات ونصائح"
+
+msgid "Relationship and marriage tips"
+msgstr "نصائح في العلاقات والزواج"
+
+msgid "Safe & Secure"
+msgstr "آمن ومحمي"
+
+msgid "Your privacy is our priority"
+msgstr "خصوصيتك أولويتنا"
+
+msgid "White sandy beaches, turquoise waters and luxury resorts."
+msgstr "شواطئ رملية بيضاء ومياه فيروزية ومنتجعات فاخرة."
+
+msgid "Hotel"
+msgstr "فندق"
+
+msgid "Meals"
+msgstr "الوجبات"
+
+msgid "Tours"
+msgstr "جولات"
+
+msgid "Unforgettable safari experience and romantic wilderness."
+msgstr "تجربة سفاري لا تُنسى وبرية رومانسية."
+
+msgid "Lodge"
+msgstr "نُزُل"
+
+msgid "Game Drives"
+msgstr "جولات مشاهدة الحيوانات"
+
+msgid "World-class luxury and ultimate romantic escape."
+msgstr "فخامة عالمية وملاذ رومانسي مثالي."
+
+msgid "Resort"
+msgstr "منتجع"
+
+msgid "All Meals"
+msgstr "جميع الوجبات"
+
+msgid "Water Activities"
+msgstr "أنشطة مائية"
+
+msgid "A paradise of pristine beaches and luxury resorts."
+msgstr "جنة من الشواطئ النقية والمنتجعات الفاخرة."
+
+msgid "Island Tours"
+msgstr "جولات في الجزيرة"
+
+msgid "Modern luxury, stunning skyline and unique experiences."
+msgstr "فخامة عصرية وأفق مذهل وتجارب فريدة."
+
+msgid "City Tours"
+msgstr "جولات في المدينة"
+
+msgid "Breathtaking landscapes and unique wildlife."
+msgstr "مناظر خلابة وحياة برية فريدة."
+
+msgid "Adventure, romance and stunning views."
+msgstr "مغامرة ورومانسية ومناظر رائعة."
+
+msgid "Hiking"
+msgstr "المشي الجبلي"
+
+msgid "Secluded beaches and marine adventures."
+msgstr "شواطئ منعزلة ومغامرات بحرية."
+
+msgid "Diving"
+msgstr "الغوص"
+
+msgid "Luxury resorts and breathtaking coastlines."
+msgstr "منتجعات فاخرة وسواحل خلابة."
+
+msgid "Stunning landscapes, wine tours and romantic getaways."
+msgstr "مناظر خلابة وجولات بين الكروم ورحلات رومانسية."
+
+#, python-format
+#| msgid "%(age)s years"
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#, python-format
+#| msgid "1 month"
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+msgid ""
+"We could not find a face in this photo, so it was not saved. Use a clear "
+"photo of your face, or switch off \"Hide my face\"."
+msgstr ""
+"لم نتمكن من العثور على وجه في هذه الصورة، لذا لم تُحفظ. استخدم صورة واضحة "
+"لوجهك، أو أوقف «إخفاء وجهي»."
+
+msgid "Hide my face"
+msgstr "إخفاء وجهي"
+
+msgid ""
+"Cover your face with a soft blur so only people you choose can recognise "
+"you."
+msgstr "غطِّ وجهك بتمويه ناعم بحيث لا يتعرّف عليك إلا من تختارهم."
+
+msgid "About family"
+msgstr "عن العائلة"
+
+msgid "Accommodation"
+msgstr "الإقامة"
+
+msgid "Active"
+msgstr "نشط"
+
+msgid "Activities"
+msgstr "الأنشطة"
+
+msgid "Advert image"
+msgstr "صورة الإعلان"
+
+msgid "Age"
+msgstr "العمر"
+
+msgid "Age max"
+msgstr "العمر الأقصى"
+
+msgid "Age min"
+msgstr "العمر الأدنى"
+
+msgid "All inclusive"
+msgstr "شامل كليًا"
+
+msgid "Allow messages from"
+msgstr "السماح بالرسائل من"
+
+msgid "Attachment"
+msgstr "المرفق"
+
+msgid "Attendees"
+msgstr "الحضور"
+
+msgid "Author"
+msgstr "الكاتب"
+
+msgid "Availability"
+msgstr "التوفّر"
+
+msgid "Badge"
+msgstr "الشارة"
+
+msgid "Badge tone"
+msgstr "لون الشارة"
+
+msgid "Bio"
+msgstr "نبذة"
+
+msgid "Blurb"
+msgstr "وصف مختصر"
+
+msgid "Body"
+msgstr "المحتوى"
+
+msgid "Body type"
+msgstr "نوع الجسم"
+
+msgid "Brand"
+msgstr "العلامة التجارية"
+
+msgid "Button label"
+msgstr "نص الزر"
+
+msgid "Capacity"
+msgstr "السعة"
+
+msgid "Caption"
+msgstr "التعليق"
+
+msgid "Category"
+msgstr "الفئة"
+
+msgid "Channel"
+msgstr "القناة"
+
+msgid "City"
+msgstr "المدينة"
+
+msgid "Color"
+msgstr "اللون"
+
+msgid "Comment"
+msgstr "التعليق"
+
+msgid "Compatibility"
+msgstr "التوافق"
+
+msgid "Contact email"
+msgstr "بريد التواصل"
+
+msgid "Contact whatsapp"
+msgstr "واتساب للتواصل"
+
+msgid "Country"
+msgstr "الدولة"
+
+msgid "Couples"
+msgstr "الأزواج"
+
+msgid "Currency"
+msgstr "العملة"
+
+msgid "Date"
+msgstr "التاريخ"
+
+msgid "Days"
+msgstr "الأيام"
+
+msgid "Description"
+msgstr "الوصف"
+
+msgid "Destination"
+msgstr "الوجهة"
+
+msgid "Details"
+msgstr "التفاصيل"
+
+msgid "Drinks"
+msgstr "يشرب"
+
+msgid "Duration"
+msgstr "المدة"
+
+msgid "Education"
+msgstr "التعليم"
+
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+msgid "End time"
+msgstr "وقت الانتهاء"
+
+msgid "Excerpt"
+msgstr "مقتطف"
+
+msgid "Exclusions"
+msgstr "الاستثناءات"
+
+msgid "Exercise"
+msgstr "الرياضة"
+
+msgid "Extra icon"
+msgstr "أيقونة الإضافة"
+
+msgid "Extras"
+msgstr "الإضافات"
+
+msgid "Family location"
+msgstr "مكان العائلة"
+
+msgid "Family type"
+msgstr "نوع العائلة"
+
+msgid "Father status"
+msgstr "حالة الأب"
+
+msgid "Featured"
+msgstr "مميّز"
+
+msgid "Features"
+msgstr "الميزات"
+
+msgid "Food preference"
+msgstr "تفضيل الطعام"
+
+msgid "Gateway"
+msgstr "بوابة الدفع"
+
+msgid "Gender"
+msgstr "الجنس"
+
+msgid "Headline"
+msgstr "العنوان الرئيسي"
+
+msgid "Hero image"
+msgstr "صورة الواجهة"
+
+msgid "Hero quote"
+msgstr "اقتباس الواجهة"
+
+msgid "Hero text"
+msgstr "نص الواجهة"
+
+msgid "Hero title 1"
+msgstr "عنوان الواجهة 1"
+
+msgid "Hero title 2"
+msgstr "عنوان الواجهة 2"
+
+msgid "Highlights"
+msgstr "أبرز النقاط"
+
+msgid "Hobbies"
+msgstr "الهوايات"
+
+msgid "Icon"
+msgstr "الأيقونة"
+
+msgid "Ideal for"
+msgstr "مثالي لـ"
+
+msgid "Image"
+msgstr "الصورة"
+
+msgid "Includes"
+msgstr "يشمل"
+
+msgid "Inclusions"
+msgstr "المشمولات"
+
+msgid "Income range"
+msgstr "نطاق الدخل"
+
+msgid "Interests"
+msgstr "الاهتمامات"
+
+msgid "Itinerary"
+msgstr "برنامج الرحلة"
+
+msgid "Kind"
+msgstr "النوع"
+
+msgid "Languages"
+msgstr "اللغات"
+
+msgid "Leave empty to create it from the name."
+msgstr "اتركه فارغًا لإنشائه من الاسم."
+
+msgid "Leave empty to create it from the title."
+msgstr "اتركه فارغًا لإنشائه من العنوان."
+
+msgid "Lifestyle"
+msgstr "نمط الحياة"
+
+msgid "Location"
+msgstr "الموقع"
+
+msgid "Location display"
+msgstr "طريقة عرض الموقع"
+
+msgid "Logo"
+msgstr "الشعار"
+
+msgid "Map query"
+msgstr "استعلام الخريطة"
+
+msgid "Marital status"
+msgstr "الحالة الاجتماعية"
+
+msgid "Meals detail"
+msgstr "تفاصيل الوجبات"
+
+msgid "Member"
+msgstr "العضو"
+
+msgid "Member since"
+msgstr "عضو منذ"
+
+msgid "Message"
+msgstr "رسالة"
+
+msgid "Months"
+msgstr "الأشهر"
+
+msgid "Mother status"
+msgstr "حالة الأم"
+
+msgid "Name"
+msgstr "الاسم"
+
+msgid "Negotiable"
+msgstr "قابل للتفاوض"
+
+msgid "Nights"
+msgstr "الليالي"
+
+msgid "Notify events"
+msgstr "إشعارات الفعاليات"
+
+msgid "Notify likes"
+msgstr "إشعارات الإعجابات"
+
+msgid "Notify matches"
+msgstr "إشعارات التطابقات"
+
+msgid "Notify messages"
+msgstr "إشعارات الرسائل"
+
+msgid "Notify system"
+msgstr "إشعارات النظام"
+
+msgid "Occupation"
+msgstr "المهنة"
+
+msgid "Offer text"
+msgstr "نص العرض"
+
+msgid "Order"
+msgstr "الترتيب"
+
+msgid "Overview"
+msgstr "نظرة عامة"
+
+msgid "Package"
+msgstr "الباقة"
+
+msgid "Package type"
+msgstr "نوع الباقة"
+
+msgid "Password"
+msgstr "كلمة المرور"
+
+msgid "Payer name"
+msgstr "اسم الدافع"
+
+msgid "Payer phone"
+msgstr "هاتف الدافع"
+
+msgid "Payment instructions"
+msgstr "تعليمات الدفع"
+
+msgid "Period"
+msgstr "الفترة"
+
+msgid "Phone"
+msgstr "الهاتف"
+
+msgid "Photo"
+msgstr "الصورة"
+
+msgid "Photo visibility"
+msgstr "ظهور الصور"
+
+msgid "Plan"
+msgstr "الباقة"
+
+msgid "Prayer"
+msgstr "الصلاة"
+
+msgid "Premium image"
+msgstr "صورة بريميوم"
+
+msgid "Premium until"
+msgstr "بريميوم حتى"
+
+msgid "Price"
+msgstr "السعر"
+
+msgid "Price unit"
+msgstr "وحدة السعر"
+
+msgid "Profile visibility"
+msgstr "ظهور الملف"
+
+msgid "Published"
+msgstr "تاريخ النشر"
+
+msgid "Rating"
+msgstr "التقييم"
+
+msgid "Reason"
+msgstr "السبب"
+
+msgid "Reference"
+msgstr "المرجع"
+
+msgid "Region"
+msgstr "المنطقة"
+
+msgid "Religion"
+msgstr "الدين"
+
+msgid "Reply"
+msgstr "رد"
+
+msgid "Role"
+msgstr "الدور"
+
+msgid "Show age"
+msgstr "إظهار العمر"
+
+msgid "Show in search"
+msgstr "الظهور في البحث"
+
+msgid "Show online"
+msgstr "إظهار الاتصال"
+
+msgid "Slug"
+msgstr "المعرّف (slug)"
+
+msgid "Smokes"
+msgstr "يدخّن"
+
+msgid "Start time"
+msgstr "وقت البدء"
+
+msgid "Status"
+msgstr "الحالة"
+
+msgid "Subject"
+msgstr "الموضوع"
+
+msgid "Tagline"
+msgstr "الشعار النصي"
+
+msgid "Tags"
+msgstr "الوسوم"
+
+msgid "Text"
+msgstr "النص"
+
+msgid "Title"
+msgstr "العنوان"
+
+msgid "Travel date"
+msgstr "تاريخ السفر"
+
+msgid "Username"
+msgstr "اسم المستخدم"
+
+msgid "Values"
+msgstr "القيم"
+
+msgid "Vendor"
+msgstr "المزوّد"
+
+msgid "Verified"
+msgstr "موثّق"
+
+msgid "Voice"
+msgstr "الصوت"
+
+msgid "Why choose"
+msgstr "لماذا تختار"
+
+msgid "Willing to relocate"
+msgstr "مستعد للانتقال"
+
+msgid "Workplace"
+msgstr "مكان العمل"
+
+msgid "to"
+msgstr "إلى"
+
+msgid "Full name"
+msgstr "الاسم الكامل"
+
+msgid "I am a"
+msgstr "أنا"
+
+msgid "Letters, numbers and @ . + - _ only."
+msgstr "حروف وأرقام و @ . + - _ فقط."
+
+msgid "At least 8 characters, not only numbers."
+msgstr "8 أحرف على الأقل، وليست أرقامًا فقط."
+
+msgid "e.g. amina_28"
+msgstr "مثل amina_28"
+
+msgid "Your full name"
+msgstr "اسمك الكامل"
+
+msgid "you@example.com"
+msgstr "you@example.com"
+
+msgid "e.g. 28"
+msgstr "مثل 28"
+
+msgid "e.g. Teacher"
+msgstr "مثل معلم"
+
+msgid "Create a password"
+msgstr "أنشئ كلمة مرور"
+
+msgid "Repeat the password"
+msgstr "أعد كتابة كلمة المرور"
+
+msgid "An account with this email already exists."
+msgstr "يوجد حساب بهذا البريد الإلكتروني بالفعل."
+
+msgid "Basic information"
+msgstr "المعلومات الأساسية"
+
+msgid "About me"
+msgstr "نبذة عني"
+
+msgid "Quick info"
+msgstr "معلومات سريعة"
+
+msgid "Education & career"
+msgstr "التعليم والعمل"
+
+msgid "Religion & values"
+msgstr "الدين والقيم"
+
+msgid "Family background"
+msgstr "الخلفية العائلية"
+
+msgid "Partner preferences"
+msgstr "تفضيلات الشريك"
+
+msgid "Contact"
+msgstr "التواصل"
+
+msgid "Lengo (your marriage goal)"
+msgstr "الهدف (هدفك من الزواج)"
+
+msgid "Kuhusu Mimi (about me)"
+msgstr "نبذة عني"
+
+msgid "Asili / ethnicity"
+msgstr "الأصل العرقي"
+
+msgid "Tell others about yourself and what you are looking for."
+msgstr "أخبر الآخرين عن نفسك وعمّا تبحث عنه."
+
+msgid "Add your WhatsApp number or untick WhatsApp messages."
+msgstr "أضف رقم واتساب الخاص بك أو ألغِ تحديد رسائل واتساب."
+
+msgid "Andika ujumbe wako hapa..."
+msgstr "اكتب رسالتك هنا..."
+
+msgid "That voice note format is not supported."
+msgstr "صيغة الرسالة الصوتية هذه غير مدعومة."
+
+msgid "Voice notes can be up to 2 minutes long."
+msgstr "يمكن أن تصل مدة الرسالة الصوتية إلى دقيقتين."
+
+msgid "Write a message, attach a photo or record a voice note."
+msgstr "اكتب رسالة أو أرفق صورة أو سجّل رسالة صوتية."
+
+msgid "Email address or username"
+msgstr "البريد الإلكتروني أو اسم المستخدم"
+
+msgid "Enter your email address"
+msgstr "أدخل بريدك الإلكتروني"
+
+msgid "Enter your password"
+msgstr "أدخل كلمة المرور"
+
+msgid "Tell the vendor about your event"
+msgstr "أخبر المزوّد عن مناسبتك"
+
+msgid "Event date"
+msgstr "تاريخ المناسبة"
+
+msgid "Number of guests"
+msgstr "عدد الضيوف"
+
+msgid "Share your experience"
+msgstr "شارك تجربتك"
+
+msgid "Anything our team should know"
+msgstr "أي شيء يجب أن يعرفه فريقنا"
+
+msgid "Write a respectful comment"
+msgstr "اكتب تعليقًا محترمًا"
+
+msgid ""
+"Special requests, e.g. flights, extra nights or a surprise for your spouse"
+msgstr "طلبات خاصة، مثل الطيران أو ليالٍ إضافية أو مفاجأة لشريكك"
+
+msgid "Travel dates"
+msgstr "تواريخ السفر"
+
+msgid "Number of couples"
+msgstr "عدد الأزواج"
+
+msgid "Your name"
+msgstr "اسمك"
+
+msgid "Phone / WhatsApp"
+msgstr "الهاتف / واتساب"
+
+msgid "Email (optional)"
+msgstr "البريد الإلكتروني (اختياري)"
+
+msgid "Choose a date in the future."
+msgstr "اختر تاريخًا في المستقبل."
+
+msgid "Share your honeymoon experience"
+msgstr "شارك تجربة شهر العسل"
+
+msgid "Email, username or phone number"
+msgstr "البريد الإلكتروني أو اسم المستخدم أو رقم الهاتف"
+
+msgid "e.g. amina@example.com or 0712 345 678"
+msgstr "مثل amina@example.com أو 0712 345 678"
+
+msgid "Call ended"
+msgstr "انتهت المكالمة"
+
+msgid "Your plan's call time for today is finished"
+msgstr "انتهى وقت المكالمات في باقتك لهذا اليوم"
+
+msgid "Allow microphone access to make calls"
+msgstr "اسمح بالوصول إلى الميكروفون لإجراء المكالمات"
+
+msgid "The connection failed. Check your internet and try again."
+msgstr "فشل الاتصال. تحقق من الإنترنت وحاول مرة أخرى."
+
+msgid "Call declined"
+msgstr "تم رفض المكالمة"
+
+msgid "No answer"
+msgstr "لا يوجد رد"
+
+msgid "Call cancelled"
+msgstr "تم إلغاء المكالمة"
+
+msgid "Waiting for the network…"
+msgstr "بانتظار الشبكة…"
+
+msgid ""
+"This browser does not support calls. Please use Chrome, Safari or Firefox."
+msgstr ""
+"هذا المتصفح لا يدعم المكالمات. يرجى استخدام Chrome أو Safari أو Firefox."
+
+msgid "This call has ended"
+msgstr "انتهت هذه المكالمة"
+
+msgid "Starting video call…"
+msgstr "جارٍ بدء مكالمة الفيديو…"
+
+msgid "Calling…"
+msgstr "جارٍ الاتصال…"
+
+msgid "The call could not be started."
+msgstr "تعذّر بدء المكالمة."
+
+msgid "No connection. Check your internet and try again."
+msgstr "لا يوجد اتصال. تحقق من الإنترنت وحاول مرة أخرى."
+
+msgid "Incoming video call…"
+msgstr "مكالمة فيديو واردة…"
+
+msgid "Incoming voice call…"
+msgstr "مكالمة صوتية واردة…"
+
+msgid "This voice message could not be played on this device."
+msgstr "لا يمكن تشغيل هذه الرسالة الصوتية على هذا الجهاز."
+
+msgid "The voice note could not be sent. Check your internet."
+msgstr "تعذّر إرسال الرسالة الصوتية. تحقق من الإنترنت."
+
+msgid "Allow microphone access in your browser to record a voice note."
+msgstr "اسمح بالوصول إلى الميكروفون في متصفحك لتسجيل رسالة صوتية."
+
+msgid "Ujumbe haukutumwa. Angalia mtandao wako."
+msgstr "لم تُرسل الرسالة. تحقق من اتصالك بالشبكة."
+
+msgid "Ondoa picha"
+msgstr "إزالة الصورة"
+
+msgid "Ujumbe haukutumwa."
+msgstr "لم تُرسل الرسالة."
+
+msgid "Yupo mtandaoni"
+msgstr "متصل الآن"
+
+msgid "Hide password"
+msgstr "إخفاء كلمة المرور"
+
+msgid "Show password"
+msgstr "إظهار كلمة المرور"
+
+msgid "Link copied"
+msgstr "تم نسخ الرابط"
+
+msgid "Check availability"
+msgstr "تحقق من التوفّر"
+
+msgid "Send an inquiry"
+msgstr "أرسل استفسارًا"
+
+msgid "Admin Login"
+msgstr "دخول المدير"
+
+msgid "Welcome Back"
+msgstr "مرحبًا بعودتك"
+
+msgid " - add a caption or press send"
+msgstr " - أضف تعليقًا أو اضغط إرسال"
+
+msgid "not sent"
+msgstr "لم تُرسل"
+
+msgid "Couple photo on the Go Premium card"
+msgstr "صورة الزوجين على بطاقة «اشترك في بريميوم»"
+
+msgid "Photo on the Advertise Your Marriage Service card"
+msgstr "الصورة على بطاقة «أعلن عن خدمة الزواج الخاصة بك»"
+
+msgid "Premium page special offer. Leave blank to hide the offer."
+msgstr "عرض خاص لصفحة بريميوم. اتركه فارغًا لإخفاء العرض."
+
+msgid ""
+"Shown to members on the Membership page when they upgrade, e.g. your Lipa "
+"Namba / till number."
+msgstr ""
+"يظهر للأعضاء في صفحة العضوية عند الترقية، مثل رقم الدفع الخاص بك (Lipa "
+"Namba)."
+
+msgid "WhatsApp number with country code, e.g. 255712345678"
+msgstr "رقم واتساب مع رمز الدولة، مثل 255712345678"
+
+msgid ""
+"One feature per line. Start a line with - for a feature the plan does not "
+"include."
+msgstr "ميزة واحدة في كل سطر. ابدأ السطر بـ - للميزة غير المتضمنة في الباقة."
+
+msgid "Most popular"
+msgstr "الأكثر شيوعًا"
+
+msgid "Messages per day"
+msgstr "الرسائل يوميًا"
+
+msgid ""
+"How many messages this plan may send in 24 hours. 0 = none, -1 = unlimited."
+msgstr ""
+"عدد الرسائل التي يمكن لهذه الباقة إرسالها خلال 24 ساعة. 0 = لا شيء، ‎-1 = "
+"غير محدود."
+
+msgid "Call seconds per day"
+msgstr "ثواني المكالمات يوميًا"
+
+msgid ""
+"Voice and video call time allowed in 24 hours, in seconds. 0 = none, -1 = "
+"unlimited."
+msgstr ""
+"مدة المكالمات الصوتية والمرئية المسموح بها خلال 24 ساعة بالثواني. 0 = لا "
+"شيء، ‎-1 = غير محدود."
+
+msgid "Start as many chats as you like"
+msgstr "ابدأ محادثات بقدر ما تشاء"
+
+#, python-format
+msgid "Start %(n)d new chat a day"
+msgid_plural "Start %(n)d new chats a day"
+msgstr[0] "ابدأ %(n)d محادثة جديدة يوميًا"
+msgstr[1] "ابدأ محادثة جديدة واحدة يوميًا"
+msgstr[2] "ابدأ محادثتين جديدتين يوميًا"
+msgstr[3] "ابدأ %(n)d محادثات جديدة يوميًا"
+msgstr[4] "ابدأ %(n)d محادثة جديدة يوميًا"
+msgstr[5] "ابدأ %(n)d محادثة جديدة يوميًا"
+
+msgid "Cannot start a chat"
+msgstr "لا يمكن بدء محادثة"
+
+msgid "Unlimited voice and video calls"
+msgstr "مكالمات صوتية ومرئية غير محدودة"
+
+msgid "No voice or video calls"
+msgstr "لا مكالمات صوتية أو مرئية"
+
+#, python-format
+msgid "%(n)d minute of calls a day"
+msgid_plural "%(n)d minutes of calls a day"
+msgstr[0] "%(n)d دقيقة مكالمات يوميًا"
+msgstr[1] "دقيقة واحدة من المكالمات يوميًا"
+msgstr[2] "دقيقتان من المكالمات يوميًا"
+msgstr[3] "%(n)d دقائق من المكالمات يوميًا"
+msgstr[4] "%(n)d دقيقة من المكالمات يوميًا"
+msgstr[5] "%(n)d دقيقة من المكالمات يوميًا"
+
+#, python-format
+msgid "%(n)d seconds of calls a day"
+msgstr "%(n)d ثانية من المكالمات يوميًا"
+
+msgid "Woman"
+msgstr "امرأة"
+
+msgid "Man"
+msgstr "رجل"
+
+msgid "Muislamu"
+msgstr "مسلم"
+
+msgid "Mkristo"
+msgstr "مسيحي"
+
+msgid "Single"
+msgstr "أعزب / عزباء"
+
+msgid "Divorced"
+msgstr "مطلّق / مطلّقة"
+
+msgid "Widowed"
+msgstr "أرمل / أرملة"
+
+msgid "Lengo. Leave blank for the default text."
+msgstr "الهدف. اتركه فارغًا للنص الافتراضي."
+
+msgid "Allow WhatsApp messages"
+msgstr "السماح برسائل واتساب"
+
+msgid "Practising"
+msgstr "ملتزم"
+
+msgid "Moderately practising"
+msgstr "ملتزم إلى حد ما"
+
+msgid "Learning / revert"
+msgstr "يتعلّم / حديث الإسلام"
+
+msgid "Religiosity"
+msgstr "مستوى التديّن"
+
+msgid "Comma separated, e.g. Qur'an, Travel, Reading"
+msgstr "مفصولة بفواصل، مثل القرآن، السفر، القراءة"
+
+msgid "Comma separated, e.g. Healthy lifestyle, Open-minded"
+msgstr "مفصولة بفواصل، مثل نمط حياة صحي، منفتح الذهن"
+
+msgid "All Members"
+msgstr "جميع الأعضاء"
+
+msgid "Verified Members Only"
+msgstr "الأعضاء الموثّقون فقط"
+
+msgid "Premium Members Only"
+msgstr "أعضاء بريميوم فقط"
+
+msgid "Hidden"
+msgstr "مخفي"
+
+msgid "Matched Members Only"
+msgstr "الأعضاء المتطابقون فقط"
+
+msgid "City/Region Only"
+msgstr "المدينة/المنطقة فقط"
+
+msgid "Country Only"
+msgstr "الدولة فقط"
+
+msgid "A small copy of the photo, made automatically, for cards and avatars."
+msgstr "نسخة صغيرة من الصورة تُنشأ تلقائيًا للبطاقات والصور الرمزية."
+
+msgid "Hide my face on new photos"
+msgstr "إخفاء وجهي في الصور الجديدة"
+
+msgid ""
+"The member's choice when uploading: faces are covered with a soft blur "
+"before the photo is saved."
+msgstr "اختيار العضو عند الرفع: تُغطّى الوجوه بتمويه ناعم قبل حفظ الصورة."
+
+msgid "Automatic (my browser's language)"
+msgstr "تلقائي (لغة متصفحي)"
+
+msgid "Light Mode"
+msgstr "الوضع الفاتح"
+
+msgid "Dark Mode"
+msgstr "الوضع الداكن"
+
+msgid "Language"
+msgstr "اللغة"
+
+msgid "Theme"
+msgstr "المظهر"
+
+msgid "Rejected"
+msgstr "مرفوض"
+
+msgid "Suspended"
+msgstr "موقوف"
+
+msgid ""
+"Rejected and suspended members are hidden from everyone and cannot use the "
+"member area."
+msgstr ""
+"الأعضاء المرفوضون والموقوفون مخفيّون عن الجميع ولا يمكنهم استخدام منطقة "
+"الأعضاء."
+
+msgid "Height (cm)"
+msgstr "الطول (سم)"
+
+msgid "Hijab / dress"
+msgstr "الحجاب / اللباس"
+
+msgid "Qur'an / scripture reading"
+msgstr "قراءة القرآن / الكتاب المقدس"
+
+msgid "Number of siblings"
+msgstr "عدد الإخوة"
+
+msgid "Preferred age from"
+msgstr "العمر المفضّل من"
+
+msgid "Preferred age to"
+msgstr "العمر المفضّل إلى"
+
+msgid "Preferred marital status"
+msgstr "الحالة الاجتماعية المفضّلة"
+
+msgid "Preferred location"
+msgstr "الموقع المفضّل"
+
+msgid "Preferred education"
+msgstr "المستوى التعليمي المفضّل"
+
+msgid "Preferred occupation"
+msgstr "المهنة المفضّلة"
+
+msgid "Preferred prayer habit"
+msgstr "عادة الصلاة المفضّلة"
+
+msgid "Preferred values"
+msgstr "القيم المفضّلة"
+
+msgid "Partner willing to relocate"
+msgstr "الشريك مستعد للانتقال"
+
+msgid "Additional preferences"
+msgstr "تفضيلات إضافية"
+
+msgid "Mke wa Ndoa"
+msgstr "زوجة"
+
+msgid "Mume wa Ndoa"
+msgstr "زوج"
+
+msgid "Ameachika"
+msgstr "مطلّق"
+
+msgid "Mgane"
+msgstr "أرمل"
+
+msgid "Mjane"
+msgstr "أرملة"
+
+msgid "Hajaoa"
+msgstr "أعزب"
+
+msgid "Hajaolewa"
+msgstr "عزباء"
+
+msgid "Ndoa yenye utulivu, upendo, heshima na misingi ya Kiislamu."
+msgstr "زواج يملؤه السكينة والمحبة والاحترام على أسس إسلامية."
+
+msgid "Ndoa yenye utulivu, upendo, heshima na misingi ya Kikristo."
+msgstr "زواج يملؤه السكينة والمحبة والاحترام على أسس مسيحية."
+
+#| msgid "Practising"
+msgid "Practising Muslim"
+msgstr "مسلم ملتزم"
+
+#| msgid "Moderately practising"
+msgid "Moderately practising Muslim"
+msgstr "مسلم ملتزم إلى حد ما"
+
+msgid "Learning Muslim"
+msgstr "مسلم يتعلّم"
+
+#| msgid "Practising"
+msgid "Practising Christian"
+msgstr "مسيحي ملتزم"
+
+#| msgid "Moderately practising"
+msgid "Moderately practising Christian"
+msgstr "مسيحي ملتزم إلى حد ما"
+
+#| msgid "Christian"
+msgid "Learning Christian"
+msgstr "مسيحي يتعلّم"
+
+msgid "People already going before online registration (e.g. walk-ins)."
+msgstr "أشخاص سيحضرون قبل التسجيل الإلكتروني (مثل الحضور المباشر)."
+
+msgid "Number of seats. Leave blank for no limit."
+msgstr "عدد المقاعد. اتركه فارغًا لعدم التحديد."
+
+msgid "Comma separated, e.g. Seminar, Education"
+msgstr "مفصولة بفواصل، مثل ندوة، تعليم"
+
+msgid "Voice note"
+msgstr "رسالة صوتية"
+
+msgid "Voice note length in seconds"
+msgstr "مدة الرسالة الصوتية بالثواني"
+
+msgid "Call log"
+msgstr "سجل المكالمة"
+
+msgid ""
+"This message started the conversation, so it counts against the sender's "
+"daily allowance."
+msgstr "هذه الرسالة بدأت المحادثة، لذا تُحتسب من الحصة اليومية للمرسل."
+
+msgid "Fake profile"
+msgstr "ملف شخصي مزيّف"
+
+msgid "Rude or offensive"
+msgstr "وقح أو مسيء"
+
+msgid "Scam or asking for money"
+msgstr "احتيال أو طلب مال"
+
+msgid "Other"
+msgstr "أخرى"
+
+msgid "One reason per line."
+msgstr "سبب واحد في كل سطر."
+
+msgid ""
+"One per line as icon|text, e.g. people|Up to 300 Guests. Icons: people, "
+"parking, snow, food, camera, star."
+msgstr ""
+"عنصر في كل سطر بالشكل أيقونة|نص، مثل people|حتى 300 ضيف. الأيقونات: people, "
+"parking, snow, food, camera, star."
+
+msgid "Package includes, one per line."
+msgstr "محتويات الباقة، عنصر في كل سطر."
+
+msgid "Optional additional services, one per line."
+msgstr "خدمات إضافية اختيارية، خدمة في كل سطر."
+
+msgid "Extra details, one per line as Label|Value."
+msgstr "تفاصيل إضافية، عنصر في كل سطر بالشكل عنوان|قيمة."
+
+msgid "Address used for the map, e.g. Kariakoo, Dar es Salaam"
+msgstr "العنوان المستخدم للخريطة، مثل كارياكو، دار السلام"
+
+msgid "Inquiry"
+msgstr "استفسار"
+
+msgid "Comma separated, e.g. Nikah, Communication"
+msgstr "مفصولة بفواصل، مثل النكاح، التواصل"
+
+msgid "Premium plan"
+msgstr "باقة بريميوم"
+
+msgid "Advert listing"
+msgstr "إعلان مُدرج"
+
+msgid "Event registration"
+msgstr "التسجيل في فعالية"
+
+msgid "Membership fee"
+msgstr "رسوم العضوية"
+
+msgid "M-Pesa"
+msgstr "M-Pesa"
+
+msgid "Mixx by Yas"
+msgstr "Mixx by Yas"
+
+msgid "Airtel Money"
+msgstr "Airtel Money"
+
+msgid "Selcom"
+msgstr "Selcom"
+
+msgid "Pesapal"
+msgstr "Pesapal"
+
+msgid "DPO"
+msgstr "DPO"
+
+msgid "Visa / Mastercard"
+msgstr "فيزا / ماستركارد"
+
+msgid "PayPal"
+msgstr "باي بال"
+
+msgid "Bank transfer"
+msgstr "تحويل بنكي"
+
+msgid "Cash"
+msgstr "نقدًا"
+
+msgid "Pending"
+msgstr "قيد الانتظار"
+
+msgid "Completed"
+msgstr "مكتمل"
+
+msgid "Failed"
+msgstr "فشل"
+
+msgid "Refunded"
+msgstr "مُسترد"
+
+msgid "Transaction / receipt number from the gateway"
+msgstr "رقم المعاملة / الإيصال من بوابة الدفع"
+
+#, python-brace-format
+msgid "You can use {name} for the member's name."
+msgstr "يمكنك استخدام {name} لاسم العضو."
+
+msgid "In-App Message"
+msgstr "رسالة داخل التطبيق"
+
+msgid "Notification"
+msgstr "إشعار"
+
+msgid "Draft"
+msgstr "مسودة"
+
+msgid "Sent"
+msgstr "مُرسَل"
+
+msgid "Message to support"
+msgstr "رسالة إلى الدعم"
+
+msgid "Technical ticket"
+msgstr "تذكرة تقنية"
+
+msgid "Report an issue"
+msgstr "الإبلاغ عن مشكلة"
+
+msgid "Verification request"
+msgstr "طلب توثيق"
+
+msgid "Feedback"
+msgstr "ملاحظات"
+
+msgid "Discount code"
+msgstr "رمز الخصم"
+
+msgid "Live chat request"
+msgstr "طلب دردشة مباشرة"
+
+msgid "Open"
+msgstr "مفتوح"
+
+msgid "Closed"
+msgstr "مغلق"
+
+msgid "Answer from the support team; the member sees it as a notification."
+msgstr "رد من فريق الدعم؛ يراه العضو كإشعار."
+
+msgid "Voice call"
+msgstr "مكالمة صوتية"
+
+msgid "Video call"
+msgstr "مكالمة فيديو"
+
+msgid "Ringing"
+msgstr "يرنّ"
+
+msgid "In progress"
+msgstr "جارية"
+
+msgid "Declined"
+msgstr "مرفوضة"
+
+msgid "Ended"
+msgstr "انتهت"
+
+msgid "Missed"
+msgstr "فائتة"
+
+msgid "Cancelled"
+msgstr "ملغاة"
+
+msgid "How long the call ran, kept for the caller's daily allowance."
+msgstr "مدة المكالمة، تُحفظ لحساب الحصة اليومية للمتصل."
+
+msgid "Offer"
+msgstr "عرض"
+
+msgid "Answer"
+msgstr "رد"
+
+msgid "Network candidate"
+msgstr "مرشّح الشبكة"
+
+msgid "Beach & Islands"
+msgstr "الشواطئ والجزر"
+
+msgid "Safari & Nature"
+msgstr "السفاري والطبيعة"
+
+msgid "Mountains"
+msgstr "الجبال"
+
+msgid "Luxury Cities"
+msgstr "مدن فاخرة"
+
+msgid "Luxury Resorts"
+msgstr "منتجعات فاخرة"
+
+msgid "Romantic Getaways"
+msgstr "رحلات رومانسية"
+
+msgid "Tanzania"
+msgstr "تنزانيا"
+
+msgid "East Africa"
+msgstr "شرق أفريقيا"
+
+msgid "International"
+msgstr "دولي"
+
+msgid "Destination type"
+msgstr "نوع الوجهة"
+
+msgid ""
+"One line on the card, e.g. White sandy beaches, turquoise waters and luxury "
+"resorts."
+msgstr ""
+"سطر واحد على البطاقة، مثل شواطئ رملية بيضاء ومياه فيروزية ومنتجعات فاخرة."
+
+msgid "From price (per couple)"
+msgstr "السعر ابتداءً من (للزوجين)"
+
+msgid "Typical days"
+msgstr "الأيام المعتادة"
+
+msgid "Typical nights"
+msgstr "الليالي المعتادة"
+
+msgid ""
+"Up to three short features on the card, one per line as icon|text. Icons: "
+"bed, food, map, safari, wave, city, dive, hike, villa."
+msgstr ""
+"حتى ثلاث ميزات قصيرة على البطاقة، ميزة في كل سطر بالشكل أيقونة|نص. "
+"الأيقونات: bed, food, map, safari, wave, city, dive, hike, villa."
+
+msgid "Number of reviews"
+msgstr "عدد التقييمات"
+
+msgid "Show on the home page."
+msgstr "عرض في الصفحة الرئيسية."
+
+msgid "Beach & Island"
+msgstr "شاطئ وجزيرة"
+
+msgid "Luxury Resort"
+msgstr "منتجع فاخر"
+
+msgid "Safari & Beach"
+msgstr "سفاري وشاطئ"
+
+msgid "City & Culture"
+msgstr "مدينة وثقافة"
+
+msgid "All Inclusive"
+msgstr "شامل كليًا"
+
+msgid "Green"
+msgstr "أخضر"
+
+msgid "Blue"
+msgstr "أزرق"
+
+msgid "Pink"
+msgstr "وردي"
+
+msgid "Orange"
+msgstr "برتقالي"
+
+msgid "Purple"
+msgstr "بنفسجي"
+
+msgid "Navy"
+msgstr "كحلي"
+
+msgid "e.g. Zanzibar, Tanzania"
+msgstr "مثل زنجبار، تنزانيا"
+
+msgid "Ribbon on the photo, e.g. Best Seller, Luxury, All Inclusive."
+msgstr "شريط على الصورة، مثل الأكثر مبيعًا، فاخر، شامل كليًا."
+
+msgid "Price (per couple)"
+msgstr "السعر (للزوجين)"
+
+msgid "Hotel category (stars)"
+msgstr "تصنيف الفندق (نجوم)"
+
+msgid "3 Star"
+msgstr "3 نجوم"
+
+msgid "4 Star"
+msgstr "4 نجوم"
+
+msgid "5 Star"
+msgstr "5 نجوم"
+
+msgid "e.g. All Meals, Breakfast"
+msgstr "مثل جميع الوجبات، الإفطار"
+
+msgid "Card extra"
+msgstr "إضافة البطاقة"
+
+msgid "Third feature on the card, e.g. Airport Transfer, Candle Dinner."
+msgstr "الميزة الثالثة على البطاقة، مثل النقل من المطار، عشاء على ضوء الشموع."
+
+msgid ""
+"Icon for the extra: car, plane, map, dive, heart, villa, safari, wave, hike,"
+" gift."
+msgstr ""
+"أيقونة الإضافة: car, plane, map, dive, heart, villa, safari, wave, hike, "
+"gift."
+
+msgid "Flight option"
+msgstr "خيار الطيران"
+
+msgid "Airport transfer"
+msgstr "النقل من المطار وإليه"
+
+msgid "Romantic activities"
+msgstr "أنشطة رومانسية"
+
+msgid ""
+"Package highlights, one per line as icon|text. Icons: palm, heart, dive, "
+"boat, camera, gift, safari, wine, spa, hike, city, star."
+msgstr ""
+"أبرز ما في الباقة، عنصر في كل سطر بالشكل أيقونة|نص. الأيقونات: palm, heart, "
+"dive, boat, camera, gift, safari, wine, spa, hike, city, star."
+
+msgid ""
+"One day per line as Title|Details, e.g. Day 1 - Arrival|Airport pickup and "
+"welcome dinner."
+msgstr ""
+"يوم واحد في كل سطر بالشكل عنوان|تفاصيل، مثل اليوم 1 - الوصول|الاستقبال في "
+"المطار وعشاء ترحيبي."
+
+msgid "What is included, one per line."
+msgstr "ما هو مشمول، عنصر في كل سطر."
+
+msgid "What is not included, one per line."
+msgstr "ما هو غير مشمول، عنصر في كل سطر."
+
+msgid "Where the couple stays."
+msgstr "مكان إقامة الزوجين."
+
+msgid "Activities, one per line."
+msgstr "الأنشطة، نشاط في كل سطر."
+
+msgid "Important information"
+msgstr "معلومات مهمة"
+
+msgid "One per line."
+msgstr "عنصر في كل سطر."
+
+msgid "One per line as icon|text."
+msgstr "عنصر في كل سطر بالشكل أيقونة|نص."
+
+msgid "Honeymoon discount"
+msgstr "خصم شهر العسل"
+
+msgid "Free add-ons"
+msgstr "إضافات مجانية"
+
+msgid "New"
+msgstr "جديد"
+
+msgid "Contacted"
+msgstr "تم التواصل"
+
+msgid "Confirmed"
+msgstr "مؤكَّد"
+
+#, python-format
+msgid "%(name)s added to your shortlist."
+msgstr "تمت إضافة %(name)s إلى قائمتك المختصرة."
+
+#, python-format
+msgid "%(name)s removed from your shortlist."
+msgstr "تمت إزالة %(name)s من قائمتك المختصرة."
+
+msgid "Thank you. Our team will review this profile."
+msgstr "شكرًا لك. سيراجع فريقنا هذا الملف الشخصي."
+
+msgid "You cannot like your own profile."
+msgstr "لا يمكنك الإعجاب بملفك الشخصي."
+
+#, python-format
+msgid "You liked %(name)s."
+msgstr "لقد أعجبت بـ %(name)s."
+
+#, python-format
+msgid "Like removed for %(name)s."
+msgstr "تمت إزالة الإعجاب بـ %(name)s."
+
+msgid "Karibu Sakinah! Complete your profile so others can get to know you."
+msgstr "مرحبًا بك في سكينة! أكمل ملفك الشخصي ليتعرّف عليك الآخرون."
+
+msgid "Profile saved."
+msgstr "تم حفظ الملف الشخصي."
+
+msgid "Kamilisha wasifu wako ili uweze kupiga simu."
+msgstr "أكمل ملفك الشخصي لتتمكن من إجراء المكالمات."
+
+msgid ""
+"Umetumia muda wako wote wa simu leo. Utapata mwingine baada ya masaa 24, au "
+"ongeza kifurushi."
+msgstr ""
+"لقد استهلكت كل وقت المكالمات اليوم. ستحصل على المزيد بعد 24 ساعة، أو قم "
+"بترقية باقتك."
+
+msgid "Huwezi kumpigia simu mwanachama huyu."
+msgstr "لا يمكنك الاتصال بهذا العضو."
+
+msgid "Simu haipatikani kwa akaunti hii kwa sasa."
+msgstr "المكالمات غير متاحة لهذا الحساب حاليًا."
+
+msgid "Kamilisha wasifu wako ili uweze kutuma ujumbe."
+msgstr "أكمل ملفك الشخصي لتتمكن من إرسال الرسائل."
+
+msgid ""
+"Kifurushi chako hakikuruhusu kuanzisha mazungumzo. Jiunge na kifurushi ili "
+"uanze; kujibu aliyekuandikia ni bure."
+msgstr ""
+"باقتك لا تسمح ببدء محادثة. اشترك في باقة لتبدأ؛ الرد على من راسلك مجاني."
+
+msgid ""
+"Umefikia kikomo cha mazungumzo mapya ya leo. Utaweza kuanzisha mengine baada"
+" ya masaa 24, au ongeza kifurushi."
+msgstr ""
+"لقد بلغت حد المحادثات الجديدة لهذا اليوم. يمكنك بدء المزيد بعد 24 ساعة، أو "
+"قم بترقية باقتك."
+
+msgid "Huwezi kumtumia ujumbe mwanachama huyu."
+msgstr "لا يمكنك مراسلة هذا العضو."
+
+#, python-format
+msgid "%(first_name)s anapokea ujumbe kutoka kwa %(lower)s pekee."
+msgstr "%(first_name)s يقبل الرسائل من %(lower)s فقط."
+
+msgid "Comment posted."
+msgstr "تم نشر التعليق."
+
+#, python-format
+msgid "%(title)s has already taken place."
+msgstr "لقد أُقيمت %(title)s بالفعل."
+
+#, python-format
+msgid "Sorry, %(title)s is fully booked."
+msgstr "عذرًا، %(title)s مكتملة الحجز."
+
+#, python-format
+msgid "You are registered for %(title)s. See you there!"
+msgstr "لقد سُجّلت في %(title)s. نراك هناك!"
+
+#, python-format
+msgid "Your registration for %(title)s was cancelled."
+msgstr "تم إلغاء تسجيلك في %(title)s."
+
+msgid "1 - 3 Days"
+msgstr "1 - 3 أيام"
+
+msgid "4 - 7 Days"
+msgstr "4 - 7 أيام"
+
+#| msgid "More than 10 Days"
+msgid "8 - 10 Days"
+msgstr "8 - 10 أيام"
+
+msgid "More than 10 Days"
+msgstr "أكثر من 10 أيام"
+
+msgid "Honeymoon Discount"
+msgstr "خصم شهر العسل"
+
+msgid "Free Add-ons"
+msgstr "إضافات مجانية"
+
+msgid "Most Popular"
+msgstr "الأكثر شيوعًا"
+
+msgid "Price: Low to High"
+msgstr "السعر: من الأقل إلى الأعلى"
+
+msgid "Price: High to Low"
+msgstr "السعر: من الأعلى إلى الأقل"
+
+msgid "Top Rated"
+msgstr "الأعلى تقييمًا"
+
+msgid "Shortest Trip"
+msgstr "الأقصر مدة"
+
+msgid "Stunning Locations"
+msgstr "مواقع خلابة"
+
+msgid "Curated for Couples"
+msgstr "مُعدّ للأزواج"
+
+msgid "Safe & Trusted"
+msgstr "آمن وموثوق"
+
+msgid "Unforgettable Experiences"
+msgstr "تجارب لا تُنسى"
+
+msgid "Romantic Experiences"
+msgstr "تجارب رومانسية"
+
+msgid "Luxury Accommodation"
+msgstr "إقامة فاخرة"
+
+msgid "Seamless Travel"
+msgstr "سفر سلس"
+
+msgid "Special Couple Offers"
+msgstr "عروض خاصة للأزواج"
+
+msgid "Home"
+msgstr "الرئيسية"
+
+msgid "Honeymoon Destinations"
+msgstr "وجهات شهر العسل"
+
+msgid "View Packages"
+msgstr "عرض الباقات"
+
+msgid "All Packages"
+msgstr "جميع الباقات"
+
+#, python-format
+msgid ""
+"Asante! Your request for %(title)s was sent. Our travel team will contact "
+"you on %(phone)s very soon."
+msgstr ""
+"شكرًا! تم إرسال طلبك لـ %(title)s. سيتواصل معك فريق السفر على %(phone)s "
+"قريبًا جدًا."
+
+#, python-format
+msgid "Please check the booking form. %(errors)s"
+msgstr "يرجى مراجعة نموذج الحجز. %(errors)s"
+
+msgid "Thank you for your review."
+msgstr "شكرًا على تقييمك."
+
+#, python-format
+msgid "%(item)s saved to your favourites."
+msgstr "تم حفظ %(item)s في المفضلة."
+
+#, python-format
+msgid "%(item)s removed from your favourites."
+msgstr "تمت إزالة %(item)s من المفضلة."
+
+#, python-format
+msgid "%(title)s added to your wishlist."
+msgstr "تمت إضافة %(title)s إلى قائمة أمنياتك."
+
+#, python-format
+msgid "%(title)s removed from your wishlist."
+msgstr "تمت إزالة %(title)s من قائمة أمنياتك."
+
+#, python-format
+msgid "Asante! Your request was sent to %(name)s. They will contact you soon."
+msgstr "شكرًا! تم إرسال طلبك إلى %(name)s. سيتواصلون معك قريبًا."
+
+msgid "Please add your name and phone number so the vendor can reach you."
+msgstr "يرجى إضافة اسمك ورقم هاتفك ليتمكن المزوّد من التواصل معك."
+
+msgid "All"
+msgstr "الكل"
+
+msgid "Women"
+msgstr "النساء"
+
+msgid "Men"
+msgstr "الرجال"
+
+msgid "Not verified"
+msgstr "غير موثّق"
+
+msgid "All Locations"
+msgstr "جميع المواقع"
+
+#, python-brace-format
+msgid "Write your message here... Use {name} for the member's name."
+msgstr "اكتب رسالتك هنا... استخدم {name} لاسم العضو."
+
+msgid "Enter message subject"
+msgstr "أدخل موضوع الرسالة"
+
+msgid "All Plans"
+msgstr "جميع الباقات"
+
+msgid "Free members"
+msgstr "الأعضاء المجانيون"
+
+msgid "Any paid plan"
+msgstr "أي باقة مدفوعة"
+
+msgid "Choose a member to activate their plan automatically."
+msgstr "اختر عضوًا لتفعيل باقته تلقائيًا."
+
+msgid "Amount (TSh)"
+msgstr "المبلغ (شلن تنزاني)"
+
+msgid "Enter the payer's name or choose a member."
+msgstr "أدخل اسم الدافع أو اختر عضوًا."
+
+msgid "Choose the plan that was paid for."
+msgstr "اختر الباقة التي تم دفعها."
+
+msgid "Yes"
+msgstr "نعم"
+
+msgid "No"
+msgstr "لا"
+
+msgid "Leave empty to create it from the "
+msgstr "اتركه فارغًا لإنشائه من "
+
+msgid "The plan is active until this date. Leave empty for a free member."
+msgstr "الباقة سارية حتى هذا التاريخ. اتركه فارغًا للعضو المجاني."
+
+msgid "Match score (0-100) shown on suggestions."
+msgstr "درجة التطابق (0-100) المعروضة في الاقتراحات."
+
+msgid "Rejected and suspended members are hidden from everyone."
+msgstr "الأعضاء المرفوضون والموقوفون مخفيّون عن الجميع."
+
+msgid "Events"
+msgstr "الفعاليات"
+
+msgid "People already going before online registration (walk-ins)."
+msgstr "أشخاص سيحضرون قبل التسجيل الإلكتروني (الحضور المباشر)."
+
+msgid "Leave empty for no limit."
+msgstr "اتركه فارغًا لعدم التحديد."
+
+msgid "All dates"
+msgstr "جميع التواريخ"
+
+msgid "Upcoming"
+msgstr "القادمة"
+
+msgid "Past"
+msgstr "السابقة"
+
+msgid "All categories"
+msgstr "جميع الفئات"
+
+msgid "Event"
+msgstr "الفعالية"
+
+msgid "Time"
+msgstr "الوقت"
+
+msgid "Registrations"
+msgstr "التسجيلات"
+
+msgid "Seats"
+msgstr "المقاعد"
+
+msgid "Event Categories"
+msgstr "فئات الفعاليات"
+
+msgid "Event Registrations"
+msgstr "تسجيلات الفعاليات"
+
+msgid "All events"
+msgstr "جميع الفعاليات"
+
+msgid "Registered"
+msgstr "مسجّل"
+
+msgid "Membership Plans"
+msgstr "باقات العضوية"
+
+msgid ""
+"One feature per line. Start a line with - for a feature the plan does NOT "
+"include. Write 'All Silver features' to include the previous plan."
+msgstr ""
+"ميزة واحدة في كل سطر. ابدأ السطر بـ - للميزة غير المتضمنة في الباقة. اكتب "
+"'All Silver features' لتضمين الباقة السابقة."
+
+msgid "Messages this plan may send in 24 hours. 0 = none, -1 = unlimited."
+msgstr ""
+"الرسائل التي يمكن لهذه الباقة إرسالها خلال 24 ساعة. 0 = لا شيء، ‎-1 = غير "
+"محدود."
+
+msgid ""
+"Voice and video call time in 24 hours, in seconds (60 = 1 minute). 0 = none,"
+" -1 = unlimited."
+msgstr ""
+"مدة المكالمات الصوتية والمرئية خلال 24 ساعة بالثواني (60 = دقيقة). 0 = لا "
+"شيء، ‎-1 = غير محدود."
+
+msgid "Per day"
+msgstr "يوميًا"
+
+msgid "Active members"
+msgstr "الأعضاء النشطون"
+
+msgid "Premium Perks"
+msgstr "مزايا بريميوم"
+
+msgid "Perk"
+msgstr "الميزة"
+
+msgid "Articles"
+msgstr "المقالات"
+
+msgid ""
+"Separate paragraphs with an empty line. Start a line with ## for a heading."
+msgstr "افصل الفقرات بسطر فارغ. ابدأ السطر بـ ## لعنوان فرعي."
+
+msgid "Article"
+msgstr "المقالة"
+
+msgid "Views"
+msgstr "المشاهدات"
+
+msgid "Feature / unfeature"
+msgstr "تمييز / إلغاء التمييز"
+
+msgid "Article Categories"
+msgstr "فئات المقالات"
+
+msgid "Home Page Highlights"
+msgstr "أبرز عناصر الصفحة الرئيسية"
+
+msgid "The short feature boxes shown on the home page."
+msgstr "مربعات الميزات القصيرة المعروضة في الصفحة الرئيسية."
+
+msgid "Message Templates"
+msgstr "قوالب الرسائل"
+
+#, python-brace-format
+msgid "Use {name} for the member's name."
+msgstr "استخدم {name} لاسم العضو."
+
+msgid "Template"
+msgstr "القالب"
+
+msgid "Message History"
+msgstr "سجل الرسائل"
+
+msgid "All channels"
+msgstr "جميع القنوات"
+
+msgid "All statuses"
+msgstr "جميع الحالات"
+
+msgid "Recipients"
+msgstr "المستلمون"
+
+msgid "Created"
+msgstr "تاريخ الإنشاء"
+
+msgid "By"
+msgstr "بواسطة"
+
+msgid "Support Tickets"
+msgstr "تذاكر الدعم"
+
+msgid "The member gets this answer as a notification in their dashboard."
+msgstr "يتلقى العضو هذه الإجابة كإشعار في لوحته."
+
+msgid "All types"
+msgstr "جميع الأنواع"
+
+msgid "Type"
+msgstr "النوع"
+
+msgid "From"
+msgstr "من"
+
+msgid "Received"
+msgstr "تاريخ الاستلام"
+
+msgid "Answered"
+msgstr "تمت الإجابة"
+
+msgid "Close / reopen"
+msgstr "إغلاق / إعادة فتح"
+
+msgid "Member Reports"
+msgstr "بلاغات الأعضاء"
+
+msgid "Open and resolved"
+msgstr "المفتوحة والمعالَجة"
+
+msgid "Resolved"
+msgstr "تمت المعالجة"
+
+msgid "Reported member"
+msgstr "العضو المُبلَّغ عنه"
+
+msgid "Mark resolved / open"
+msgstr "تحديد كمعالَج / مفتوح"
+
+msgid "Suspend this member"
+msgstr "إيقاف هذا العضو"
+
+msgid "Vendor Inquiries"
+msgstr "استفسارات المزوّدين"
+
+msgid "Handled"
+msgstr "تمت المتابعة"
+
+msgid "Customer"
+msgstr "العميل"
+
+msgid "Service"
+msgstr "الخدمة"
+
+msgid "Mark handled / new"
+msgstr "تحديد كمُتابَع / جديد"
+
+msgid "Adverts"
+msgstr "الإعلانات"
+
+msgid "Advert"
+msgstr "الإعلان"
+
+msgid "Show / hide"
+msgstr "إظهار / إخفاء"
+
+msgid "Vendors"
+msgstr "المزوّدون"
+
+msgid "Service Categories"
+msgstr "فئات الخدمات"
+
+msgid ""
+"Hongera! Your honeymoon booking is confirmed. Our team will share the travel"
+" details with you."
+msgstr "مبروك! تم تأكيد حجز شهر العسل. سيشاركك فريقنا تفاصيل السفر."
+
+msgid ""
+"Your honeymoon booking request was cancelled. Contact us if you would like "
+"to choose other dates."
+msgstr "تم إلغاء طلب حجز شهر العسل. تواصل معنا إذا أردت اختيار تواريخ أخرى."
+
+msgid "Honeymoon Bookings"
+msgstr "حجوزات شهر العسل"
+
+msgid "All destinations"
+msgstr "جميع الوجهات"
+
+msgid "Couple"
+msgstr "الزوجان"
+
+msgid "Estimated total"
+msgstr "الإجمالي التقديري"
+
+msgid "Mark contacted"
+msgstr "وضع علامة «تم التواصل»"
+
+msgid "Confirm booking"
+msgstr "تأكيد الحجز"
+
+msgid "Cancel booking"
+msgstr "إلغاء الحجز"
+
+msgid "Honeymoon Packages"
+msgstr "باقات شهر العسل"
+
+msgid "Photos"
+msgstr "الصور"
+
+msgid "Bookings"
+msgstr "الحجوزات"
+
+msgid "All regions"
+msgstr "جميع المناطق"
+
+msgid "Packages"
+msgstr "الباقات"
+
+msgid "On home page"
+msgstr "في الصفحة الرئيسية"
+
+msgid "Show on home page / remove"
+msgstr "عرض في الرئيسية / إزالة"
+
+msgid "Package Photos"
+msgstr "صور الباقات"
+
+msgid "All packages"
+msgstr "جميع الباقات"
+
+msgid "Package Reviews"
+msgstr "تقييمات الباقات"
+
+msgid "All Transactions"
+msgstr "جميع المعاملات"
+
+msgid "All gateways"
+msgstr "جميع بوابات الدفع"
+
+msgid "Invoice"
+msgstr "الفاتورة"
+
+msgid "Payer"
+msgstr "الدافع"
+
+msgid "For"
+msgstr "مقابل"
+
+msgid "Amount"
+msgstr "المبلغ"
+
+msgid "Approve payment"
+msgstr "الموافقة على الدفعة"
+
+msgid "Refund"
+msgstr "استرداد"
+
+msgid "Added"
+msgstr "مُضاف"
+
+msgid "Changed"
+msgstr "تم التعديل"
+
+msgid "Deleted"
+msgstr "تم الحذف"
+
+msgid "Audit Logs"
+msgstr "سجلات التدقيق"
+
+msgid "All actions"
+msgstr "جميع الإجراءات"
+
+msgid "When"
+msgstr "متى"
+
+msgid "Staff"
+msgstr "الموظف"
+
+msgid "Action"
+msgstr "الإجراء"
+
+msgid "Item"
+msgstr "العنصر"
+
+msgid "&ldquo;Na Mwenyezi Mungu aliuumba kwa jozi.&rdquo;"
+msgstr "&ldquo;وخلقناكم أزواجًا&rdquo;"
+
+msgid "(Qur'an 78:8)"
+msgstr "(النبأ 78:8)"
+
+#, python-format
+msgid "%(now_local)s EAT"
+msgstr "%(now_local)s بتوقيت شرق أفريقيا"
+
+#, python-format
+msgid "Showing %(start_index)s to %(end_index)s of %(v_count)s"
+msgstr "عرض %(start_index)s إلى %(end_index)s من %(v_count)s"
+
+msgid "To"
+msgstr "إلى"
+
+msgid "Apply"
+msgstr "تطبيق"
+
+msgid "Go"
+msgstr "انتقال"
+
+msgid "New:"
+msgstr "جديد:"
+
+msgid "Premium:"
+msgstr "بريميوم:"
+
+msgid "Dashboard"
+msgstr "لوحة التحكم"
+
+#, python-format
+msgid "- %(brand)s Admin"
+msgstr "- إدارة %(brand)s"
+
+msgid "Menu"
+msgstr "القائمة"
+
+msgid "Pata Mwenza, Pata Utulivu"
+msgstr "اعثر على شريك، اعثر على السكينة"
+
+msgid "Search members, matches, messages, events, payments..."
+msgstr "ابحث عن الأعضاء والتطابقات والرسائل والفعاليات والمدفوعات..."
+
+msgid "Search"
+msgstr "بحث"
+
+msgid "Open support tickets and reports"
+msgstr "تذاكر الدعم والبلاغات المفتوحة"
+
+msgid "Member messages today"
+msgstr "رسائل الأعضاء اليوم"
+
+msgid "Site settings"
+msgstr "إعدادات الموقع"
+
+msgid "Super Admin"
+msgstr "المدير العام"
+
+msgid "Administrator"
+msgstr "مدير"
+
+msgid "View website"
+msgstr "عرض الموقع"
+
+msgid "Change password"
+msgstr "تغيير كلمة المرور"
+
+msgid "Logout"
+msgstr "تسجيل الخروج"
+
+msgid "Super Admin Dashboard"
+msgstr "لوحة تحكم المدير العام"
+
+msgid "Members Management"
+msgstr "إدارة الأعضاء"
+
+msgid "Pending Approval"
+msgstr "بانتظار الموافقة"
+
+msgid "Verified Members"
+msgstr "الأعضاء الموثّقون"
+
+msgid "Rejected Members"
+msgstr "الأعضاء المرفوضون"
+
+msgid "Inactive / Suspended"
+msgstr "غير نشط / موقوف"
+
+msgid "Reported Members"
+msgstr "الأعضاء المُبلَّغ عنهم"
+
+msgid "Add Member"
+msgstr "إضافة عضو"
+
+msgid "Import Members"
+msgstr "استيراد الأعضاء"
+
+msgid "Export Members"
+msgstr "تصدير الأعضاء"
+
+msgid "Match and Activities"
+msgstr "التطابقات والأنشطة"
+
+msgid "Matches Overview"
+msgstr "نظرة عامة على التطابقات"
+
+msgid "Manage Matches"
+msgstr "إدارة التطابقات"
+
+msgid "Match Suggestions"
+msgstr "اقتراحات التطابق"
+
+msgid "Messages Monitoring"
+msgstr "مراقبة الرسائل"
+
+msgid "Activities Overview"
+msgstr "نظرة عامة على الأنشطة"
+
+msgid "All Events"
+msgstr "جميع الفعاليات"
+
+msgid "Add Event"
+msgstr "إضافة فعالية"
+
+msgid "Payments &amp; Finance"
+msgstr "المدفوعات والمالية"
+
+msgid "Record Payment"
+msgstr "تسجيل دفعة"
+
+msgid "Pending Payments"
+msgstr "مدفوعات معلّقة"
+
+msgid "Export Transactions"
+msgstr "تصدير المعاملات"
+
+msgid "Plans"
+msgstr "الباقات"
+
+msgid "Content Management"
+msgstr "إدارة المحتوى"
+
+msgid "Communication"
+msgstr "التواصل"
+
+msgid "Send Email"
+msgstr "إرسال بريد إلكتروني"
+
+msgid "Send Notification"
+msgstr "إرسال إشعار"
+
+msgid "Templates"
+msgstr "القوالب"
+
+msgid "Reports &amp; Analytics"
+msgstr "التقارير والتحليلات"
+
+msgid "Download Report (CSV)"
+msgstr "تنزيل التقرير (CSV)"
+
+msgid "Members (CSV)"
+msgstr "الأعضاء (CSV)"
+
+msgid "Payments (CSV)"
+msgstr "المدفوعات (CSV)"
+
+msgid "User Management"
+msgstr "إدارة المستخدمين"
+
+msgid "System Settings"
+msgstr "إعدادات النظام"
+
+msgid "Support &amp; Tickets"
+msgstr "الدعم والتذاكر"
+
+msgid "Open Tickets"
+msgstr "التذاكر المفتوحة"
+
+msgid "All Tickets"
+msgstr "جميع التذاكر"
+
+msgid "Honeymoon"
+msgstr "شهر العسل"
+
+msgid "New Bookings"
+msgstr "حجوزات جديدة"
+
+msgid "All Bookings"
+msgstr "جميع الحجوزات"
+
+msgid "Destinations"
+msgstr "الوجهات"
+
+msgid "Reviews"
+msgstr "التقييمات"
+
+msgid "Marketing &amp; Ads"
+msgstr "التسويق والإعلانات"
+
+msgid "Communication Center"
+msgstr "مركز التواصل"
+
+#, python-format
+msgid "Send emails, in-app messages and notifications to %(brand)s members."
+msgstr ""
+"أرسل رسائل البريد الإلكتروني والرسائل الداخلية والإشعارات إلى أعضاء "
+"%(brand)s."
+
+msgid "New Communication"
+msgstr "تواصل جديد"
+
+msgid "This month"
+msgstr "هذا الشهر"
+
+msgid "Create New Message"
+msgstr "إنشاء رسالة جديدة"
+
+msgid "Needs an SMS provider"
+msgstr "يحتاج إلى مزوّد رسائل SMS"
+
+msgid "SMS (not set up)"
+msgstr "SMS (غير مُعدّ)"
+
+msgid ""
+"Email is not configured yet, so emails are only printed to the server log. "
+"Add BREVO_API_KEY (or RESEND_API_KEY) on Render to send real email. In-app "
+"messages and notifications work now."
+msgstr ""
+"لم يتم إعداد البريد الإلكتروني بعد، لذا تُطبع الرسائل في سجل الخادم فقط. أضف"
+" BREVO_API_KEY (أو RESEND_API_KEY) على Render لإرسال بريد حقيقي. الرسائل "
+"الداخلية والإشعارات تعمل الآن."
+
+msgid "Only Males"
+msgstr "الذكور فقط"
+
+msgid "Only Females"
+msgstr "الإناث فقط"
+
+msgid "Premium Members"
+msgstr "أعضاء بريميوم"
+
+msgid "Save as Draft"
+msgstr "حفظ كمسودة"
+
+msgid "Send Message"
+msgstr "إرسال الرسالة"
+
+msgid "Manage"
+msgstr "إدارة"
+
+msgid "Use"
+msgstr "استخدام"
+
+msgid "No templates yet."
+msgstr "لا توجد قوالب بعد."
+
+msgid "Recipient Filters"
+msgstr "فلاتر المستلمين"
+
+msgid "Age Range"
+msgstr "الفئة العمرية"
+
+msgid "Membership Plan"
+msgstr "باقة العضوية"
+
+msgid "Verification Status"
+msgstr "حالة التوثيق"
+
+msgid "Preview Recipients"
+msgstr "معاينة المستلمين"
+
+msgid "Estimated Recipients:"
+msgstr "العدد التقديري للمستلمين:"
+
+msgid "Recent Communications"
+msgstr "أحدث المراسلات"
+
+msgid "View All"
+msgstr "عرض الكل"
+
+msgid "Date &amp; Time"
+msgstr "التاريخ والوقت"
+
+msgid "Nothing sent yet."
+msgstr "لم يُرسل شيء بعد."
+
+msgid "Communication Performance"
+msgstr "أداء المراسلات"
+
+msgid "Last 4 weeks"
+msgstr "آخر 4 أسابيع"
+
+msgid "Top Recipient Groups"
+msgstr "أهم فئات المستلمين"
+
+msgid "Group"
+msgstr "المجموعة"
+
+msgid "Members"
+msgstr "الأعضاء"
+
+msgid ""
+"Manage member matches, activities and events to build meaningful "
+"connections."
+msgstr "أدر تطابقات الأعضاء وأنشطتهم وفعالياتهم لبناء علاقات هادفة."
+
+msgid "Find Potential Matches"
+msgstr "ابحث عن تطابقات محتملة"
+
+msgid "Advanced Filters"
+msgstr "فلاتر متقدمة"
+
+msgid "Female"
+msgstr "أنثى"
+
+msgid "Male"
+msgstr "ذكر"
+
+msgid "Any"
+msgstr "أي"
+
+msgid "Any age"
+msgstr "أي عمر"
+
+msgid "Within Tanzania"
+msgstr "داخل تنزانيا"
+
+msgid "Profile Type"
+msgstr "نوع الملف الشخصي"
+
+msgid "Premium"
+msgstr "بريميوم"
+
+msgid "Reset"
+msgstr "إعادة تعيين"
+
+msgid "Recent Matches"
+msgstr "أحدث التطابقات"
+
+#, python-format
+msgid "%(score)s%% Match"
+msgstr "تطابق %(score)s%%"
+
+msgid ""
+"No mutual matches yet. They appear here when two members like each other."
+msgstr "لا توجد تطابقات متبادلة بعد. تظهر هنا عندما يُعجب عضوان ببعضهما."
+
+msgid "Member Activities"
+msgstr "أنشطة الأعضاء"
+
+msgid "No activity yet."
+msgstr "لا يوجد نشاط بعد."
+
+msgid "Previous"
+msgstr "السابق"
+
+#, python-format
+msgid "%(compatibility)s%% Match"
+msgstr "تطابق %(compatibility)s%%"
+
+msgid "View Profile"
+msgstr "عرض الملف الشخصي"
+
+msgid "No members match this search."
+msgstr "لا يوجد أعضاء يطابقون هذا البحث."
+
+msgid "Next"
+msgstr "التالي"
+
+msgid "Upcoming Events"
+msgstr "الفعاليات القادمة"
+
+msgid "Full"
+msgstr "مكتمل"
+
+#, python-format
+msgid "%(reg_count)s Registered"
+msgstr "%(reg_count)s مسجّل"
+
+msgid "View Details"
+msgstr "عرض التفاصيل"
+
+msgid "No upcoming events."
+msgstr "لا توجد فعاليات قادمة."
+
+msgid "Match Statistics"
+msgstr "إحصائيات التطابق"
+
+msgid "Last 12 Months"
+msgstr "آخر 12 شهرًا"
+
+msgid "Every mutual match on the platform: two members who liked each other."
+msgstr "كل تطابق متبادل على المنصة: عضوان أُعجب كل منهما بالآخر."
+
+#, python-format
+msgid "All Matches (%(total)s)"
+msgstr "جميع التطابقات (%(total)s)"
+
+msgid "Back to overview"
+msgstr "العودة إلى النظرة العامة"
+
+msgid "Match"
+msgstr "التطابق"
+
+msgid "Score"
+msgstr "النتيجة"
+
+msgid "Matched On"
+msgstr "تاريخ التطابق"
+
+msgid "Messages"
+msgstr "الرسائل"
+
+#, python-format
+msgid "%(n)s message"
+msgid_plural "%(n)s messages"
+msgstr[0] "%(n)s رسالة"
+msgstr[1] "رسالة واحدة"
+msgstr[2] "رسالتان"
+msgstr[3] "%(n)s رسائل"
+msgstr[4] "%(n)s رسالة"
+msgstr[5] "%(n)s رسالة"
+
+msgid "Not contacted"
+msgstr "لم يتم التواصل"
+
+msgid "View messages"
+msgstr "عرض الرسائل"
+
+msgid "No mutual matches yet."
+msgstr "لا توجد تطابقات متبادلة بعد."
+
+msgid "Review member conversations to keep the community safe and respectful."
+msgstr "راجع محادثات الأعضاء للحفاظ على مجتمع آمن ومحترم."
+
+#, python-format
+msgid "Conversation: %(name)s &harr; %(name2)s"
+msgstr "محادثة: %(name)s &harr; %(name2)s"
+
+msgid "Latest Member Messages"
+msgstr "أحدث رسائل الأعضاء"
+
+msgid "All messages"
+msgstr "كل الرسائل"
+
+msgid "Search messages, sender or recipient..."
+msgstr "ابحث في الرسائل أو المرسل أو المستلم..."
+
+msgid "Read"
+msgstr "مقروءة"
+
+msgid "Unread"
+msgstr "غير مقروءة"
+
+msgid "Conversation"
+msgstr "المحادثة"
+
+msgid "No messages found."
+msgstr "لم يتم العثور على رسائل."
+
+msgid "View, manage and monitor all members of Sakinah platform."
+msgstr "اعرض وأدر وراقب جميع أعضاء منصة سكينة."
+
+msgid "Add New Member"
+msgstr "إضافة عضو جديد"
+
+msgid "Search members..."
+msgstr "ابحث عن الأعضاء..."
+
+msgid "All Regions"
+msgstr "جميع المناطق"
+
+msgid "All Status"
+msgstr "جميع الحالات"
+
+msgid "Filter"
+msgstr "تصفية"
+
+msgid "Featured members only"
+msgstr "الأعضاء المميّزون فقط"
+
+msgid "With profile photo"
+msgstr "مع صورة شخصية"
+
+msgid "Members with open reports"
+msgstr "أعضاء لديهم بلاغات مفتوحة"
+
+msgid "Premium members"
+msgstr "أعضاء بريميوم"
+
+msgid "Select all"
+msgstr "تحديد الكل"
+
+msgid "Full Name"
+msgstr "الاسم الكامل"
+
+msgid "Join Date"
+msgstr "تاريخ الانضمام"
+
+msgid "Last Active"
+msgstr "آخر نشاط"
+
+msgid "Actions"
+msgstr "الإجراءات"
+
+#, python-format
+msgid "Select %(name)s"
+msgstr "تحديد %(name)s"
+
+#, python-format
+msgid "%(n_reports)s report"
+msgid_plural "%(n_reports)s reports"
+msgstr[0] "%(n_reports)s بلاغ"
+msgstr[1] "بلاغ واحد"
+msgstr[2] "بلاغان"
+msgstr[3] "%(n_reports)s بلاغات"
+msgstr[4] "%(n_reports)s بلاغًا"
+msgstr[5] "%(n_reports)s بلاغ"
+
+msgid "View profile"
+msgstr "عرض الملف الشخصي"
+
+msgid "Edit"
+msgstr "تعديل"
+
+msgid "Send message"
+msgstr "إرسال رسالة"
+
+msgid "More actions"
+msgstr "المزيد من الإجراءات"
+
+msgid "Remove verification"
+msgstr "إزالة التوثيق"
+
+msgid "Approve &amp; verify"
+msgstr "الموافقة والتوثيق"
+
+msgid "Unfeature"
+msgstr "إلغاء التمييز"
+
+msgid "Feature on home page"
+msgstr "تمييز في الصفحة الرئيسية"
+
+msgid "Activate"
+msgstr "تفعيل"
+
+msgid "Suspend"
+msgstr "إيقاف"
+
+msgid "Reject"
+msgstr "رفض"
+
+msgid "Resolve reports"
+msgstr "معالجة البلاغات"
+
+msgid "Password reset link"
+msgstr "رابط إعادة تعيين كلمة المرور"
+
+msgid "Delete"
+msgstr "حذف"
+
+msgid "No members match these filters."
+msgstr "لا يوجد أعضاء يطابقون هذه الفلاتر."
+
+msgid "Show"
+msgstr "عرض"
+
+msgid "entries"
+msgstr "إدخالات"
+
+#, python-format
+msgid "Showing %(start_index)s to %(end_index)s of %(v_count)s members"
+msgstr "عرض %(start_index)s إلى %(end_index)s من %(v_count)s عضو"
+
+msgid ""
+"Exports the selected members, or everyone in this list when none are "
+"selected"
+msgstr "يصدّر الأعضاء المحددين، أو كل من في هذه القائمة إن لم يُحدَّد أحد"
+
+msgid ""
+"selected. Export without a selection downloads every member in the current "
+"list."
+msgstr "محدد. التصدير دون تحديد ينزّل كل عضو في القائمة الحالية."
+
+msgid "Send a message to the selected members"
+msgstr "أرسل رسالة إلى الأعضاء المحددين"
+
+#, python-brace-format
+msgid ""
+"It arrives as a notification in their member dashboard. Use "
+"<code>{name}</code> for the member's first name."
+msgstr ""
+"تصلهم كإشعار في لوحة العضو. استخدم <code>{name}</code> للاسم الأول للعضو."
+
+msgid "e.g. Please complete your profile"
+msgstr "مثل: يرجى إكمال ملفك الشخصي"
+
+#, python-brace-format
+msgid "Assalamu Alaikum {name}, ..."
+msgstr "السلام عليكم {name}، ..."
+
+msgid "Send to selected"
+msgstr "إرسال إلى المحددين"
+
+msgid "Import members from CSV"
+msgstr "استيراد الأعضاء من ملف CSV"
+
+msgid ""
+"The first row must be the column names: <code>name, age, gender, city, "
+"occupation</code> and optionally <code>phone, education, bio</code>. Gender "
+"is M or F. Imported members have no login until they sign up."
+msgstr ""
+"يجب أن يحتوي السطر الأول على أسماء الأعمدة: <code>name, age, gender, city, "
+"occupation</code> واختياريًا <code>phone, education, bio</code>. الجنس هو M "
+"أو F. الأعضاء المستوردون ليس لديهم تسجيل دخول حتى يسجّلوا."
+
+msgid "Import"
+msgstr "استيراد"
+
+msgid "Open Reports"
+msgstr "البلاغات المفتوحة"
+
+#, python-format
+msgid "by %(get_username)s, %(created)s ago"
+msgstr "بواسطة %(get_username)s، منذ %(created)s"
+
+msgid "Admin Dashboard"
+msgstr "لوحة تحكم المدير"
+
+msgid "Welcome, Super Admin"
+msgstr "مرحبًا أيها المدير العام"
+
+msgid ""
+"Manage Sakinah platform, members, content, payments and all activities."
+msgstr "أدر منصة سكينة والأعضاء والمحتوى والمدفوعات وجميع الأنشطة."
+
+msgid "Monitor, manage and grow the Sakinah platform."
+msgstr "راقب وأدر وطوّر منصة سكينة."
+
+msgid "Member Registration Trend"
+msgstr "اتجاه تسجيل الأعضاء"
+
+msgid "Last 6 Months"
+msgstr "آخر 6 أشهر"
+
+msgid "Member Distribution by Gender"
+msgstr "توزيع الأعضاء حسب الجنس"
+
+msgid "Members by Gender"
+msgstr "الأعضاء حسب الجنس"
+
+msgid "Members by Age Group"
+msgstr "الأعضاء حسب الفئة العمرية"
+
+msgid "Active Members (Last 7 Days)"
+msgstr "الأعضاء النشطون (آخر 7 أيام)"
+
+msgid "Nobody was active this week."
+msgstr "لم يكن أحد نشطًا هذا الأسبوع."
+
+msgid "Latest Registrations"
+msgstr "أحدث التسجيلات"
+
+msgid "No members yet."
+msgstr "لا يوجد أعضاء بعد."
+
+msgid "Latest Members"
+msgstr "أحدث الأعضاء"
+
+msgid "Latest Matches"
+msgstr "أحدث التطابقات"
+
+msgid "Recent Payments"
+msgstr "أحدث المدفوعات"
+
+msgid "Paid"
+msgstr "مدفوع"
+
+msgid "No payments yet."
+msgstr "لا توجد مدفوعات بعد."
+
+msgid "Manage Members"
+msgstr "إدارة الأعضاء"
+
+msgid "View, approve or suspend members"
+msgstr "اعرض الأعضاء أو وافق عليهم أو أوقفهم"
+
+msgid "Monitor matches and reports"
+msgstr "راقب التطابقات والبلاغات"
+
+msgid "Manage Events"
+msgstr "إدارة الفعاليات"
+
+msgid "Create and manage events"
+msgstr "أنشئ الفعاليات وأدرها"
+
+msgid "View payments and reports"
+msgstr "اعرض المدفوعات والتقارير"
+
+msgid "Send emails and notifications"
+msgstr "أرسل رسائل البريد والإشعارات"
+
+msgid "Manage pages, articles and media"
+msgstr "أدر الصفحات والمقالات والوسائط"
+
+msgid "Detailed reports and platform insights"
+msgstr "تقارير مفصلة ورؤى عن المنصة"
+
+msgid "Communications"
+msgstr "المراسلات"
+
+msgid "Manage admin and staff accounts"
+msgstr "أدر حسابات المديرين والموظفين"
+
+msgid "Answer member questions and reports"
+msgstr "أجب عن أسئلة الأعضاء وبلاغاتهم"
+
+msgid "Change Password"
+msgstr "تغيير كلمة المرور"
+
+msgid "Use a strong password you don't use anywhere else."
+msgstr "استخدم كلمة مرور قوية لا تستخدمها في أي مكان آخر."
+
+msgid "Cancel"
+msgstr "إلغاء"
+
+msgid "Update Password"
+msgstr "تحديث كلمة المرور"
+
+msgid "Payment &amp; Finance"
+msgstr "المدفوعات والمالية"
+
+#, python-format
+msgid ""
+"Manage all payments, subscriptions and financial transactions of %(brand)s."
+msgstr "أدر جميع المدفوعات والاشتراكات والمعاملات المالية لـ %(brand)s."
+
+msgid "Download Report"
+msgstr "تنزيل التقرير"
+
+msgid "vs last month"
+msgstr "مقارنة بالشهر الماضي"
+
+msgid "Selected period"
+msgstr "الفترة المحددة"
+
+msgid "Revenue Trend"
+msgstr "اتجاه الإيرادات"
+
+#, python-format
+msgid "%(currency)s thousands"
+msgstr "%(currency)s بالآلاف"
+
+msgid "Revenue trend"
+msgstr "اتجاه الإيرادات"
+
+msgid "Revenue by Service Type"
+msgstr "الإيرادات حسب نوع الخدمة"
+
+msgid "Total Revenue"
+msgstr "إجمالي الإيرادات"
+
+msgid "Revenue by Payment Gateway"
+msgstr "الإيرادات حسب بوابة الدفع"
+
+msgid "No payments in this period."
+msgstr "لا توجد مدفوعات في هذه الفترة."
+
+msgid "Recent Transactions"
+msgstr "أحدث المعاملات"
+
+msgid "Member / Customer"
+msgstr "العضو / العميل"
+
+#, python-format
+msgid "Amount (%(currency)s)"
+msgstr "المبلغ (%(currency)s)"
+
+msgid "Receipt"
+msgstr "الإيصال"
+
+#, python-format
+msgid "%(name)s plan (%(months)s mo)"
+msgstr "باقة %(name)s (%(months)s شهر)"
+
+msgid "Confirm"
+msgstr "تأكيد"
+
+msgid ""
+"No payments recorded yet. Use <b>Record Manual Payment</b> when a member "
+"pays by mobile money, bank or cash."
+msgstr ""
+"لم تُسجَّل أي مدفوعات بعد. استخدم <b>تسجيل دفعة يدوية</b> عندما يدفع عضو عبر"
+" المحفظة الهاتفية أو البنك أو نقدًا."
+
+msgid "Subscription Plans Revenue"
+msgstr "إيرادات باقات الاشتراك"
+
+msgid "Subscribers"
+msgstr "المشتركون"
+
+#, python-format
+msgid "Revenue (%(currency)s)"
+msgstr "الإيرادات (%(currency)s)"
+
+msgid "Total"
+msgstr "الإجمالي"
+
+msgid "Record Manual Payment"
+msgstr "تسجيل دفعة يدوية"
+
+msgid "Open payment form"
+msgstr "فتح نموذج الدفع"
+
+msgid "Save Payment"
+msgstr "حفظ الدفعة"
+
+msgid ""
+"Online gateways (Selcom, Pesapal, AzamPay) are not connected yet, so record "
+"mobile money, bank and cash payments here. A completed Premium payment for a"
+" member activates their plan immediately."
+msgstr ""
+"بوابات الدفع الإلكتروني (Selcom وPesapal وAzamPay) غير متصلة بعد، لذا سجّل "
+"هنا المدفوعات عبر المحفظة الهاتفية والبنك والنقد. الدفعة المكتملة لباقة "
+"بريميوم تفعّل باقة العضو فورًا."
+
+msgid "Account Summary"
+msgstr "ملخص الحساب"
+
+msgid "Export to Excel (CSV)"
+msgstr "تصدير إلى Excel (CSV)"
+
+msgid "Financial Report"
+msgstr "التقرير المالي"
+
+#, python-format
+msgid "Receipt %(invoice_no)s"
+msgstr "إيصال %(invoice_no)s"
+
+msgid "Received from"
+msgstr "مستلَم من"
+
+#, python-format
+msgid "&middot; %(name)s plan, %(months)s month"
+msgid_plural "&middot; %(name)s plan, %(months)s months"
+msgstr[0] "&middot; باقة %(name)s، %(months)s شهر"
+msgstr[1] "&middot; باقة %(name)s، شهر واحد"
+msgstr[2] "&middot; باقة %(name)s، شهران"
+msgstr[3] "&middot; باقة %(name)s، %(months)s أشهر"
+msgstr[4] "&middot; باقة %(name)s، %(months)s شهرًا"
+msgstr[5] "&middot; باقة %(name)s، %(months)s شهر"
+
+msgid "Paid via"
+msgstr "تم الدفع عبر"
+
+msgid "Asante kwa malipo yako. Thank you for your payment."
+msgstr "شكرًا لك على الدفع."
+
+msgid "Print / Save as PDF"
+msgstr "طباعة / حفظ كملف PDF"
+
+#, python-format
+msgid "%(get_kind_display)s from"
+msgstr "%(get_kind_display)s من"
+
+msgid "a visitor"
+msgstr "زائر"
+
+msgid "Open attachment"
+msgstr "فتح المرفق"
+
+#, python-format
+msgid "Email: %(email)s"
+msgstr "البريد الإلكتروني: %(email)s"
+
+#, python-format
+msgid "Replied %(replied_at)s"
+msgstr "تم الرد %(replied_at)s"
+
+msgid "Add"
+msgstr "إضافة"
+
+msgid "Add "
+msgstr "إضافة "
+
+msgid "Fill in the details and save."
+msgstr "املأ التفاصيل ثم احفظ."
+
+#, python-format
+msgid "Verify %(name)s when I save"
+msgstr "توثيق %(name)s عند الحفظ"
+
+msgid "Adds the verified badge to their profile."
+msgstr "يضيف شارة التوثيق إلى ملفه الشخصي."
+
+msgid "Save and add another"
+msgstr "حفظ وإضافة آخر"
+
+msgid "Send reply &amp; save"
+msgstr "إرسال الرد والحفظ"
+
+msgid "Save"
+msgstr "حفظ"
+
+#, python-format
+msgid "Delete %(obj)s permanently?"
+msgstr "حذف %(obj)s نهائيًا؟"
+
+msgid "Search, add, edit and remove items."
+msgstr "ابحث عن العناصر وأضفها وعدّلها واحذفها."
+
+msgid "Add New"
+msgstr "إضافة جديد"
+
+msgid "Search and manage records."
+msgstr "ابحث في السجلات وأدرها."
+
+#, python-format
+msgid "Search %(title)s..."
+msgstr "ابحث في %(title)s..."
+
+#, python-format
+msgid "%(v_count)s result"
+msgid_plural "%(v_count)s results"
+msgstr[0] "%(v_count)s نتيجة"
+msgstr[1] "نتيجة واحدة"
+msgstr[2] "نتيجتان"
+msgstr[3] "%(v_count)s نتائج"
+msgstr[4] "%(v_count)s نتيجة"
+msgstr[5] "%(v_count)s نتيجة"
+
+msgid "Open and reply"
+msgstr "فتح والرد"
+
+msgid "Delete this item permanently?"
+msgstr "حذف هذا العنصر نهائيًا؟"
+
+msgid "Nothing here yet."
+msgstr "لا يوجد شيء هنا بعد."
+
+msgid "Add the first one"
+msgstr "أضف الأول"
+
+#, python-format
+msgid "Results for &ldquo;%(q)s&rdquo;"
+msgstr "نتائج &ldquo;%(q)s&rdquo;"
+
+msgid "Type in the search box above."
+msgstr "اكتب في مربع البحث أعلاه."
+
+msgid "No matches."
+msgstr "لا توجد نتائج."
+
+msgid "Site Settings"
+msgstr "إعدادات الموقع"
+
+msgid "Business details, payment instructions and home page content."
+msgstr "بيانات النشاط وتعليمات الدفع ومحتوى الصفحة الرئيسية."
+
+msgid "Save Settings"
+msgstr "حفظ الإعدادات"
+
+msgid "Staff Account"
+msgstr "حساب الموظف"
+
+msgid "Edit staff account"
+msgstr "تعديل حساب الموظف"
+
+msgid "Add Staff Member"
+msgstr "إضافة موظف"
+
+msgid "Create a dashboard account for a team member."
+msgstr "أنشئ حسابًا في لوحة التحكم لأحد أعضاء الفريق."
+
+msgid "Staff Accounts"
+msgstr "حسابات الموظفين"
+
+msgid "People who can sign in to this dashboard."
+msgstr "الأشخاص الذين يمكنهم الدخول إلى لوحة التحكم هذه."
+
+msgid "Last sign in"
+msgstr "آخر تسجيل دخول"
+
+msgid "You"
+msgstr "أنت"
+
+msgid "Blocked"
+msgstr "محظور"
+
+msgid "Never"
+msgstr "أبدًا"
+
+#, python-format
+msgid "Delete %(username)s? They will no longer be able to sign in."
+msgstr "حذف %(username)s؟ لن يتمكن من تسجيل الدخول بعد الآن."
+
+msgid "No staff accounts yet."
+msgstr "لا توجد حسابات موظفين بعد."
+
+msgid "Change"
+msgstr "تغيير"
+
+msgid "Upload"
+msgstr "رفع"
+
+msgid "Remove"
+msgstr "إزالة"
+
+msgid "Only the Super Admin can open that page."
+msgstr "المدير العام فقط يمكنه فتح هذه الصفحة."
+
+msgid "That area is for Sakinah administrators only."
+msgstr "هذه المنطقة مخصصة لمديري سكينة فقط."
+
+msgid "Online"
+msgstr "متصل"
+
+#, python-format
+#| msgid "%(n)s message"
+#| msgid_plural "%(n)s messages"
+msgid "%(n)d mins ago"
+msgstr "منذ %(n)d دقيقة"
+
+#, python-format
+#| msgid "Today: %(n)s"
+msgid "Today %(time)s"
+msgstr "اليوم %(time)s"
+
+#, python-format
+#| msgid "Yesterday"
+msgid "Yesterday %(time)s"
+msgstr "أمس %(time)s"
+
+msgid "Total Members"
+msgstr "إجمالي الأعضاء"
+
+#, python-format
+msgid "New this month: %(n)s"
+msgstr "الجدد هذا الشهر: %(n)s"
+
+msgid "Active Members"
+msgstr "الأعضاء النشطون"
+
+#, python-format
+msgid "Online now: %(n)s"
+msgstr "متصل الآن: %(n)s"
+
+#, python-format
+msgid "%(pct)s%% of total"
+msgstr "%(pct)s%% من الإجمالي"
+
+msgid "Total Messages"
+msgstr "إجمالي الرسائل"
+
+#, python-format
+msgid "Today: %(n)s"
+msgstr "اليوم: %(n)s"
+
+msgid "New Members"
+msgstr "أعضاء جدد"
+
+msgid "Awaiting verification"
+msgstr "بانتظار التوثيق"
+
+#, python-format
+msgid "%(pct)s%% active and verified"
+msgstr "%(pct)s%% نشط وموثّق"
+
+msgid "Did not meet criteria"
+msgstr "لم يستوفوا المعايير"
+
+msgid "Suspended Members"
+msgstr "الأعضاء الموقوفون"
+
+msgid "Temporarily suspended"
+msgstr "موقوفون مؤقتًا"
+
+msgid "Search members by name, email, phone, location..."
+msgstr "ابحث عن الأعضاء بالاسم أو البريد أو الهاتف أو الموقع..."
+
+msgid "Your profile is verified"
+msgstr "تم توثيق ملفك الشخصي"
+
+msgid "Your profile now shows the verified badge."
+msgstr "يعرض ملفك الآن شارة التوثيق."
+
+msgid "Contact support if you think this is a mistake."
+msgstr "تواصل مع الدعم إذا كنت تعتقد أن هذا خطأ."
+
+msgid "Password links are only for member accounts."
+msgstr "روابط كلمة المرور مخصصة لحسابات الأعضاء فقط."
+
+#, python-format
+msgid ""
+"Password reset link for %(name)s (works once, for 3 days). Copy it and send "
+"it to them: %(user)s"
+msgstr ""
+"رابط إعادة تعيين كلمة المرور لـ %(name)s (يعمل مرة واحدة، لمدة 3 أيام). "
+"انسخه وأرسله إليه: %(user)s"
+
+#, python-format
+msgid "%(name)s %(done)s."
+msgstr "%(name)s: %(done)s."
+
+msgid "That action is not allowed for this member."
+msgstr "هذا الإجراء غير مسموح لهذا العضو."
+
+msgid "Select at least one member first."
+msgstr "اختر عضوًا واحدًا على الأقل أولًا."
+
+msgid "Write a subject for the message."
+msgstr "اكتب موضوعًا للرسالة."
+
+#, python-format
+msgid "Message sent to %(n)d member."
+msgid_plural "Message sent to %(n)d members."
+msgstr[0] "أُرسلت الرسالة إلى %(n)d عضو."
+msgstr[1] "أُرسلت الرسالة إلى عضو واحد."
+msgstr[2] "أُرسلت الرسالة إلى عضوين."
+msgstr[3] "أُرسلت الرسالة إلى %(n)d أعضاء."
+msgstr[4] "أُرسلت الرسالة إلى %(n)d عضوًا."
+msgstr[5] "أُرسلت الرسالة إلى %(n)d عضو."
+
+#, python-format
+msgid "%(n)d without a login account was skipped."
+msgid_plural "%(n)d without a login account were skipped."
+msgstr[0] "تم تخطي %(n)d بدون حساب دخول."
+msgstr[1] "تم تخطي واحد بدون حساب دخول."
+msgstr[2] "تم تخطي اثنين بدون حساب دخول."
+msgstr[3] "تم تخطي %(n)d بدون حساب دخول."
+msgstr[4] "تم تخطي %(n)d بدون حساب دخول."
+msgstr[5] "تم تخطي %(n)d بدون حساب دخول."
+
+#, python-format
+msgid "%(n)d member %(done)s."
+msgid_plural "%(n)d members %(done)s."
+msgstr[0] "%(n)d عضو: %(done)s."
+msgstr[1] "عضو واحد: %(done)s."
+msgstr[2] "عضوان: %(done)s."
+msgstr[3] "%(n)d أعضاء: %(done)s."
+msgstr[4] "%(n)d عضوًا: %(done)s."
+msgstr[5] "%(n)d عضو: %(done)s."
+
+#, python-format
+msgid "%(n)d member skipped (staff accounts cannot be changed here)."
+msgid_plural "%(n)d members skipped (staff accounts cannot be changed here)."
+msgstr[0] "تم تخطي %(n)d عضو (لا يمكن تغيير حسابات الموظفين هنا)."
+msgstr[1] "تم تخطي عضو واحد (لا يمكن تغيير حسابات الموظفين هنا)."
+msgstr[2] "تم تخطي عضوين (لا يمكن تغيير حسابات الموظفين هنا)."
+msgstr[3] "تم تخطي %(n)d أعضاء (لا يمكن تغيير حسابات الموظفين هنا)."
+msgstr[4] "تم تخطي %(n)d عضوًا (لا يمكن تغيير حسابات الموظفين هنا)."
+msgstr[5] "تم تخطي %(n)d عضو (لا يمكن تغيير حسابات الموظفين هنا)."
+
+msgid "Member ID"
+msgstr "رقم العضو"
+
+msgid "Joined"
+msgstr "تاريخ الانضمام"
+
+msgid "Last active"
+msgstr "آخر نشاط"
+
+msgid "Choose a .csv file to import."
+msgstr "اختر ملف .csv لاستيراده."
+
+msgid "The file must be saved as UTF-8 CSV."
+msgstr "يجب حفظ الملف بصيغة CSV بترميز UTF-8."
+
+#, python-format
+msgid "Imported %(n)d member."
+msgid_plural "Imported %(n)d members."
+msgstr[0] "تم استيراد %(n)d عضو."
+msgstr[1] "تم استيراد عضو واحد."
+msgstr[2] "تم استيراد عضوين."
+msgstr[3] "تم استيراد %(n)d أعضاء."
+msgstr[4] "تم استيراد %(n)d عضوًا."
+msgstr[5] "تم استيراد %(n)d عضو."
+
+#, python-format
+msgid ""
+"Skipped %(n)d row with missing or invalid name, age, gender or city (rows "
+"%(rows)s)."
+msgid_plural ""
+"Skipped %(n)d rows with missing or invalid name, age, gender or city (rows "
+"%(rows)s)."
+msgstr[0] ""
+"تم تخطي %(n)d صف بسبب اسم أو عمر أو جنس أو مدينة مفقودة أو غير صالحة (الصفوف"
+" %(rows)s)."
+msgstr[1] ""
+"تم تخطي صف واحد بسبب اسم أو عمر أو جنس أو مدينة مفقودة أو غير صالحة (الصفوف "
+"%(rows)s)."
+msgstr[2] ""
+"تم تخطي صفين بسبب اسم أو عمر أو جنس أو مدينة مفقودة أو غير صالحة (الصفوف "
+"%(rows)s)."
+msgstr[3] ""
+"تم تخطي %(n)d صفوف بسبب اسم أو عمر أو جنس أو مدينة مفقودة أو غير صالحة "
+"(الصفوف %(rows)s)."
+msgstr[4] ""
+"تم تخطي %(n)d صفًا بسبب اسم أو عمر أو جنس أو مدينة مفقودة أو غير صالحة "
+"(الصفوف %(rows)s)."
+msgstr[5] ""
+"تم تخطي %(n)d صف بسبب اسم أو عمر أو جنس أو مدينة مفقودة أو غير صالحة (الصفوف"
+" %(rows)s)."
+
+msgid "Total Matches"
+msgstr "إجمالي التطابقات"
+
+msgid "New matches this month"
+msgstr "تطابقات جديدة هذا الشهر"
+
+msgid "Messages Exchanged"
+msgstr "الرسائل المتبادلة"
+
+msgid "Scheduled"
+msgstr "مُجدولة"
+
+msgid "Total Activities"
+msgstr "إجمالي الأنشطة"
+
+msgid "liked a profile"
+msgstr "أُعجب بملف شخصي"
+
+msgid "Like"
+msgstr "إعجاب"
+
+#, python-format
+msgid "joined an event: %(title)s"
+msgstr "انضم إلى فعالية: %(title)s"
+
+msgid "Event Registration"
+msgstr "التسجيل في فعالية"
+
+msgid "sent a message"
+msgstr "أرسل رسالة"
+
+msgid "received a new match"
+msgstr "حصل على تطابق جديد"
+
+msgid "New Match"
+msgstr "تطابق جديد"
+
+msgid "joined Sakinah"
+msgstr "انضم إلى سكينة"
+
+msgid "New Member"
+msgstr "عضو جديد"
+
+msgid "Matches"
+msgstr "التطابقات"
+
+msgid "Event Participants"
+msgstr "المشاركون في الفعاليات"
+
+msgid "Search members by name, email, location..."
+msgstr "ابحث عن الأعضاء بالاسم أو البريد أو الموقع..."
+
+msgid "Sakinah report"
+msgstr "تقرير سكينة"
+
+msgid "New members"
+msgstr "أعضاء جدد"
+
+msgid "Total members"
+msgstr "إجمالي الأعضاء"
+
+msgid "New adverts"
+msgstr "إعلانات جديدة"
+
+msgid "Event registrations"
+msgstr "تسجيلات الفعاليات"
+
+msgid "Payments"
+msgstr "المدفوعات"
+
+msgid "Revenue"
+msgstr "الإيرادات"
+
+msgid "Saved as draft."
+msgstr "تم الحفظ كمسودة."
+
+#, python-format
+msgid "Sent to %(n)d member."
+msgid_plural "Sent to %(n)d members."
+msgstr[0] "أُرسلت إلى %(n)d عضو."
+msgstr[1] "أُرسلت إلى عضو واحد."
+msgstr[2] "أُرسلت إلى عضوين."
+msgstr[3] "أُرسلت إلى %(n)d أعضاء."
+msgstr[4] "أُرسلت إلى %(n)d عضوًا."
+msgstr[5] "أُرسلت إلى %(n)d عضو."
+
+#, python-format
+msgid "Could not send: %(e)s. Saved as draft."
+msgstr "تعذّر الإرسال: %(e)s. تم الحفظ كمسودة."
+
+msgid "Emails Sent"
+msgstr "رسائل البريد المرسلة"
+
+msgid "In-App Messages"
+msgstr "الرسائل الداخلية"
+
+msgid "Notifications"
+msgstr "الإشعارات"
+
+msgid "Member Messages"
+msgstr "رسائل الأعضاء"
+
+msgid "Emails"
+msgstr "رسائل البريد"
+
+msgid "In-App"
+msgstr "داخل التطبيق"
+
+#, python-format
+msgid "Payment %(invoice_no)s recorded."
+msgstr "تم تسجيل الدفعة %(invoice_no)s."
+
+#, python-format
+msgid "%(plan)s activated for %(payer)s."
+msgstr "تم تفعيل %(plan)s لـ %(payer)s."
+
+msgid "Please correct the payment form."
+msgstr "يرجى تصحيح نموذج الدفع."
+
+msgid "Total Transactions"
+msgstr "إجمالي المعاملات"
+
+msgid "Paying Members"
+msgstr "الأعضاء الدافعون"
+
+msgid "Premium Revenue"
+msgstr "إيرادات بريميوم"
+
+msgid "Advert Revenue"
+msgstr "إيرادات الإعلانات"
+
+msgid "No payments"
+msgstr "لا توجد مدفوعات"
+
+msgid "Collected in period"
+msgstr "المحصّل في الفترة"
+
+msgid "Pending payments"
+msgstr "مدفوعات معلّقة"
+
+msgid "Refunds"
+msgstr "المبالغ المستردة"
+
+msgid "Net revenue"
+msgstr "صافي الإيرادات"
+
+#, python-format
+msgid "%(invoice_no)s %(result)s."
+msgstr "%(invoice_no)s: %(result)s."
+
+#, python-format
+msgid "%(item)s added."
+msgstr "تمت إضافة %(item)s."
+
+#, python-format
+msgid "%(item)s saved."
+msgstr "تم حفظ %(item)s."
+
+msgid "Staff accounts can't be deleted here."
+msgstr "لا يمكن حذف حسابات الموظفين هنا."
+
+#, python-format
+msgid "%(label)s deleted."
+msgstr "تم حذف %(label)s."
+
+#, python-format
+msgid "%(label)s is still in use, so it can't be deleted."
+msgstr "%(label)s لا يزال قيد الاستخدام، لذا لا يمكن حذفه."
+
+#, python-format
+msgid "%(item)s %(result)s."
+msgstr "%(item)s: %(result)s."
+
+msgid "First name"
+msgstr "الاسم الأول"
+
+msgid "Last name"
+msgstr "اسم العائلة"
+
+msgid ""
+"A Super Admin can also manage staff accounts, site settings and the audit "
+"log."
+msgstr ""
+"يمكن للمدير العام أيضًا إدارة حسابات الموظفين وإعدادات الموقع وسجل التدقيق."
+
+msgid "Account active"
+msgstr "الحساب نشط"
+
+msgid "Untick to block this person from signing in."
+msgstr "ألغِ التحديد لمنع هذا الشخص من تسجيل الدخول."
+
+msgid "Required for a new account. Leave empty to keep the current password."
+msgstr "مطلوب لحساب جديد. اتركه فارغًا للإبقاء على كلمة المرور الحالية."
+
+msgid "This username is taken."
+msgstr "اسم المستخدم هذا مأخوذ."
+
+msgid "Another account uses this email."
+msgstr "حساب آخر يستخدم هذا البريد الإلكتروني."
+
+msgid "You can't remove your own Super Admin role or block your own account."
+msgstr "لا يمكنك إزالة دورك كمدير عام أو حظر حسابك."
+
+#, python-format
+msgid "%(username)s created."
+msgstr "تم إنشاء %(username)s."
+
+#, python-format
+msgid "%(username)s saved."
+msgstr "تم حفظ %(username)s."
+
+msgid "You can't delete your own account."
+msgstr "لا يمكنك حذف حسابك."
+
+#, python-format
+msgid "%(name)s deleted."
+msgstr "تم حذف %(name)s."
+
+msgid "Business details"
+msgstr "بيانات النشاط"
+
+msgid "Home page"
+msgstr "الصفحة الرئيسية"
+
+msgid "Images"
+msgstr "الصور"
+
+msgid "Settings saved."
+msgstr "تم حفظ الإعدادات."
+
+msgid "Password changed."
+msgstr "تم تغيير كلمة المرور."
+
+msgid "This member can't receive calls."
+msgstr "لا يمكن لهذا العضو تلقي المكالمات."
+
+msgid "Calls are not available for this account."
+msgstr "المكالمات غير متاحة لهذا الحساب."
+
+msgid "You can't call this member."
+msgstr "لا يمكنك الاتصال بهذا العضو."
+
+msgid "Complete your profile first."
+msgstr "أكمل ملفك الشخصي أولًا."
+
+msgid "Your plan does not include calls. Upgrade to call other members."
+msgstr "باقتك لا تشمل المكالمات. قم بالترقية للاتصال بالأعضاء الآخرين."
+
+msgid ""
+"You have used today's call time. It comes back in 24 hours, or upgrade for "
+"more."
+msgstr ""
+"لقد استهلكت وقت المكالمات لليوم. يعود بعد 24 ساعة، أو قم بالترقية للمزيد."
+
+#, python-format
+msgid "%(first_name)s is on another call. Try again in a few minutes."
+msgstr "%(first_name)s في مكالمة أخرى. حاول مرة أخرى بعد بضع دقائق."
+
+msgid "Basic Information"
+msgstr "المعلومات الأساسية"
+
+msgid "name, age, city and occupation"
+msgstr "الاسم والعمر والمدينة والمهنة"
+
+msgid "education"
+msgstr "التعليم"
+
+msgid "height"
+msgstr "الطول"
+
+msgid "languages"
+msgstr "اللغات"
+
+msgid "profile photo"
+msgstr "الصورة الشخصية"
+
+msgid "at least 3 more photos"
+msgstr "3 صور إضافية على الأقل"
+
+msgid "About Me"
+msgstr "نبذة عني"
+
+msgid "about me"
+msgstr "نبذة عني"
+
+msgid "interests"
+msgstr "الاهتمامات"
+
+msgid "religion & values"
+msgstr "الدين والقيم"
+
+msgid "family background"
+msgstr "الخلفية العائلية"
+
+msgid "Partner Preferences"
+msgstr "تفضيلات الشريك"
+
+msgid "preferred age"
+msgstr "العمر المفضل"
+
+msgid "preferred location"
+msgstr "الموقع المفضل"
+
+msgid "Verification"
+msgstr "التوثيق"
+
+msgid "verified profile"
+msgstr "ملف موثّق"
+
+msgid "Interests & lifestyle"
+msgstr "الاهتمامات ونمط الحياة"
+
+msgid "Preferred Location"
+msgstr "الموقع المفضل"
+
+msgid "Preferred Education Level"
+msgstr "المستوى التعليمي المفضل"
+
+msgid "Preferred Marital Status"
+msgstr "الحالة الاجتماعية المفضلة"
+
+msgid "Religious Practice"
+msgstr "الالتزام الديني"
+
+msgid "Date of Birth"
+msgstr "تاريخ الميلاد"
+
+msgid "Profession"
+msgstr "المهنة"
+
+msgid "Must be greater than the minimum age."
+msgstr "يجب أن يكون أكبر من الحد الأدنى للعمر."
+
+msgid "1 month"
+msgstr "شهر واحد"
+
+msgid "3 months"
+msgstr "3 أشهر"
+
+msgid "6 months"
+msgstr "6 أشهر"
+
+msgid "12 months"
+msgstr "12 شهرًا"
+
+msgid "Paid with"
+msgstr "تم الدفع بواسطة"
+
+msgid "Phone number used"
+msgstr "رقم الهاتف المستخدم"
+
+msgid "Transaction reference"
+msgstr "مرجع المعاملة"
+
+msgid "Verified Only"
+msgstr "الموثّقون فقط"
+
+msgid "Premium Only"
+msgstr "بريميوم فقط"
+
+msgid "All Ages"
+msgstr "جميع الأعمار"
+
+msgid "Liked your profile"
+msgstr "أُعجب بملفك الشخصي"
+
+msgid "Today"
+msgstr "اليوم"
+
+msgid "Offline"
+msgstr "غير متصل"
+
+msgid "Mutual Match"
+msgstr "إعجاب متبادل"
+
+msgid "Likes You"
+msgstr "معجب بك"
+
+msgid "You Liked"
+msgstr "أعجبت به"
+
+msgid "Seeking Marriage"
+msgstr "يبحث عن الزواج"
+
+msgid "Upgrade to see"
+msgstr "قم بالترقية للعرض"
+
+#, python-format
+msgid "Message %(first_name)s"
+msgstr "راسل %(first_name)s"
+
+#, python-format
+msgid "Voice call %(first_name)s"
+msgstr "مكالمة صوتية مع %(first_name)s"
+
+#, python-format
+msgid "Video call %(first_name)s"
+msgstr "مكالمة فيديو مع %(first_name)s"
+
+msgid "Save event"
+msgstr "حفظ الفعالية"
+
+#, python-format
+msgid "%(seats_left)s seats left"
+msgstr "تبقّى %(seats_left)s مقعد"
+
+msgid "Fully booked"
+msgstr "مكتمل الحجز"
+
+msgid "Open seating"
+msgstr "جلوس مفتوح"
+
+#, python-format
+msgid "Cancel your registration for %(title)s?"
+msgstr "إلغاء تسجيلك في %(title)s؟"
+
+msgid "Event ended"
+msgstr "انتهت الفعالية"
+
+msgid "Register Now"
+msgstr "سجّل الآن"
+
+msgid "Edit Profile"
+msgstr "تعديل الملف الشخصي"
+
+msgid "Preferences"
+msgstr "التفضيلات"
+
+msgid "Privacy Settings"
+msgstr "إعدادات الخصوصية"
+
+msgid "Play voice message"
+msgstr "تشغيل الرسالة الصوتية"
+
+msgid "My Activities"
+msgstr "أنشطتي"
+
+msgid "Track all your activities and interactions on Sakinah."
+msgstr "تابع جميع أنشطتك وتفاعلاتك على سكينة."
+
+msgid "Na Mwenyezi Mungu aliwaumba kwa jozi."
+msgstr "وخلقناكم أزواجًا."
+
+msgid "Qur'an 78:8"
+msgstr "النبأ 78:8"
+
+#, python-format
+msgid "%(pct)s%% this week"
+msgstr "%(pct)s%% هذا الأسبوع"
+
+msgid "&uarr; you both liked"
+msgstr "&uarr; أُعجب كل منكما بالآخر"
+
+msgid "Recent Activities"
+msgstr "أحدث الأنشطة"
+
+#, python-format
+msgid "You got a <b>mutual match</b> with <b>%(name)s</b>"
+msgstr "حصلت على <b>تطابق متبادل</b> مع <b>%(name)s</b>"
+
+#, python-format
+msgid "You saved <b>%(name)s</b>&rsquo;s profile"
+msgstr "حفظت الملف الشخصي لـ <b>%(name)s</b>"
+
+msgid "More"
+msgstr "المزيد"
+
+#, python-format
+msgid "Block %(name)s?"
+msgstr "حظر %(name)s؟"
+
+msgid "Block member"
+msgstr "حظر العضو"
+
+msgid "You searched for"
+msgstr "بحثت عن"
+
+#, python-format
+msgid "%(n)s result"
+msgid_plural "%(n)s results"
+msgstr[0] "%(n)s نتيجة"
+msgstr[1] "نتيجة واحدة"
+msgstr[2] "نتيجتان"
+msgstr[3] "%(n)s نتائج"
+msgstr[4] "%(n)s نتيجة"
+msgstr[5] "%(n)s نتيجة"
+
+msgid "Search again"
+msgstr "ابحث مجددًا"
+
+msgid "No activity here yet. Start by visiting"
+msgstr "لا يوجد نشاط هنا بعد. ابدأ بزيارة"
+
+msgid "Newer"
+msgstr "الأحدث"
+
+#, python-format
+msgid "Page %(number)s of %(num_pages)s"
+msgstr "الصفحة %(number)s من %(num_pages)s"
+
+msgid "Older"
+msgstr "الأقدم"
+
+msgid "Activity Summary (Last 30 Days)"
+msgstr "ملخص النشاط (آخر 30 يومًا)"
+
+msgid "Top Interactions"
+msgstr "أبرز التفاعلات"
+
+msgid "No interactions yet."
+msgstr "لا توجد تفاعلات بعد."
+
+msgid "Tips to Increase Your Activity"
+msgstr "نصائح لزيادة نشاطك"
+
+msgid "Complete your profile to get more views"
+msgstr "أكمل ملفك الشخصي للحصول على مشاهدات أكثر"
+
+msgid "Add clear and recent photos"
+msgstr "أضف صورًا واضحة وحديثة"
+
+msgid "Be active and respond to messages"
+msgstr "كن نشطًا وردّ على الرسائل"
+
+msgid "Search and like profiles that match your preferences"
+msgstr "ابحث عن الملفات التي تناسب تفضيلاتك وأعجب بها"
+
+msgid "Search members by name, location, age..."
+msgstr "ابحث عن الأعضاء بالاسم أو الموقع أو العمر..."
+
+msgid "Premium Member"
+msgstr "عضو بريميوم"
+
+msgid "My Profile"
+msgstr "ملفي الشخصي"
+
+msgid "Settings"
+msgstr "الإعدادات"
+
+msgid "Main website"
+msgstr "الموقع الرئيسي"
+
+msgid "Admin dashboard"
+msgstr "لوحة تحكم المدير"
+
+msgid "My Matches"
+msgstr "تطابقاتي"
+
+msgid "Profile Views"
+msgstr "مشاهدات الملف الشخصي"
+
+msgid "Who Liked Me"
+msgstr "من أُعجب بي"
+
+msgid "Membership"
+msgstr "العضوية"
+
+msgid "Safety &amp; Privacy"
+msgstr "الأمان والخصوصية"
+
+msgid "Help &amp; Support"
+msgstr "المساعدة والدعم"
+
+msgid ""
+"&ldquo;Na katika Ishara Zake ni kuwa Amekuumbieni wake zenu kutokana na "
+"nafsi zenu ili mpate utulivu kwao...&rdquo;"
+msgstr ""
+"&ldquo;وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا "
+"لِّتَسْكُنُوا إِلَيْهَا...&rdquo;"
+
+msgid "(Qur'an 30:21)"
+msgstr "(الروم 30:21)"
+
+msgid "&ldquo;Na katika kila kitu tumeumba kwa jozi.&rdquo;"
+msgstr "&ldquo;وَمِن كُلِّ شَيْءٍ خَلَقْنَا زَوْجَيْنِ&rdquo;"
+
+msgid "(Qur'an 51:49)"
+msgstr "(الذاريات 51:49)"
+
+#, python-format
+msgid "Account %(get_status_display)s"
+msgstr "الحساب %(get_status_display)s"
+
+#, python-format
+msgid "Your account is %(get_status_display)s"
+msgstr "حسابك %(get_status_display)s"
+
+msgid ""
+"Your profile is temporarily hidden and you can't use matching or messaging "
+"right now."
+msgstr "ملفك الشخصي مخفي مؤقتًا ولا يمكنك استخدام التطابق أو المراسلة الآن."
+
+msgid ""
+"Your profile did not meet our community guidelines, so it is not shown to "
+"other members."
+msgstr "ملفك الشخصي لم يستوفِ إرشادات مجتمعنا، لذا لا يُعرض للأعضاء الآخرين."
+
+msgid "If you think this is a mistake, please contact our support team."
+msgstr "إذا كنت تعتقد أن هذا خطأ، يرجى التواصل مع فريق الدعم."
+
+msgid "Contact Support"
+msgstr "اتصل بالدعم"
+
+msgid "Private call"
+msgstr "مكالمة خاصة"
+
+msgid "Connecting…"
+msgstr "جارٍ الربط…"
+
+msgid "Mute microphone"
+msgstr "كتم الميكروفون"
+
+msgid "Mute"
+msgstr "كتم"
+
+msgid "Turn camera off"
+msgstr "إيقاف الكاميرا"
+
+msgid "Camera"
+msgstr "الكاميرا"
+
+msgid "Switch camera"
+msgstr "تبديل الكاميرا"
+
+msgid "Flip"
+msgstr "قلب"
+
+msgid "End call"
+msgstr "إنهاء المكالمة"
+
+msgid "End"
+msgstr "إنهاء"
+
+msgid "Assalamu Alaikum,"
+msgstr "السلام عليكم،"
+
+msgid ""
+"Karibu Sakinah. Endelea kuboresha wasifu wako ili kupata mwenza anayekufaa."
+msgstr "مرحبًا بك في سكينة. واصل تحسين ملفك الشخصي لتجد الشريك المناسب لك."
+
+msgid "Ukamili wa Wasifu"
+msgstr "اكتمال الملف الشخصي"
+
+msgid "Complete Profile"
+msgstr "أكمل الملف الشخصي"
+
+msgid "Ndoa ni Ibadah, Utulivu na Baraka"
+msgstr "الزواج عبادة وسكينة وبركة"
+
+msgid "People matched with you"
+msgstr "أشخاص متطابقون معك"
+
+msgid "Search members by your preference"
+msgstr "ابحث عن الأعضاء حسب تفضيلاتك"
+
+msgid "Unread messages"
+msgstr "رسائل غير مقروءة"
+
+#, python-format
+msgid "%(pct)s%% Complete"
+msgstr "مكتمل %(pct)s%%"
+
+msgid "Update your profile"
+msgstr "حدّث ملفك الشخصي"
+
+msgid "Suggested Matches For You"
+msgstr "تطابقات مقترحة لك"
+
+msgid "No suggestions yet. Update your partner preferences to see matches."
+msgstr "لا توجد اقتراحات بعد. حدّث تفضيلات الشريك لرؤية التطابقات."
+
+msgid "Sakinah Events"
+msgstr "فعاليات سكينة"
+
+msgid "Profile Verification"
+msgstr "توثيق الملف الشخصي"
+
+msgid "Blocked Members"
+msgstr "الأعضاء المحظورون"
+
+msgid "Report a Member"
+msgstr "الإبلاغ عن عضو"
+
+msgid "Safety Centre"
+msgstr "مركز الأمان"
+
+msgid "Membership Status"
+msgstr "حالة العضوية"
+
+#, python-format
+msgid "%(name)s Member"
+msgstr "عضو %(name)s"
+
+msgid "Free Member"
+msgstr "عضو مجاني"
+
+msgid "Renew"
+msgstr "تجديد"
+
+msgid "Upgrade"
+msgstr "ترقية"
+
+#, python-format
+msgid "Active until %(premium_until)s"
+msgstr "نشط حتى %(premium_until)s"
+
+msgid ""
+"Pata Mwenza, Pata Utulivu. Tunakuunganisha na watu waaminifu kwa ajili ya "
+"ndoa yenye baraka."
+msgstr ""
+"اعثر على شريك، اعثر على السكينة. نصلك بأشخاص صادقين من أجل زواج مبارك."
+
+msgid "Back to Events"
+msgstr "العودة إلى الفعاليات"
+
+msgid "To be announced"
+msgstr "سيُعلن لاحقًا"
+
+#, python-format
+msgid "%(city)s, Tanzania"
+msgstr "%(city)s، تنزانيا"
+
+#, python-format
+msgid "%(seats_left)s of %(capacity)s left"
+msgstr "تبقّى %(seats_left)s من %(capacity)s"
+
+#, python-format
+msgid "&middot; %(going)s going"
+msgstr "&middot; %(going)s سيحضرون"
+
+msgid "About this event"
+msgstr "عن هذه الفعالية"
+
+msgid "Details will be shared soon."
+msgstr "سيتم مشاركة التفاصيل قريبًا."
+
+msgid "Cancel your registration?"
+msgstr "إلغاء تسجيلك؟"
+
+msgid "You are registered &middot; Cancel"
+msgstr "أنت مسجّل &middot; إلغاء"
+
+msgid "This event has ended"
+msgstr "انتهت هذه الفعالية"
+
+msgid "Saved"
+msgstr "محفوظ"
+
+msgid "Event etiquette"
+msgstr "آداب الفعالية"
+
+msgid "Arrive on time"
+msgstr "احضر في الموعد"
+
+msgid "Dress modestly"
+msgstr "البس ملابس محتشمة"
+
+msgid "Respect separate seating where arranged"
+msgstr "احترم الجلوس المنفصل حيثما وُجد"
+
+msgid "Bring your registration name"
+msgstr "أحضر الاسم الذي سجّلت به"
+
+msgid ""
+"Join Islamic and community events to learn, connect and build a stronger "
+"future together."
+msgstr ""
+"انضم إلى الفعاليات الإسلامية والمجتمعية لتتعلّم وتتواصل وتبني معًا مستقبلًا "
+"أقوى."
+
+msgid "Na katika kila kitu tumeumba kwa jozi."
+msgstr "وَمِن كُلِّ شَيْءٍ خَلَقْنَا زَوْجَيْنِ."
+
+msgid "Qur'an 51:49"
+msgstr "الذاريات 51:49"
+
+msgid "My Registrations"
+msgstr "تسجيلاتي"
+
+msgid "Past Events"
+msgstr "الفعاليات السابقة"
+
+msgid "Search events by title, location, or topic..."
+msgstr "ابحث عن الفعاليات بالعنوان أو الموقع أو الموضوع..."
+
+msgid "All Categories"
+msgstr "جميع الفئات"
+
+msgid "All Event Types"
+msgstr "جميع أنواع الفعاليات"
+
+msgid "You have not registered for any events yet."
+msgstr "لم تسجّل في أي فعالية بعد."
+
+msgid "No events found"
+msgstr "لم يتم العثور على فعاليات"
+
+msgid "for this search"
+msgstr "لهذا البحث"
+
+msgid "See all upcoming events"
+msgstr "عرض جميع الفعاليات القادمة"
+
+msgid "Event Calendar"
+msgstr "تقويم الفعاليات"
+
+msgid "Previous month"
+msgstr "الشهر السابق"
+
+msgid "Next month"
+msgstr "الشهر التالي"
+
+msgid "Sun"
+msgstr "أحد"
+
+msgid "Mon"
+msgstr "إثنين"
+
+msgid "Tue"
+msgstr "ثلاثاء"
+
+msgid "Wed"
+msgstr "أربعاء"
+
+msgid "Thu"
+msgstr "خميس"
+
+msgid "Fri"
+msgstr "جمعة"
+
+msgid "Sat"
+msgstr "سبت"
+
+msgid "Event <span class=\"mine\"></span>Registered"
+msgstr "فعالية <span class=\"mine\"></span>مسجّل"
+
+msgid "My Event Registrations"
+msgstr "تسجيلاتي في الفعاليات"
+
+msgid "Attended"
+msgstr "حضر"
+
+msgid "No registrations yet."
+msgstr "لا توجد تسجيلات بعد."
+
+msgid "Search Filters"
+msgstr "فلاتر البحث"
+
+msgid "I am looking for"
+msgstr "أبحث عن"
+
+msgid "Minimum age"
+msgstr "الحد الأدنى للعمر"
+
+msgid "Maximum age"
+msgstr "الحد الأقصى للعمر"
+
+msgid "Marital Status"
+msgstr "الحالة الاجتماعية"
+
+msgid "Never Married"
+msgstr "لم يتزوج قط"
+
+msgid "Education Level"
+msgstr "المستوى التعليمي"
+
+msgid "Christian"
+msgstr "مسيحي"
+
+msgid "Muslim"
+msgstr "مسلم"
+
+msgid "Appearance"
+msgstr "المظهر"
+
+msgid "With Photo"
+msgstr "مع صورة"
+
+msgid "Online Now"
+msgstr "متصل الآن"
+
+msgid "Search Members"
+msgstr "البحث عن الأعضاء"
+
+msgid ""
+"Search and connect with genuine members for a serious and halal "
+"relationship."
+msgstr "ابحث وتواصل مع أعضاء حقيقيين من أجل علاقة جادة وحلال."
+
+msgid "Search by name, keyword, or location..."
+msgstr "ابحث بالاسم أو الكلمة المفتاحية أو الموقع..."
+
+msgid "Sort by:"
+msgstr "ترتيب حسب:"
+
+msgid "Newest Members"
+msgstr "الأعضاء الأحدث"
+
+msgid "Recently Active"
+msgstr "النشطون مؤخرًا"
+
+msgid "Best Match"
+msgstr "الأكثر تطابقًا"
+
+msgid "Youngest First"
+msgstr "الأصغر سنًا أولًا"
+
+msgid "Grid"
+msgstr "شبكة"
+
+msgid "List"
+msgstr "قائمة"
+
+#, python-format
+msgid "%(v_count)s member found"
+msgid_plural "%(v_count)s members found"
+msgstr[0] "تم العثور على %(v_count)s عضو"
+msgstr[1] "تم العثور على عضو واحد"
+msgstr[2] "تم العثور على عضوين"
+msgstr[3] "تم العثور على %(v_count)s أعضاء"
+msgstr[4] "تم العثور على %(v_count)s عضوًا"
+msgstr[5] "تم العثور على %(v_count)s عضو"
+
+msgid ""
+"No members match these filters. Try widening the age range or location."
+msgstr ""
+"لا يوجد أعضاء يطابقون هذه الفلاتر. جرّب توسيع الفئة العمرية أو الموقع."
+
+msgid "Help & Support"
+msgstr "المساعدة والدعم"
+
+msgid ""
+"We are here to help you. Find answers, contact our support team, or get "
+"guidance on using Sakinah."
+msgstr ""
+"نحن هنا لمساعدتك. اعثر على الإجابات أو تواصل مع فريق الدعم أو احصل على "
+"إرشادات لاستخدام سكينة."
+
+msgid "Knowledge Base"
+msgstr "قاعدة المعرفة"
+
+msgid "Browse helpful articles and guides."
+msgstr "تصفّح مقالات وأدلة مفيدة."
+
+msgid "Browse Articles"
+msgstr "تصفّح المقالات"
+
+msgid "Get help from our support team."
+msgstr "احصل على المساعدة من فريق الدعم."
+
+msgid "Send a Message"
+msgstr "أرسل رسالة"
+
+msgid "Live Chat"
+msgstr "الدردشة المباشرة"
+
+msgid "Chat with our support agent (when online)."
+msgstr "تحدث مع موظف الدعم (عند توفره)."
+
+msgid "Start Live Chat"
+msgstr "ابدأ الدردشة"
+
+msgid "Report an Issue"
+msgstr "الإبلاغ عن مشكلة"
+
+msgid "Report problems or suspicious behaviour."
+msgstr "أبلغ عن المشكلات أو السلوك المريب."
+
+msgid "Report Now"
+msgstr "أبلغ الآن"
+
+msgid "Send a message to our team"
+msgstr "أرسل رسالة إلى فريقنا"
+
+msgid "Close"
+msgstr "إغلاق"
+
+msgid "Send"
+msgstr "إرسال"
+
+msgid "Your recent requests"
+msgstr "طلباتك الأخيرة"
+
+msgid "Frequently Asked Questions (FAQ)"
+msgstr "الأسئلة الشائعة"
+
+msgid "View All FAQs"
+msgstr "عرض كل الأسئلة الشائعة"
+
+msgid "Contact Our Support Team"
+msgstr "تواصل مع فريق الدعم"
+
+msgid ""
+"Our team is ready to assist you. Choose your preferred way to get support."
+msgstr "فريقنا مستعد لمساعدتك. اختر الطريقة المفضلة للحصول على الدعم."
+
+msgid "Fill the support form and we will respond to your email."
+msgstr "املأ نموذج الدعم وسنرد على بريدك الإلكتروني."
+
+msgid "Contact Us"
+msgstr "اتصل بنا"
+
+msgid "Start Chat"
+msgstr "ابدأ الدردشة"
+
+msgid "Submit a Ticket"
+msgstr "أرسل تذكرة"
+
+msgid "Report a technical issue or request assistance."
+msgstr "أبلغ عن مشكلة تقنية أو اطلب المساعدة."
+
+msgid "Create Ticket"
+msgstr "إنشاء تذكرة"
+
+msgid "Support Hours"
+msgstr "ساعات الدعم"
+
+msgid "Our support team is available (EAT):"
+msgstr "فريق الدعم متاح (بتوقيت شرق أفريقيا):"
+
+msgid "Monday &ndash; Friday"
+msgstr "الاثنين &ndash; الجمعة"
+
+msgid "8:00 AM &ndash; 8:00 PM"
+msgstr "8:00 ص &ndash; 8:00 م"
+
+msgid "Saturday"
+msgstr "السبت"
+
+msgid "9:00 AM &ndash; 5:00 PM"
+msgstr "9:00 ص &ndash; 5:00 م"
+
+msgid "Sunday"
+msgstr "الأحد"
+
+msgid "Emergency &amp; Safety"
+msgstr "الطوارئ والأمان"
+
+msgid ""
+"If you notice suspicious activity, inappropriate content or feel unsafe, "
+"please report immediately."
+msgstr ""
+"إذا لاحظت نشاطًا مريبًا أو محتوى غير لائق أو شعرت بعدم الأمان، يرجى الإبلاغ "
+"فورًا."
+
+msgid "Help Topics"
+msgstr "مواضيع المساعدة"
+
+#, python-format
+msgid "Find guides and tutorials on using %(brand)s."
+msgstr "اعثر على أدلة وشروحات لاستخدام %(brand)s."
+
+msgid "Browse Help Topics"
+msgstr "تصفّح مواضيع المساعدة"
+
+msgid "Video Guides"
+msgstr "أدلة الفيديو"
+
+msgid "Step-by-step guides and articles."
+msgstr "أدلة ومقالات خطوة بخطوة."
+
+msgid "Read Guides"
+msgstr "اقرأ الأدلة"
+
+msgid "Community Guidelines"
+msgstr "إرشادات المجتمع"
+
+msgid "Learn about our rules and values."
+msgstr "تعرّف على قواعدنا وقيمنا."
+
+msgid "View Guidelines"
+msgstr "عرض الإرشادات"
+
+msgid "Give Feedback"
+msgstr "أرسل ملاحظاتك"
+
+#, python-format
+msgid "Help us improve %(brand)s."
+msgstr "ساعدنا في تحسين %(brand)s."
+
+msgid "Send Feedback"
+msgstr "إرسال الملاحظات"
+
+msgid "Members who have shown interest in you by liking your profile."
+msgstr "أعضاء أبدوا اهتمامهم بك بالإعجاب بملفك الشخصي."
+
+#, python-format
+msgid "All Likes (%(all)s)"
+msgstr "كل الإعجابات (%(all)s)"
+
+#, python-format
+msgid "New Likes (%(new)s)"
+msgstr "إعجابات جديدة (%(new)s)"
+
+#, python-format
+msgid "This Week (%(week)s)"
+msgstr "هذا الأسبوع (%(week)s)"
+
+#, python-format
+msgid "This Month (%(month)s)"
+msgstr "هذا الشهر (%(month)s)"
+
+msgid "Newest First"
+msgstr "الأحدث أولًا"
+
+msgid "Oldest First"
+msgstr "الأقدم أولًا"
+
+#, python-format
+msgid "%(all)s member liked you."
+msgid_plural "%(all)s members liked you."
+msgstr[0] "أُعجب بك %(all)s عضو."
+msgstr[1] "أُعجب بك عضو واحد."
+msgstr[2] "أُعجب بك عضوان."
+msgstr[3] "أُعجب بك %(all)s أعضاء."
+msgstr[4] "أُعجب بك %(all)s عضوًا."
+msgstr[5] "أُعجب بك %(all)s عضو."
+
+msgid "Upgrade to Premium to see who they are and like them back."
+msgstr "قم بالترقية إلى بريميوم لترى من هم وتبادلهم الإعجاب."
+
+msgid "Upgrade Now"
+msgstr "قم بالترقية الآن"
+
+msgid "No likes"
+msgstr "لا إعجابات"
+
+msgid "for this filter"
+msgstr "لهذا الفلتر"
+
+msgid "yet"
+msgstr "بعد"
+
+msgid ". Keep your profile active and complete to get noticed."
+msgstr ". حافظ على نشاط ملفك واكتماله ليلاحظك الآخرون."
+
+msgid "Likes Summary"
+msgstr "ملخص الإعجابات"
+
+msgid "Total Likes"
+msgstr "إجمالي الإعجابات"
+
+msgid "New Likes"
+msgstr "إعجابات جديدة"
+
+msgid "This Week"
+msgstr "هذا الأسبوع"
+
+msgid "This Month"
+msgstr "هذا الشهر"
+
+msgid "Your Premium Benefits"
+msgstr "مزايا بريميوم الخاصة بك"
+
+msgid "Upgrade to Premium"
+msgstr "الترقية إلى بريميوم"
+
+msgid "Manage Membership"
+msgstr "إدارة العضوية"
+
+msgid "Tips to Get More Likes"
+msgstr "نصائح للحصول على إعجابات أكثر"
+
+msgid "Complete your profile fully"
+msgstr "أكمل ملفك الشخصي بالكامل"
+
+msgid "Write an interesting bio"
+msgstr "اكتب نبذة شيقة عنك"
+
+msgid "Verify your profile"
+msgstr "وثّق ملفك الشخصي"
+
+msgid "Upgrade to Premium for more visibility"
+msgstr "قم بالترقية إلى بريميوم لظهور أكبر"
+
+msgid "People who match with your preferences and show mutual interest."
+msgstr "أشخاص يطابقون تفضيلاتك ويبادلونك الاهتمام."
+
+msgid ""
+"Na Miongoni mwa Aya zake ni kwamba amekuumbieni wake zenu mpate utulivu "
+"katikao."
+msgstr ""
+"وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا"
+" إِلَيْهَا."
+
+msgid "Qur'an 30:21"
+msgstr "الروم 30:21"
+
+msgid "All Matches"
+msgstr "جميع التطابقات"
+
+msgid "Search in my matches..."
+msgstr "ابحث في تطابقاتي..."
+
+msgid "No members here yet. Like profiles in"
+msgstr "لا يوجد أعضاء هنا بعد. أعجب بالملفات في"
+
+msgid "to build your matches."
+msgstr "لبناء تطابقاتك."
+
+msgid "Your Matches Summary"
+msgstr "ملخص تطابقاتك"
+
+msgid "Mutual Matches"
+msgstr "التطابقات المتبادلة"
+
+msgid "People Who Liked You"
+msgstr "من أُعجبوا بك"
+
+msgid "Shortlisted"
+msgstr "في القائمة المختصرة"
+
+msgid "Tips for Better Matches"
+msgstr "نصائح لتطابقات أفضل"
+
+msgid "Be specific about your preferences"
+msgstr "كن دقيقًا في تفضيلاتك"
+
+msgid "Respond to messages"
+msgstr "ردّ على الرسائل"
+
+msgid "Keep your profile active"
+msgstr "حافظ على نشاط ملفك الشخصي"
+
+msgid "Take Action"
+msgstr "اتخذ إجراءً"
+
+msgid "View People Who Liked You"
+msgstr "عرض من أُعجبوا بك"
+
+msgid "Find More Matches"
+msgstr "ابحث عن تطابقات أكثر"
+
+msgid "Adjust Match Preferences"
+msgstr "اضبط تفضيلات التطابق"
+
+msgid ""
+"Choose a membership plan to unlock more features and find your life partner "
+"easily."
+msgstr "اختر باقة عضوية لفتح ميزات أكثر والعثور على شريك حياتك بسهولة."
+
+msgid "Compare Plans"
+msgstr "قارن الباقات"
+
+msgid "My Membership"
+msgstr "عضويتي"
+
+msgid "Payment History"
+msgstr "سجل المدفوعات"
+
+msgid "Benefits"
+msgstr "المزايا"
+
+msgid "FAQ"
+msgstr "الأسئلة الشائعة"
+
+msgid "Upgrade your plan"
+msgstr "قم بترقية باقتك"
+
+msgid "How to pay"
+msgstr "طريقة الدفع"
+
+msgid "Pay the amount for your plan by mobile money or bank."
+msgstr "ادفع مبلغ باقتك عبر المحفظة الهاتفية أو البنك."
+
+msgid "Enter the phone number and the transaction reference below."
+msgstr "أدخل رقم الهاتف ومرجع المعاملة أدناه."
+
+msgid "Our team confirms the payment and activates your plan."
+msgstr "يؤكد فريقنا الدفع ويفعّل باقتك."
+
+msgid "Total:"
+msgstr "الإجمالي:"
+
+msgid "Submit Payment Details"
+msgstr "إرسال تفاصيل الدفع"
+
+#, python-format
+msgid "TSh %(price)s"
+msgstr "%(price)s شلن تنزاني"
+
+msgid "Current Plan"
+msgstr "الباقة الحالية"
+
+msgid "Free Plan"
+msgstr "الباقة المجانية"
+
+msgid "Switch Plan"
+msgstr "تغيير الباقة"
+
+msgid "Membership Benefits"
+msgstr "مزايا العضوية"
+
+msgid "Why Upgrade?"
+msgstr "لماذا الترقية؟"
+
+msgid "Get more profile views"
+msgstr "احصل على مشاهدات أكثر لملفك"
+
+msgid "Find better matches faster"
+msgstr "اعثر على تطابقات أفضل بشكل أسرع"
+
+msgid "Access advanced search filters"
+msgstr "استخدم فلاتر البحث المتقدمة"
+
+msgid "Join exclusive events"
+msgstr "انضم إلى فعاليات حصرية"
+
+msgid "Build trust with verified profile"
+msgstr "ابنِ الثقة بملف شخصي موثّق"
+
+msgid "Increase your chances of marriage"
+msgstr "زِد فرصك في الزواج"
+
+msgid "Feature"
+msgstr "الميزة"
+
+msgid "Current"
+msgstr "الحالية"
+
+msgid "Choose"
+msgstr "اختيار"
+
+msgid "Free member"
+msgstr "عضو مجاني"
+
+msgid "Valid until"
+msgstr "صالحة حتى"
+
+#, python-format
+msgid "(%(premium_until)s left)"
+msgstr "(متبقٍ %(premium_until)s)"
+
+msgid "(expired)"
+msgstr "(منتهية)"
+
+msgid "Auto-renewal"
+msgstr "التجديد التلقائي"
+
+msgid "Off &ndash; you renew manually"
+msgstr "متوقف &ndash; تجدّد يدويًا"
+
+msgid "Pending payment"
+msgstr "دفعة معلّقة"
+
+#, python-format
+msgid "%(name)s &middot; TSh %(amount)s (waiting for confirmation)"
+msgstr "%(name)s &middot; %(amount)s شلن (بانتظار التأكيد)"
+
+msgid "Your plan includes:"
+msgstr "تشمل باقتك:"
+
+msgid "Renew or change plan"
+msgstr "جدّد أو غيّر الباقة"
+
+msgid "Upgrade now"
+msgstr "قم بالترقية الآن"
+
+#, python-format
+msgid "&middot; %(months)s mo"
+msgstr "&middot; %(months)s شهر"
+
+#, python-format
+msgid "TSh %(amount)s"
+msgstr "%(amount)s شلن تنزاني"
+
+msgid "My Membership Status"
+msgstr "حالة عضويتي"
+
+msgid "Plan:"
+msgstr "الباقة:"
+
+msgid "Valid Until:"
+msgstr "صالحة حتى:"
+
+msgid "Status:"
+msgstr "الحالة:"
+
+msgid "Quick Actions"
+msgstr "إجراءات سريعة"
+
+msgid "Upgrade Plan"
+msgstr "ترقية الباقة"
+
+msgid "Manage Auto-Renewal"
+msgstr "إدارة التجديد التلقائي"
+
+msgid "View Benefits"
+msgstr "عرض المزايا"
+
+msgid "Apply Discount Code"
+msgstr "استخدم رمز الخصم"
+
+msgid ""
+"Chat and get to know your potential partner in a respectful and halal way."
+msgstr "تحدّث وتعرّف على شريكك المحتمل بطريقة محترمة وحلال."
+
+msgid "All Messages"
+msgstr "كل الرسائل"
+
+msgid "Favorites"
+msgstr "المفضلة"
+
+msgid "Archived"
+msgstr "المؤرشفة"
+
+msgid "Search messages..."
+msgstr "ابحث في الرسائل..."
+
+msgid "Yesterday"
+msgstr "أمس"
+
+#, python-format
+msgid "No conversations match &ldquo;%(q)s&rdquo;."
+msgstr "لا توجد محادثات تطابق &ldquo;%(q)s&rdquo;."
+
+msgid "No conversations here yet."
+msgstr "لا توجد محادثات هنا بعد."
+
+msgid "Back"
+msgstr "رجوع"
+
+#, python-format
+msgid "%(practice_label)s &middot; Seeking Marriage"
+msgstr "%(practice_label)s &middot; يبحث عن الزواج"
+
+msgid "Voice and video calls are a Premium feature"
+msgstr "المكالمات الصوتية والمرئية ميزة بريميوم"
+
+msgid "Remove from favorites"
+msgstr "إزالة من المفضلة"
+
+msgid "Add to favorites"
+msgstr "إضافة إلى المفضلة"
+
+msgid "Unarchive chat"
+msgstr "إلغاء أرشفة المحادثة"
+
+msgid "Archive chat"
+msgstr "أرشفة المحادثة"
+
+#, python-format
+msgid "Block %(name)s? They will no longer see or message you."
+msgstr "حظر %(name)s؟ لن يتمكن من رؤيتك أو مراسلتك بعد الآن."
+
+msgid "Report member"
+msgstr "الإبلاغ عن العضو"
+
+msgid "Today,"
+msgstr "اليوم،"
+
+msgid "Yesterday,"
+msgstr "أمس،"
+
+msgid "&middot; no answer"
+msgstr "&middot; لم يتم الرد"
+
+#, python-format
+msgid ""
+"Say <b>Assalamu Alaikum</b> to %(first_name)s and start a respectful "
+"conversation."
+msgstr "قل <b>السلام عليكم</b> لـ %(first_name)s وابدأ محادثة محترمة."
+
+#, python-format
+msgid "%(msgs_left)s new chat left today. Replying is always free."
+msgid_plural "%(msgs_left)s new chats left today. Replying is always free."
+msgstr[0] "تبقّى %(msgs_left)s محادثة جديدة اليوم. الرد مجاني دائمًا."
+msgstr[1] "تبقّت محادثة جديدة واحدة اليوم. الرد مجاني دائمًا."
+msgstr[2] "تبقّت محادثتان جديدتان اليوم. الرد مجاني دائمًا."
+msgstr[3] "تبقّت %(msgs_left)s محادثات جديدة اليوم. الرد مجاني دائمًا."
+msgstr[4] "تبقّت %(msgs_left)s محادثة جديدة اليوم. الرد مجاني دائمًا."
+msgstr[5] "تبقّت %(msgs_left)s محادثة جديدة اليوم. الرد مجاني دائمًا."
+
+msgid "Emoji"
+msgstr "رموز تعبيرية"
+
+msgid "Attach a photo"
+msgstr "إرفاق صورة"
+
+msgid "Send an image"
+msgstr "إرسال صورة"
+
+msgid "Record a voice note"
+msgstr "تسجيل رسالة صوتية"
+
+msgid "Hold a voice note (up to 2 minutes)"
+msgstr "اضغط مطولًا لتسجيل رسالة صوتية (حتى دقيقتين)"
+
+msgid "Cancel recording"
+msgstr "إلغاء التسجيل"
+
+msgid "Recording&hellip; max 2:00"
+msgstr "جارٍ التسجيل&hellip; الحد الأقصى 2:00"
+
+msgid "Send voice note"
+msgstr "إرسال الرسالة الصوتية"
+
+msgid "You blocked this member."
+msgstr "لقد حظرت هذا العضو."
+
+msgid "See plans"
+msgstr "عرض الباقات"
+
+#, python-format
+msgid ""
+"%(first_name)s only accepts messages from "
+"%(get_allow_messages_from_display)s."
+msgstr ""
+"%(first_name)s يقبل الرسائل من %(get_allow_messages_from_display)s فقط."
+
+msgid "Your conversations"
+msgstr "محادثاتك"
+
+msgid "Pick a conversation or find someone to talk to."
+msgstr "اختر محادثة أو ابحث عن شخص للتحدث معه."
+
+msgid "Updates about your likes, matches, messages, events and membership."
+msgstr "تحديثات عن الإعجابات والتطابقات والرسائل والفعاليات والعضوية."
+
+msgid "All Notifications"
+msgstr "كل الإشعارات"
+
+msgid "Notification settings"
+msgstr "إعدادات الإشعارات"
+
+msgid "You have no notifications yet."
+msgstr "ليس لديك إشعارات بعد."
+
+msgid "Quick links"
+msgstr "روابط سريعة"
+
+msgid ""
+"Manage your account, preferences and privacy to get the best experience on "
+"Sakinah."
+msgstr "أدر حسابك وتفضيلاتك وخصوصيتك لتحصل على أفضل تجربة في سكينة."
+
+msgid "Back to Settings"
+msgstr "العودة إلى الإعدادات"
+
+msgid "Strong passwords"
+msgstr "كلمات مرور قوية"
+
+msgid "At least 8 characters"
+msgstr "8 أحرف على الأقل"
+
+msgid "Mix letters, numbers and symbols"
+msgstr "امزج الحروف والأرقام والرموز"
+
+msgid "Don't reuse passwords from other sites"
+msgstr "لا تعِد استخدام كلمات مرور مواقع أخرى"
+
+msgid "Never share your password"
+msgstr "لا تشارك كلمة مرورك أبدًا"
+
+msgid "My Photos"
+msgstr "صوري"
+
+msgid "Manage your profile information to get better matches."
+msgstr "أدر معلومات ملفك الشخصي للحصول على تطابقات أفضل."
+
+#, python-format
+msgid "My Photos (%(n_photos)s/6)"
+msgstr "صوري (%(n_photos)s/6)"
+
+msgid ""
+"Turn this on before adding a photo: your face is covered with a soft blur so"
+" you cannot be recognised. You decide."
+msgstr ""
+"فعّل هذا قبل إضافة صورة: يُغطّى وجهك بتمويه ناعم فلا يمكن التعرّف عليك. "
+"القرار لك."
+
+msgid "Main photo"
+msgstr "الصورة الرئيسية"
+
+msgid ""
+"Hide your face on this photo? This cannot be undone; upload the photo again "
+"to show your face."
+msgstr ""
+"إخفاء وجهك في هذه الصورة؟ لا يمكن التراجع عن ذلك؛ ارفع الصورة مجددًا لإظهار "
+"وجهك."
+
+msgid "Hide my face on this photo"
+msgstr "إخفاء وجهي في هذه الصورة"
+
+msgid "Hide face"
+msgstr "إخفاء الوجه"
+
+msgid "Remove your main photo?"
+msgstr "إزالة صورتك الرئيسية؟"
+
+msgid "Remove this photo?"
+msgstr "إزالة هذه الصورة؟"
+
+msgid "Make main"
+msgstr "اجعلها رئيسية"
+
+msgid "Add Photo"
+msgstr "إضافة صورة"
+
+msgid "JPG or PNG"
+msgstr "JPG أو PNG"
+
+msgid "Photo Guidelines"
+msgstr "إرشادات الصور"
+
+msgid "Use clear, recent photos of yourself"
+msgstr "استخدم صورًا واضحة وحديثة لك"
+
+msgid "Modest dress that reflects Islamic values"
+msgstr "ملابس محتشمة تعكس القيم الإسلامية"
+
+msgid "No group photos as your main photo"
+msgstr "لا صور جماعية كصورة رئيسية"
+
+msgid "No filters that change how you look"
+msgstr "لا فلاتر تغيّر مظهرك"
+
+msgid "Up to 6 photos"
+msgstr "حتى 6 صور"
+
+msgid "Prefer privacy? Switch on <b>Hide my face</b> before uploading"
+msgstr "تفضّل الخصوصية؟ فعّل <b>إخفاء وجهي</b> قبل الرفع"
+
+msgid "Who can see my photos?"
+msgstr "من يمكنه رؤية صوري؟"
+
+#, python-format
+msgid "Currently: <b>%(get_photo_visibility_display)s</b>."
+msgstr "حاليًا: <b>%(get_photo_visibility_display)s</b>."
+
+msgid "Change in Privacy Settings"
+msgstr "غيّر ذلك في إعدادات الخصوصية"
+
+msgid ""
+"These settings decide who appears in your suggested matches on the dashboard"
+" and the default filters in Find a Match."
+msgstr ""
+"تحدد هذه الإعدادات من يظهر في التطابقات المقترحة في لوحة التحكم والفلاتر "
+"الافتراضية في «ابحث عن شريك»."
+
+msgid "Save Preferences"
+msgstr "حفظ التفضيلات"
+
+msgid "Tips"
+msgstr "نصائح"
+
+msgid "Keep the age range realistic"
+msgstr "اجعل الفئة العمرية واقعية"
+
+msgid "Focus on values, not looks"
+msgstr "ركّز على القيم لا على المظهر"
+
+msgid "Be open to nearby regions"
+msgstr "كن منفتحًا على المناطق القريبة"
+
+msgid "Review your preferences often"
+msgstr "راجع تفضيلاتك باستمرار"
+
+msgid "See results"
+msgstr "عرض النتائج"
+
+msgid "Suggested Matches"
+msgstr "تطابقات مقترحة"
+
+msgid "Change photo"
+msgstr "تغيير الصورة"
+
+msgid "Free Member &middot; Upgrade"
+msgstr "عضو مجاني &middot; ترقية"
+
+#, python-format
+msgid "%(age)s years old"
+msgstr "%(age)s سنة"
+
+msgid "Profile Completion"
+msgstr "اكتمال الملف الشخصي"
+
+msgid "Manage Photos"
+msgstr "إدارة الصور"
+
+msgid "Update Preferences"
+msgstr "تحديث التفضيلات"
+
+msgid "Verify Account"
+msgstr "توثيق الحساب"
+
+msgid ""
+"Tell other members about yourself, your values and what you are looking for."
+msgstr "أخبر الأعضاء الآخرين عن نفسك وقيمك وما تبحث عنه."
+
+msgid "Height"
+msgstr "الطول"
+
+#, python-format
+msgid "%(height_cm)s cm"
+msgstr "%(height_cm)s سم"
+
+msgid "Body Type"
+msgstr "نوع الجسم"
+
+msgid "Ethnicity"
+msgstr "الأصل العرقي"
+
+msgid "Income Range"
+msgstr "نطاق الدخل"
+
+msgid "Residence"
+msgstr "مكان الإقامة"
+
+msgid "Willing to Relocate"
+msgstr "مستعد للانتقال"
+
+msgid "Edit Photos"
+msgstr "تعديل الصور"
+
+msgid "(Optional)"
+msgstr "(اختياري)"
+
+msgid "Account Status"
+msgstr "حالة الحساب"
+
+msgid "Email Verified"
+msgstr "البريد الإلكتروني موثّق"
+
+msgid "Add your email"
+msgstr "أضف بريدك الإلكتروني"
+
+msgid "Profile Verified"
+msgstr "الملف الشخصي موثّق"
+
+msgid "Not Verified Yet"
+msgstr "لم يُوثَّق بعد"
+
+msgid "Looking for"
+msgstr "يبحث عن"
+
+#, python-format
+msgid "%(pref_age_min)s &ndash; %(pref_age_max)s years"
+msgstr "%(pref_age_min)s &ndash; %(pref_age_max)s سنة"
+
+msgid "Open to discussion"
+msgstr "قابل للنقاش"
+
+msgid "Interests &amp; Lifestyle"
+msgstr "الاهتمامات ونمط الحياة"
+
+msgid "Add your interests so others know you better."
+msgstr "أضف اهتماماتك ليعرفك الآخرون بشكل أفضل."
+
+msgid "Non-smoker"
+msgstr "غير مدخن"
+
+msgid "No alcohol"
+msgstr "لا يشرب الكحول"
+
+msgid "Profile Visibility"
+msgstr "ظهور الملف الشخصي"
+
+msgid "Save Profile"
+msgstr "حفظ الملف الشخصي"
+
+msgid "Safety & Privacy"
+msgstr "الأمان والخصوصية"
+
+msgid "Your safety, privacy and trust are our priority."
+msgstr "سلامتك وخصوصيتك وثقتك أولويتنا."
+
+msgid "Safety Features"
+msgstr "ميزات الأمان"
+
+msgid "Blocked Users"
+msgstr "المستخدمون المحظورون"
+
+msgid "Report &amp; Support"
+msgstr "الإبلاغ والدعم"
+
+msgid "Real people, safer connections"
+msgstr "أشخاص حقيقيون، تواصل أكثر أمانًا"
+
+msgid "Your Privacy Matters"
+msgstr "خصوصيتك مهمة"
+
+msgid "You control your information"
+msgstr "أنت تتحكم في معلوماتك"
+
+msgid "Safe Community"
+msgstr "مجتمع آمن"
+
+msgid "Moderated and Islamic values based"
+msgstr "خاضع للإشراف وقائم على القيم الإسلامية"
+
+msgid "We're Here to Help"
+msgstr "نحن هنا للمساعدة"
+
+msgid "Report, block or get support anytime"
+msgstr "أبلغ أو احظر أو احصل على الدعم في أي وقت"
+
+msgid "Control who can see your information and how you interact."
+msgstr "تحكّم في من يمكنه رؤية معلوماتك وكيفية تفاعلك."
+
+msgid "Please check the highlighted settings."
+msgstr "يرجى مراجعة الإعدادات المميزة."
+
+msgid "Choose who can view your profile."
+msgstr "اختر من يمكنه مشاهدة ملفك الشخصي."
+
+msgid "Show My Photos"
+msgstr "إظهار صوري"
+
+msgid "Control who can see your photos."
+msgstr "تحكّم في من يمكنه رؤية صورك."
+
+msgid "Show My Online Status"
+msgstr "إظهار حالة اتصالي"
+
+msgid "Let others see when you are online."
+msgstr "اسمح للآخرين برؤية متى تكون متصلًا."
+
+msgid "Show My Age"
+msgstr "إظهار عمري"
+
+msgid "Display or hide your age."
+msgstr "أظهر عمرك أو أخفِه."
+
+msgid "Show My Location"
+msgstr "إظهار موقعي"
+
+msgid "Display city/region only (not exact location)."
+msgstr "عرض المدينة/المنطقة فقط (وليس الموقع الدقيق)."
+
+msgid "Allow Messages"
+msgstr "السماح بالرسائل"
+
+msgid "Choose who can send you messages."
+msgstr "اختر من يمكنه مراسلتك."
+
+msgid "Allow Profile in Search"
+msgstr "السماح بظهور الملف في البحث"
+
+msgid "Appear in search results."
+msgstr "الظهور في نتائج البحث."
+
+msgid "Save Privacy Settings"
+msgstr "حفظ إعدادات الخصوصية"
+
+msgid "We use multiple layers of protection to keep our community safe."
+msgstr "نستخدم طبقات حماية متعددة للحفاظ على أمان مجتمعنا."
+
+msgid "Identity and photo verification to ensure real members."
+msgstr "التحقق من الهوية والصور لضمان أعضاء حقيقيين."
+
+msgid "Photo Moderation"
+msgstr "مراجعة الصور"
+
+msgid "All photos are reviewed to prevent inappropriate content."
+msgstr "تتم مراجعة جميع الصور لمنع المحتوى غير اللائق."
+
+msgid "Report &amp; Block"
+msgstr "الإبلاغ والحظر"
+
+msgid "Report suspicious behaviour and block unwanted users."
+msgstr "أبلغ عن السلوك المريب واحظر المستخدمين غير المرغوب فيهم."
+
+msgid "Content Monitoring"
+msgstr "مراقبة المحتوى"
+
+msgid "Our team moderates reports for safe conversations."
+msgstr "يراجع فريقنا البلاغات لضمان محادثات آمنة."
+
+msgid "Secure Data"
+msgstr "بيانات آمنة"
+
+msgid "Your personal data is protected and kept confidential."
+msgstr "بياناتك الشخصية محمية وتبقى سرية."
+
+msgid "Zero Tolerance"
+msgstr "عدم التسامح مطلقًا"
+
+msgid "Harassment, fake profiles and inappropriate behaviour are not allowed."
+msgstr "التحرش والملفات المزيفة والسلوك غير اللائق غير مسموح بها."
+
+msgid "Your Data is Secure"
+msgstr "بياناتك آمنة"
+
+msgid "Passwords are encrypted and your data is protected."
+msgstr "كلمات المرور مشفرة وبياناتك محمية."
+
+msgid "Your Privacy is Our Priority"
+msgstr "خصوصيتك أولويتنا"
+
+msgid "We never share your personal data with third parties."
+msgstr "لا نشارك بياناتك الشخصية مع أطراف ثالثة أبدًا."
+
+msgid "Report Anytime"
+msgstr "أبلغ في أي وقت"
+
+#, python-format
+msgid "Help us keep %(brand)s safe by reporting concerns."
+msgstr "ساعدنا في الحفاظ على أمان %(brand)s بالإبلاغ عن المخاوف."
+
+msgid "Trusted Community"
+msgstr "مجتمع موثوق"
+
+msgid "Building sincere and respectful connections within Islamic values."
+msgstr "بناء علاقات صادقة ومحترمة في إطار القيم الإسلامية."
+
+msgid "Members see the green verified badge on your profile."
+msgstr "يرى الأعضاء شارة التوثيق الخضراء على ملفك الشخصي."
+
+msgid "Your profile is not verified yet"
+msgstr "لم يُوثَّق ملفك الشخصي بعد"
+
+msgid ""
+"Verified members get more trust and more responses. It only takes a minute."
+msgstr "الأعضاء الموثّقون يحظون بثقة أكبر وردود أكثر. يستغرق الأمر دقيقة فقط."
+
+msgid "Verify my profile"
+msgstr "وثّق ملفي الشخصي"
+
+msgid ""
+"Blocked members cannot see your profile or message you, and you will not see"
+" them."
+msgstr "لا يمكن للأعضاء المحظورين رؤية ملفك أو مراسلتك، ولن تراهم أنت."
+
+#, python-format
+msgid "%(city)s &middot; blocked %(created)s"
+msgstr "%(city)s &middot; حُظر %(created)s"
+
+msgid "Unblock"
+msgstr "إلغاء الحظر"
+
+msgid "You have not blocked anyone."
+msgstr "لم تحظر أحدًا."
+
+msgid "Report a Member or Problem"
+msgstr "الإبلاغ عن عضو أو مشكلة"
+
+msgid "Reports are private. Our team reviews every report and takes action."
+msgstr "البلاغات سرية. يراجع فريقنا كل بلاغ ويتخذ الإجراء المناسب."
+
+msgid "Send Report"
+msgstr "إرسال البلاغ"
+
+msgid "Safety Tips"
+msgstr "نصائح الأمان"
+
+msgid "Complete your profile fully and honestly"
+msgstr "أكمل ملفك الشخصي بالكامل وبصدق"
+
+msgid "Verify your identity and photos"
+msgstr "وثّق هويتك وصورك"
+
+msgid "Keep personal information private"
+msgstr "حافظ على خصوصية معلوماتك الشخصية"
+
+msgid "Communicate only within the platform"
+msgstr "تواصل داخل المنصة فقط"
+
+msgid "Report suspicious or inappropriate behaviour"
+msgstr "أبلغ عن السلوك المريب أو غير اللائق"
+
+msgid "Meet in public places if you decide to meet"
+msgstr "التقوا في أماكن عامة إن قررتم اللقاء"
+
+msgid "Trust your instincts"
+msgstr "ثق بحدسك"
+
+msgid "What We Do Not Allow"
+msgstr "ما لا نسمح به"
+
+msgid "Fake profiles or impersonation"
+msgstr "الملفات المزيفة أو انتحال الشخصية"
+
+msgid "Inappropriate photos or content"
+msgstr "صور أو محتوى غير لائق"
+
+msgid "Harassment, abuse or hate speech"
+msgstr "التحرش أو الإساءة أو خطاب الكراهية"
+
+msgid "Requests for money or financial help"
+msgstr "طلب المال أو المساعدة المالية"
+
+msgid "Sharing personal contact details early"
+msgstr "مشاركة بيانات الاتصال الشخصية مبكرًا"
+
+msgid "Any illegal activities"
+msgstr "أي أنشطة غير قانونية"
+
+msgid "Need Help?"
+msgstr "تحتاج مساعدة؟"
+
+msgid ""
+"Our support team is here to help you stay safe and have a positive "
+"experience."
+msgstr "فريق الدعم هنا ليساعدك على البقاء آمنًا والحصول على تجربة إيجابية."
+
+msgid "Account Settings"
+msgstr "إعدادات الحساب"
+
+msgid "Profile Settings"
+msgstr "إعدادات الملف الشخصي"
+
+msgid "Notification Settings"
+msgstr "إعدادات الإشعارات"
+
+msgid "Account Information"
+msgstr "معلومات الحساب"
+
+msgid "Update your basic account details."
+msgstr "حدّث بيانات حسابك الأساسية."
+
+msgid "Email Address"
+msgstr "عنوان البريد الإلكتروني"
+
+msgid "Blur your face on the photo you choose here and on future uploads."
+msgstr "موّه وجهك في الصورة التي تختارها هنا وفي الصور القادمة."
+
+msgid "Save Changes"
+msgstr "حفظ التغييرات"
+
+msgid "Manage how your profile appears to others."
+msgstr "تحكّم في كيفية ظهور ملفك الشخصي للآخرين."
+
+msgid "Security Settings"
+msgstr "إعدادات الأمان"
+
+msgid "Keep your account safe and secure."
+msgstr "حافظ على أمان حسابك."
+
+msgid "Update your password regularly"
+msgstr "حدّث كلمة مرورك بانتظام"
+
+msgid "Coming soon"
+msgstr "قريبًا"
+
+msgid "Two-Factor Authentication"
+msgstr "المصادقة الثنائية"
+
+msgid "Coming soon &ndash; extra layer of security"
+msgstr "قريبًا &ndash; طبقة أمان إضافية"
+
+msgid "Login Sessions"
+msgstr "جلسات تسجيل الدخول"
+
+#, python-format
+msgid "%(other_sessions)s other active session &middot; log out"
+msgid_plural "%(other_sessions)s other active sessions &middot; log out"
+msgstr[0] "%(other_sessions)s جلسة أخرى نشطة &middot; تسجيل الخروج"
+msgstr[1] "جلسة أخرى نشطة &middot; تسجيل الخروج"
+msgstr[2] "جلستان أخريان نشطتان &middot; تسجيل الخروج"
+msgstr[3] "%(other_sessions)s جلسات أخرى نشطة &middot; تسجيل الخروج"
+msgstr[4] "%(other_sessions)s جلسة أخرى نشطة &middot; تسجيل الخروج"
+msgstr[5] "%(other_sessions)s جلسة أخرى نشطة &middot; تسجيل الخروج"
+
+msgid "Only this device is logged in"
+msgstr "هذا الجهاز فقط مسجّل الدخول"
+
+msgid "Email Verification"
+msgstr "توثيق البريد الإلكتروني"
+
+msgid "Add your email address"
+msgstr "أضف عنوان بريدك الإلكتروني"
+
+msgid "Identity Verification"
+msgstr "التحقق من الهوية"
+
+msgid "Verify your identity for more trust"
+msgstr "وثّق هويتك لثقة أكبر"
+
+msgid "Choose what notifications you want to receive."
+msgstr "اختر الإشعارات التي تريد تلقيها."
+
+msgid "New Messages"
+msgstr "رسائل جديدة"
+
+msgid "Get notified when you receive a message"
+msgstr "تلقَّ إشعارًا عند وصول رسالة"
+
+msgid "Likes and Profile Views"
+msgstr "الإعجابات ومشاهدات الملف"
+
+msgid "Get notified when someone likes your profile"
+msgstr "تلقَّ إشعارًا عندما يُعجب أحد بملفك"
+
+msgid "New mutual matches"
+msgstr "تطابقات متبادلة جديدة"
+
+msgid "Events and Activities"
+msgstr "الفعاليات والأنشطة"
+
+msgid "Updates about events and activities"
+msgstr "تحديثات عن الفعاليات والأنشطة"
+
+msgid "System Updates"
+msgstr "تحديثات النظام"
+
+msgid "Important announcements"
+msgstr "إعلانات مهمة"
+
+msgid "Customize your matching preferences."
+msgstr "خصّص تفضيلات التطابق."
+
+msgid "Preferred Age Range"
+msgstr "الفئة العمرية المفضلة"
+
+msgid "yrs"
+msgstr "سنة"
+
+msgid "All preferences"
+msgstr "جميع التفضيلات"
+
+msgid "Language &amp; Appearance"
+msgstr "اللغة والمظهر"
+
+msgid "Set your language and theme preference."
+msgstr "حدد اللغة والمظهر المفضلين."
+
+msgid "Account Actions"
+msgstr "إجراءات الحساب"
+
+msgid "Download My Data"
+msgstr "تنزيل بياناتي"
+
+msgid "Get a copy of your data"
+msgstr "احصل على نسخة من بياناتك"
+
+msgid "Reactivate your account and show your profile again?"
+msgstr "إعادة تفعيل حسابك وإظهار ملفك الشخصي مجددًا؟"
+
+msgid ""
+"Deactivate your account? Your profile will be hidden until you reactivate "
+"it."
+msgstr "إلغاء تفعيل حسابك؟ سيُخفى ملفك الشخصي حتى تعيد تفعيله."
+
+msgid "Reactivate Account"
+msgstr "إعادة تفعيل الحساب"
+
+msgid "Deactivate Account"
+msgstr "إلغاء تفعيل الحساب"
+
+msgid "Your profile is hidden now"
+msgstr "ملفك الشخصي مخفي الآن"
+
+msgid "Temporarily hide your account"
+msgstr "أخفِ حسابك مؤقتًا"
+
+msgid "Delete Account"
+msgstr "حذف الحساب"
+
+msgid "Permanently delete your account"
+msgstr "احذف حسابك نهائيًا"
+
+msgid ""
+"This permanently deletes your account, profile, messages and likes. "
+"Continue?"
+msgstr ""
+"سيؤدي هذا إلى حذف حسابك وملفك ورسائلك وإعجاباتك نهائيًا. هل تريد المتابعة؟"
+
+msgid "Enter your password to confirm. This cannot be undone."
+msgstr "أدخل كلمة المرور للتأكيد. لا يمكن التراجع عن ذلك."
+
+msgid "Your password"
+msgstr "كلمة المرور"
+
+msgid "Delete my account"
+msgstr "احذف حسابي"
+
+#, python-format
+msgid ""
+"Members see the green verified badge on your profile. Thank you for helping "
+"keep %(brand)s safe."
+msgstr ""
+"يرى الأعضاء شارة التوثيق الخضراء على ملفك الشخصي. شكرًا لمساعدتك في الحفاظ "
+"على أمان %(brand)s."
+
+msgid "Request received"
+msgstr "تم استلام الطلب"
+
+#, python-format
+msgid ""
+"You sent a verification request on %(created)s. Our team will review it and "
+"update your profile."
+msgstr "أرسلت طلب توثيق في %(created)s. سيراجعه فريقنا ويحدّث ملفك الشخصي."
+
+msgid ""
+"Verified members get more trust and more responses. Upload a clear photo of "
+"your National ID (NIDA), passport or driving licence. It is only seen by our"
+" admin team."
+msgstr ""
+"الأعضاء الموثّقون يحظون بثقة أكبر وردود أكثر. ارفع صورة واضحة لبطاقة الهوية "
+"الوطنية (NIDA) أو جواز السفر أو رخصة القيادة. لا يراها إلا فريق الإدارة."
+
+msgid "Send for Verification"
+msgstr "إرسال للتوثيق"
+
+msgid "Why verify?"
+msgstr "لماذا التوثيق؟"
+
+msgid "Verified badge on your profile"
+msgstr "شارة التوثيق على ملفك الشخصي"
+
+msgid "Appear to members who only accept verified profiles"
+msgstr "الظهور للأعضاء الذين يقبلون الملفات الموثّقة فقط"
+
+msgid "Message members who only accept verified members"
+msgstr "راسل الأعضاء الذين يقبلون الموثّقين فقط"
+
+msgid "Build trust faster"
+msgstr "ابنِ الثقة بشكل أسرع"
+
+msgid "People who have viewed your profile."
+msgstr "أشخاص شاهدوا ملفك الشخصي."
+
+msgid "No profile views"
+msgstr "لا مشاهدات للملف"
+
+msgid ". A complete profile with clear photos gets more views."
+msgstr ". الملف المكتمل مع صور واضحة يحصل على مشاهدات أكثر."
+
+msgid "Complete your profile"
+msgstr "أكمل ملفك الشخصي"
+
+msgid "Profile Views Summary"
+msgstr "ملخص مشاهدات الملف"
+
+msgid "Top Viewers"
+msgstr "أكثر المشاهدين"
+
+#, python-format
+msgid "Viewed %(view_count)s time"
+msgid_plural "Viewed %(view_count)s times"
+msgstr[0] "شاهد %(view_count)s مرة"
+msgstr[1] "شاهد مرة واحدة"
+msgstr[2] "شاهد مرتين"
+msgstr[3] "شاهد %(view_count)s مرات"
+msgstr[4] "شاهد %(view_count)s مرة"
+msgstr[5] "شاهد %(view_count)s مرة"
+
+msgid "No viewers yet."
+msgstr "لا يوجد مشاهدون بعد."
+
+msgid "Tips to Get More Views"
+msgstr "نصائح لمشاهدات أكثر"
+
+msgid "Just now"
+msgstr "الآن"
+
+#, python-format
+#| msgid "%(created)s ago"
+msgid "%(time)s ago"
+msgstr "منذ %(time)s"
+
+msgid "People who liked you"
+msgstr "من أُعجبوا بك"
+
+msgid "Profile views"
+msgstr "مشاهدات الملف"
+
+msgid "New messages"
+msgstr "رسائل جديدة"
+
+msgid "Mutual matches"
+msgstr "تطابقات متبادلة"
+
+msgid "New notifications"
+msgstr "إشعارات جديدة"
+
+msgid "Complete your profile before sending messages."
+msgstr "أكمل ملفك الشخصي قبل إرسال الرسائل."
+
+msgid ""
+"Your plan cannot start a conversation. Upgrade to write first - answering "
+"someone is always free."
+msgstr ""
+"باقتك لا تسمح ببدء محادثة. قم بالترقية لتكتب أولًا - الرد على أي شخص مجاني "
+"دائمًا."
+
+msgid ""
+"You have started all of today's conversations. More in 24 hours, or upgrade "
+"for a bigger plan."
+msgstr ""
+"لقد بدأت كل محادثات اليوم. المزيد بعد 24 ساعة، أو قم بالترقية لباقة أكبر."
+
+msgid "Complete your profile before calling."
+msgstr "أكمل ملفك الشخصي قبل الاتصال."
+
+msgid "This member is no longer on Sakinah."
+msgstr "هذا العضو لم يعد على سكينة."
+
+msgid "You can't message this member."
+msgstr "لا يمكنك مراسلة هذا العضو."
+
+#, python-format
+msgid "%(name)s only accepts messages from %(lower)s."
+msgstr "%(name)s يقبل الرسائل من %(lower)s فقط."
+
+msgid "The voice note could not be sent."
+msgstr "تعذّر إرسال الرسالة الصوتية."
+
+msgid "Show my profile to all members"
+msgstr "إظهار ملفي لجميع الأعضاء"
+
+msgid "Show only to verified members"
+msgstr "الإظهار للأعضاء الموثّقين فقط"
+
+msgid "Show only to premium members"
+msgstr "الإظهار لأعضاء بريميوم فقط"
+
+msgid "Hide my profile"
+msgstr "إخفاء ملفي"
+
+msgid "You can have up to 6 photos. Remove one first."
+msgstr "يمكنك إضافة 6 صور كحد أقصى. أزل واحدة أولًا."
+
+msgid "Photo added with your face hidden."
+msgstr "تمت إضافة الصورة مع إخفاء وجهك."
+
+msgid "Photo added."
+msgstr "تمت إضافة الصورة."
+
+msgid "We could not find a face in this photo, so it was left as it is."
+msgstr "لم نتمكن من العثور على وجه في هذه الصورة، لذا تُركت كما هي."
+
+msgid "Your face is now hidden on this photo."
+msgstr "وجهك مخفي الآن في هذه الصورة."
+
+msgid "Partner preferences saved."
+msgstr "تم حفظ تفضيلات الشريك."
+
+msgid "Please verify my profile"
+msgstr "يرجى توثيق ملفي الشخصي"
+
+msgid "Attach a photo of your ID so we can verify you."
+msgstr "أرفق صورة لهويتك لنتمكن من توثيقك."
+
+msgid "Verification request sent. Our team will review it soon."
+msgstr "تم إرسال طلب التوثيق. سيراجعه فريقنا قريبًا."
+
+msgid "Profile visibility updated."
+msgstr "تم تحديث ظهور الملف الشخصي."
+
+msgid "Total Profile Views"
+msgstr "إجمالي مشاهدات الملف"
+
+msgid "Last 3 Months"
+msgstr "آخر 3 أشهر"
+
+msgid "Unique Visitors"
+msgstr "زوار فريدون"
+
+msgid "All Views"
+msgstr "كل المشاهدات"
+
+msgid "Recent (7 days)"
+msgstr "حديثة (7 أيام)"
+
+msgid "See who liked you"
+msgstr "اعرف من أُعجب بك"
+
+msgid "Advanced filters"
+msgstr "فلاتر متقدمة"
+
+msgid "viewed your profile"
+msgstr "شاهد ملفك الشخصي"
+
+msgid "liked your profile"
+msgstr "أُعجب بملفك الشخصي"
+
+msgid "sent you a message"
+msgstr "أرسل إليك رسالة"
+
+msgid "All members"
+msgstr "جميع الأعضاء"
+
+msgid "People Who Liked Me"
+msgstr "من أُعجبوا بي"
+
+msgid "Saved Profiles"
+msgstr "الملفات المحفوظة"
+
+msgid "Likes"
+msgstr "الإعجابات"
+
+msgid "All Activities"
+msgstr "كل الأنشطة"
+
+msgid "Search Activity"
+msgstr "نشاط البحث"
+
+#| msgid "Search events by title, location, or topic..."
+msgid "Search events, topics, locations..."
+msgstr "ابحث عن الفعاليات والمواضيع والمواقع..."
+
+msgid ""
+"Asante! We received your payment details. Your plan will be activated once "
+"our team confirms the payment."
+msgstr ""
+"شكرًا! استلمنا تفاصيل الدفع. سيتم تفعيل باقتك بمجرد أن يؤكد فريقنا الدفع."
+
+msgid "How do I pay?"
+msgstr "كيف أدفع؟"
+
+msgid "When is my plan activated?"
+msgstr "متى تُفعَّل باقتي؟"
+
+msgid ""
+"As soon as our team confirms your payment, usually within a few hours. You "
+"will get a notification."
+msgstr "بمجرد أن يؤكد فريقنا دفعتك، عادة خلال ساعات قليلة. ستصلك رسالة إشعار."
+
+msgid "Does my plan renew automatically?"
+msgstr "هل تتجدد باقتي تلقائيًا؟"
+
+msgid ""
+"No. Plans do not renew automatically, so you are never charged without "
+"asking. Renew any time from this page."
+msgstr ""
+"لا. لا تتجدد الباقات تلقائيًا، لذا لن تُخصم منك أي مبالغ دون طلبك. جدّد في "
+"أي وقت من هذه الصفحة."
+
+msgid "Can I change my plan?"
+msgstr "هل يمكنني تغيير باقتي؟"
+
+msgid ""
+"Yes. Pay for the new plan and it starts after confirmation. Remaining time "
+"on a paid plan is kept."
+msgstr ""
+"نعم. ادفع للباقة الجديدة وتبدأ بعد التأكيد. يُحتفظ بالمدة المتبقية من الباقة"
+" المدفوعة."
+
+msgid "Advanced Search"
+msgstr "بحث متقدم"
+
+msgid "Find matches with detailed preferences"
+msgstr "اعثر على تطابقات بتفضيلات مفصلة"
+
+msgid "See Who Liked You"
+msgstr "اعرف من أُعجب بك"
+
+msgid "Know who is interested in you"
+msgstr "اعرف من المهتم بك"
+
+msgid "Unlimited Messages"
+msgstr "رسائل غير محدودة"
+
+msgid "Chat without limits"
+msgstr "تحدّث بلا حدود"
+
+msgid "Featured Profile"
+msgstr "ملف مميّز"
+
+msgid "Get more visibility"
+msgstr "احصل على ظهور أكبر"
+
+msgid "Priority in Search"
+msgstr "أولوية في البحث"
+
+msgid "Appear at the top"
+msgstr "اظهر في المقدمة"
+
+msgid "Access to Premium Events"
+msgstr "الوصول إلى فعاليات بريميوم"
+
+msgid "Verified Badge"
+msgstr "شارة التوثيق"
+
+msgid "Build trust and credibility"
+msgstr "ابنِ الثقة والمصداقية"
+
+msgid "Dedicated Support"
+msgstr "دعم مخصص"
+
+msgid "Get priority assistance"
+msgstr "احصل على مساعدة ذات أولوية"
+
+#| msgid "Search members..."
+msgid "Search members, events, topics..."
+msgstr "ابحث عن الأعضاء والفعاليات والمواضيع..."
+
+msgid "Privacy settings saved."
+msgstr "تم حفظ إعدادات الخصوصية."
+
+#, python-format
+msgid "%(name)s blocked. They can no longer see or message you."
+msgstr "تم حظر %(name)s. لن يتمكن من رؤيتك أو مراسلتك بعد الآن."
+
+#, python-format
+msgid "%(name)s unblocked."
+msgstr "تم إلغاء حظر %(name)s."
+
+#, python-format
+msgid "Logged out of %(n)d other session."
+msgid_plural "Logged out of %(n)d other sessions."
+msgstr[0] "تم تسجيل الخروج من %(n)d جلسة أخرى."
+msgstr[1] "تم تسجيل الخروج من جلسة أخرى."
+msgstr[2] "تم تسجيل الخروج من جلستين أخريين."
+msgstr[3] "تم تسجيل الخروج من %(n)d جلسات أخرى."
+msgstr[4] "تم تسجيل الخروج من %(n)d جلسة أخرى."
+msgstr[5] "تم تسجيل الخروج من %(n)d جلسة أخرى."
+
+msgid "Welcome back! Your profile is visible again."
+msgstr "مرحبًا بعودتك! ملفك الشخصي ظاهر مجددًا."
+
+msgid ""
+"Your account is deactivated. Your profile is hidden until you reactivate it."
+msgstr "تم إلغاء تفعيل حسابك. ملفك الشخصي مخفي حتى تعيد تفعيله."
+
+msgid "Password is incorrect. Your account was not deleted."
+msgstr "كلمة المرور غير صحيحة. لم يتم حذف حسابك."
+
+msgid "Your account and profile were deleted. Kwaheri."
+msgstr "تم حذف حسابك وملفك الشخصي. مع السلامة."
+
+msgid "Getting Started"
+msgstr "البدء"
+
+msgid ""
+"Learn how to create an account, complete your profile and start searching."
+msgstr "تعلّم كيف تنشئ حسابًا وتكمل ملفك وتبدأ البحث."
+
+msgid "How do I start?"
+msgstr "كيف أبدأ؟"
+
+msgid ""
+"Join free, complete your profile with a clear photo, set your partner "
+"preferences, then use Find a Match."
+msgstr ""
+"انضم مجانًا، وأكمل ملفك بصورة واضحة، وحدد تفضيلات الشريك، ثم استخدم «ابحث عن"
+" شريك»."
+
+msgid "Is Sakinah free?"
+msgstr "هل سكينة مجانية؟"
+
+msgid ""
+"Yes. Creating a profile, searching and sending likes are free. Premium plans"
+" add more features."
+msgstr ""
+"نعم. إنشاء الملف والبحث وإرسال الإعجابات مجانية. باقات بريميوم تضيف ميزات "
+"أكثر."
+
+msgid "Profile & Verification"
+msgstr "الملف الشخصي والتوثيق"
+
+msgid "How to verify your profile, upload photos and keep your account safe."
+msgstr "كيف توثّق ملفك وترفع الصور وتحافظ على أمان حسابك."
+
+msgid "How do I get verified?"
+msgstr "كيف أحصل على التوثيق؟"
+
+msgid ""
+"Go to My Profile > Verification and send a request with a photo of your ID. "
+"Our team reviews it."
+msgstr ""
+"اذهب إلى ملفي الشخصي > التوثيق وأرسل طلبًا مع صورة هويتك. سيراجعه فريقنا."
+
+msgid "How many photos can I add?"
+msgstr "كم صورة يمكنني إضافتها؟"
+
+msgid "Up to 6 photos. Use clear, recent and modest photos."
+msgstr "حتى 6 صور. استخدم صورًا واضحة وحديثة ومحتشمة."
+
+msgid "Finding a Match"
+msgstr "العثور على شريك"
+
+msgid "Tips on using search filters, likes, messages and matches."
+msgstr "نصائح لاستخدام فلاتر البحث والإعجابات والرسائل والتطابقات."
+
+msgid "What is a mutual match?"
+msgstr "ما هو التطابق المتبادل؟"
+
+msgid ""
+"When you like someone and they like you back, it becomes a mutual match."
+msgstr "عندما تُعجب بشخص ويبادلك الإعجاب يصبح ذلك تطابقًا متبادلًا."
+
+msgid "Why can't I message someone?"
+msgstr "لماذا لا أستطيع مراسلة شخص ما؟"
+
+msgid ""
+"Some members only accept messages from verified or matched members. Check "
+"their profile."
+msgstr ""
+"بعض الأعضاء يقبلون الرسائل من الموثّقين أو المتطابقين فقط. راجع ملفهم."
+
+msgid "Membership & Payments"
+msgstr "العضوية والمدفوعات"
+
+msgid "Information about membership plans, payments and benefits."
+msgstr "معلومات عن باقات العضوية والمدفوعات والمزايا."
+
+msgid "How do I upgrade?"
+msgstr "كيف أقوم بالترقية؟"
+
+msgid ""
+"Open Membership, choose a plan, pay by mobile money and enter the "
+"transaction reference."
+msgstr ""
+"افتح العضوية واختر باقة وادفع عبر المحفظة الهاتفية ثم أدخل مرجع المعاملة."
+
+msgid "Do plans renew automatically?"
+msgstr "هل تتجدد الباقات تلقائيًا؟"
+
+msgid "No. You choose when to renew."
+msgstr "لا. أنت من يقرر موعد التجديد."
+
+msgid "How we protect your information and keep the community safe."
+msgstr "كيف نحمي معلوماتك ونحافظ على أمان المجتمع."
+
+msgid "Who can see my profile?"
+msgstr "من يمكنه رؤية ملفي الشخصي؟"
+
+msgid ""
+"You decide in Safety & Privacy: everyone, verified members, premium members,"
+" or hidden."
+msgstr ""
+"أنت تقرر في الأمان والخصوصية: الجميع أو الموثّقون أو أعضاء بريميوم أو مخفي."
+
+msgid "How do I block someone?"
+msgstr "كيف أحظر شخصًا؟"
+
+msgid ""
+"Open their profile or conversation and choose Block. Manage blocked users in"
+" Safety & Privacy."
+msgstr "افتح ملفه أو محادثته واختر حظر. أدر المحظورين في الأمان والخصوصية."
+
+msgid "Technical Support"
+msgstr "الدعم الفني"
+
+msgid "Help with login, password, errors and other technical issues."
+msgstr ""
+"المساعدة في تسجيل الدخول وكلمة المرور والأخطاء والمشكلات التقنية الأخرى."
+
+msgid "I forgot my password"
+msgstr "نسيت كلمة المرور"
+
+msgid "Use 'Forgot password?' on the login page to get a reset link by email."
+msgstr ""
+"استخدم «نسيت كلمة المرور؟» في صفحة الدخول للحصول على رابط إعادة التعيين "
+"بالبريد."
+
+msgid "The site is not working"
+msgstr "الموقع لا يعمل"
+
+msgid ""
+"Refresh the page or try another browser. If it continues, submit a ticket "
+"below."
+msgstr "حدّث الصفحة أو جرّب متصفحًا آخر. إن استمرت المشكلة، أرسل تذكرة أدناه."
+
+msgid "Our rules for a respectful and Islamic community."
+msgstr "قواعدنا لمجتمع محترم وإسلامي."
+
+msgid "What is not allowed?"
+msgstr "ما الممنوع؟"
+
+msgid ""
+"Fake profiles, inappropriate photos, harassment, asking for money and "
+"sharing contact details too early."
+msgstr ""
+"الملفات المزيفة والصور غير اللائقة والتحرش وطلب المال ومشاركة بيانات الاتصال"
+" مبكرًا."
+
+msgid "What happens when I report someone?"
+msgstr "ماذا يحدث عندما أبلغ عن شخص؟"
+
+msgid ""
+"Our team reviews every report privately and may warn or remove the member."
+msgstr "يراجع فريقنا كل بلاغ بسرية وقد يحذّر العضو أو يزيله."
+
+msgid ""
+"Asante! Our support team received your message and will reply by email or "
+"notification."
+msgstr ""
+"شكرًا! تلقى فريق الدعم رسالتك وسيرد عبر البريد الإلكتروني أو الإشعارات."
+
+#| msgid "Search members, matches, messages, events, payments..."
+msgid "Search members, topics, or help articles..."
+msgstr "ابحث عن الأعضاء أو المواضيع أو مقالات المساعدة..."
+
+msgid "Breadcrumb"
+msgstr "مسار التنقل"
+
+msgid "Share"
+msgstr "مشاركة"
+
+#, python-format
+msgid "(%(n)s review)"
+msgid_plural "(%(n)s reviews)"
+msgstr[0] "(%(n)s تقييم)"
+msgstr[1] "(تقييم واحد)"
+msgstr[2] "(تقييمان)"
+msgstr[3] "(%(n)s تقييمات)"
+msgstr[4] "(%(n)s تقييمًا)"
+msgstr[5] "(%(n)s تقييم)"
+
+msgid "New &middot; no reviews yet"
+msgstr "جديد &middot; لا تقييمات بعد"
+
+#, python-format
+msgid "%(views)s view"
+msgid_plural "%(views)s views"
+msgstr[0] "%(views)s مشاهدة"
+msgstr[1] "مشاهدة واحدة"
+msgstr[2] "مشاهدتان"
+msgstr[3] "%(views)s مشاهدات"
+msgstr[4] "%(views)s مشاهدة"
+msgstr[5] "%(views)s مشاهدة"
+
+msgid "In Wishlist"
+msgstr "في قائمة الأمنيات"
+
+msgid "Add to Wishlist"
+msgstr "أضف إلى قائمة الأمنيات"
+
+msgid "Check Availability"
+msgstr "تحقق من التوفّر"
+
+msgid "Inquire Now"
+msgstr "استفسر الآن"
+
+msgid "Verified Vendor"
+msgstr "مزوّد موثّق"
+
+#, python-format
+msgid "Member since: %(member_since)s"
+msgstr "عضو منذ: %(member_since)s"
+
+#, python-format
+msgid "%(avg)s (%(n)s reviews)"
+msgstr "%(avg)s (%(n)s تقييم)"
+
+msgid "View All Adverts"
+msgstr "عرض كل الإعلانات"
+
+msgid "Why Choose This Vendor?"
+msgstr "لماذا تختار هذا المزوّد؟"
+
+#, python-format
+msgid "Reviews (%(n)s)"
+msgstr "التقييمات (%(n)s)"
+
+msgid "Similar Ads"
+msgstr "إعلانات مشابهة"
+
+msgid "Package Includes"
+msgstr "تشمل الباقة"
+
+msgid "Additional Services (Optional)"
+msgstr "خدمات إضافية (اختيارية)"
+
+msgid "(negotiable)"
+msgstr "(قابل للتفاوض)"
+
+msgid ""
+"No reviews yet. Have you used this service? Be the first to share your "
+"experience."
+msgstr "لا توجد تقييمات بعد. هل استخدمت هذه الخدمة؟ كن أول من يشارك تجربته."
+
+#, python-format
+msgid "%(v)s stars"
+msgstr "%(v)s نجوم"
+
+msgid "Post Review"
+msgstr "نشر التقييم"
+
+msgid "Log in to write a review"
+msgstr "سجّل الدخول لكتابة تقييم"
+
+msgid "View on Map"
+msgstr "عرض على الخريطة"
+
+#, python-format
+msgid "Map of %(title)s"
+msgstr "خريطة %(title)s"
+
+msgid "Related Adverts"
+msgstr "إعلانات ذات صلة"
+
+msgid "View More"
+msgstr "عرض المزيد"
+
+msgid "No similar adverts yet."
+msgstr "لا توجد إعلانات مشابهة بعد."
+
+#, python-format
+msgid "Contact %(name)s"
+msgstr "تواصل مع %(name)s"
+
+msgid "Your request goes to the vendor, who will call you back."
+msgstr "يصل طلبك إلى المزوّد الذي سيتصل بك."
+
+msgid "Send Request"
+msgstr "إرسال الطلب"
+
+#, python-format
+msgid "Comments (%(comments)s)"
+msgstr "التعليقات (%(comments)s)"
+
+msgid "No comments yet. Start the conversation."
+msgstr "لا توجد تعليقات بعد. ابدأ النقاش."
+
+msgid "Post Comment"
+msgstr "نشر التعليق"
+
+msgid "Log in to comment"
+msgstr "سجّل الدخول للتعليق"
+
+msgid "Recent Articles"
+msgstr "أحدث المقالات"
+
+msgid "All Articles"
+msgstr "جميع المقالات"
+
+#, python-format
+msgid "Articles & Advice - %(brand)s"
+msgstr "مقالات ونصائح - %(brand)s"
+
+msgid "Articles &amp; Advice"
+msgstr "مقالات ونصائح"
+
+msgid "Guidance for a Happier, Stronger Marriage"
+msgstr "إرشادات لزواج أسعد وأقوى"
+
+msgid ""
+"Explore useful articles, expert advice and Islamic guidance on marriage, "
+"relationships, family life and personal growth."
+msgstr ""
+"اكتشف مقالات مفيدة ونصائح الخبراء والإرشاد الإسلامي حول الزواج والعلاقات "
+"والحياة الأسرية والنمو الشخصي."
+
+msgid "Islamic Guidance"
+msgstr "إرشاد إسلامي"
+
+msgid "Expert Advice"
+msgstr "نصائح الخبراء"
+
+msgid "Practical Tips"
+msgstr "نصائح عملية"
+
+msgid "Real Stories"
+msgstr "قصص حقيقية"
+
+msgid "Healthy Relationships"
+msgstr "علاقات صحية"
+
+msgid "&ldquo;Knowledge today builds stronger families tomorrow.&rdquo;"
+msgstr "&ldquo;معرفة اليوم تبني أسرًا أقوى غدًا.&rdquo;"
+
+msgid "Search articles..."
+msgstr "ابحث في المقالات..."
+
+msgid "All Authors"
+msgstr "جميع الكتّاب"
+
+msgid "Latest First"
+msgstr "الأحدث أولًا"
+
+msgid "Most Read"
+msgstr "الأكثر قراءة"
+
+msgid "Popular Tags"
+msgstr "الوسوم الشائعة"
+
+msgid "Search Results"
+msgstr "نتائج البحث"
+
+msgid "Latest Articles"
+msgstr "أحدث المقالات"
+
+msgid "View All Articles"
+msgstr "عرض كل المقالات"
+
+msgid "&lsaquo; Previous"
+msgstr "&lsaquo; السابق"
+
+msgid "Next &rsaquo;"
+msgstr "التالي &rsaquo;"
+
+msgid "No articles found. Try another search."
+msgstr "لم يتم العثور على مقالات. جرّب بحثًا آخر."
+
+msgid "Featured Article"
+msgstr "مقالة مميزة"
+
+msgid "Read Article"
+msgstr "اقرأ المقالة"
+
+#, python-format
+msgid "Events - %(brand)s"
+msgstr "الفعاليات - %(brand)s"
+
+msgid "Meet, Learn and Connect"
+msgstr "التقِ وتعلّم وتواصل"
+
+msgid ""
+"Join our events, workshops and seminars designed to guide, support and bring"
+" people together for meaningful relationships and successful marriages."
+msgstr ""
+"انضم إلى فعالياتنا وورشنا وندواتنا المصممة للإرشاد والدعم وجمع الناس من أجل "
+"علاقات هادفة وزيجات ناجحة."
+
+#| msgid "Expert Advice"
+msgid "Expert guidance"
+msgstr "إرشاد الخبراء"
+
+#| msgid "Practical Tips"
+msgid "Practical skills"
+msgstr "مهارات عملية"
+
+msgid "Meet verified members"
+msgstr "تعرّف على أعضاء موثّقين"
+
+#| msgid "Your conversations"
+msgid "Build connections"
+msgstr "ابنِ علاقات"
+
+msgid ""
+"&ldquo;Good events create better opportunities for righteous "
+"connections.&rdquo;"
+msgstr "&ldquo;الفعاليات الجيدة تصنع فرصًا أفضل لعلاقات صالحة.&rdquo;"
+
+msgid "Search events..."
+msgstr "ابحث عن الفعاليات..."
+
+msgid "Search Events"
+msgstr "البحث عن الفعاليات"
+
+msgid "Join our upcoming seminars, workshops and community events."
+msgstr "انضم إلى ندواتنا وورشنا وفعالياتنا المجتمعية القادمة."
+
+msgid "View All Events"
+msgstr "عرض جميع الفعاليات"
+
+msgid "person"
+msgstr "شخص"
+
+msgid "people"
+msgstr "أشخاص"
+
+msgid "going"
+msgstr "سيحضرون"
+
+msgid "Be the first to register"
+msgstr "كن أول المسجّلين"
+
+msgid "Registered &#10003;"
+msgstr "مسجّل &#10003;"
+
+msgid "Register"
+msgstr "سجّل"
+
+msgid "No events match your search right now."
+msgstr "لا توجد فعاليات تطابق بحثك حاليًا."
+
+msgid "Host an Event"
+msgstr "استضف فعالية"
+
+#, python-format
+msgid ""
+"Are you a vendor, expert or organization? You can host your marriage-related"
+" event on %(brand)s."
+msgstr ""
+"هل أنت مزوّد أو خبير أو مؤسسة؟ يمكنك استضافة فعاليتك المتعلقة بالزواج على "
+"%(brand)s."
+
+msgid "Submit Your Event"
+msgstr "أرسل فعاليتك"
+
+msgid "Anywhere"
+msgstr "أي مكان"
+
+msgid "Islam"
+msgstr "الإسلام"
+
+msgid "Verified Profiles"
+msgstr "ملفات موثّقة"
+
+msgid "Serious Intentions"
+msgstr "نوايا جادة"
+
+msgid "Safe &amp; Secure"
+msgstr "آمن ومحمي"
+
+msgid "Real People"
+msgstr "أشخاص حقيقيون"
+
+msgid "Imethibitishwa"
+msgstr "موثّق"
+
+msgid "Verified members"
+msgstr "أعضاء موثّقون"
+
+msgid "Jinsi inavyofanya kazi"
+msgstr "كيف يعمل"
+
+msgid "Four steps to your Nikah"
+msgstr "أربع خطوات نحو نكاحك"
+
+msgid "Jisajili bure"
+msgstr "سجّل مجانًا"
+
+msgid "Create your free profile in two minutes."
+msgstr "أنشئ ملفك الشخصي المجاني في دقيقتين."
+
+msgid "Tafuta mwenza"
+msgstr "ابحث عن شريك"
+
+msgid "Filter by age, city and faith to find your match."
+msgstr "صفِّ حسب العمر والمدينة والدين لتجد شريكك."
+
+msgid "Wasiliana kwa heshima"
+msgstr "تواصل باحترام"
+
+#, python-format
+msgid "Talk privately and respectfully inside %(brand)s."
+msgstr "تحدّث بخصوصية واحترام داخل %(brand)s."
+
+msgid "Fanya Nikah"
+msgstr "أتمّ النكاح"
+
+msgid "Plan your wedding with trusted vendors."
+msgstr "خطّط لزفافك مع مزوّدين موثوقين."
+
+msgid "Featured matches"
+msgstr "تطابقات مميّزة"
+
+msgid "Serious people looking for a blessed marriage."
+msgstr "أشخاص جادّون يبحثون عن زواج مبارك."
+
+msgid "View More Matches"
+msgstr "عرض المزيد من التطابقات"
+
+msgid "Nikah &amp; wedding"
+msgstr "النكاح والزفاف"
+
+msgid "Everything you need for your Nikah"
+msgstr "كل ما تحتاجه لنكاحك"
+
+msgid ""
+"Discover trusted vendors and services to make your special day perfect."
+msgstr "اكتشف مزوّدين وخدمات موثوقة لتجعل يومك المميز مثاليًا."
+
+msgid "View All Services"
+msgstr "عرض كل الخدمات"
+
+msgid "Romantic getaways for a beautiful start to your new journey together."
+msgstr "رحلات رومانسية لبداية جميلة لرحلتكما الجديدة معًا."
+
+msgid "View All Destinations"
+msgstr "عرض كل الوجهات"
+
+msgid "GO PREMIUM"
+msgstr "اشترك في بريميوم"
+
+msgid "Get more matches and powerful features."
+msgstr "احصل على تطابقات أكثر وميزات قوية."
+
+#, python-format
+msgid "From <b>%(currency)s %(from_price)s</b>/month"
+msgstr "ابتداءً من <b>%(from_price)s %(currency)s</b>/شهريًا"
+
+msgid "New events coming soon."
+msgstr "فعاليات جديدة قريبًا."
+
+msgid "Advertise Your Marriage Service"
+msgstr "أعلن عن خدمة الزواج الخاصة بك"
+
+msgid "Reach thousands of members looking for trusted wedding services."
+msgstr "صل إلى آلاف الأعضاء الباحثين عن خدمات زفاف موثوقة."
+
+msgid "Advertise Now"
+msgstr "أعلن الآن"
+
+#, python-format
+msgid "%(days)s Days %(nights)s Nights"
+msgstr "%(days)s أيام %(nights)s ليالٍ"
+
+#, python-format
+msgid "From %(currency)s %(from_price)s"
+msgstr "ابتداءً من %(from_price)s %(currency)s"
+
+msgid "per couple"
+msgstr "للزوجين"
+
+msgid "Remove from favourites"
+msgstr "إزالة من المفضلة"
+
+msgid "Save to favourites"
+msgstr "حفظ في المفضلة"
+
+#, python-format
+msgid "%(rating)s (%(reviews)s reviews)"
+msgstr "%(rating)s (%(reviews)s تقييم)"
+
+msgid "Love<br>Travel<br>Memories<br>Together"
+msgstr "حب<br>سفر<br>ذكريات<br>معًا"
+
+msgid "Pages"
+msgstr "الصفحات"
+
+msgid "Previous page"
+msgstr "الصفحة السابقة"
+
+msgid "Next page"
+msgstr "الصفحة التالية"
+
+msgid "View Package"
+msgstr "عرض الباقة"
+
+msgid "Special Honeymoon Offers"
+msgstr "عروض شهر عسل خاصة"
+
+msgid "Enjoy exclusive discounts"
+msgstr "استمتع بخصومات حصرية"
+
+msgid "Candle dinner, photoshoot and more"
+msgstr "عشاء على ضوء الشموع وجلسة تصوير والمزيد"
+
+msgid "Safe &amp; Trusted"
+msgstr "آمن وموثوق"
+
+msgid "Verified hotels and travel partners"
+msgstr "فنادق وشركاء سفر موثّقون"
+
+msgid "24/7 Support"
+msgstr "دعم على مدار الساعة"
+
+msgid "We are here to help you"
+msgstr "نحن هنا لمساعدتك"
+
+#, python-format
+msgid "Honeymoon Destinations - %(brand)s"
+msgstr "وجهات شهر العسل - %(brand)s"
+
+msgid "Filter Destinations"
+msgstr "تصفية الوجهات"
+
+msgid "Destination Type"
+msgstr "نوع الوجهة"
+
+msgid "All Countries"
+msgstr "جميع الدول"
+
+#, python-format
+msgid "Budget (%(currency)s per Couple)"
+msgstr "الميزانية (%(currency)s للزوجين)"
+
+msgid "Min"
+msgstr "الأدنى"
+
+msgid "Minimum budget"
+msgstr "الحد الأدنى للميزانية"
+
+msgid "Max"
+msgstr "الأقصى"
+
+msgid "Maximum budget"
+msgstr "الحد الأقصى للميزانية"
+
+#, python-format
+msgid "%(label)s &amp; Above"
+msgstr "%(label)s فأكثر"
+
+msgid "Search Destinations"
+msgstr "البحث عن الوجهات"
+
+msgid "Destination types"
+msgstr "أنواع الوجهات"
+
+msgid "All Destinations"
+msgstr "جميع الوجهات"
+
+msgid "Matching Destinations"
+msgstr "الوجهات المطابقة"
+
+msgid "All Honeymoon Destinations"
+msgstr "جميع وجهات شهر العسل"
+
+msgid ""
+"Explore our handpicked destinations around Tanzania, East Africa and the "
+"world."
+msgstr "اكتشف وجهاتنا المختارة بعناية في تنزانيا وشرق أفريقيا والعالم."
+
+msgid "Filters"
+msgstr "الفلاتر"
+
+msgid "No destinations match these filters"
+msgstr "لا توجد وجهات تطابق هذه الفلاتر"
+
+msgid "Try a wider budget or fewer filters."
+msgstr "جرّب ميزانية أوسع أو فلاتر أقل."
+
+msgid "Show all destinations"
+msgstr "عرض كل الوجهات"
+
+#, python-format
+msgid "%(title)s - Honeymoon - %(brand)s"
+msgstr "%(title)s - شهر العسل - %(brand)s"
+
+msgid "Previous photo"
+msgstr "الصورة السابقة"
+
+msgid "Next photo"
+msgstr "الصورة التالية"
+
+#, python-format
+msgid "View All Photos (%(gallery)s)"
+msgstr "عرض كل الصور (%(gallery)s)"
+
+msgid "Flight Option"
+msgstr "خيار الطيران"
+
+msgid "Airport Transfer"
+msgstr "النقل من المطار"
+
+msgid "Romantic Activities"
+msgstr "أنشطة رومانسية"
+
+msgid "Important Information"
+msgstr "معلومات مهمة"
+
+msgid "Package Highlights"
+msgstr "أبرز ما في الباقة"
+
+msgid "Ideal For"
+msgstr "مثالي لـ"
+
+msgid "Day by Day Itinerary"
+msgstr "البرنامج يومًا بيوم"
+
+msgid "What's Included"
+msgstr "ما هو مشمول"
+
+msgid "Not Included"
+msgstr "غير مشمول"
+
+#, python-format
+msgid "%(stars)s Star &middot; %(stay)s"
+msgstr "%(stars)s نجوم &middot; %(stay)s"
+
+#, python-format
+msgid "Based on %(reviews)s reviews"
+msgstr "بناءً على %(reviews)s تقييم"
+
+#, python-format
+msgid "(%(reviews)s reviews)"
+msgstr "(%(reviews)s تقييم)"
+
+msgid "Add email or a message"
+msgstr "أضف بريدًا إلكترونيًا أو رسالة"
+
+msgid "Book This Package"
+msgstr "احجز هذه الباقة"
+
+msgid "No payment now. Our travel team calls you to confirm dates and price."
+msgstr "لا دفع الآن. سيتصل بك فريق السفر لتأكيد التواريخ والسعر."
+
+msgid "Secure Booking"
+msgstr "حجز آمن"
+
+msgid "Your payment is safe and secure"
+msgstr "دفعتك آمنة ومحمية"
+
+msgid "Best Price"
+msgstr "أفضل سعر"
+
+msgid "Guaranteed"
+msgstr "مضمون"
+
+msgid "Chat with our travel experts for a customized package."
+msgstr "تحدّث مع خبراء السفر لدينا للحصول على باقة مخصصة."
+
+msgid "Similar Packages"
+msgstr "باقات مشابهة"
+
+msgid "View All Packages"
+msgstr "عرض كل الباقات"
+
+#, python-format
+msgid "%(title)s &middot; %(gallery)s photos"
+msgstr "%(title)s &middot; %(gallery)s صور"
+
+#, python-format
+msgid "in %(name)s"
+msgstr "في %(name)s"
+
+msgid ""
+"Choose from our carefully curated honeymoon packages for a romantic and "
+"unforgettable experience."
+msgstr "اختر من باقات شهر العسل المنتقاة بعناية لتجربة رومانسية لا تُنسى."
+
+msgid "Filter Packages"
+msgstr "تصفية الباقات"
+
+msgid "Package Type"
+msgstr "نوع الباقة"
+
+msgid "Hotel/Resort Category"
+msgstr "فئة الفندق/المنتجع"
+
+#, python-format
+msgid "%(k)s Star"
+msgstr "%(k)s نجوم"
+
+msgid "Special Offers"
+msgstr "عروض خاصة"
+
+msgid "Search Packages"
+msgstr "البحث عن الباقات"
+
+msgid "No packages match these filters"
+msgstr "لا توجد باقات تطابق هذه الفلاتر"
+
+msgid "Try another destination or remove a filter."
+msgstr "جرّب وجهة أخرى أو أزل فلترًا."
+
+msgid "Show all packages"
+msgstr "عرض كل الباقات"
+
+#, python-format
+msgid "My Likes - %(brand)s"
+msgstr "إعجاباتي - %(brand)s"
+
+msgid "My Likes & Shortlist"
+msgstr "إعجاباتي وقائمتي المختصرة"
+
+msgid "My Likes"
+msgstr "إعجاباتي"
+
+msgid "Members you have sent interest to."
+msgstr "أعضاء أبديت اهتمامك بهم."
+
+msgid "Find more"
+msgstr "ابحث عن المزيد"
+
+msgid "You haven't sent interest to anyone yet."
+msgstr "لم تُبدِ اهتمامك بأحد بعد."
+
+msgid "My Shortlist"
+msgstr "قائمتي المختصرة"
+
+msgid "Profiles you saved to look at again."
+msgstr "ملفات حفظتها لتعود إليها."
+
+msgid "Your shortlist is empty."
+msgstr "قائمتك المختصرة فارغة."
+
+#, python-format
+msgid "Find a Match - %(brand)s"
+msgstr "ابحث عن شريك - %(brand)s"
+
+msgid "Looking for a"
+msgstr "أبحث عن"
+
+msgid "Anyone"
+msgstr "أي شخص"
+
+msgid "Verified only"
+msgstr "الموثّقون فقط"
+
+msgid "No members match these filters yet. Try widening your search."
+msgstr "لا يوجد أعضاء يطابقون هذه الفلاتر بعد. جرّب توسيع بحثك."
+
+msgid "Send interest"
+msgstr "أبدِ اهتمامك"
+
+msgid "Quick Info"
+msgstr "معلومات سريعة"
+
+#, python-format
+msgid "%(age)s years"
+msgstr "%(age)s سنة"
+
+msgid "Language(s)"
+msgstr "اللغات"
+
+msgid "Looking for: Marriage"
+msgstr "يبحث عن: الزواج"
+
+#, python-format
+msgid "Member since: %(joined)s"
+msgstr "عضو منذ: %(joined)s"
+
+#, python-format
+msgid "WhatsApp %(name)s"
+msgstr "واتساب %(name)s"
+
+msgid "Report profile"
+msgstr "الإبلاغ عن الملف"
+
+msgid "Interest Sent"
+msgstr "تم إبداء الاهتمام"
+
+msgid "Send Interest"
+msgstr "أبدِ اهتمامك"
+
+msgid "Add to Shortlist"
+msgstr "أضف إلى القائمة المختصرة"
+
+msgid "Voice Call"
+msgstr "مكالمة صوتية"
+
+msgid "Video Call"
+msgstr "مكالمة فيديو"
+
+msgid "Calls come with a membership plan - tap to join"
+msgstr "المكالمات متاحة مع باقة العضوية - اضغط للانضمام"
+
+#, python-format
+msgid "Call %(first_name)s"
+msgstr "اتصل بـ %(first_name)s"
+
+msgid "About"
+msgstr "نبذة"
+
+msgid "Education &amp; Career"
+msgstr "التعليم والعمل"
+
+msgid "Family"
+msgstr "العائلة"
+
+msgid "This member hasn't written an introduction yet."
+msgstr "لم يكتب هذا العضو نبذة تعريفية بعد."
+
+msgid "Lengo:"
+msgstr "الهدف:"
+
+msgid "Lives in"
+msgstr "يقيم في"
+
+msgid "Food Preference"
+msgstr "تفضيلات الطعام"
+
+msgid "Religion &amp; Values"
+msgstr "الدين والقيم"
+
+msgid "Hijab"
+msgstr "الحجاب"
+
+msgid "Dress"
+msgstr "اللباس"
+
+msgid "Qur'an Reading"
+msgstr "قراءة القرآن"
+
+msgid "Bible Reading"
+msgstr "قراءة الكتاب المقدس"
+
+msgid "Family Background"
+msgstr "الخلفية العائلية"
+
+msgid "Father's Status"
+msgstr "حالة الأب"
+
+msgid "Mother's Status"
+msgstr "حالة الأم"
+
+msgid "Number of Siblings"
+msgstr "عدد الإخوة"
+
+msgid "Family Type"
+msgstr "نوع العائلة"
+
+msgid "Family Location"
+msgstr "مكان العائلة"
+
+msgid "About Family"
+msgstr "عن العائلة"
+
+msgid "Great Match"
+msgstr "تطابق ممتاز"
+
+msgid "Good Match"
+msgstr "تطابق جيد"
+
+msgid "Possible Match"
+msgstr "تطابق محتمل"
+
+msgid "Based on your preferences, values and lifestyle."
+msgstr "بناءً على تفضيلاتك وقيمك ونمط حياتك."
+
+msgid "View Compatibility Details"
+msgstr "عرض تفاصيل التوافق"
+
+msgid "More Photos"
+msgstr "صور أخرى"
+
+#, python-format
+msgid "%(photo_total)s photo"
+msgid_plural "%(photo_total)s photos"
+msgstr[0] "%(photo_total)s صورة"
+msgstr[1] "صورة واحدة"
+msgstr[2] "صورتان"
+msgstr[3] "%(photo_total)s صور"
+msgstr[4] "%(photo_total)s صورة"
+msgstr[5] "%(photo_total)s صورة"
+
+#, python-format
+msgid "%(pronoun)s Preferences"
+msgstr "تفضيلات %(pronoun)s"
+
+#, python-format
+msgid "%(pref_age_min)s - %(pref_age_max)s years"
+msgstr "%(pref_age_min)s - %(pref_age_max)s سنة"
+
+msgid "Additional Preferences"
+msgstr "تفضيلات إضافية"
+
+msgid "Back to Results"
+msgstr "العودة إلى النتائج"
+
+msgid "Report Profile"
+msgstr "الإبلاغ عن الملف"
+
+#, python-format
+msgid "Report %(name)s"
+msgstr "الإبلاغ عن %(name)s"
+
+msgid "Reports are private. Our team reviews every report."
+msgstr "البلاغات سرية. يراجع فريقنا كل بلاغ."
+
+#, python-format
+msgid "%(name)s - Ujumbe"
+msgstr "%(name)s - الرسائل"
+
+#, python-format
+msgid "Ujumbe - %(brand)s"
+msgstr "الرسائل - %(brand)s"
+
+msgid "Ujumbe"
+msgstr "الرسائل"
+
+msgid "Tafuta mazungumzo..."
+msgstr "ابحث في المحادثات..."
+
+msgid "Tafuta mazungumzo"
+msgstr "البحث في المحادثات"
+
+msgid "Futa utafutaji"
+msgstr "مسح البحث"
+
+msgid "Wewe:"
+msgstr "أنت:"
+
+msgid "Mazungumzo mapya"
+msgstr "محادثة جديدة"
+
+msgid "Jana"
+msgstr "أمس"
+
+#, python-format
+msgid "Hakuna mazungumzo yanayolingana na &ldquo;%(q)s&rdquo;."
+msgstr "لا توجد محادثات تطابق &ldquo;%(q)s&rdquo;."
+
+msgid "Bado huna mazungumzo. Anza kwa kumsalimia mtu unayempenda."
+msgstr "ليس لديك محادثات بعد. ابدأ بإلقاء التحية على شخص يعجبك."
+
+msgid "Rudi kwenye orodha"
+msgstr "العودة إلى القائمة"
+
+#, python-format
+msgid "Mwanachama wa %(brand)s"
+msgstr "عضو في %(brand)s"
+
+#, python-format
+msgid "Mpigie %(first_name)s video"
+msgstr "مكالمة فيديو مع %(first_name)s"
+
+#, python-format
+msgid "Mpigie %(first_name)s simu"
+msgstr "اتصل بـ %(first_name)s"
+
+msgid "Simu ya video ni huduma ya Premium - bofya kujiunga"
+msgstr "مكالمات الفيديو ميزة بريميوم - اضغط للانضمام"
+
+msgid "Simu ya sauti ni huduma ya Premium - bofya kujiunga"
+msgstr "المكالمات الصوتية ميزة بريميوم - اضغط للانضمام"
+
+msgid "Chaguo zaidi"
+msgstr "خيارات أخرى"
+
+msgid "Angalia wasifu"
+msgstr "عرض الملف الشخصي"
+
+#, python-format
+msgid "Mzuie %(name)s? Hataweza kukuona wala kukutumia ujumbe."
+msgstr "حظر %(name)s؟ لن يتمكن من رؤيتك أو مراسلتك."
+
+msgid "Mzuie mwanachama"
+msgstr "حظر العضو"
+
+msgid "Ripoti mwanachama"
+msgstr "الإبلاغ عن العضو"
+
+#, python-format
+msgid ""
+"%(name)s bado hajaanza kutumia ujumbe wa %(brand)s; ujumbe wako utamfikia "
+"atakapoingia."
+msgstr ""
+"لم يبدأ %(name)s استخدام رسائل %(brand)s بعد؛ ستصله رسالتك عند تسجيل دخوله."
+
+#, python-format
+msgid "Sema <b>Assalamu Alaikum</b> kwa %(first_name)s"
+msgstr "قل <b>السلام عليكم</b> لـ %(first_name)s"
+
+msgid ""
+"Anza mazungumzo kwa heshima na unyenyekevu. Mazungumzo yenu ni ya faragha "
+"kati yenu wawili."
+msgstr "ابدأ المحادثة باحترام وتواضع. محادثتكما خاصة بينكما فقط."
+
+msgid "Assalamu Alaikum"
+msgstr "السلام عليكم"
+
+msgid "Habari za siku?"
+msgstr "كيف حالك اليوم؟"
+
+msgid "Nimefurahi kukutana nawe"
+msgstr "سعدت بالتعرّف عليك"
+
+#, python-format
+msgid "Unaweza kuanzisha mazungumzo %(msgs_left)s mapya leo. Kujibu ni bure."
+msgstr "يمكنك بدء %(msgs_left)s محادثة جديدة اليوم. الرد مجاني."
+
+msgid "Ongeza kifurushi"
+msgstr "ترقية الباقة"
+
+msgid "Andika ujumbe..."
+msgstr "اكتب رسالة..."
+
+msgid "Ambatisha picha"
+msgstr "إرفاق صورة"
+
+msgid "Rekodi ujumbe wa sauti (hadi dakika 2)"
+msgstr "تسجيل رسالة صوتية (حتى دقيقتين)"
+
+msgid "Rekodi sauti"
+msgstr "تسجيل صوت"
+
+msgid "Tuma"
+msgstr "إرسال"
+
+msgid "Futa"
+msgstr "حذف"
+
+msgid "Inarekodi&hellip; kiwango 2:00"
+msgstr "جارٍ التسجيل&hellip; الحد 2:00"
+
+msgid "Tuma sauti"
+msgstr "إرسال الصوت"
+
+msgid "Umemzuia mwanachama huyu."
+msgstr "لقد حظرت هذا العضو."
+
+msgid "Angalia vifurushi"
+msgstr "عرض الباقات"
+
+#, python-format
+msgid ""
+"%(first_name)s anapokea ujumbe kutoka kwa "
+"%(get_allow_messages_from_display)s pekee."
+msgstr ""
+"%(first_name)s يقبل الرسائل من %(get_allow_messages_from_display)s فقط."
+
+msgid "Mazungumzo yako"
+msgstr "محادثاتك"
+
+msgid ""
+"Chagua mazungumzo upande wa kushoto, au tafuta mtu mpya wa kuzungumza naye."
+msgstr "اختر محادثة من القائمة، أو ابحث عن شخص جديد للتحدث معه."
+
+#, python-format
+msgid "Notifications - %(brand)s"
+msgstr "الإشعارات - %(brand)s"
+
+#, python-format
+msgid "Updates from the %(brand)s team."
+msgstr "تحديثات من فريق %(brand)s."
+
+#, python-format
+msgid "%(created)s ago"
+msgstr "منذ %(created)s"
+
+msgid "No notifications yet."
+msgstr "لا توجد إشعارات بعد."
+
+msgid "Wishlist"
+msgstr "قائمة الأمنيات"
+
+msgid "Read More"
+msgstr "اقرأ المزيد"
+
+msgid "Verified, marriage-minded members"
+msgstr "أعضاء موثّقون يسعون للزواج"
+
+msgid "Private, respectful messaging"
+msgstr "مراسلة خاصة ومحترمة"
+
+msgid "Free to join, upgrade any time"
+msgstr "الانضمام مجاني، والترقية في أي وقت"
+
+msgid "Real, verified people<br>across Tanzania"
+msgstr "أشخاص حقيقيون موثّقون<br>في جميع أنحاء تنزانيا"
+
+msgid "My dashboard"
+msgstr "لوحتي"
+
+msgid "My Dashboard"
+msgstr "لوحتي"
+
+msgid "Login"
+msgstr "تسجيل الدخول"
+
+msgid "Join Free"
+msgstr "انضم مجانًا"
+
+msgid "Funga"
+msgstr "إغلاق"
+
+#, python-format
+msgid "Jiunge na %(brand)s"
+msgstr "انضم إلى %(brand)s"
+
+msgid ""
+"Ili kutazama profaili au kuwasiliana na mwanachama, jisajili bure au ingia "
+"kwenye akaunti yako."
+msgstr ""
+"لعرض الملفات الشخصية أو التواصل مع عضو، سجّل مجانًا أو ادخل إلى حسابك."
+
+msgid "Jisajili"
+msgstr "التسجيل"
+
+msgid "Ingia"
+msgstr "تسجيل الدخول"
+
+msgid "Jisajili Bure"
+msgstr "سجّل مجانًا"
+
+msgid "Leo"
+msgstr "اليوم"
+
+msgid "Previous Profile"
+msgstr "الملف السابق"
+
+msgid "Next Profile"
+msgstr "الملف التالي"
+
+msgid "Bismillah"
+msgstr "بسم الله"
+
+msgid "Anza safari yako ya ndoa leo"
+msgstr "ابدأ رحلة زواجك اليوم"
+
+#, python-format
+msgid ""
+"Join %(brand)s free and meet verified people who share your faith and "
+"values."
+msgstr ""
+"انضم إلى %(brand)s مجانًا وتعرّف على أشخاص موثّقين يشاركونك الإيمان والقيم."
+
+msgid "Browse Matches"
+msgstr "تصفّح التطابقات"
+
+#, python-format
+msgid ""
+"%(brand)s helps Tanzanians find a righteous partner and plan a blessed "
+"Nikah, with verified profiles, respectful messaging and trusted wedding "
+"vendors."
+msgstr ""
+"تساعد %(brand)s التنزانيين على إيجاد شريك صالح والتخطيط لنكاح مبارك، بملفات "
+"موثّقة ومراسلة محترمة ومزوّدي أعراس موثوقين."
+
+msgid "Facebook"
+msgstr "فيسبوك"
+
+msgid "Instagram"
+msgstr "إنستغرام"
+
+msgid "YouTube"
+msgstr "يوتيوب"
+
+msgid "WhatsApp"
+msgstr "واتساب"
+
+msgid "Explore"
+msgstr "استكشف"
+
+msgid "Company"
+msgstr "الشركة"
+
+msgid "About Us"
+msgstr "من نحن"
+
+msgid "How It Works"
+msgstr "كيف يعمل"
+
+msgid "Help"
+msgstr "المساعدة"
+
+msgid "Help Centre"
+msgstr "مركز المساعدة"
+
+msgid "Terms"
+msgstr "الشروط"
+
+msgid "Privacy"
+msgstr "الخصوصية"
+
+#, python-format
+msgid "Tanzania (%(currency)s)"
+msgstr "تنزانيا (%(currency)s)"
+
+msgid "Incoming call"
+msgstr "مكالمة واردة"
+
+msgid "Incoming call…"
+msgstr "مكالمة واردة…"
+
+msgid "Decline"
+msgstr "رفض"
+
+msgid "Liked"
+msgstr "أُعجبت"
+
+msgid "Online sasa"
+msgstr "متصل الآن"
+
+msgid "Search members"
+msgstr "البحث عن الأعضاء"
+
+#, python-format
+msgid "Anatafuta %(seeking)s"
+msgstr "يبحث عن %(seeking)s"
+
+#, python-format
+msgid "Miaka %(age)s"
+msgstr "%(age)s سنة"
+
+msgid "Mahali:"
+msgstr "الموقع:"
+
+msgid "Dini:"
+msgstr "الدين:"
+
+msgid "Elimu:"
+msgstr "التعليم:"
+
+msgid "Kazi:"
+msgstr "المهنة:"
+
+msgid "Hali ya Ndoa:"
+msgstr "الحالة الاجتماعية:"
+
+msgid "Asili:"
+msgstr "الأصل:"
+
+#, python-format
+msgid "Anatafuta: %(seeking)s"
+msgstr "يبحث عن: %(seeking)s"
+
+msgid "Kuhusu Mimi:"
+msgstr "نبذة عني:"
+
+msgid "Hariri Profaili"
+msgstr "تعديل الملف الشخصي"
+
+msgid "Tazama Profaili"
+msgstr "عرض الملف الشخصي"
+
+msgid "Wasiliana"
+msgstr "تواصل"
+
+msgid "Piga Simu"
+msgstr "اتصال"
+
+msgid "Umempenda"
+msgstr "أعجبت به"
+
+msgid "Mpende"
+msgstr "إعجاب"
+
+msgid "Simu ni huduma ya kifurushi - bofya kujiunga"
+msgstr "المكالمات ميزة ضمن الباقات - اضغط للانضمام"
+
+msgid "Video ni huduma ya kifurushi - bofya kujiunga"
+msgstr "الفيديو ميزة ضمن الباقات - اضغط للانضمام"
+
+msgid "Kuhusu wewe &middot; About you"
+msgstr "عنك"
+
+msgid "Akaunti &middot; Account"
+msgstr "الحساب"
+
+msgid "I agree to the"
+msgstr "أوافق على"
+
+msgid "and"
+msgstr "و"
+
+msgid "Privacy Policy"
+msgstr "سياسة الخصوصية"
+
+msgid ", and I am 18 or older."
+msgstr "، وعمري 18 عامًا أو أكثر."
+
+#, python-format
+msgid "%(r)s out of 5"
+msgstr "%(r)s من 5"
+
+msgid "Quick navigation"
+msgstr "تنقل سريع"
+
+msgid "Profile"
+msgstr "الملف"
+
+msgid "Join"
+msgstr "انضم"
+
+msgid "Sikiliza ujumbe wa sauti"
+msgstr "استمع إلى الرسالة الصوتية"
+
+#, python-format
+msgid "Premium Membership - %(brand)s"
+msgstr "عضوية بريميوم - %(brand)s"
+
+msgid "Premium Membership"
+msgstr "عضوية بريميوم"
+
+msgid "More Features. Better Matches. A Brighter Future."
+msgstr "ميزات أكثر. تطابقات أفضل. مستقبل أجمل."
+
+msgid ""
+"Upgrade to Premium and unlock advanced features to connect with serious and "
+"verified members, communicate freely and increase your chances of finding "
+"the right partner."
+msgstr ""
+"قم بالترقية إلى بريميوم وافتح ميزات متقدمة للتواصل مع أعضاء جادّين وموثّقين،"
+" والتحدث بحرية، وزيادة فرصك في إيجاد الشريك المناسب."
+
+msgid "Unlimited Messaging"
+msgstr "مراسلة غير محدودة"
+
+msgid "See Who Likes You"
+msgstr "اعرف من أُعجب بك"
+
+msgid "Priority Support"
+msgstr "دعم ذو أولوية"
+
+msgid ""
+"&ldquo;Invest in your future. Find a partner with shared values.&rdquo;"
+msgstr "&ldquo;استثمر في مستقبلك. اعثر على شريك يشاركك القيم.&rdquo;"
+
+#, python-format
+msgid "%(name)s Plan"
+msgstr "باقة %(name)s"
+
+msgid "Your current plan"
+msgstr "باقتك الحالية"
+
+msgid "Verified &amp; Serious Members"
+msgstr "أعضاء موثّقون وجادّون"
+
+msgid "Premium members are more likely to be serious and committed."
+msgstr "أعضاء بريميوم أكثر جدية والتزامًا."
+
+msgid "Advanced Search Filters"
+msgstr "فلاتر بحث متقدمة"
+
+msgid ""
+"Find matches based on religion, location, education, profession and more."
+msgstr "اعثر على تطابقات حسب الدين والموقع والتعليم والمهنة وغير ذلك."
+
+msgid "Unlimited Communication"
+msgstr "تواصل غير محدود"
+
+msgid "Chat freely with members and build meaningful relationships."
+msgstr "تحدّث بحرية مع الأعضاء وابنِ علاقات هادفة."
+
+msgid "Higher Success Rate"
+msgstr "نسبة نجاح أعلى"
+
+msgid ""
+"Premium members get more views, more likes and better match recommendations."
+msgstr "يحصل أعضاء بريميوم على مشاهدات وإعجابات أكثر واقتراحات تطابق أفضل."
+
+msgid "Special Offer"
+msgstr "عرض خاص"
+
+msgid "Ready to upgrade?"
+msgstr "مستعد للترقية؟"
+
+msgid ""
+"Mobile money payments (M-Pesa, Mixx by Yas, Airtel Money) are coming soon."
+msgstr ""
+"الدفع عبر المحافظ الهاتفية (M-Pesa وMixx by Yas وAirtel Money) قريبًا."
+
+msgid "Contact us to upgrade today."
+msgstr "تواصل معنا للترقية اليوم."
+
+msgid "Join Free First"
+msgstr "انضم مجانًا أولًا"
+
+#, python-format
+msgid "Edit Profile - %(brand)s"
+msgstr "تعديل الملف الشخصي - %(brand)s"
+
+msgid "Your profile"
+msgstr "ملفك الشخصي"
+
+msgid ""
+"A complete profile with a clear photo gets far more interest. Everything "
+"except the basics is optional."
+msgstr ""
+"الملف المكتمل مع صورة واضحة يجذب اهتمامًا أكبر بكثير. كل شيء اختياري عدا "
+"الأساسيات."
+
+#, python-format
+msgid "Login - %(brand)s"
+msgstr "تسجيل الدخول - %(brand)s"
+
+msgid "Meaningful Connections for a Blessed Future"
+msgstr "علاقات هادفة لمستقبل مبارك"
+
+#, python-format
+msgid ""
+"%(brand)s is a trusted platform for halal and meaningful marriage "
+"connections, built on faith, values and respect."
+msgstr ""
+"%(brand)s منصة موثوقة لعلاقات زواج حلال وهادفة، قائمة على الإيمان والقيم "
+"والاحترام."
+
+msgid "Meet compatible and verified members."
+msgstr "تعرّف على أعضاء موثّقين متوافقين معك."
+
+msgid "Get guidance and professional support."
+msgstr "احصل على الإرشاد والدعم المهني."
+
+msgid "Join seminars, meetups and marriage events."
+msgstr "انضم إلى الندوات واللقاءات وفعاليات الزواج."
+
+msgid "Read useful articles and Islamic guidance."
+msgstr "اقرأ مقالات مفيدة وإرشادات إسلامية."
+
+msgid ""
+"&ldquo;And among His signs is that He created for you spouses from among "
+"yourselves that you may find tranquility in them, and He placed between you "
+"affection and mercy.&rdquo;"
+msgstr ""
+"&ldquo;وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا "
+"لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً&rdquo;"
+
+msgid "Don't have an account?"
+msgstr "ليس لديك حساب؟"
+
+#, python-format
+msgid ""
+"Login to your %(brand)s account and continue your journey towards a brighter"
+" future."
+msgstr "سجّل الدخول إلى حسابك في %(brand)s وواصل رحلتك نحو مستقبل أجمل."
+
+msgid "Member Login"
+msgstr "دخول العضو"
+
+msgid "Remember me"
+msgstr "تذكّرني"
+
+msgid "Forgot password?"
+msgstr "نسيت كلمة المرور؟"
+
+msgid "Don't have an account yet?"
+msgstr "ليس لديك حساب بعد؟"
+
+#, python-format
+msgid "Join %(brand)s today and take the first step."
+msgstr "انضم إلى %(brand)s اليوم واتخذ الخطوة الأولى."
+
+msgid "Password changed"
+msgstr "تم تغيير كلمة المرور"
+
+msgid "Your password has been changed."
+msgstr "تم تغيير كلمة مرورك."
+
+msgid "Choose a new password"
+msgstr "اختر كلمة مرور جديدة"
+
+msgid "Save password"
+msgstr "حفظ كلمة المرور"
+
+msgid "This reset link is invalid or has already been used."
+msgstr "رابط إعادة التعيين هذا غير صالح أو تم استخدامه بالفعل."
+
+msgid "Request a new one"
+msgstr "اطلب رابطًا جديدًا"
+
+#, python-format
+msgid "Check your email - %(brand)s"
+msgstr "تحقق من بريدك الإلكتروني - %(brand)s"
+
+msgid "Check your email"
+msgstr "تحقق من بريدك الإلكتروني"
+
+msgid ""
+"If we found an account, a link to choose a new password is on its way to the"
+" email on that account. It can take a few minutes, so check your <b>spam</b>"
+" or <b>promotions</b> folder too. The link works for 3 days."
+msgstr ""
+"إذا وجدنا حسابًا، فإن رابط اختيار كلمة مرور جديدة في طريقه إلى البريد "
+"الإلكتروني لهذا الحساب. قد يستغرق ذلك بضع دقائق، لذا تحقق أيضًا من مجلد "
+"<b>الرسائل غير المرغوبة</b> أو <b>العروض</b>. يعمل الرابط لمدة 3 أيام."
+
+msgid ""
+"No email after 10 minutes, or no email on your account? Our support team can"
+" send you a reset link directly"
+msgstr ""
+"لم يصلك بريد بعد 10 دقائق، أو لا يوجد بريد في حسابك؟ يمكن لفريق الدعم إرسال "
+"رابط إعادة التعيين إليك مباشرة"
+
+msgid "; reach us below"
+msgstr "؛ تواصل معنا أدناه"
+
+msgid "Contact support"
+msgstr "تواصل مع الدعم"
+
+msgid "Back to login"
+msgstr "العودة إلى تسجيل الدخول"
+
+#, python-format
+msgid "Assalamu Alaikum <b>%(name)s</b>,"
+msgstr "السلام عليكم <b>%(name)s</b>،"
+
+#, python-format
+msgid ""
+"We received a request to reset the password for your account "
+"<b>%(username)s</b>. Tap the button below to choose a new password."
+msgstr ""
+"تلقينا طلبًا لإعادة تعيين كلمة مرور حسابك <b>%(username)s</b>. اضغط الزر "
+"أدناه لاختيار كلمة مرور جديدة."
+
+msgid "Button not working? Copy this link into your browser:"
+msgstr "الزر لا يعمل؟ انسخ هذا الرابط في متصفحك:"
+
+msgid ""
+"The link works for 3 days and only once. If you did not ask for this, ignore"
+" this email; your password stays the same."
+msgstr ""
+"يعمل الرابط لمدة 3 أيام ولمرة واحدة فقط. إن لم تطلب ذلك فتجاهل هذه الرسالة؛ "
+"ستبقى كلمة مرورك كما هي."
+
+#, python-format
+msgid "Reset password - %(brand)s"
+msgstr "إعادة تعيين كلمة المرور - %(brand)s"
+
+msgid "Forgot your password?"
+msgstr "نسيت كلمة مرورك؟"
+
+msgid ""
+"Enter the <b>email, username or phone number</b> on your account. We will "
+"email you a link to choose a new password."
+msgstr ""
+"أدخل <b>البريد الإلكتروني أو اسم المستخدم أو رقم الهاتف</b> الخاص بحسابك. "
+"سنرسل إليك رابطًا لاختيار كلمة مرور جديدة."
+
+msgid "Send reset link"
+msgstr "إرسال الرابط"
+
+msgid "Remembered it?"
+msgstr "تذكّرتها؟"
+
+#, python-format
+msgid "Join Free - %(brand)s"
+msgstr "انضم مجانًا - %(brand)s"
+
+msgid "Anza safari yako"
+msgstr "ابدأ رحلتك"
+
+msgid ""
+"Create your free profile and meet verified people who are serious about "
+"marriage."
+msgstr "أنشئ ملفك المجاني وتعرّف على أشخاص موثّقين جادّين بشأن الزواج."
+
+msgid "Jisajili &middot; Join free"
+msgstr "سجّل مجانًا"
+
+msgid "Create your account"
+msgstr "أنشئ حسابك"
+
+msgid "It takes less than two minutes."
+msgstr "يستغرق أقل من دقيقتين."
+
+msgid "Create my account"
+msgstr "أنشئ حسابي"
+
+msgid "Already a member?"
+msgstr "عضو بالفعل؟"
+
+#, python-format
+msgid "Marriage Services - %(brand)s"
+msgstr "خدمات الزواج - %(brand)s"
+
+msgid "Trusted vendors for your Nikah &amp; Walima"
+msgstr "مزوّدون موثوقون لنكاحك ووليمتك"
+
+msgid ""
+"Venues, catering, decoration, photography and more from vendors who respect "
+"your values."
+msgstr "قاعات وتموين وديكور وتصوير والمزيد من مزوّدين يحترمون قيمك."
+
+msgid "Search venues, vendors or cities"
+msgstr "ابحث عن القاعات أو المزوّدين أو المدن"
+
+msgid ""
+"&ldquo;The most blessed marriage is the one with the least burden.&rdquo;"
+msgstr "&ldquo;أعظم النكاح بركة أيسره مؤونة.&rdquo;"
+
+msgid "Categories"
+msgstr "الفئات"
+
+#, python-format
+msgid "Adverts by %(name)s"
+msgstr "إعلانات %(name)s"
+
+msgid "All adverts"
+msgstr "كل الإعلانات"
+
+#, python-format
+msgid "%(ads)s advert"
+msgid_plural "%(ads)s adverts"
+msgstr[0] "%(ads)s إعلان"
+msgstr[1] "إعلان واحد"
+msgstr[2] "إعلانان"
+msgstr[3] "%(ads)s إعلانات"
+msgstr[4] "%(ads)s إعلانًا"
+msgstr[5] "%(ads)s إعلان"
+
+#, python-format
+msgid "matching &ldquo;%(q)s&rdquo;"
+msgstr "تطابق &ldquo;%(q)s&rdquo;"
+
+msgid "No adverts here yet."
+msgstr "لا توجد إعلانات هنا بعد."
+
+msgid ""
+"Reach members who are planning their Nikah. Contact our team to list your "
+"business."
+msgstr "صل إلى الأعضاء الذين يخططون لنكاحهم. تواصل مع فريقنا لإدراج نشاطك."

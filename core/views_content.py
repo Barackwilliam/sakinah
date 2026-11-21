@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _, ngettext
 import calendar
 from collections import Counter
 from datetime import date
@@ -39,7 +40,7 @@ def article(request, slug):
         if not request.user.is_authenticated: return redirect(f"{reverse('login')}?next={a.get_absolute_url()}")
         if form.is_valid():
             form.instance.article, form.instance.user = a, request.user; form.save()
-            messages.success(request, "Comment posted.")
+            messages.success(request, _("Comment posted."))
             return redirect(a.get_absolute_url() + "#comments")
     else:
         Article.objects.filter(pk=a.pk).update(views=F("views") + 1)
@@ -77,12 +78,12 @@ def event_register(request, pk):
     e = get_object_or_404(Event, pk=pk)
     mine = EventRegistration.objects.filter(event=e, user=request.user).exists()
     if not mine and e.date < date.today():
-        messages.error(request, f"{e.title} has already taken place."); return redirect(safe_next(request) or reverse("events"))
+        messages.error(request, _("%(title)s has already taken place.") % {"title": e.title}); return redirect(safe_next(request) or reverse("events"))
     if not mine and e.seats_left == 0:
-        messages.error(request, f"Sorry, {e.title} is fully booked."); return redirect(safe_next(request) or reverse("events"))
+        messages.error(request, _("Sorry, %(title)s is fully booked.") % {"title": e.title}); return redirect(safe_next(request) or reverse("events"))
     reg, created = EventRegistration.objects.get_or_create(event=e, user=request.user)
     if not created: reg.delete()
-    messages.success(request, f"You are registered for {e.title}. See you there!" if created else f"Your registration for {e.title} was cancelled.")
+    messages.success(request, (_("You are registered for %(title)s. See you there!") if created else _("Your registration for %(title)s was cancelled.")) % {"title": e.title})
     return redirect(safe_next(request) or reverse("events"))
 
 # ----- premium -----

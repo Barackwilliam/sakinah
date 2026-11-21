@@ -10,11 +10,11 @@ if(burger){burger.addEventListener('click',()=>menu(!links.classList.contains('o
 const nav=$('#nav');const onScroll=()=>nav&&nav.classList.toggle('scrolled',scrollY>8);addEventListener('scroll',onScroll,{passive:true});onScroll();
 
 // featured matches carousel arrows
-const g=$('#mgrid');$$('.arr').forEach(a=>a.addEventListener('click',()=>g&&g.scrollBy({left:a.dataset.dir*g.clientWidth*.8,behavior:'smooth'})));
+const g=$('#mgrid');$$('.arr').forEach(a=>a.addEventListener('click',()=>g&&g.scrollBy({left:a.dataset.dir*g.clientWidth*.8*(document.dir==='rtl'?-1:1),behavior:'smooth'})));
 
 // show / hide password
 document.addEventListener('click',e=>{const b=e.target.closest('[data-eye]');if(!b)return;const i=b.parentElement.querySelector('input');
-  const show=i.type==='password';i.type=show?'text':'password';b.classList.toggle('on',show);b.setAttribute('aria-label',show?'Hide password':'Show password')});
+  const show=i.type==='password';i.type=show?'text':'password';b.classList.toggle('on',show);b.setAttribute('aria-label',show?gettext('Hide password'):gettext('Show password'))});
 
 // sign-in modal for visitors
 const md=$('#amodal');
@@ -44,14 +44,14 @@ if('IntersectionObserver' in window&&!matchMedia('(prefers-reduced-motion: reduc
 // share buttons: native share sheet on phones, copy link elsewhere
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-share]');if(!b)return;
   const data={title:b.dataset.share,url:location.href.split('#')[0]};
-  try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(data.url);b.classList.add('done');b.title='Link copied';setTimeout(()=>b.classList.remove('done'),1600)}}catch(_){}});
+  try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(data.url);b.classList.add('done');b.title=gettext('Link copied');setTimeout(()=>b.classList.remove('done'),1600)}}catch(_){}});
 
 // dialogs (inquiry, report)
 const openDlg=(d)=>{if(d&&d.showModal){d.showModal();lock(true)}};
 document.addEventListener('click',e=>{
   const o=e.target.closest('[data-open-dlg]');if(o){const m=o.closest('details');if(m)m.open=false;openDlg($('#'+o.dataset.openDlg))}
   const q=e.target.closest('[data-inq]');if(q){const d=$('#inq');$('[name=kind]',d).value=q.dataset.inq;
-    $('#inq-title').textContent=q.dataset.inq==='availability'?'Check availability':'Send an inquiry';openDlg(d)}
+    $('#inq-title').textContent=q.dataset.inq==='availability'?gettext('Check availability'):gettext('Send an inquiry');openDlg(d)}
   if(e.target.closest('[data-close-dlg]')){const d=e.target.closest('dialog');d.close()}
   if(e.target.tagName==='DIALOG')e.target.close();
 });
@@ -66,7 +66,7 @@ $$('.tabs').forEach(tb=>tb.addEventListener('click',e=>{const a=e.target.closest
 
 // login page: member / admin tabs only change where you land after login
 $$('[data-lg]').forEach(t=>t.addEventListener('click',()=>{$$('[data-lg]').forEach(x=>x.classList.toggle('on',x===t));
-  $('#lg-next').value=t.dataset.next;$('#lg-title').textContent=t.dataset.lg==='admin'?'Admin Login':'Welcome Back'}));
+  $('#lg-next').value=t.dataset.next;$('#lg-title').textContent=t.dataset.lg==='admin'?gettext('Admin Login'):gettext('Welcome Back')}));
 
 // honeymoon: gallery arrows / thumbnails, tabs, sort and destination pickers, mobile filters
 $$('[data-gallery]').forEach(g=>{const list=JSON.parse($('[data-gal-list]',g).textContent||'[]'),img=$('[data-gal-img]',g),n=$('[data-gal-n]',g);let i=0;

@@ -1,34 +1,34 @@
-{% extends "base.html" %}{% load static %}{% block title %}Login - {{ site.brand }}{% endblock %}{% block bodyclass %}auth-page login-page{% endblock %}
+{% extends "base.html" %}{% load i18n %}{% load static %}{% block title %}{% blocktranslate with brand=site.brand %}Login - {{ brand }}{% endblocktranslate %}{% endblock %}{% block bodyclass %}auth-page login-page{% endblock %}
 {% block content %}
 {% url 'dashboard' as dash_url %}
 <section class="lg">
   <div class="lg-art" style="--img:url('{% static "img/login_bg.jpg" %}')">
     <div class="lg-art-in">
-      <h1>Meaningful Connections for a Blessed Future</h1>
-      <p>{{ site.brand }} is a trusted platform for halal and meaningful marriage connections, built on faith, values and respect.</p>
+      <h1>{% translate "Meaningful Connections for a Blessed Future" %}</h1>
+      <p>{% blocktranslate with brand=site.brand %}{{ brand }} is a trusted platform for halal and meaningful marriage connections, built on faith, values and respect.{% endblocktranslate %}</p>
       <ul class="lg-feats">
-        <li><span><svg><use href="{{ icons }}#i-people"/></svg></span><div><b>Find a Match</b><small>Meet compatible and verified members.</small></div></li>
-        <li><span><svg><use href="{{ icons }}#i-heart-f"/></svg></span><div><b>Marriage Services</b><small>Get guidance and professional support.</small></div></li>
-        <li><span><svg><use href="{{ icons }}#i-cal-f"/></svg></span><div><b>Events</b><small>Join seminars, meetups and marriage events.</small></div></li>
-        <li><span><svg><use href="{{ icons }}#i-book"/></svg></span><div><b>Articles</b><small>Read useful articles and Islamic guidance.</small></div></li>
+        <li><span><svg><use href="{{ icons }}#i-people"/></svg></span><div><b>{% translate "Find a Match" %}</b><small>{% translate "Meet compatible and verified members." %}</small></div></li>
+        <li><span><svg><use href="{{ icons }}#i-heart-f"/></svg></span><div><b>{% translate "Marriage Services" %}</b><small>{% translate "Get guidance and professional support." %}</small></div></li>
+        <li><span><svg><use href="{{ icons }}#i-cal-f"/></svg></span><div><b>{% translate "Events" %}</b><small>{% translate "Join seminars, meetups and marriage events." %}</small></div></li>
+        <li><span><svg><use href="{{ icons }}#i-book"/></svg></span><div><b>{% translate "Articles" %}</b><small>{% translate "Read useful articles and Islamic guidance." %}</small></div></li>
       </ul>
-      <blockquote class="lg-q">&ldquo;And among His signs is that He created for you spouses from among yourselves that you may find tranquility in them, and He placed between you affection and mercy.&rdquo;<cite>Qur'an 30:21</cite></blockquote>
+      <blockquote class="lg-q">{% translate "&ldquo;And among His signs is that He created for you spouses from among yourselves that you may find tranquility in them, and He placed between you affection and mercy.&rdquo;" %}<cite>{% translate "Qur'an 30:21" %}</cite></blockquote>
     </div>
   </div>
   <div class="lg-side">
-    <p class="lg-top">Don't have an account? <a class="btn btn-s" href="{% url 'signup' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Join Free</a></p>
+    <p class="lg-top">{% translate "Don't have an account?" %} <a class="btn btn-s" href="{% url 'signup' %}{% if next %}?next={{ next|urlencode }}{% endif %}">{% translate "Join Free" %}</a></p>
     <div class="lg-card">
-      <h2 id="lg-title">{% if next == dash_url %}Admin Login{% else %}Welcome Back{% endif %}</h2>
-      <p class="muted">Login to your {{ site.brand }} account and continue your journey towards a brighter future.</p>
+      <h2 id="lg-title">{% if next == dash_url %}{% translate "Admin Login" %}{% else %}{% translate "Welcome Back" %}{% endif %}</h2>
+      <p class="muted">{% blocktranslate with brand=site.brand %}Login to your {{ brand }} account and continue your journey towards a brighter future.{% endblocktranslate %}</p>
       <div class="lg-tabs" role="tablist">
-        <button type="button" class="{% if next != dash_url %}on{% endif %}" data-lg="member" data-next="{% if next != dash_url %}{{ next }}{% endif %}"><svg><use href="{{ icons }}#i-user"/></svg>Member Login</button>
-        <button type="button" class="{% if next == dash_url %}on{% endif %}" data-lg="admin" data-next="{{ dash_url }}"><svg><use href="{{ icons }}#i-shield-c"/></svg>Admin Login</button>
+        <button type="button" class="{% if next != dash_url %}on{% endif %}" data-lg="member" data-next="{% if next != dash_url %}{{ next }}{% endif %}"><svg><use href="{{ icons }}#i-user"/></svg>{% translate "Member Login" %}</button>
+        <button type="button" class="{% if next == dash_url %}on{% endif %}" data-lg="admin" data-next="{{ dash_url }}"><svg><use href="{{ icons }}#i-shield-c"/></svg>{% translate "Admin Login" %}</button>
       </div>
       <form method="post" class="form">{% csrf_token %}{% include "partials/login_fields.html" %}
         <input type="hidden" name="next" id="lg-next" value="{{ next }}">
-        <div class="frow"><label class="agree"><input type="checkbox" name="remember" checked><span>Remember me</span></label><a class="lnk" href="{% url 'password_reset' %}">Forgot password?</a></div>
-        <button class="btn btn-s btn-lg block"><svg><use href="{{ icons }}#i-arrow"/></svg>Login</button></form>
-      <div class="lg-join"><div><b>Don't have an account yet?</b><small>Join {{ site.brand }} today and take the first step.</small></div><a class="btn btn-s" href="{% url 'signup' %}">Join Free</a></div>
+        <div class="frow"><label class="agree"><input type="checkbox" name="remember" checked><span>{% translate "Remember me" %}</span></label><a class="lnk" href="{% url 'password_reset' %}">{% translate "Forgot password?" %}</a></div>
+        <button class="btn btn-s btn-lg block"><svg><use href="{{ icons }}#i-arrow"/></svg>{% translate "Login" %}</button></form>
+      <div class="lg-join"><div><b>{% translate "Don't have an account yet?" %}</b><small>{% blocktranslate with brand=site.brand %}Join {{ brand }} today and take the first step.{% endblocktranslate %}</small></div><a class="btn btn-s" href="{% url 'signup' %}">{% translate "Join Free" %}</a></div>
     </div>
   </div>
 </section>{% endblock %}

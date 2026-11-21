@@ -1,3 +1,3 @@
-{% if pg.paginator.num_pages > 1 %}<div class="mpager"><span class="muted">Showing {{ pg.start_index }} to {{ pg.end_index }} of {{ pg.paginator.count }}</span><nav class="pgn">
+{% load i18n %}{% if pg.paginator.num_pages > 1 %}<div class="mpager"><span class="muted">{% blocktranslate with start_index=pg.start_index end_index=pg.end_index v_count=pg.paginator.count %}Showing {{ start_index }} to {{ end_index }} of {{ v_count }}{% endblocktranslate %}</span><nav class="pgn">
   {% if pg.has_previous %}<a href="{{ base }}&amp;page={{ pg.previous_page_number }}">&laquo;</a>{% endif %}<span class="on">{{ pg.number }}</span>
   {% if pg.has_next %}<a href="{{ base }}&amp;page={{ pg.next_page_number }}">&raquo;</a>{% endif %}</nav></div>{% endif %}
