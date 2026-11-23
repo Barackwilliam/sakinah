@@ -6,6 +6,7 @@ saved on their profile (Member.ui_language), so the site opens in their language
 from django.conf import settings
 from django.utils import translation
 from django.views.decorators.http import require_POST
+from django.middleware.locale import LocaleMiddleware
 from django.views.i18n import set_language as django_set_language
 
 CODES = {code for code, _name in settings.LANGUAGES}
@@ -24,6 +25,15 @@ def save_for_member(user, code):
     if code in CODES and user.is_authenticated:
         from .models import Member
         Member.objects.filter(user=user).exclude(ui_language=code).update(ui_language=code)
+
+
+class SiteLocaleMiddleware(LocaleMiddleware):
+    """The language a visitor chose (cookie), otherwise the site's own language (Kiswahili) - never a guess from the browser."""
+    def process_request(self, request):
+        code = request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME)
+        if code not in CODES: code = getattr(settings, "SITE_LANGUAGE", "") or settings.LANGUAGE_CODE
+        translation.activate(code)
+        request.LANGUAGE_CODE = translation.get_language()
 
 
 @require_POST
@@ -48,7 +58,7 @@ class MemberLanguageMiddleware:
             if code in CODES:
                 if code != request.LANGUAGE_CODE: translation.activate(code); request.LANGUAGE_CODE = code
             else:
-                code = None   # not chosen: the browser's language stands
+                code = None   # not chosen: the site's language stands
         response = self.get_response(request)
         if code: remember(response, code)
         return response

@@ -511,3 +511,7 @@ html[lang=ar] *{letter-spacing:0!important}
 [dir=rtl] svg:has(>use[href$="#i-arrow"],>use[href$="#i-chev-l"],>use[href$="#i-chev-r"],>use[href$="#m-arrow"],>use[href$="#m-chev-l"],>use[href$="#m-chev-r"],>use[href$="#i-send"],>use[href$="#m-send"]){transform:scaleX(-1)}
 @media(max-width:1000px){[dir=rtl] .msb{transform:translateX(105%)}[dir=rtl] .msb.open{transform:none}}
 [dir=rtl] .sw input:checked+span:before{transform:translateX(-18px)}[dir=rtl] .ff-chk input:checked+.sw:after{transform:translateX(-16px)}[dir=rtl] .prow input:checked+.sw:after{transform:translateX(-17px)}
+.lang summary{gap:7px;padding:7px 11px}.lang summary b{font-weight:600;letter-spacing:0;font-size:13px}.lang .flag{width:22px;height:15px;border-radius:3px;object-fit:cover;box-shadow:0 0 0 1px rgba(0,0,0,.08);flex:none}
+.lang summary .car{width:14px;height:14px;opacity:.6;transition:transform .2s}.lang[open] summary .car{transform:rotate(180deg)}
+.lang form{min-width:200px}.lang button{gap:12px;padding:11px 12px}.lang button .flag{width:26px;height:18px}.lang button .tick{width:16px;height:16px;margin-inline-start:auto;color:#0b4b34}
+@media(max-width:369px){.lang summary b{display:none}}

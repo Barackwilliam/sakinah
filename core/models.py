@@ -26,6 +26,10 @@ class SiteSetting(models.Model):
         help_text=_("Shown to members on the Membership page when they upgrade, e.g. your Lipa Namba / till number."))
     ad_payment_instructions = models.TextField(blank=True, default="Lipa kwa M-Pesa, Mixx by Yas au Airtel Money kwa namba yetu ya malipo (Lipa Namba), kisha weka namba ya simu uliyotumia na namba ya muamala hapa chini. Tutathibitisha malipo na tangazo lako litaanza kuonekana mara moja.",
         help_text=_("Shown to vendors when they pay for an advert, e.g. your Lipa Namba / till number."))
+    days_per_month = models.PositiveSmallIntegerField(default=30, verbose_name=_("Days in one month"),
+        help_text=_("How many days count as one month of membership or advertising. Use a small number like 3 while testing payments, then 30."))
+    pesapal_ipn_id = models.CharField(max_length=64, blank=True, editable=False)   # filled in by core/pesapal.py
+    pesapal_ipn_url = models.CharField(max_length=300, blank=True, editable=False)
     contact_email = models.EmailField(blank=True)
     contact_whatsapp = models.CharField(max_length=20, blank=True, help_text=_("WhatsApp number with country code, e.g. 255712345678"))
     @property
@@ -81,7 +85,7 @@ class Plan(models.Model):
         """Features as written by the admin. The starter wording is translated (core/content_strings.py); new wording shows as typed."""
         from django.utils.translation import gettext
         return self.allowance_lines + [(not l.startswith("-"), gettext(l.lstrip("-+ ").strip())) for l in self.features.splitlines() if l.strip()]
-    class Meta: ordering = ["order"]
+    class Meta: ordering = ["price", "order"]   # smallest to biggest: Free, Basic, Silver, Gold, Tanzanite
     def __str__(self): return self.name
 
 class PremiumPerk(models.Model):
@@ -143,12 +147,14 @@ class Member(models.Model):
     notify_matches = models.BooleanField(default=True)
     notify_events = models.BooleanField(default=True)
     notify_system = models.BooleanField(default=True)
-    # each language in its own name, so a member can always find theirs; blank = not chosen, the browser's language is used
-    LANGUAGES = [("", _("Automatic (my browser's language)"))] + list(settings.LANGUAGES)
+    # each language in its own name, so a member can always find theirs; blank = not chosen, the site's language (Kiswahili)
+    LANGUAGES = [("", _("Default (Kiswahili)"))] + list(settings.LANGUAGES)
     THEMES = [("light", _("Light Mode")), ("dark", _("Dark Mode"))]
     ui_language = models.CharField(max_length=2, choices=LANGUAGES, default="", blank=True, verbose_name=_("Language"))
     ui_theme = models.CharField(max_length=5, choices=THEMES, default="light", verbose_name=_("Theme"))
     likes_seen_at = models.DateTimeField(null=True, blank=True)
+    # True unless we asked: signing up or changing the email sets it to False until the code or link is used
+    email_verified = models.BooleanField(default=True, verbose_name=_("Email verified"))
     premium_until = models.DateField(null=True, blank=True)
     STATUS = [("active", _("Active")), ("rejected", _("Rejected")), ("suspended", _("Suspended"))]
     status = models.CharField(max_length=10, choices=STATUS, default="active", db_index=True,
@@ -576,7 +582,7 @@ class ArticleComment(models.Model):
 # ----- payments, notifications and admin communications -----
 class Payment(models.Model):
     KINDS = [("premium", _("Premium plan")), ("advert", _("Advert listing")), ("event", _("Event registration")), ("membership", _("Membership fee")), ("other", _("Other"))]
-    GATEWAYS = [("mpesa", _("M-Pesa")), ("mixx", _("Mixx by Yas")), ("airtel", _("Airtel Money")), ("selcom", _("Selcom")), ("pesapal", _("Pesapal")),
+    GATEWAYS = [("pesapal", _("Pesapal")), ("mpesa", _("M-Pesa")), ("mixx", _("Mixx by Yas")), ("airtel", _("Airtel Money")), ("selcom", _("Selcom")), ("pesapal", _("Pesapal")),
                 ("dpo", _("DPO")), ("card", _("Visa / Mastercard")), ("paypal", _("PayPal")), ("bank", _("Bank transfer")), ("cash", _("Cash"))]
     STATUS = [("pending", _("Pending")), ("completed", _("Completed")), ("failed", _("Failed")), ("refunded", _("Refunded"))]
     invoice_no = models.CharField(max_length=20, unique=True, editable=False)
@@ -594,6 +600,8 @@ class Payment(models.Model):
     created = models.DateTimeField(default=timezone.now)
     recorded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+")
     ad_order = models.ForeignKey("core.AdOrder", on_delete=models.SET_NULL, null=True, blank=True, related_name="payments")
+    tracking_id = models.CharField(max_length=64, blank=True, db_index=True, help_text=_("Pesapal's order tracking id."))
+    pay_method = models.CharField(max_length=40, blank=True, help_text=_("How the payer paid inside Pesapal, e.g. M-Pesa or Visa."))
     class Meta: ordering = ["-created", "-pk"]
     def __str__(self): return f"{self.invoice_no} {self.payer_name} {self.amount}"
 
@@ -609,9 +617,13 @@ class Payment(models.Model):
         member = getattr(self.user, "member", None) if self.user_id else None
         if self.status != "completed" or self.kind != "premium" or not self.plan_id or member is None: return False
         start = max(member.premium_until or timezone.localdate(), timezone.localdate())
-        y, m = divmod(start.month - 1 + self.months, 12)
-        y, m = start.year + y, m + 1
-        end = start.replace(year=y, month=m, day=min(start.day, calendar.monthrange(y, m)[1]))
+        per = SiteSetting.load().days_per_month
+        if per == 30:   # real months: same day next month
+            y, m = divmod(start.month - 1 + self.months, 12)
+            y, m = start.year + y, m + 1
+            end = start.replace(year=y, month=m, day=min(start.day, calendar.monthrange(y, m)[1]))
+        else:           # testing: a "month" is a few days, so an ending plan is quick to see
+            end = start + timedelta(days=per * self.months)
         member.plan, member.premium_until = self.plan, end
         member.save(update_fields=["plan", "premium_until"])
         return True
@@ -718,3 +730,18 @@ from .models_ads import AdOrder, AdPackage  # noqa: E402,F401
 def _refresh_admin_badges(**kwargs):
     from django.core.cache import cache
     cache.delete("admin-badges")
+
+
+class EmailVerification(models.Model):
+    """A 6-digit code and a one-click link, sent to an email address to prove it belongs to the member (core/verify.py)."""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="email_verifications")
+    email = models.EmailField()
+    code_hash = models.CharField(max_length=128)
+    token = models.CharField(max_length=48, unique=True)
+    attempts = models.PositiveSmallIntegerField(default=0)
+    used = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+    class Meta: ordering = ["-created"]
+    def __str__(self): return f"{self.email} ({'used' if self.used else 'open'})"
+    @property
+    def expired(self): return self.created < timezone.now() - timedelta(hours=24)

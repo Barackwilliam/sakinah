@@ -4,23 +4,23 @@ from datetime import date, time
 PLANS = [  # name, price, period, tagline, popular, features ("-" = not included)
     ("Free", 0, "Forever", "Get started and explore Sakinah.", False,
      "Create profile\nBrowse profiles (limited)\nSend likes (limited)\nView basic profiles\n-Messaging (limited)\n-Advanced search\n-See who likes you\n-Priority support"),
-    ("Basic", 10000, "per month", "More visibility and better connections.", False,
+    ("Basic", 50, "per month", "More visibility and better connections.", False,
      "All Free features\nFull profile access\nSend and receive messages\nAdvanced search filters\n-See who likes you\n-Profile boost (limited)\n-Featured in search\n-Priority support"),
-    ("Silver", 25000, "per month", "Connect more and get better matches.", False,
+    ("Silver", 100, "per month", "Connect more and get better matches.", False,
      "All Basic features\nSee who likes you\nPriority in search results\n5 Profile boosts per month\nRead receipts (message seen)\n-Featured profile\n-Incognito mode\n-Priority support"),
-    ("Gold", 50000, "per month", "Maximum visibility and serious connections.", True,
+    ("Gold", 150, "per month", "Maximum visibility and serious connections.", True,
      "All Silver features\nUnlimited messages\nFeatured profile (top results)\n10 Profile boosts per month\nAdvanced matching filters\nIncognito mode (browse privately)\nSee who viewed your profile\nPriority support"),
-    ("Tanzanite", 100000, "per month", "Ultimate experience for serious marriage seekers.", False,
+    ("Tanzanite", 200, "per month", "Ultimate experience for serious marriage seekers.", False,
      "All Gold features\nUnlimited profile boosts\nPersonal match recommendations\nDedicated account support\nEarly access to new features\nInvitation to premium events\nProfile verification badge\nVIP priority support"),
 ]
 
-AD_PACKAGES = [  # slug, name, tagline, price, days, photos, featured, home page, popular, features (sample prices; edit them in the dashboard)
-    ("starter", "Starter", "Get your service seen by couples.", 25000, 30, 1, False, False, False,
-     "Your advert in its category for 30 days\nInquiries and WhatsApp button\nLocation map and reviews\n1 photo\n-Featured badge\n-Home page spotlight"),
-    ("featured", "Business", "Stand out at the top of your category.", 60000, 30, 4, True, False, True,
+AD_PACKAGES = [  # slug, name, tagline, price, months, photos, featured, home page, popular, features (small test prices; edit them in the dashboard)
+    ("starter", "Starter", "Get your service seen by couples.", 50, 1, 1, False, False, False,
+     "Your advert in its category for 1 month\nInquiries and WhatsApp button\nLocation map and reviews\n1 photo\n-Featured badge\n-Home page spotlight"),
+    ("featured", "Business", "Stand out at the top of your category.", 100, 1, 4, True, False, True,
      "Everything in Starter\nFeatured badge\nTop of your category\nUp to 4 photos\n-Home page spotlight"),
-    ("spotlight", "Spotlight", "Maximum visibility for serious businesses.", 150000, 60, 4, True, True, False,
-     "Everything in Business\nRuns for 60 days\nShown on the home page\nPriority support from our team"),
+    ("spotlight", "Spotlight", "Maximum visibility for serious businesses.", 150, 2, 4, True, True, False,
+     "Everything in Business\nRuns for 2 months\nShown on the home page\nPriority support from our team"),
 ]
 
 EVENT_CATEGORIES = [("Seminars", "seminars"), ("Workshops", "workshops"), ("Meetups", "meetups"), ("Community Events", "community-events")]

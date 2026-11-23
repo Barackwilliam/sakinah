@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sakinah\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-21 04:38+0300\n"
+"POT-Creation-Date: 2026-11-23 03:26+0300\n"
 "PO-Revision-Date: 2026-11-20 00:00+0300\n"
 "Last-Translator: Sakinah\n"
 "Language-Team: Sakinah\n"
@@ -401,10 +401,6 @@ msgstr "Complexes de luxe et côtes spectaculaires."
 msgid "Stunning landscapes, wine tours and romantic getaways."
 msgstr "Paysages magnifiques, visites de vignobles et escapades romantiques."
 
-#| msgid ""
-#| "Lipa kwa M-Pesa, Mixx by Yas au Airtel Money, kisha weka namba ya muamala "
-#| "(transaction reference) hapa chini. Tutathibitisha malipo na kuwasha mpango "
-#| "wako."
 msgid ""
 "Lipa kwa M-Pesa, Mixx by Yas au Airtel Money kwa namba yetu ya malipo (Lipa "
 "Namba), kisha weka namba ya simu uliyotumia na namba ya muamala hapa chini. "
@@ -418,32 +414,27 @@ msgstr ""
 msgid "Per Event / Day"
 msgstr "Par événement / jour"
 
-#| msgid "Start time"
 msgid "Starter"
 msgstr "Essentiel"
 
 msgid "Get your service seen by couples."
 msgstr "Faites connaître votre service aux couples."
 
-msgid "Your advert in its category for 30 days"
-msgstr "Votre annonce dans sa catégorie pendant 30 jours"
+msgid "Your advert in its category for 1 month"
+msgstr "Votre annonce dans sa catégorie pendant 1 mois"
 
 msgid "Inquiries and WhatsApp button"
 msgstr "Demandes et bouton WhatsApp"
 
-#| msgid "Education &amp; Career"
 msgid "Location map and reviews"
 msgstr "Carte et avis"
 
-#| msgid "Main photo"
 msgid "1 photo"
 msgstr "1 photo"
 
-#| msgid "Featured matches"
 msgid "Featured badge"
 msgstr "Badge « À la une »"
 
-#| msgid "Home Page Highlights"
 msgid "Home page spotlight"
 msgstr "Mise en avant sur l’accueil"
 
@@ -453,55 +444,45 @@ msgstr "Mis en avant"
 msgid "Stand out at the top of your category."
 msgstr "Démarquez-vous en tête de votre catégorie."
 
-#| msgid "Getting Started"
 msgid "Everything in Starter"
 msgstr "Tout le pack Essentiel"
 
-#| msgid "Get a copy of your data"
 msgid "Top of your category"
 msgstr "En tête de votre catégorie"
 
-#| msgid "Up to 6 photos"
 msgid "Up to 4 photos"
 msgstr "Jusqu’à 4 photos"
 
 msgid "Spotlight"
 msgstr "Vedette"
 
-#| msgid "Maximum visibility and serious connections."
 msgid "Maximum visibility for serious businesses."
 msgstr "Visibilité maximale pour les entreprises sérieuses."
 
 msgid "Everything in Business"
 msgstr "Tout le pack Business"
 
-msgid "Runs for 60 days"
-msgstr "Dure 60 jours"
+msgid "Runs for 2 months"
+msgstr "Dure 2 mois"
 
-#| msgid "Show on the home page."
 msgid "Shown on the home page"
 msgstr "Affiché sur la page d’accueil"
 
-#| msgid "Priority support"
 msgid "Priority support from our team"
 msgstr "Assistance prioritaire de notre équipe"
 
-#| msgid "Business details"
 msgid "Business"
 msgstr "Business"
 
-#| msgid "person"
 msgid "Per Person"
 msgstr "Par personne"
 
 msgid "Per Hour"
 msgstr "Par heure"
 
-#| msgid "View Package"
 msgid "Per Package"
 msgstr "Par forfait"
 
-#| msgid "Start time"
 msgid "Starting price"
 msgstr "Prix de départ"
 
@@ -571,7 +552,6 @@ msgstr "Actif"
 msgid "Activities"
 msgstr "Activités"
 
-#| msgid "Payment instructions"
 msgid "Ad payment instructions"
 msgstr "Instructions de paiement des annonces"
 
@@ -707,7 +687,6 @@ msgstr "Exclusions"
 msgid "Exercise"
 msgstr "Sport"
 
-#| msgid "(expired)"
 msgid "Expires"
 msgstr "Expire le"
 
@@ -819,7 +798,6 @@ msgstr "Recherche sur la carte"
 msgid "Marital status"
 msgstr "Situation matrimoniale"
 
-#| msgid "Main photo"
 msgid "Max photos"
 msgstr "Photos max"
 
@@ -907,15 +885,12 @@ msgstr "Photo"
 msgid "Photo visibility"
 msgstr "Visibilité des photos"
 
-#| msgid "Photo"
 msgid "Photo2"
 msgstr "Photo 2"
 
-#| msgid "Photo"
 msgid "Photo3"
 msgstr "Photo 3"
 
-#| msgid "Photo"
 msgid "Photo4"
 msgstr "Photo 4"
 
@@ -1178,38 +1153,30 @@ msgstr "E-mail, nom d’utilisateur ou numéro de téléphone"
 msgid "e.g. amina@example.com or 0712 345 678"
 msgstr "par ex. amina@example.com ou 0712 345 678"
 
-#| msgid "Per day"
 msgid "Per event / day"
 msgstr "Par événement / jour"
 
-#| msgid "person"
 msgid "Per person"
 msgstr "Par personne"
 
 msgid "Per hour"
 msgstr "Par heure"
 
-#| msgid "Package"
 msgid "Per package"
 msgstr "Par forfait"
 
-#| msgid "Show all packages"
 msgid "Choose your package"
 msgstr "Choisissez votre formule"
 
-#| msgid "Price unit"
 msgid "Price is per"
 msgstr "Le prix est"
 
-#| msgid "View All Events"
 msgid "e.g. Al-Noor Events"
 msgstr "par ex. Al-Noor Events"
 
-#| msgid "e.g. amina_28"
 msgid "e.g. Amina Hassan"
 msgstr "par ex. Amina Hassan"
 
-#| msgid "e.g. amina@example.com or 0712 345 678"
 msgid "e.g. 0712 345 678"
 msgstr "par ex. 0712 345 678"
 
@@ -1225,7 +1192,6 @@ msgstr ""
 msgid "e.g. 500000"
 msgstr "par ex. 500000"
 
-#| msgid "Category"
 msgid "Choose a category"
 msgstr "Choisissez une catégorie"
 
@@ -1244,7 +1210,6 @@ msgstr "Référence de la transaction"
 msgid "e.g. QK71ABC2XY"
 msgstr "par ex. QK71ABC2XY"
 
-#| msgid "This reset link is invalid or has already been used."
 msgid "This transaction reference has already been used."
 msgstr "Cette référence de transaction a déjà été utilisée."
 
@@ -1372,15 +1337,22 @@ msgstr ""
 "Affiché aux membres sur la page Abonnement lors de la mise à niveau, par ex."
 " votre Lipa Namba / numéro de caisse."
 
-#| msgid ""
-#| "Shown to members on the Membership page when they upgrade, e.g. your Lipa "
-#| "Namba / till number."
 msgid ""
 "Shown to vendors when they pay for an advert, e.g. your Lipa Namba / till "
 "number."
 msgstr ""
 "Affiché aux prestataires quand ils paient une annonce, par ex. votre Lipa "
 "Namba / numéro de caisse."
+
+msgid "Days in one month"
+msgstr "Jours dans un mois"
+
+msgid ""
+"How many days count as one month of membership or advertising. Use a small "
+"number like 3 while testing payments, then 30."
+msgstr ""
+"Nombre de jours comptés comme un mois d’abonnement ou d’annonce. Utilisez un"
+" petit nombre comme 3 pendant les tests de paiement, puis 30."
 
 msgid "WhatsApp number with country code, e.g. 255712345678"
 msgstr "Numéro WhatsApp avec l’indicatif du pays, par ex. 255712345678"
@@ -1523,8 +1495,8 @@ msgstr ""
 "Le choix du membre lors de l’envoi : les visages sont couverts d’un flou "
 "doux avant l’enregistrement de la photo."
 
-msgid "Automatic (my browser's language)"
-msgstr "Automatique (langue de mon navigateur)"
+msgid "Default (Kiswahili)"
+msgstr "Par défaut (swahili)"
 
 msgid "Light Mode"
 msgstr "Mode clair"
@@ -1537,6 +1509,9 @@ msgstr "Langue"
 
 msgid "Theme"
 msgstr "Thème"
+
+msgid "Email verified"
+msgstr "E-mail vérifié"
 
 msgid "Rejected"
 msgstr "Rejeté"
@@ -1702,8 +1677,6 @@ msgstr "Détails supplémentaires, un par ligne sous la forme Libellé|Valeur."
 msgid "Address used for the map, e.g. Kariakoo, Dar es Salaam"
 msgstr "Adresse utilisée pour la carte, par ex. Kariakoo, Dar es Salaam"
 
-#| msgid ""
-#| "The plan is active until this date. Leave empty for a free member."
 msgid "Last day on the site. Leave empty for no end date."
 msgstr "Dernier jour sur le site. Laissez vide pour aucune date de fin."
 
@@ -1725,6 +1698,9 @@ msgstr "Inscription à un événement"
 msgid "Membership fee"
 msgstr "Frais d’adhésion"
 
+msgid "Pesapal"
+msgstr "Pesapal"
+
 msgid "M-Pesa"
 msgstr "M-Pesa"
 
@@ -1736,9 +1712,6 @@ msgstr "Airtel Money"
 
 msgid "Selcom"
 msgstr "Selcom"
-
-msgid "Pesapal"
-msgstr "Pesapal"
 
 msgid "DPO"
 msgstr "DPO"
@@ -1769,6 +1742,12 @@ msgstr "Remboursé"
 
 msgid "Transaction / receipt number from the gateway"
 msgstr "Numéro de transaction / reçu fourni par la passerelle de paiement"
+
+msgid "Pesapal's order tracking id."
+msgstr "Identifiant de suivi Pesapal."
+
+msgid "How the payer paid inside Pesapal, e.g. M-Pesa or Visa."
+msgstr "Moyen de paiement utilisé sur Pesapal, par ex. M-Pesa ou Visa."
 
 #, python-brace-format
 msgid "You can use {name} for the member's name."
@@ -1820,12 +1799,13 @@ msgstr ""
 msgid "Price for the whole period, in TSh."
 msgstr "Prix pour toute la période, en TSh."
 
-msgid "How many days the advert stays on the site."
-msgstr "Nombre de jours pendant lesquels l’annonce reste en ligne."
+msgid ""
+"How long the advert stays on the site, in months (see Days in one month in "
+"Site Settings)."
+msgstr ""
+"Durée de l’annonce en ligne, en mois (voir « Jours dans un mois » dans les "
+"paramètres du site)."
 
-#| msgid ""
-#| "One feature per line. Start a line with - for a feature the plan does not "
-#| "include."
 msgid ""
 "One per line. Start a line with - for something the package does not "
 "include."
@@ -1835,47 +1815,39 @@ msgstr ""
 msgid "Featured badge and first place in its category."
 msgstr "Badge « À la une » et première place dans sa catégorie."
 
-#| msgid "The short feature boxes shown on the home page."
 msgid "Also shown in Featured Vendors on the home page."
 msgstr "Également affiché dans « Prestataires à la une » sur l’accueil."
 
 msgid "Photos the vendor may upload (1 to 4)."
 msgstr "Photos que le prestataire peut envoyer (1 à 4)."
 
-#| msgid "Pending payment"
 msgid "Awaiting payment"
 msgstr "En attente de paiement"
 
 msgid "Payment sent - being confirmed"
 msgstr "Paiement envoyé - en cours de vérification"
 
-#| msgid "Lives in"
 msgid "Live"
 msgstr "En ligne"
 
 msgid "Not approved"
 msgstr "Non approuvée"
 
-#| msgid "Business details"
 msgid "Business name"
 msgstr "Nom de l’entreprise"
 
-#| msgid "Service Categories"
 msgid "Service category"
 msgstr "Catégorie de service"
 
-#| msgid "Advert image"
 msgid "Advert title"
 msgstr "Titre de l’annonce"
 
-#| msgid "Share your experience"
 msgid "Describe your service"
 msgstr "Décrivez votre service"
 
 msgid "Starting price (TSh)"
 msgstr "Prix de départ (TSh)"
 
-#| msgid "(negotiable)"
 msgid "Price is negotiable"
 msgstr "Prix négociable"
 
@@ -2192,13 +2164,15 @@ msgstr "Les formules d’annonce sont en préparation. Revenez bientôt."
 msgid "Your advert is ready. One last step: pay to publish it."
 msgstr "Votre annonce est prête. Dernière étape : payez pour la publier."
 
-#| msgid "Please check the highlighted settings."
 msgid "Please check the highlighted fields."
 msgstr "Veuillez vérifier les champs en surbrillance."
 
-#| msgid ""
-#| "Asante! We received your payment details. Your plan will be activated once "
-#| "our team confirms the payment."
+msgid ""
+"We could not open the payment page right now. Please try again in a moment."
+msgstr ""
+"Impossible d’ouvrir la page de paiement pour le moment. Réessayez dans un "
+"instant."
+
 msgid ""
 "Asante! We received your payment details. Your advert goes live as soon as "
 "our team confirms the payment."
@@ -2206,7 +2180,6 @@ msgstr ""
 "Merci ! Nous avons reçu les détails de votre paiement. Votre annonce sera en"
 " ligne dès que notre équipe aura confirmé le paiement."
 
-#| msgid "Please correct the payment form."
 msgid "Please check the payment details."
 msgstr "Veuillez vérifier les détails du paiement."
 
@@ -2338,6 +2311,53 @@ msgid "Please add your name and phone number so the vendor can reach you."
 msgstr ""
 "Veuillez ajouter votre nom et votre numéro de téléphone pour que le "
 "prestataire puisse vous joindre."
+
+msgid ""
+"We could not find that payment. If money left your account, please contact "
+"us."
+msgstr ""
+"Nous n’avons pas trouvé ce paiement. Si de l’argent a été débité, contactez-"
+"nous."
+
+msgid "Payment received, thank you! It is confirmed and already active."
+msgstr "Paiement reçu, merci ! Il est confirmé et déjà actif."
+
+msgid "The payment did not go through. You can try again."
+msgstr "Le paiement n’a pas abouti. Vous pouvez réessayer."
+
+msgid ""
+"Your payment is being processed. This page updates as soon as Pesapal "
+"confirms it."
+msgstr ""
+"Votre paiement est en cours de traitement. Cette page se met à jour dès que "
+"Pesapal le confirme."
+
+msgid "Email address"
+msgstr "Adresse e-mail"
+
+msgid "Your email is verified. Welcome to Sakinah!"
+msgstr "Votre e-mail est vérifié. Bienvenue sur Sakinah !"
+
+msgid "That code is not right. Check the email and try again."
+msgstr "Ce code est incorrect. Vérifiez l’e-mail et réessayez."
+
+msgid "Too many wrong tries. We can send you a new code."
+msgstr "Trop d’essais erronés. Nous pouvons vous envoyer un nouveau code."
+
+msgid "That code has expired. We can send you a new one."
+msgstr "Ce code a expiré. Nous pouvons vous en envoyer un nouveau."
+
+msgid "Please wait a minute before asking for another code."
+msgstr "Veuillez patienter une minute avant de demander un autre code."
+
+#, python-format
+msgid "We sent a new code to %(email)s."
+msgstr "Nous avons envoyé un nouveau code à %(email)s."
+
+msgid "This link has expired or was already used. Sign in to get a new code."
+msgstr ""
+"Ce lien a expiré ou a déjà été utilisé. Connectez-vous pour recevoir un "
+"nouveau code."
 
 msgid "All"
 msgstr "Tous"
@@ -2604,7 +2624,6 @@ msgstr "Annonce"
 msgid "Show / hide"
 msgstr "Afficher / masquer"
 
-#| msgid "Advert Revenue"
 msgid "Advert Requests"
 msgstr "Demandes d’annonces"
 
@@ -2619,19 +2638,15 @@ msgstr ""
 msgid "Amount"
 msgstr "Montant"
 
-#| msgid "Payments"
 msgid "Payment"
 msgstr "Paiement"
 
-#| msgid "Not verified"
 msgid "Not paid"
 msgstr "Non payé"
 
-#| msgid "(expired)"
 msgid "Expired"
 msgstr "Expirée"
 
-#| msgid "Premium until"
 msgid "Runs until"
 msgstr "En ligne jusqu’au"
 
@@ -2641,7 +2656,6 @@ msgstr "Confirmer le paiement et publier"
 msgid "Do not approve"
 msgstr "Ne pas approuver"
 
-#| msgid "All Packages"
 msgid "Advert Packages"
 msgstr "Formules d’annonces"
 
@@ -2653,7 +2667,6 @@ msgstr ""
 msgid "Photos"
 msgstr "Photos"
 
-#| msgid "Send Request"
 msgid "Requests"
 msgstr "Demandes"
 
@@ -3647,14 +3660,11 @@ msgid "Print / Save as PDF"
 msgstr "Imprimer / Enregistrer en PDF"
 
 #, python-format
-#| msgid "%(ads)s advert"
-#| msgid_plural "%(ads)s adverts"
 msgid "%(days)s day"
 msgid_plural "%(days)s days"
 msgstr[0] "%(days)s jour"
 msgstr[1] "%(days)s jours"
 
-#| msgid "Tell the vendor about your event"
 msgid "The vendor has not paid yet."
 msgstr "Le prestataire n’a pas encore payé."
 
@@ -3665,11 +3675,9 @@ msgstr ""
 "Ne pas approuver cette annonce ? Écrivez d’abord le motif dans la note ci-"
 "dessous, le prestataire le verra."
 
-#| msgid "Vendors"
 msgid "Vendor's page"
 msgstr "Page du prestataire"
 
-#| msgid "New adverts"
 msgid "Live advert"
 msgstr "Annonce en ligne"
 
@@ -4509,6 +4517,250 @@ msgstr "Soyez actif et répondez aux messages"
 msgid "Search and like profiles that match your preferences"
 msgstr "Recherchez et aimez les profils qui correspondent à vos préférences"
 
+msgid "My Adverts"
+msgstr "Mes annonces"
+
+#, python-format
+msgid "created %(d)s"
+msgstr "créée le %(d)s"
+
+msgid "Advert created"
+msgstr "Annonce créée"
+
+msgid "Your advert was not approved"
+msgstr "Votre annonce n’a pas été approuvée"
+
+msgid "Our team could not publish this advert. Please contact us for details."
+msgstr ""
+"Notre équipe n’a pas pu publier cette annonce. Contactez-nous pour en savoir"
+" plus."
+
+msgid "One last step: pay to publish"
+msgstr "Dernière étape : payez pour publier"
+
+#, python-format
+msgid ""
+"Pay %(currency)s %(amount)s for %(months)s month on the site. Your advert "
+"goes live as soon as the payment is confirmed."
+msgid_plural ""
+"Pay %(currency)s %(amount)s for %(months)s months on the site. Your advert "
+"goes live as soon as the payment is confirmed."
+msgstr[0] ""
+"Payez %(amount)s %(currency)s pour %(months)s mois en ligne. Votre annonce "
+"est publiée dès la confirmation du paiement."
+msgstr[1] ""
+"Payez %(amount)s %(currency)s pour %(months)s mois en ligne. Votre annonce "
+"est publiée dès la confirmation du paiement."
+
+msgid "Payment received, we are confirming it"
+msgstr "Paiement reçu, nous le vérifions"
+
+msgid ""
+"Your advert goes live as soon as the payment is confirmed. This page updates"
+" on its own."
+msgstr ""
+"Votre annonce est publiée dès la confirmation du paiement. Cette page se met"
+" à jour toute seule."
+
+msgid "Your advert has ended"
+msgstr "Votre annonce est terminée"
+
+#, python-format
+msgid ""
+"It stopped showing on %(d)s. Renew below to bring it back straight away."
+msgstr ""
+"Elle n’est plus visible depuis le %(d)s. Renouvelez ci-dessous pour la "
+"remettre en ligne aussitôt."
+
+msgid "Your advert is live!"
+msgstr "Votre annonce est en ligne !"
+
+#, python-format
+msgid "Couples can see it until %(d)s."
+msgstr "Les couples peuvent la voir jusqu’au %(d)s."
+
+msgid "Your renewal payment is being confirmed."
+msgstr "Votre paiement de renouvellement est en cours de vérification."
+
+msgid "View my advert"
+msgstr "Voir mon annonce"
+
+msgid "Inquiries"
+msgstr "Demandes"
+
+msgid "Days left"
+msgstr "Jours restants"
+
+msgid "Renew early"
+msgstr "Renouveler en avance"
+
+msgid "Renew your advert"
+msgstr "Renouveler votre annonce"
+
+msgid "Pay for your advert"
+msgstr "Payer votre annonce"
+
+#, python-format
+msgid "%(months)s more month is added to the end of your current period."
+msgid_plural ""
+"%(months)s more months are added to the end of your current period."
+msgstr[0] ""
+"%(months)s mois de plus est ajouté à la fin de votre période actuelle."
+msgstr[1] ""
+"%(months)s mois de plus sont ajoutés à la fin de votre période actuelle."
+
+msgid "Secure online payment with Pesapal."
+msgstr "Paiement en ligne sécurisé avec Pesapal."
+
+msgid "Mobile money or bank transfer."
+msgstr "Mobile money ou virement bancaire."
+
+msgid "Amount to pay"
+msgstr "Montant à payer"
+
+#, python-format
+msgid "%(months)s month"
+msgid_plural "%(months)s months"
+msgstr[0] "%(months)s mois"
+msgstr[1] "%(months)s mois"
+
+#, python-format
+msgid "Pay %(currency)s %(amount)s with Pesapal"
+msgstr "Payer %(amount)s %(currency)s avec Pesapal"
+
+msgid ""
+"You will be taken to Pesapal's secure page, then brought back here. Your "
+"advert goes live automatically once the payment is complete."
+msgstr ""
+"Vous serez redirigé vers la page sécurisée de Pesapal, puis ramené ici. "
+"Votre annonce est publiée automatiquement une fois le paiement effectué."
+
+msgid "I have paid - submit"
+msgstr "J’ai payé - envoyer"
+
+msgid ""
+"Our team checks every payment against the transaction reference before "
+"publishing."
+msgstr ""
+"Notre équipe vérifie chaque paiement avec la référence de transaction avant "
+"publication."
+
+msgid "Your advert"
+msgstr "Votre annonce"
+
+msgid "Need help? Talk to our team"
+msgstr "Besoin d’aide ? Parlez à notre équipe"
+
+msgid "Create your advert"
+msgstr "Créer votre annonce"
+
+msgid "You can renew or upgrade later."
+msgstr "Vous pourrez renouveler ou changer de formule plus tard."
+
+#, python-format
+msgid "%(n)s photo"
+msgid_plural "%(n)s photos"
+msgstr[0] "%(n)s photo"
+msgstr[1] "%(n)s photos"
+
+msgid "Your business"
+msgstr "Votre entreprise"
+
+msgid "So couples and our team can reach you."
+msgstr "Pour que les couples et notre équipe puissent vous joindre."
+
+msgid "Clear, honest details get more inquiries."
+msgstr "Des informations claires et honnêtes attirent plus de demandes."
+
+msgid "Bright, real photos of your work. The first one is the cover."
+msgstr ""
+"Des photos lumineuses et réelles de votre travail. La première sert de "
+"couverture."
+
+msgid "Cover photo"
+msgstr "Photo de couverture"
+
+msgid "Add photo"
+msgstr "Ajouter une photo"
+
+msgid "We review every advert. Services must suit a family, halal platform."
+msgstr ""
+"Nous vérifions chaque annonce. Les services doivent convenir à une "
+"plateforme familiale et halal."
+
+msgid "Live preview"
+msgstr "Aperçu en direct"
+
+msgid "Your advert title"
+msgstr "Titre de votre annonce"
+
+msgid "Runs for"
+msgstr "Durée"
+
+msgid "Total to pay"
+msgstr "Total à payer"
+
+msgid "Continue to payment"
+msgstr "Continuer vers le paiement"
+
+msgid "Nothing is charged yet. You pay on the next step."
+msgstr "Rien n’est encore facturé. Vous payez à l’étape suivante."
+
+msgid ""
+"Advertise your wedding service to couples on Sakinah, pay online and follow "
+"your results."
+msgstr ""
+"Présentez votre service de mariage aux couples sur Sakinah, payez en ligne "
+"et suivez vos résultats."
+
+msgid "Na katika kila kitu tumeumba kwa jozi."
+msgstr "Et de toute chose Nous avons créé un couple."
+
+msgid "Qur'an 51:49"
+msgstr "Coran 51:49"
+
+msgid "Reach couples planning their Nikah"
+msgstr "Touchez les couples qui préparent leur Nikah"
+
+msgid ""
+"Create an advert in a few minutes, pay with Pesapal (M-Pesa, Airtel Money, "
+"Mixx by Yas or card) and go live straight away."
+msgstr ""
+"Créez une annonce en quelques minutes, payez avec Pesapal (M-Pesa, Airtel "
+"Money, Mixx by Yas ou carte) et soyez en ligne aussitôt."
+
+msgid "Create an advert"
+msgstr "Créer une annonce"
+
+msgid "How it works"
+msgstr "Comment ça marche"
+
+msgid "Live now"
+msgstr "En ligne"
+
+msgid "Your adverts"
+msgstr "Vos annonces"
+
+#, python-format
+msgid "until %(d)s"
+msgstr "jusqu’au %(d)s"
+
+msgid "You have no adverts yet"
+msgstr "Vous n’avez pas encore d’annonce"
+
+msgid "Choose a package below to create your first advert."
+msgstr "Choisissez une formule ci-dessous pour créer votre première annonce."
+
+#, python-format
+msgid "for %(months)s month"
+msgid_plural "for %(months)s months"
+msgstr[0] "pour %(months)s mois"
+msgstr[1] "pour %(months)s mois"
+
+#, python-format
+msgid "Choose %(name)s"
+msgstr "Choisir %(name)s"
+
 msgid "Search members by name, location, age..."
 msgstr "Rechercher des membres par nom, lieu, âge..."
 
@@ -4762,12 +5014,6 @@ msgid ""
 msgstr ""
 "Participez à des événements islamiques et communautaires pour apprendre, "
 "tisser des liens et bâtir ensemble un avenir plus solide."
-
-msgid "Na katika kila kitu tumeumba kwa jozi."
-msgstr "Et de toute chose Nous avons créé un couple."
-
-msgid "Qur'an 51:49"
-msgstr "Coran 51:49"
 
 msgid "My Registrations"
 msgstr "Mes inscriptions"
@@ -5258,6 +5504,21 @@ msgstr "Améliorer votre offre"
 msgid "How to pay"
 msgstr "Comment payer"
 
+msgid "Choose your plan and how many months."
+msgstr "Choisissez votre formule et le nombre de mois."
+
+msgid ""
+"Pay on Pesapal's secure page with M-Pesa, Airtel Money, Mixx by Yas, "
+"HaloPesa or card."
+msgstr ""
+"Payez sur la page sécurisée de Pesapal avec M-Pesa, Airtel Money, Mixx by "
+"Yas, HaloPesa ou carte."
+
+msgid ""
+"Your plan is activated automatically as soon as the payment is complete."
+msgstr ""
+"Votre formule est activée automatiquement dès que le paiement est effectué."
+
 msgid "Pay the amount for your plan by mobile money or bank."
 msgstr ""
 "Payez le montant de votre offre par mobile money ou virement bancaire."
@@ -5272,6 +5533,9 @@ msgstr "Notre équipe confirme le paiement et active votre offre."
 
 msgid "Total:"
 msgstr "Total :"
+
+msgid "Pay with Pesapal"
+msgstr "Payer avec Pesapal"
 
 msgid "Submit Payment Details"
 msgstr "Envoyer les détails du paiement"
@@ -6531,6 +6795,12 @@ msgstr ""
 msgid "%(name)s unblocked."
 msgstr "%(name)s est débloqué(e)."
 
+msgid ""
+"We sent a code to your new email address. Enter it to confirm the change."
+msgstr ""
+"Nous avons envoyé un code à votre nouvelle adresse. Saisissez-le pour "
+"confirmer le changement."
+
 #, python-format
 msgid "Logged out of %(n)d other session."
 msgid_plural "Logged out of %(n)d other sessions."
@@ -6848,11 +7118,9 @@ msgid "Send Request"
 msgstr "Envoyer la demande"
 
 #, python-format
-#| msgid "Events - %(brand)s"
 msgid "Advertise with us - %(brand)s"
 msgstr "Annoncez chez nous - %(brand)s"
 
-#| msgid "Advertise Now"
 msgid "Advertise with us"
 msgstr "Annoncez chez nous"
 
@@ -6873,74 +7141,54 @@ msgstr ""
 "traiteur, votre décoration, vos photos ou tout service de mariage, et "
 "laissez-les vous contacter directement."
 
-#| msgid "Start time"
 msgid "Start my advert"
 msgstr "Créer mon annonce"
 
-#| msgid "All packages"
 msgid "See packages"
 msgstr "Voir les formules"
 
-msgid "Live within hours"
-msgstr "En ligne en quelques heures"
+msgid "Live straight after payment"
+msgstr "En ligne dès le paiement"
 
-msgid "Pay by mobile money"
-msgstr "Paiement par mobile money"
+msgid "Secure payment with Pesapal"
+msgstr "Paiement sécurisé avec Pesapal"
 
-#| msgid "Not contacted"
 msgid "No contract"
 msgstr "Sans engagement"
 
-#| msgid "Your full name"
 msgid "Your business name"
 msgstr "Nom de votre entreprise"
 
 msgid "advert views so far"
 msgstr "vues d’annonces à ce jour"
 
-#| msgid "Featured matches"
 msgid "with a Featured package"
 msgstr "avec une formule « À la une »"
 
-#| msgid "Send an inquiry"
 msgid "New inquiry"
 msgstr "Nouvelle demande"
 
 msgid "Is 12 June available?"
 msgstr "Le 12 juin est-il libre ?"
 
-#| msgid "Seeking Marriage"
 msgid "members planning marriage"
 msgstr "membres qui préparent leur mariage"
 
-#| msgid "Reported member"
 msgid "Registered members"
 msgstr "Membres inscrits"
 
-#| msgid "Advert image"
 msgid "Advert views"
 msgstr "Vues des annonces"
 
-#| msgid "Registered"
 msgid "Regions we reach"
 msgstr "Régions couvertes"
 
 msgid "Vendors on the platform"
 msgstr "Prestataires sur la plateforme"
 
-#| msgid "Service Categories"
 msgid "Service categories"
 msgstr "Catégories de services"
 
-#| msgid "New adverts"
-msgid "Your adverts"
-msgstr "Vos annonces"
-
-#, python-format
-msgid "until %(d)s"
-msgstr "jusqu’au %(d)s"
-
-#| msgid "No adverts here yet."
 msgid "Why advertise here"
 msgstr "Pourquoi annoncer ici"
 
@@ -6994,7 +7242,6 @@ msgstr ""
 "Les couples satisfaits laissent des étoiles et des avis, que les nouveaux "
 "clients voient en premier."
 
-#| msgid "See results"
 msgid "See your results"
 msgstr "Suivez vos résultats"
 
@@ -7015,14 +7262,9 @@ msgstr ""
 "Soyez visible aux côtés de services qui partagent des valeurs islamiques et "
 "familiales, sur une plateforme respectueuse."
 
-#| msgid "How It Works"
-msgid "How it works"
-msgstr "Comment ça marche"
-
 msgid "Live in four simple steps"
 msgstr "En ligne en quatre étapes simples"
 
-#| msgid "Show all packages"
 msgid "Choose a package"
 msgstr "Choisissez une formule"
 
@@ -7036,25 +7278,24 @@ msgstr ""
 "Ajoutez un titre, une description, un prix et vos meilleures photos. Vous "
 "voyez l’annonce pendant que vous écrivez."
 
-#| msgid ""
-#| "Open Membership, choose a plan, pay by mobile money and enter the "
-#| "transaction reference."
-msgid ""
-"M-Pesa, Mixx by Yas, Airtel Money or bank. Enter the transaction reference."
-msgstr ""
-"M-Pesa, Mixx by Yas, Airtel Money ou banque. Saisissez la référence de la "
-"transaction."
+msgid "Pay by mobile money"
+msgstr "Paiement par mobile money"
 
-#| msgid "No likes"
+msgid ""
+"Pay securely with Pesapal: M-Pesa, Airtel Money, Mixx by Yas, HaloPesa or "
+"card."
+msgstr ""
+"Payez en toute sécurité avec Pesapal : M-Pesa, Airtel Money, Mixx by Yas, "
+"HaloPesa ou carte."
+
 msgid "Go live"
 msgstr "En ligne"
 
 msgid ""
-"We confirm the payment and your advert appears straight away, usually within"
-" a few hours."
+"As soon as Pesapal confirms the payment your advert appears, automatically."
 msgstr ""
-"Nous confirmons le paiement et votre annonce apparaît aussitôt, généralement"
-" en quelques heures."
+"Dès que Pesapal confirme le paiement, votre annonce apparaît "
+"automatiquement."
 
 msgid "Simple prices, no surprises"
 msgstr "Des prix simples, sans surprise"
@@ -7063,22 +7304,6 @@ msgid "Pay once for the whole period. Renew any time from your advert page."
 msgstr ""
 "Payez une seule fois pour toute la période. Renouvelez quand vous voulez "
 "depuis la page de votre annonce."
-
-#, python-format
-msgid "for %(days)s day"
-msgid_plural "for %(days)s days"
-msgstr[0] "pour %(days)s jour"
-msgstr[1] "pour %(days)s jours"
-
-#, python-format
-#| msgid "From %(currency)s %(from_price)s"
-msgid "about %(currency)s %(per)s a day"
-msgstr "environ %(per)s %(currency)s par jour"
-
-#, python-format
-#| msgid "Contact %(name)s"
-msgid "Choose %(name)s"
-msgstr "Choisir %(name)s"
 
 msgid "Pay safely with"
 msgstr "Payez en toute sécurité avec"
@@ -7089,56 +7314,50 @@ msgstr "Catégories"
 msgid "Every wedding service has a place"
 msgstr "Chaque service de mariage a sa place"
 
-#| msgid "All adverts"
 msgid "Real adverts"
 msgstr "Vraies annonces"
 
 msgid "This is how your advert looks"
 msgstr "Voici à quoi ressemble votre annonce"
 
-#| msgid "Destinations"
 msgid "Questions"
 msgstr "Questions"
 
-#| msgid "Frequently Asked Questions (FAQ)"
 msgid "Frequently asked questions"
 msgstr "Questions fréquentes"
 
 msgid "How soon does my advert appear?"
 msgstr "Quand mon annonce apparaît-elle ?"
 
-#| msgid ""
-#| "As soon as our team confirms your payment, usually within a few hours. You "
-#| "will get a notification."
 msgid ""
-"As soon as our team confirms your payment, usually within a few hours during"
-" the day. You can follow every step on your advert page."
+"Straight after you pay. Pesapal confirms the payment within moments and your"
+" advert is published automatically. You can follow it under My Adverts in "
+"your account."
 msgstr ""
-"Dès que notre équipe confirme votre paiement, généralement en quelques "
-"heures en journée. Vous suivez chaque étape sur la page de votre annonce."
+"Juste après votre paiement. Pesapal le confirme en quelques instants et "
+"votre annonce est publiée automatiquement. Suivez-la dans « Mes annonces » "
+"de votre compte."
 
 msgid ""
-"After you submit your advert you see the amount and our payment number. Pay "
-"with M-Pesa, Mixx by Yas, Airtel Money or bank, then enter the transaction "
-"reference."
+"Online with Pesapal: M-Pesa, Airtel Money, Mixx by Yas, HaloPesa, Visa or "
+"Mastercard. You are taken to Pesapal's secure page and brought back to your "
+"account."
 msgstr ""
-"Après l’envoi de votre annonce, vous voyez le montant et notre numéro de "
-"paiement. Payez par M-Pesa, Mixx by Yas, Airtel Money ou banque, puis "
-"saisissez la référence de la transaction."
+"En ligne avec Pesapal : M-Pesa, Airtel Money, Mixx by Yas, HaloPesa, Visa ou"
+" Mastercard. Vous passez par la page sécurisée de Pesapal puis revenez à "
+"votre compte."
 
-#| msgid "Don't have an account?"
 msgid "Do I need an account?"
 msgstr "Ai-je besoin d’un compte ?"
 
 msgid ""
-"No. You get a private link to your advert page; keep it to pay, follow "
-"progress and renew. If you are logged in, your adverts are also listed here."
+"Yes, a free Sakinah account. Your adverts, payments and results are kept "
+"together under My Adverts, so you can renew any time from any device."
 msgstr ""
-"Non. Vous recevez un lien privé vers la page de votre annonce ; gardez-le "
-"pour payer, suivre et renouveler. Si vous êtes connecté, vos annonces sont "
-"aussi listées ici."
+"Oui, un compte Sakinah gratuit. Vos annonces, paiements et résultats sont "
+"regroupés dans « Mes annonces » : vous pouvez renouveler à tout moment, "
+"depuis n’importe quel appareil."
 
-#| msgid "What happens when I report someone?"
 msgid "What happens when my package ends?"
 msgstr "Que se passe-t-il à la fin de ma formule ?"
 
@@ -7149,7 +7368,6 @@ msgstr ""
 "Votre annonce est masquée automatiquement le dernier jour. Renouvelez depuis"
 " sa page avant ou après la fin, et les nouveaux jours s’ajoutent."
 
-#| msgid "Can I change my plan?"
 msgid "Can I change my advert later?"
 msgstr "Puis-je modifier mon annonce plus tard ?"
 
@@ -7158,7 +7376,6 @@ msgstr ""
 "Oui. Envoyez vos modifications à notre équipe et nous la mettrons à jour "
 "pour vous."
 
-#| msgid "What is not allowed?"
 msgid "What if my advert is not approved?"
 msgstr "Et si mon annonce n’est pas approuvée ?"
 
@@ -7176,228 +7393,8 @@ msgstr "Prêt à rencontrer vos prochains clients ?"
 msgid "It takes about five minutes to create your advert."
 msgstr "Créer votre annonce prend environ cinq minutes."
 
-#| msgid "Send a message to our team"
 msgid "Questions? Talk to our team"
 msgstr "Des questions ? Parlez à notre équipe"
-
-#| msgid "Your name"
-msgid "Your advert"
-msgstr "Votre annonce"
-
-#, python-format
-#| msgid "%(created)s ago"
-msgid "created %(d)s"
-msgstr "créée le %(d)s"
-
-#| msgid "Advert image"
-msgid "Advert created"
-msgstr "Annonce créée"
-
-#| msgid "Conversation"
-msgid "Confirmation"
-msgstr "Confirmation"
-
-msgid "Your advert was not approved"
-msgstr "Votre annonce n’a pas été approuvée"
-
-msgid "Our team could not publish this advert. Please contact us for details."
-msgstr ""
-"Notre équipe n’a pas pu publier cette annonce. Contactez-nous pour en savoir"
-" plus."
-
-msgid "One last step: pay to publish"
-msgstr "Dernière étape : payez pour publier"
-
-#, python-format
-msgid ""
-"Pay %(currency)s %(amount)s for %(days)s days on the site, then enter the "
-"payment details below."
-msgstr ""
-"Payez %(amount)s %(currency)s pour %(days)s jours en ligne, puis saisissez "
-"les détails du paiement ci-dessous."
-
-msgid "Payment received, we are confirming it"
-msgstr "Paiement reçu, nous le vérifions"
-
-msgid ""
-"Our team is checking your payment. Your advert goes live as soon as it is "
-"confirmed, usually within a few hours. You can close this page; it updates "
-"on its own."
-msgstr ""
-"Notre équipe vérifie votre paiement. Votre annonce sera en ligne dès sa "
-"confirmation, généralement en quelques heures. Vous pouvez fermer cette page"
-" ; elle se met à jour toute seule."
-
-#| msgid "This event has ended"
-msgid "Your advert has ended"
-msgstr "Votre annonce est terminée"
-
-#, python-format
-msgid ""
-"It stopped showing on %(d)s. Renew below to bring it back straight away."
-msgstr ""
-"Elle n’est plus visible depuis le %(d)s. Renouvelez ci-dessous pour la "
-"remettre en ligne aussitôt."
-
-#| msgid "Your Data is Secure"
-msgid "Your advert is live!"
-msgstr "Votre annonce est en ligne !"
-
-#, python-format
-msgid "Couples can see it until %(d)s."
-msgstr "Les couples peuvent la voir jusqu’au %(d)s."
-
-#| msgid "Your payment is safe and secure"
-msgid "Your renewal payment is being confirmed."
-msgstr "Votre paiement de renouvellement est en cours de vérification."
-
-#| msgid "View Advert"
-msgid "View my advert"
-msgstr "Voir mon annonce"
-
-#| msgid "Inquiry"
-msgid "Inquiries"
-msgstr "Demandes"
-
-#| msgid "Days"
-msgid "Days left"
-msgstr "Jours restants"
-
-#| msgid "Renew"
-msgid "Renew early"
-msgstr "Renouveler en avance"
-
-#| msgid "New adverts"
-msgid "Renew your advert"
-msgstr "Renouveler votre annonce"
-
-#| msgid "Thank you for your review."
-msgid "Pay for your advert"
-msgstr "Payer votre annonce"
-
-#, python-format
-msgid "%(days)s more days are added to the end of your current period."
-msgstr ""
-"%(days)s jours de plus sont ajoutés à la fin de votre période actuelle."
-
-msgid "Mobile money or bank transfer."
-msgstr "Mobile money ou virement bancaire."
-
-#| msgid "How to pay"
-msgid "Amount to pay"
-msgstr "Montant à payer"
-
-msgid "I have paid - submit"
-msgstr "J’ai payé - envoyer"
-
-#| msgid "Enter the phone number and the transaction reference below."
-msgid ""
-"Our team checks every payment against the transaction reference before "
-"publishing."
-msgstr ""
-"Notre équipe vérifie chaque paiement avec la référence de transaction avant "
-"publication."
-
-#| msgid "Next page"
-msgid "Keep this page"
-msgstr "Gardez cette page"
-
-msgid ""
-"This private link is how you pay, follow progress and renew. Save it or send"
-" it to yourself on WhatsApp."
-msgstr ""
-"Ce lien privé vous sert à payer, suivre et renouveler. Enregistrez-le ou "
-"envoyez-le-vous sur WhatsApp."
-
-#| msgid "Your conversations"
-msgid "Your advert link"
-msgstr "Le lien de votre annonce"
-
-msgid "Copied"
-msgstr "Copié"
-
-msgid "Copy"
-msgstr "Copier"
-
-#| msgid "Phone / WhatsApp"
-msgid "Send to my WhatsApp"
-msgstr "M’envoyer sur WhatsApp"
-
-#| msgid "Send a message to our team"
-msgid "Need help? Talk to our team"
-msgstr "Besoin d’aide ? Parlez à notre équipe"
-
-#, python-format
-#| msgid "Check your email - %(brand)s"
-msgid "Create your advert - %(brand)s"
-msgstr "Créer votre annonce - %(brand)s"
-
-#| msgid "Create your account"
-msgid "Create your advert"
-msgstr "Créer votre annonce"
-
-msgid "You can renew or upgrade later."
-msgstr "Vous pourrez renouveler ou changer de formule plus tard."
-
-#, python-format
-#| msgid "Main photo"
-msgid "%(n)s photo"
-msgid_plural "%(n)s photos"
-msgstr[0] "%(n)s photo"
-msgstr[1] "%(n)s photos"
-
-#| msgid "Your name"
-msgid "Your business"
-msgstr "Votre entreprise"
-
-msgid "So couples and our team can reach you."
-msgstr "Pour que les couples et notre équipe puissent vous joindre."
-
-msgid "Clear, honest details get more inquiries."
-msgstr "Des informations claires et honnêtes attirent plus de demandes."
-
-msgid "Bright, real photos of your work. The first one is the cover."
-msgstr ""
-"Des photos lumineuses et réelles de votre travail. La première sert de "
-"couverture."
-
-#| msgid "Change photo"
-msgid "Cover photo"
-msgstr "Photo de couverture"
-
-#| msgid "Add Photo"
-msgid "Add photo"
-msgstr "Ajouter une photo"
-
-msgid "We review every advert. Services must suit a family, halal platform."
-msgstr ""
-"Nous vérifions chaque annonce. Les services doivent convenir à une "
-"plateforme familiale et halal."
-
-#| msgid "Overview"
-msgid "Live preview"
-msgstr "Aperçu en direct"
-
-#| msgid "Your profile"
-msgid "Your advert title"
-msgstr "Titre de votre annonce"
-
-msgid "Runs for"
-msgstr "Durée"
-
-msgid "days"
-msgstr "jours"
-
-#| msgid "How to pay"
-msgid "Total to pay"
-msgstr "Total à payer"
-
-#| msgid "Content Management"
-msgid "Continue to payment"
-msgstr "Continuer vers le paiement"
-
-msgid "Nothing is charged yet. You pay on the next step."
-msgstr "Rien n’est encore facturé. Vous payez à l’étape suivante."
 
 #, python-format
 msgid "Comments (%(comments)s)"
@@ -7656,7 +7653,6 @@ msgstr ""
 msgid "View All Services"
 msgstr "Voir tous les services"
 
-#| msgid "Featured matches"
 msgid "Featured vendors"
 msgstr "Prestataires à la une"
 
@@ -8568,11 +8564,11 @@ msgid "Sikiliza ujumbe wa sauti"
 msgstr "Écouter le message vocal"
 
 #, python-format
-msgid "Premium Membership - %(brand)s"
-msgstr "Abonnement Premium - %(brand)s"
+msgid "Packages - %(brand)s"
+msgstr "Forfaits - %(brand)s"
 
-msgid "Premium Membership"
-msgstr "Abonnement Premium"
+msgid "Membership Packages"
+msgstr "Formules d’abonnement"
 
 msgid "More Features. Better Matches. A Brighter Future."
 msgstr ""
@@ -8647,13 +8643,11 @@ msgid "Ready to upgrade?"
 msgstr "Prêt à passer à Premium ?"
 
 msgid ""
-"Mobile money payments (M-Pesa, Mixx by Yas, Airtel Money) are coming soon."
+"Pay securely online with M-Pesa, Airtel Money, Mixx by Yas, HaloPesa or "
+"card. Your plan starts straight away."
 msgstr ""
-"Les paiements mobile money (M-Pesa, Mixx by Yas, Airtel Money) arrivent "
-"bientôt."
-
-msgid "Contact us to upgrade today."
-msgstr "Contactez-nous pour passer à Premium dès aujourd’hui."
+"Payez en ligne en toute sécurité avec M-Pesa, Airtel Money, Mixx by Yas, "
+"HaloPesa ou carte. Votre formule démarre aussitôt."
 
 msgid "Join Free First"
 msgstr "Inscrivez-vous d’abord gratuitement"
@@ -8860,6 +8854,66 @@ msgstr "Créer mon compte"
 msgid "Already a member?"
 msgstr "Déjà membre ?"
 
+msgid "Confirm your email"
+msgstr "Confirmez votre e-mail"
+
+#, python-format
+msgid ""
+"We sent a 6-digit code to <b>%(email)s</b>. Enter it below, or tap the "
+"button in the email."
+msgstr ""
+"Nous avons envoyé un code à 6 chiffres à <b>%(email)s</b>. Saisissez-le ci-"
+"dessous ou touchez le bouton dans l’e-mail."
+
+msgid "6-digit code"
+msgstr "Code à 6 chiffres"
+
+msgid "Confirm and continue"
+msgstr "Confirmer et continuer"
+
+msgid ""
+"Can't find it? Check your spam or promotions folder. The code works for 24 "
+"hours."
+msgstr ""
+"Vous ne le trouvez pas ? Vérifiez le dossier spam ou promotions. Le code est"
+" valable 24 heures."
+
+msgid "Send a new code"
+msgstr "Envoyer un nouveau code"
+
+msgid "Wrong email address?"
+msgstr "Mauvaise adresse e-mail ?"
+
+msgid "Send the code there"
+msgstr "Envoyer le code à cette adresse"
+
+msgid "Log out"
+msgstr "Se déconnecter"
+
+msgid ""
+"Welcome to Sakinah! To finish creating your account, enter this code on the "
+"sign-up page:"
+msgstr ""
+"Bienvenue sur Sakinah ! Pour finaliser votre compte, saisissez ce code sur "
+"la page d’inscription :"
+
+msgid "Or activate your account with one tap:"
+msgstr "Ou activez votre compte en un clic :"
+
+msgid "Activate my account"
+msgstr "Activer mon compte"
+
+msgid ""
+"The code and the link work for 24 hours. If you did not create an account, "
+"you can ignore this email."
+msgstr ""
+"Le code et le lien sont valables 24 heures. Si vous n’avez pas créé de "
+"compte, ignorez cet e-mail."
+
+#, python-format
+msgid "Assalamu Alaikum %(name)s,"
+msgstr "Assalamou alaykoum %(name)s,"
+
 #, python-format
 msgid "Marriage Services - %(brand)s"
 msgstr "Services de mariage - %(brand)s"
@@ -8901,9 +8955,6 @@ msgstr "correspondant à &ldquo;%(q)s&rdquo;"
 msgid "No adverts here yet."
 msgstr "Aucune annonce ici pour l’instant."
 
-#| msgid ""
-#| "Reach members who are planning their Nikah. Contact our team to list your "
-#| "business."
 msgid ""
 "Reach couples who are planning their Nikah. Create your advert in minutes "
 "and pay by mobile money."

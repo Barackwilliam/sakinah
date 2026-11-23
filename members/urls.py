@@ -1,5 +1,6 @@
 from django.urls import path
 from . import calls, views
+from core import views_ads
 urlpatterns = [
     path("", views.dashboard, name="m_dashboard"),
     path("find/", views.find, name="m_find"),
@@ -21,6 +22,9 @@ urlpatterns = [
     path("events/", views.events, name="m_events"),
     path("events/<int:pk>/", views.event_detail, name="m_event"),
     path("events/<int:pk>/save/", views.event_save, name="m_event_save"),
+    path("adverts/", views_ads.my_adverts, name="m_ads"),
+    path("adverts/new/", views_ads.new_advert, name="m_ad_new"),
+    path("adverts/<str:token>/", views_ads.advert_detail, name="m_ad"),
     path("membership/", views.membership, name="m_membership"),
     path("membership/receipt/<int:pk>/", views.receipt, name="m_receipt"),
     path("safety/", views.safety, name="m_safety"),

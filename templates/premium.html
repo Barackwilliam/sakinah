@@ -1,9 +1,9 @@
-{% extends "base.html" %}{% load i18n lang %}{% load static humanize %}{% block title %}{% blocktranslate with brand=site.brand %}Premium Membership - {{ brand }}{% endblocktranslate %}{% endblock %}
+{% extends "base.html" %}{% load i18n lang %}{% load static humanize %}{% block title %}{% blocktranslate with brand=site.brand %}Packages - {{ brand }}{% endblocktranslate %}{% endblock %}
 {% block content %}
 <section class="phero">
   <div class="phero-img" style="--img:url('{% static "img/hero_premium.jpg" %}')"></div>
   <div class="phero-in"><div class="phero-txt">
-    <h1>{% translate "Premium Membership" %}</h1><h2>{% translate "More Features. Better Matches. A Brighter Future." %}</h2>
+    <h1>{% translate "Membership Packages" %}</h1><h2>{% translate "More Features. Better Matches. A Brighter Future." %}</h2>
     <p>{% translate "Upgrade to Premium and unlock advanced features to connect with serious and verified members, communicate freely and increase your chances of finding the right partner." %}</p>
     <ul class="phero-feats round"><li><svg><use href="{{ icons }}#i-search"/></svg>{% translate "Advanced Search" %}</li><li><svg><use href="{{ icons }}#i-chat"/></svg>{% translate "Unlimited Messaging" %}</li>
       <li><svg><use href="{{ icons }}#i-eye"/></svg>{% translate "See Who Likes You" %}</li><li><svg><use href="{{ icons }}#i-shield-c"/></svg>{% translate "Verified Members" %}</li><li><svg><use href="{{ icons }}#i-heart-f"/></svg>{% translate "Priority Support" %}</li></ul>
@@ -17,9 +17,9 @@
     <article class="plan{% if p.popular %} top{% endif %}">
       {% if p.popular %}<span class="plan-badge"><svg><use href="{{ icons }}#i-crown"/></svg>{% translate "Most Popular" %}</span>{% endif %}
       <span class="plan-ic">{% if p.icon %}<img loading="lazy" decoding="async" src="{{ p.icon.url }}" alt="">{% else %}<svg><use href="{{ icons }}#i-crown"/></svg>{% endif %}</span>
-      <h3>{% blocktranslate with name=p.name %}{{ name }} Plan{% endblocktranslate %}</h3><p class="plan-tag">{{ p.tagline|tr }}</p>
+      <h3>{% blocktranslate with name=p.name|tr %}{{ name }} Plan{% endblocktranslate %}</h3><p class="plan-tag">{{ p.tagline|tr }}</p>
       <div class="amt">{{ site.currency }} {{ p.price|intcomma }}<small>{{ p.period|tr }}</small></div>
-      {% if p.price %}<a class="btn {% if p.popular %}btn-s{% else %}btn-p{% endif %} block" href="#pay" data-plan="{{ p.name|tr }}">{% translate "Upgrade Now" %}</a>
+      {% if p.price %}{% url 'm_membership' as mem %}<a class="btn {% if p.popular %}btn-s{% else %}btn-p{% endif %} block" href="{% if user.is_authenticated %}{{ mem }}?pay={{ p.pk }}#pay{% else %}{% url 'signup' %}?next={{ mem|urlencode }}%3Fpay%3D{{ p.pk }}{% endif %}">{% translate "Upgrade Now" %}</a>
       {% elif user.is_authenticated %}<span class="btn btn-o block is-current">{% translate "Your current plan" %}</span>
       {% else %}<a class="btn btn-o block" href="{% url 'signup' %}">{% translate "Join Free" %}</a>{% endif %}
       <ul class="plan-f">{% for ok, text in p.feature_list %}<li class="{% if not ok %}no{% endif %}"><svg><use href="{{ icons }}#i-{% if ok %}check-c{% else %}x-c{% endif %}"/></svg>{{ text }}</li>{% endfor %}</ul>
@@ -37,8 +37,8 @@
   <div class="offer" id="pay">
     <span class="offer-ic"><svg><use href="{{ icons }}#i-gift"/></svg></span>
     <div><h3>{% if site.offer_text %}{% translate "Special Offer" %}{% else %}{% translate "Ready to upgrade?" %}{% endif %}</h3>
-      <p>{% if site.offer_text %}{{ site.offer_text }}{% else %}{% translate "Mobile money payments (M-Pesa, Mixx by Yas, Airtel Money) are coming soon." %}{% if site.contact_url %} {% translate "Contact us to upgrade today." %}{% endif %}{% endif %}</p></div>
-    {% if site.contact_url %}<a class="btn btn-light" href="{{ site.contact_url }}" target="_blank" rel="noopener">{% translate "Upgrade to Premium" %} <svg><use href="{{ icons }}#i-arrow"/></svg></a>
-    {% elif not user.is_authenticated %}<a class="btn btn-light" href="{% url 'signup' %}">{% translate "Join Free First" %} <svg><use href="{{ icons }}#i-arrow"/></svg></a>{% endif %}
+      <p>{% if site.offer_text %}{{ site.offer_text }}{% else %}{% translate "Pay securely online with M-Pesa, Airtel Money, Mixx by Yas, HaloPesa or card. Your plan starts straight away." %}{% endif %}</p></div>
+    {% if user.is_authenticated %}<a class="btn btn-light" href="{% url 'm_membership' %}?pay=#pay">{% translate "Upgrade to Premium" %} <svg><use href="{{ icons }}#i-arrow"/></svg></a>
+    {% else %}<a class="btn btn-light" href="{% url 'signup' %}">{% translate "Join Free First" %} <svg><use href="{{ icons }}#i-arrow"/></svg></a>{% endif %}
   </div>
 </div>{% endblock %}

@@ -26,7 +26,7 @@ class AdPackage(models.Model):
     slug = models.SlugField(unique=True)
     tagline = models.CharField(max_length=120, blank=True)
     price = models.PositiveIntegerField(help_text=_("Price for the whole period, in TSh."))
-    days = models.PositiveSmallIntegerField(default=30, help_text=_("How many days the advert stays on the site."))
+    months = models.PositiveSmallIntegerField(default=1, help_text=_("How long the advert stays on the site, in months (see Days in one month in Site Settings)."))
     features = models.TextField(blank=True, help_text=_("One per line. Start a line with - for something the package does not include."))
     featured = models.BooleanField(default=False, help_text=_("Featured badge and first place in its category."))
     home_page = models.BooleanField(default=False, help_text=_("Also shown in Featured Vendors on the home page."))
@@ -35,7 +35,7 @@ class AdPackage(models.Model):
     active = models.BooleanField(default=True)
     order = models.PositiveSmallIntegerField(default=0)
 
-    class Meta: ordering = ["order", "price"]
+    class Meta: ordering = ["price", "order"]
     def __str__(self): return self.name
 
     @property
@@ -45,7 +45,10 @@ class AdPackage(models.Model):
         return [(not l.startswith("-"), gettext(l.lstrip("-+ ").strip())) for l in self.features.splitlines() if l.strip()]
 
     @property
-    def per_day(self): return round(self.price / self.days) if self.days else self.price
+    def days(self):
+        """Days the advert actually runs: months x the site's days in one month (3 while testing, 30 later)."""
+        from .models import SiteSetting
+        return self.months * SiteSetting.load().days_per_month
 
 
 class AdOrder(models.Model):
@@ -78,7 +81,7 @@ class AdOrder(models.Model):
 
     class Meta: ordering = ["-created"]
     def __str__(self): return f"{self.business_name} - {self.title}"
-    def get_absolute_url(self): return reverse("ad_order", args=[self.token])
+    def get_absolute_url(self): return reverse("m_ad", args=[self.token])
 
     @property
     def photos(self): return [p for p in (self.image, self.photo2, self.photo3, self.photo4) if p]

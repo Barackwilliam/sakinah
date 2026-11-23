@@ -7,7 +7,7 @@
 {# The web fonts arrive beside the page, not before it: words show at once in the fallback. #}
 <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,500;1,600&display=swap">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,500;1,600&display=swap"></noscript>
-<link rel="stylesheet" href="{% asset 'css/member.css' %}">{% include "partials/img_fallback.html" %}{% include "partials/lang_head.html" %}</head>
+<link rel="stylesheet" href="{% asset 'css/member.css' %}">{% include "partials/img_fallback.html" %}{% include "partials/lang_head.html" %}{% block head %}{% endblock %}</head>
 <body class="{% if no_sidebar %}no-sb{% endif %}">
 <header class="mh">
   <button class="mh-burger" id="sb-open" aria-label="{% translate 'Menu' %}"><span></span><span></span><span></span></button>
@@ -50,6 +50,7 @@
       <a href="{% url 'm_activity' %}" class="{% if nav == 'activity' %}on{% endif %}"><svg><use href="{{ micons }}#m-cal"/></svg>{% translate "My Activities" %}</a>
       <a href="{% url 'm_events' %}" class="{% if nav == 'events' %}on{% endif %}"><svg><use href="{{ micons }}#m-cal-o"/></svg>{% translate "Events" %}</a>
       <a href="{% url 'm_membership' %}" class="{% if nav == 'membership' %}on{% endif %}"><svg class="gold"><use href="{{ micons }}#m-crown"/></svg>{% translate "Membership" %}</a>
+      <a href="{% url 'm_ads' %}" class="{% if nav == 'adverts' %}on{% endif %}"><svg><use href="{{ icons }}#i-mega"/></svg>{% translate "My Adverts" %}</a>
       <a href="{% url 'm_safety' %}" class="{% if nav == 'safety' %}on{% endif %}"><svg><use href="{{ micons }}#m-shield"/></svg>{% translate "Safety &amp; Privacy" %}</a>
       <a href="{% url 'm_settings' %}" class="{% if nav == 'settings' %}on{% endif %}"><svg><use href="{{ micons }}#m-gear"/></svg>{% translate "Settings" %}</a>
       <a href="{% url 'm_help' %}" class="{% if nav == 'help' %}on{% endif %}"><svg><use href="{{ micons }}#m-help"/></svg>{% translate "Help &amp; Support" %}</a>

@@ -27,13 +27,14 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "core.middleware.GZipPagesMiddleware",   # pages shrink to about a fifth on the wire (static files are pre-compressed by WhiteNoise)
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.locale.LocaleMiddleware",    # picks the language: the visitor's choice (cookie), else what their browser asks for
+    "core.lang.SiteLocaleMiddleware",               # picks the language: the visitor's choice (cookie), else Kiswahili
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "core.lang.MemberLanguageMiddleware",       # a member's saved language follows them to new devices
+    "core.lang.MemberLanguageMiddleware",
+    "core.verify.EmailVerifiedMiddleware",     # new accounts confirm their email (code or link) before going further       # a member's saved language follows them to new devices
     "core.middleware.LastSeenMiddleware",
     "core.middleware.HideDjangoAdminMiddleware",
 ]
@@ -65,6 +66,12 @@ CLOUDFLARE_TURN_API_TOKEN = os.getenv("CLOUDFLARE_TURN_API_TOKEN", "").strip()
 TURN_URLS = os.getenv("TURN_URLS", "")
 TURN_USERNAME = os.getenv("TURN_USERNAME", "")
 TURN_CREDENTIAL = os.getenv("TURN_CREDENTIAL", "")
+
+# Payments: Pesapal API 3.0 (live). Keys from the Pesapal merchant dashboard; without them the site uses the manual
+# "enter the transaction reference" form instead. PESAPAL_SANDBOX=True points at Pesapal's test server.
+PESAPAL_CONSUMER_KEY = os.getenv("PESAPAL_CONSUMER_KEY", "").strip()
+PESAPAL_CONSUMER_SECRET = os.getenv("PESAPAL_CONSUMER_SECRET", "").strip()
+PESAPAL_SANDBOX = os.getenv("PESAPAL_SANDBOX", "False") == "True"
 
 # Text stamped on every uploaded picture (members, adverts, events, honeymoon, articles). Empty turns it off.
 WATERMARK_TEXT = os.getenv("WATERMARK_TEXT", "sakinah.co.tz")
@@ -101,7 +108,11 @@ LANGUAGE_CODE = "en"; TIME_ZONE = "Africa/Dar_es_Salaam"; USE_TZ = True
 # Translations live in locale/<code>/LC_MESSAGES/django.po; the compiled .mo files are committed, so a deploy needs no gettext.
 USE_I18N = True
 LANGUAGES = [("en", "English"), ("sw", "Kiswahili"), ("ar", "العربية"), ("fr", "Français")]
+# What everyone sees until they pick a language themselves (the browser's language is not used). LANGUAGE_CODE stays
+# "en" because the texts in the code are written in English.
+SITE_LANGUAGE = os.getenv("SITE_LANGUAGE", "sw")
 LOCALE_PATHS = [BASE_DIR / "locale"]
+TEST_RUNNER = "config.test_runner.Runner"
 FORMAT_MODULE_PATH = ["core.formats"]   # number formats for Kiswahili and Arabic
 LANGUAGE_COOKIE_AGE = 365 * 24 * 3600
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

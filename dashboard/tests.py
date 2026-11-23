@@ -274,7 +274,7 @@ class ManagePagesTests(TestCase):
         self.assertContains(r, "remove your own Super Admin role")
         self.client.post(reverse("dash_staff_delete", args=[new.pk])); self.assertFalse(User.objects.filter(username="newadmin").exists())
         r = self.client.post(reverse("dash_settings"), {"brand": "Sakinah", "tagline": "Imani", "currency": "TSh", "payment_instructions": "Lipa namba 123456",
-                                                        "hero_title_1": "A", "hero_title_2": "B", "hero_text": "C", "hero_quote": "D", "offer_text": "E"})
+                                                        "hero_title_1": "A", "hero_title_2": "B", "hero_text": "C", "hero_quote": "D", "offer_text": "E", "days_per_month": 3})
         self.assertRedirects(r, reverse("dash_settings"))
         from core.models import SiteSetting
         self.assertEqual(SiteSetting.load().payment_instructions, "Lipa namba 123456")

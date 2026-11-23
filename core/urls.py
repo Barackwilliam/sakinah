@@ -1,6 +1,6 @@
 from django.contrib.auth import views as auth
 from django.urls import path
-from . import views, views_ads, views_content, views_honeymoon as hm, views_market
+from . import views, views_ads, views_content, views_honeymoon as hm, views_market, views_pay, views_verify
 urlpatterns = [
     path("", views.home, name="home"),
     path("matches/", views.matches, name="matches"),
@@ -15,10 +15,14 @@ urlpatterns = [
     path("messages/<int:pk>/feed/", views.thread_feed, name="thread_feed"),
     path("profile/edit/", views.profile_edit, name="profile_edit"),
     path("signup/", views.signup, name="signup"),
+    path("account/verify-email/", views_verify.verify_email, name="verify_email"),
+    path("account/verify-email/<str:token>/", views_verify.verify_email_link, name="verify_email_link"),
     path("login/", views.LoginView.as_view(), name="login"),
     path("logout/", auth.LogoutView.as_view(), name="logout"),
     path("events/", views_content.events, name="events"),
     path("events/<int:pk>/register/", views_content.event_register, name="event_register"),
+    path("payments/pesapal/return/", views_pay.callback, name="pesapal_callback"),
+    path("payments/pesapal/ipn/", views_pay.ipn, name="pesapal_ipn"),
     path("advertise/", views_ads.advertise, name="advertise"),
     path("advertise/start/", views_ads.advertise_start, name="advertise_start"),
     path("advertise/order/<str:token>/", views_ads.ad_order, name="ad_order"),

@@ -1,0 +1,94 @@
+{% extends "members/base.html" %}{% load i18n lang humanize assets %}{% block title %}{{ o.title }}{% endblock %}
+{% block head %}<link rel="stylesheet" href="{% asset 'css/advertise.css' %}">{% endblock %}
+{% block content %}
+<div class="avx">
+<section class="av-acc-top">
+  <a class="av-back" href="{% url 'm_ads' %}"><svg><use href="{{ micons }}#m-chev-l"/></svg>{% translate "My Adverts" %}</a>
+  <h1>{{ o.title }}</h1>
+  <p class="av-top-sub">{{ o.business_name }} &middot; {{ o.package.name|tr }} &middot; {% blocktranslate with d=o.created|date:"j M Y" %}created {{ d }}{% endblocktranslate %}</p>
+  <ol class="av-track">
+    <li class="done"><i><svg><use href="{{ micons }}#m-tick2"/></svg></i>{% translate "Advert created" %}</li>
+    <li class="{% if o.step >= 2 %}done{% elif o.status != 'rejected' %}now{% endif %}"><i>{% if o.step >= 2 %}<svg><use href="{{ micons }}#m-tick2"/></svg>{% else %}2{% endif %}</i>{% translate "Payment" %}</li>
+    <li class="{% if o.step >= 4 and not o.is_expired %}done{% elif o.step == 3 %}now{% endif %}"><i>{% if o.step >= 4 and not o.is_expired %}<svg><use href="{{ micons }}#m-tick2"/></svg>{% else %}3{% endif %}</i>{% translate "Live" %}</li>
+  </ol>
+</section>
+
+<div class="av-order">
+  <div class="av-order-main">
+    {% if o.status == "rejected" %}
+      <div class="av-state bad"><span class="avi"><svg><use href="{{ micons }}#m-info"/></svg></span><div><h2>{% translate "Your advert was not approved" %}</h2>
+        <p>{% if o.admin_note %}{{ o.admin_note|linebreaksbr }}{% else %}{% translate "Our team could not publish this advert. Please contact us for details." %}{% endif %}</p></div></div>
+    {% elif o.status == "awaiting_payment" and not o.payment_pending %}
+      <div class="av-state"><span class="avi"><svg><use href="{{ micons }}#m-card"/></svg></span><div><h2>{% translate "One last step: pay to publish" %}</h2>
+        <p>{% blocktranslate with amount=o.package.price|intcomma currency=site.currency count months=o.package.months %}Pay {{ currency }} {{ amount }} for {{ months }} month on the site. Your advert goes live as soon as the payment is confirmed.{% plural %}Pay {{ currency }} {{ amount }} for {{ months }} months on the site. Your advert goes live as soon as the payment is confirmed.{% endblocktranslate %}</p></div></div>
+    {% elif o.status == "paid" or o.status == "awaiting_payment" and o.payment_pending %}
+      <div class="av-state wait"><span class="avi"><svg><use href="{{ micons }}#m-clock"/></svg></span><div><h2>{% translate "Payment received, we are confirming it" %}</h2>
+        <p>{% translate "Your advert goes live as soon as the payment is confirmed. This page updates on its own." %}</p></div></div>
+    {% elif o.is_expired %}
+      <div class="av-state bad"><span class="avi"><svg><use href="{{ micons }}#m-clock"/></svg></span><div><h2>{% translate "Your advert has ended" %}</h2>
+        <p>{% blocktranslate with d=o.expires|date:"j M Y" %}It stopped showing on {{ d }}. Renew below to bring it back straight away.{% endblocktranslate %}</p></div></div>
+    {% else %}
+      <div class="av-state ok"><span class="avi"><svg><use href="{{ micons }}#m-star"/></svg></span><div><h2>{% translate "Your advert is live!" %}</h2>
+        <p>{% blocktranslate with d=o.expires|date:"j M Y" %}Couples can see it until {{ d }}.{% endblocktranslate %}{% if o.payment_pending %} {% translate "Your renewal payment is being confirmed." %}{% endif %}</p>
+        {% if ad %}<a class="btn" href="{% url 'advert' ad.slug %}" target="_blank">{% translate "View my advert" %}<svg><use href="{{ micons }}#m-arrow"/></svg></a>{% endif %}</div></div>
+    {% endif %}
+
+    {% if o.status == "live" and ad %}
+    <div class="av-kpis">
+      <div><span class="avi grn"><svg><use href="{{ micons }}#m-eye"/></svg></span><b>{{ ad.views|intcomma }}</b><small>{% translate "Views" %}</small></div>
+      <div><span class="avi mag"><svg><use href="{{ micons }}#m-chat"/></svg></span><b>{{ inquiries|intcomma }}</b><small>{% translate "Inquiries" %}</small></div>
+      <div><span class="avi gold"><svg><use href="{{ micons }}#m-cal"/></svg></span><b>{{ o.days_left }}</b><small>{% translate "Days left" %}</small></div>
+    </div>
+    {% if not o.is_expired %}<div class="av-left"><span style="--p:{% widthratio o.days_left o.package.days 100 %}%"></span></div>{% endif %}
+    {% endif %}
+
+    {% if can_pay %}
+    {% if o.status == "live" and not o.is_expired and o.days_left > 2 %}<details class="av-renew"{% if form.errors %} open{% endif %}><summary class="btn o block"><svg><use href="{{ micons }}#m-clock"/></svg>{% translate "Renew early" %}</summary>{% endif %}
+    <section class="av-card av-pay" id="pay">
+      <header><span><svg><use href="{{ micons }}#m-card"/></svg></span><div><h2>{% if o.status == "live" %}{% translate "Renew your advert" %}{% else %}{% translate "Pay for your advert" %}{% endif %}</h2>
+        <p>{% if o.status == "live" %}{% blocktranslate count months=o.package.months %}{{ months }} more month is added to the end of your current period.{% plural %}{{ months }} more months are added to the end of your current period.{% endblocktranslate %}{% elif online %}{% translate "Secure online payment with Pesapal." %}{% else %}{% translate "Mobile money or bank transfer." %}{% endif %}</p></div></header>
+      <div class="av-amount"><small>{% translate "Amount to pay" %}</small><b>{{ site.currency }} {{ o.package.price|intcomma }}</b><span>{{ o.package.name|tr }} &middot; {% blocktranslate count months=o.package.months %}{{ months }} month{% plural %}{{ months }} months{% endblocktranslate %}</span></div>
+      <form method="post" class="av-payform" novalidate>{% csrf_token %}
+        {% if online %}
+          <ul class="av-pp"><li class="gw-mpesa">M-Pesa</li><li class="gw-airtel">Airtel Money</li><li class="gw-mixx">Mixx by Yas</li><li>HaloPesa</li><li class="gw-bank">Visa / Mastercard</li></ul>
+          <button class="btn lg block" type="submit"><svg><use href="{{ micons }}#m-lock"/></svg>{% blocktranslate with amount=o.package.price|intcomma currency=site.currency %}Pay {{ currency }} {{ amount }} with Pesapal{% endblocktranslate %}</button>
+          <p class="av-side-note"><svg><use href="{{ micons }}#m-shield"/></svg>{% translate "You will be taken to Pesapal's secure page, then brought back here. Your advert goes live automatically once the payment is complete." %}</p>
+        {% else %}
+          {% if site.ad_payment_instructions %}<div class="av-howpay"><svg><use href="{{ micons }}#m-info"/></svg><p>{{ site.ad_payment_instructions|tr|linebreaksbr }}</p></div>{% endif %}
+          <fieldset class="av-gw"><legend>{% translate "Paid with" %}</legend>
+            {% for r in form.gateway %}<label class="av-gw-i gw-{{ r.data.value }}">{{ r.tag }}<span>{{ r.choice_label }}</span></label>{% endfor %}</fieldset>
+          <div class="fgrid two">{% include "members/_field.html" with f=form.phone %}{% include "members/_field.html" with f=form.reference %}</div>
+          <button class="btn lg block" type="submit"><svg><use href="{{ micons }}#m-tick2"/></svg>{% translate "I have paid - submit" %}</button>
+          <p class="av-side-note"><svg><use href="{{ micons }}#m-lock"/></svg>{% translate "Our team checks every payment against the transaction reference before publishing." %}</p>
+        {% endif %}
+      </form>
+    </section>
+    {% if o.status == "live" and not o.is_expired and o.days_left > 2 %}</details>{% endif %}
+    {% endif %}
+
+    {% if history %}
+    <section class="av-card"><header><span><svg><use href="{{ micons }}#m-doc"/></svg></span><div><h2>{% translate "Payments" %}</h2></div></header>
+      <ul class="av-hist">{% for p in history %}<li><div><b>{{ p.invoice_no }}</b><small>{{ p.created|date:"j M Y H:i" }} &middot; {{ p.pay_method|default:p.get_gateway_display }}{% if p.reference %} &middot; {{ p.reference }}{% endif %}</small></div>
+        <span>{{ site.currency }} {{ p.amount|intcomma }}</span><em class="pst {{ p.status }}">{{ p.get_status_display }}</em></li>{% endfor %}</ul>
+    </section>{% endif %}
+  </div>
+
+  <aside class="av-side"><div class="av-side-in">
+    <h3>{% translate "Your advert" %}</h3>
+    <article class="adc av-prev">
+      <span class="adc-img">{% if o.image %}<img src="{{ o.image.url }}" alt="">{% endif %}{% if o.package.featured %}<span class="av-badge"><svg><use href="{{ micons }}#m-star"/></svg>{% translate "Featured" %}</span>{% endif %}</span>
+      <div class="adc-b"><h4>{{ o.title }}</h4><p><svg><use href="{{ micons }}#m-pin"/></svg>{{ o.city }}</p>
+        <b class="adc-p">{{ site.currency }} {{ o.price|intcomma }}</b><p class="adc-r">{{ o.category.name|tr }}</p></div>
+    </article>
+    <dl class="av-sum">
+      <div><dt>{% translate "Status" %}</dt><dd><span class="av-st st-{{ o.status }}{% if o.is_expired %} st-expired{% endif %}">{% if o.is_expired %}{% translate "Expired" %}{% else %}{{ o.get_status_display }}{% endif %}</span></dd></div>
+      <div><dt>{% translate "Package" %}</dt><dd>{{ o.package.name|tr }}</dd></div>
+      {% if o.expires %}<div><dt>{% translate "Runs until" %}</dt><dd>{{ o.expires|date:"j M Y" }}</dd></div>{% endif %}
+      <div><dt>{% translate "Contact" %}</dt><dd>{{ o.phone }}</dd></div>
+    </dl>
+    {% if site.contact_url %}<a class="av-help" href="{{ site.contact_url }}" target="_blank" rel="noopener"><svg><use href="{{ micons }}#m-headset"/></svg>{% translate "Need help? Talk to our team" %}</a>{% endif %}
+  </div></aside>
+</div>
+</div>
+{% endblock %}
+{% block scripts %}{% if o.status == "paid" or o.payment_pending %}<script>setTimeout(()=>location.reload(),30000)</script>{% endif %}{% endblock %}

@@ -754,9 +754,12 @@ class LanguageTests(TestCase):
         self.assertContains(self.home("en"), "Verified members")
         self.assertNotContains(self.home("en"), "Imethibitishwa")
 
-    def test_the_browser_language_is_used_until_a_visitor_chooses(self):
-        r = self.client.get(reverse("home"), HTTP_ACCEPT_LANGUAGE="fr-FR,fr;q=0.9")
-        self.assertContains(r, '<html lang="fr"')
+    def test_kiswahili_is_the_default_whatever_the_browser_asks_for(self):
+        with override_settings(SITE_LANGUAGE="sw"):
+            r = self.client.get(reverse("home"), HTTP_ACCEPT_LANGUAGE="en-US,en;q=0.9")
+            self.assertContains(r, '<html lang="sw"'); self.assertContains(r, "Tafuta Mwenza")
+            self.client.cookies["django_language"] = "en"           # until the visitor picks another language
+            self.assertContains(self.client.get(reverse("home")), '<html lang="en"')
 
     def test_the_language_menu_sets_the_cookie_and_saves_it_on_the_profile(self):
         self.client.login(username="fatma", password=self.pw)
@@ -773,10 +776,10 @@ class LanguageTests(TestCase):
         self.assertContains(r, '<html lang="sw"')
         self.assertEqual(r.cookies["django_language"].value, "sw")
 
-    def test_a_member_who_never_chose_keeps_the_browser_language(self):
+    def test_a_member_who_never_chose_gets_the_site_language(self):
         self.client.login(username="fatma", password=self.pw)
-        r = self.client.get(reverse("home"), HTTP_ACCEPT_LANGUAGE="ar")
-        self.assertContains(r, '<html lang="ar"')
+        with override_settings(SITE_LANGUAGE="sw"):
+            self.assertContains(self.client.get(reverse("home"), HTTP_ACCEPT_LANGUAGE="ar"), '<html lang="sw"')
 
     def test_page_scripts_get_their_words_in_the_page_language(self):
         self.assertContains(self.home("fr"), "window.I18N=")
@@ -805,11 +808,14 @@ class AdvertiseTests(TestCase):
         self._media = override_settings(MEDIA_ROOT=self._tmp.name, WATERMARK_TEXT="")
         self._media.enable()
         self.cat = ServiceCategory.objects.create(name="Catering", slug="catering", blurb="Food")
-        self.basic = AdPackage.objects.create(name="Starter", slug="starter", price=25000, days=30, max_photos=1)
-        self.spot = AdPackage.objects.create(name="Spotlight", slug="spotlight", price=150000, days=60, max_photos=4,
+        self.basic = AdPackage.objects.create(name="Starter", slug="starter", price=25000, months=1, max_photos=1)
+        self.spot = AdPackage.objects.create(name="Spotlight", slug="spotlight", price=150000, months=2, max_photos=4,
                                              featured=True, home_page=True, popular=True)
         import secrets
         self.staff = User.objects.create_user("boss", "boss@example.com", secrets.token_urlsafe(16), is_staff=True)
+        self.vendor = User.objects.create_user("asha", "asha@example.com", secrets.token_urlsafe(16))
+        Member.objects.create(user=self.vendor, name="Asha", age=30, gender="F", city="Arusha", occupation="Caterer")
+        self.client.force_login(self.vendor)   # adverts are asked for from inside the account
 
     def tearDown(self):
         self._media.disable(); self._tmp.cleanup()
@@ -825,21 +831,22 @@ class AdvertiseTests(TestCase):
         data = dict(package=(package or self.spot).pk, business_name="Baraka Catering", contact_name="Asha", phone="0713 222 333",
                     category=self.cat.pk, city="Arusha", title="Halal wedding catering", description="Pilau, biryani and more.",
                     price=12000, price_unit="Per Person", image=self.photo(), photo2=self.photo("b.jpg"), **extra)
-        return self.client.post(reverse("advertise_start"), data)
+        return self.client.post(reverse("m_ad_new"), data)
 
     def pay(self, order, ref="QK71ABC2XY"):
         return self.client.post(order.get_absolute_url(), {"gateway": "mpesa", "phone": "0713222333", "reference": ref})
 
+    def as_staff(self):
+        from django.test import Client
+        c = Client(); c.force_login(self.staff); return c
+
     def approve(self, order):
-        self.client.force_login(self.staff)
-        r = self.client.post(reverse("dash_manage_action", args=["ad-orders", order.pk]), {"act": "approve"})
-        self.client.logout()
-        return r
+        return self.as_staff().post(reverse("dash_manage_action", args=["ad-orders", order.pk]), {"act": "approve"})
 
     def test_the_landing_page_shows_packages_and_every_button_leads_to_it(self):
         r = self.client.get(reverse("advertise"))
         self.assertContains(r, "Spotlight"); self.assertContains(r, "150,000")
-        self.assertContains(r, reverse("advertise_start") + "?package=spotlight")
+        self.assertContains(r, reverse("m_ad_new") + "?package=spotlight")
         for name in ["home", "services"]:
             self.assertContains(self.client.get(reverse(name)), reverse("advertise"))
 
@@ -870,8 +877,7 @@ class AdvertiseTests(TestCase):
 
     def test_confirming_the_payment_from_the_payments_list_also_publishes(self):
         self.submit(); order = AdOrder.objects.get(); self.pay(order)
-        self.client.force_login(self.staff)
-        self.client.post(reverse("dash_manage_action", args=["payments", order.payment.pk]), {"act": "complete"})
+        self.as_staff().post(reverse("dash_manage_action", args=["payments", order.payment.pk]), {"act": "complete"})
         order.refresh_from_db()
         self.assertEqual(order.status, "live"); self.assertTrue(order.advert.is_live)
 
@@ -910,16 +916,195 @@ class AdvertiseTests(TestCase):
     def test_an_advert_that_is_not_approved_says_why(self):
         self.submit(); order = AdOrder.objects.get(); self.pay(order)
         AdOrder.objects.filter(pk=order.pk).update(admin_note="Please send clearer photos.")
-        self.client.force_login(self.staff)
-        self.client.post(reverse("dash_manage_action", args=["ad-orders", order.pk]), {"act": "reject"})
-        self.client.logout()
+        self.as_staff().post(reverse("dash_manage_action", args=["ad-orders", order.pk]), {"act": "reject"})
         order.refresh_from_db()
         self.assertEqual((order.status, order.payment.status), ("rejected", "failed"))
         self.assertContains(self.client.get(order.get_absolute_url()), "Please send clearer photos.")
 
     def test_staff_see_requests_in_the_dashboard(self):
         self.submit(); self.pay(AdOrder.objects.get())
-        self.client.force_login(self.staff)
-        r = self.client.get(reverse("dash_manage", args=["ad-orders"]))
-        self.assertContains(r, "Halal wedding catering")
-        self.assertContains(self.client.get(reverse("dash_manage_edit", args=["ad-orders", AdOrder.objects.get().pk])), "QK71ABC2XY")
+        staff = self.as_staff()
+        self.assertContains(staff.get(reverse("dash_manage", args=["ad-orders"])), "Halal wedding catering")
+        self.assertContains(staff.get(reverse("dash_manage_edit", args=["ad-orders", AdOrder.objects.get().pk])), "QK71ABC2XY")
+
+
+class FakePesapal:
+    """Stands in for Pesapal's servers: answers like API 3.0 and records what we sent."""
+    def __init__(self, status_code=1):
+        self.calls, self.status_code, self.n = [], status_code, 0
+    def __call__(self, method, path, data=None, token=None):
+        self.calls.append((method, path, data))
+        if path == "/Auth/RequestToken": return {"token": "tok", "expiryDate": "2026-12-01T00:00:00Z", "error": None, "status": "200"}
+        if path == "/URLSetup/RegisterIPN": return {"ipn_id": "ipn-123", "url": data["url"], "error": None, "status": "200"}
+        if path == "/Transactions/SubmitOrderRequest":
+            self.n += 1
+            return {"order_tracking_id": f"trk-{self.n}", "merchant_reference": data["id"], "redirect_url": f"https://pay.pesapal.com/iframe?OrderTrackingId=trk-{self.n}", "error": None, "status": "200"}
+        if path.startswith("/Transactions/GetTransactionStatus"):
+            desc = {0: "INVALID", 1: "Completed", 2: "Failed", 3: "Reversed"}[self.status_code]
+            return {"payment_method": "MpesaTZ", "amount": 50, "confirmation_code": "PP123XYZ", "payment_status_description": desc,
+                    "status_code": self.status_code, "currency": "TZS", "error": None, "status": "200"}
+        raise AssertionError(path)
+
+
+@override_settings(PESAPAL_CONSUMER_KEY="key", PESAPAL_CONSUMER_SECRET="secret")
+class PesapalTests(TestCase):
+    """Every payment goes through Pesapal once the keys are set; we only believe Pesapal's own status answer."""
+    def setUp(self):
+        import secrets
+        from unittest import mock
+        from django.core.cache import cache
+        cache.clear()
+        self.fake = FakePesapal()
+        self.patch = mock.patch("core.pesapal._call", self.fake); self.patch.start()
+        self.user = User.objects.create_user("juma", "juma@example.com", secrets.token_urlsafe(16))
+        self.me = Member.objects.create(user=self.user, name="Juma Ali", age=30, gender="M", city="Arusha", occupation="Teacher", phone="0712000111")
+        self.gold = Plan.objects.create(name="Gold", price=150, order=3)
+        SiteSetting.objects.update_or_create(pk=1, defaults={"days_per_month": 3})
+        cache.clear()
+        self.client.force_login(self.user)
+
+    def tearDown(self): self.patch.stop()
+
+    def buy_gold(self, months=1):
+        return self.client.post(reverse("m_membership"), {"plan": self.gold.pk, "months": months})
+
+    def test_paying_for_a_plan_sends_the_member_to_pesapal_with_the_right_order(self):
+        r = self.buy_gold(months=3)
+        self.assertEqual(r.status_code, 302); self.assertTrue(r["Location"].startswith("https://pay.pesapal.com/"))
+        p = Payment.objects.get()
+        self.assertEqual((p.gateway, p.status, p.amount, p.months, p.tracking_id), ("pesapal", "pending", 450, 3, "trk-1"))
+        order = next(d for m, path, d in self.fake.calls if path == "/Transactions/SubmitOrderRequest")
+        self.assertEqual((order["id"], order["currency"], order["amount"], order["notification_id"]), (p.invoice_no, "TZS", 450, "ipn-123"))
+        self.assertTrue(order["callback_url"].endswith(reverse("pesapal_callback")))
+        self.assertEqual(order["billing_address"]["phone_number"], "0712000111")
+
+    def test_a_completed_payment_activates_the_plan_for_three_days_a_month(self):
+        self.buy_gold()
+        r = self.client.get(reverse("pesapal_callback"), {"OrderTrackingId": "trk-1", "OrderMerchantReference": Payment.objects.get().invoice_no})
+        self.assertRedirects(r, reverse("m_membership") + "?tab=mine", fetch_redirect_response=False)
+        p = Payment.objects.get(); self.me.refresh_from_db()
+        self.assertEqual((p.status, p.reference, p.pay_method), ("completed", "PP123XYZ", "MpesaTZ"))
+        self.assertEqual(self.me.plan, self.gold)
+        self.assertEqual(self.me.premium_until, timezone.localdate() + timedelta(days=3))   # 1 "month" while testing = 3 days
+
+    def test_pesapal_telling_us_twice_activates_only_once(self):
+        self.buy_gold()
+        for _ in range(2):
+            r = self.client.get(reverse("pesapal_ipn"), {"OrderTrackingId": "trk-1", "OrderMerchantReference": "x", "OrderNotificationType": "IPNCHANGE"})
+            self.assertEqual(r.json(), {"orderNotificationType": "IPNCHANGE", "orderTrackingId": "trk-1", "orderMerchantReference": "x", "status": 200})
+        self.client.get(reverse("pesapal_callback"), {"OrderTrackingId": "trk-1"})
+        self.me.refresh_from_db()
+        self.assertEqual(self.me.premium_until, timezone.localdate() + timedelta(days=3))
+        self.assertEqual(Notification.objects.filter(user=self.user, title__contains="Gold plan activated").count(), 1)
+
+    def test_a_failed_payment_changes_nothing(self):
+        self.fake.status_code = 2
+        self.buy_gold()
+        self.client.get(reverse("pesapal_callback"), {"OrderTrackingId": "trk-1"})
+        self.me.refresh_from_db()
+        self.assertEqual(Payment.objects.get().status, "failed"); self.assertFalse(self.me.is_premium)
+
+    def test_an_unknown_tracking_id_is_ignored(self):
+        r = self.client.get(reverse("pesapal_ipn"), {"OrderTrackingId": "nope"})
+        self.assertEqual(r.json()["status"], 500)
+
+    def test_an_advert_is_published_automatically_after_payment(self):
+        from io import BytesIO
+        from PIL import Image
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        import tempfile
+        cat = ServiceCategory.objects.create(name="Catering", slug="catering", blurb="Food")
+        pkg = AdPackage.objects.create(name="Starter", slug="starter", price=50, months=1, max_photos=1)
+        buf = BytesIO(); Image.new("RGB", (40, 30), (200, 80, 90)).save(buf, "JPEG")
+        with tempfile.TemporaryDirectory() as tmp, override_settings(MEDIA_ROOT=tmp, WATERMARK_TEXT=""):
+            self.client.post(reverse("m_ad_new"), {"package": pkg.pk, "business_name": "Baraka", "contact_name": "Asha", "phone": "0713222333",
+                "category": cat.pk, "city": "Arusha", "title": "Halal catering", "description": "Pilau", "price": 1000, "price_unit": "Per Person",
+                "image": SimpleUploadedFile("p.jpg", buf.getvalue(), "image/jpeg")})
+            order = AdOrder.objects.get()
+            r = self.client.post(reverse("m_ad", args=[order.token]))
+            self.assertTrue(r["Location"].startswith("https://pay.pesapal.com/"))
+            self.client.get(reverse("pesapal_callback"), {"OrderTrackingId": "trk-1"})
+        order.refresh_from_db()
+        self.assertEqual(order.status, "live")
+        self.assertEqual(order.advert.expires, timezone.localdate() + timedelta(days=3))
+        self.assertContains(self.client.get(reverse("services")), "Halal catering")
+
+    def test_adverts_live_inside_the_account(self):
+        self.client.logout()
+        r = self.client.get(reverse("m_ad_new"))
+        self.assertEqual(r.status_code, 302); self.assertIn(reverse("login"), r["Location"])
+        self.assertRedirects(self.client.get("/advertise/start/"), reverse("m_ad_new"), fetch_redirect_response=False)
+
+
+@override_settings(EMAIL_LIVE=True, EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
+class EmailVerificationTests(TestCase):
+    """New accounts confirm their email with a 6-digit code or the link before using their account."""
+    def signup(self, email="juma@example.com"):
+        import secrets
+        pw = secrets.token_urlsafe(12) + "aA1!"
+        return self.client.post(reverse("signup"), dict(username="juma", name="Juma Ali", email=email, gender="M", age=30, city="Arusha",
+                                                        religion="Islam", occupation="Teacher", password1=pw, password2=pw))
+
+    def code(self):
+        import re
+        from django.core import mail
+        return re.search(r"\b(\d{6})\b", mail.outbox[-1].body).group(1)
+
+    def test_signing_up_sends_a_code_and_a_link_and_holds_the_account_until_it_is_used(self):
+        from django.core import mail
+        r = self.signup()
+        self.assertRedirects(r, reverse("verify_email"), fetch_redirect_response=False)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ["juma@example.com"])
+        self.assertIn("/account/verify-email/", mail.outbox[0].body)
+        self.assertFalse(Member.objects.get(user__username="juma").email_verified)
+        r = self.client.get(reverse("m_dashboard"))                     # the account waits for the code
+        self.assertTrue(r["Location"].startswith(reverse("verify_email")))
+        self.assertEqual(self.client.get(reverse("home")).status_code, 200)   # the public site stays open
+        r = self.client.post(reverse("verify_email"), {"action": "code", "code": self.code()})
+        self.assertRedirects(r, reverse("m_profile_edit"), fetch_redirect_response=False)
+        self.assertTrue(Member.objects.get(user__username="juma").email_verified)
+        self.assertEqual(self.client.get(reverse("m_dashboard")).status_code, 200)
+
+    def test_the_link_in_the_email_activates_the_account_on_any_device(self):
+        import re
+        from django.core import mail
+        from django.test import Client
+        self.signup()
+        link = re.search(r"(/account/verify-email/[\w-]+/)", mail.outbox[0].body).group(1)
+        r = Client().get(link)                                      # opened on another phone, not signed in
+        self.assertRedirects(r, reverse("login"), fetch_redirect_response=False)
+        self.assertTrue(Member.objects.get(user__username="juma").email_verified)
+        self.assertEqual(Client().get(link)["Location"], reverse("login"))     # used once only
+
+    def test_wrong_codes_are_limited_and_a_new_code_replaces_the_old_one(self):
+        from django.core import mail
+        from django.core.cache import cache
+        self.signup(); first = self.code()
+        for _ in range(5):
+            self.client.post(reverse("verify_email"), {"action": "code", "code": "000000" if first != "000000" else "111111"})
+        r = self.client.post(reverse("verify_email"), {"action": "code", "code": first}, follow=True)
+        self.assertContains(r, "Too many wrong tries")
+        cache.clear()
+        self.client.post(reverse("verify_email"), {"action": "resend"})
+        self.assertEqual(len(mail.outbox), 2)
+        self.client.post(reverse("verify_email"), {"action": "code", "code": self.code()})
+        self.assertTrue(Member.objects.get(user__username="juma").email_verified)
+
+    def test_a_mistyped_address_can_be_fixed_before_confirming(self):
+        from django.core import mail
+        self.signup(email="juma@exmaple.com")
+        self.client.post(reverse("verify_email"), {"action": "fix", "email": "juma@example.com"})
+        self.assertEqual(mail.outbox[-1].to, ["juma@example.com"])
+        self.client.post(reverse("verify_email"), {"action": "code", "code": self.code()})
+        self.assertEqual(User.objects.get(username="juma").email, "juma@example.com")
+
+    def test_existing_members_and_servers_without_email_are_not_held_up(self):
+        import secrets
+        u = User.objects.create_user("old", "old@example.com", secrets.token_urlsafe(16))
+        Member.objects.create(user=u, name="Old Member", age=40, gender="F", city="Arusha", occupation="Nurse")
+        self.client.force_login(u)
+        self.assertEqual(self.client.get(reverse("m_dashboard")).status_code, 200)
+        with override_settings(EMAIL_LIVE=False):
+            self.client.logout()
+            self.assertRedirects(self.signup(), reverse("m_profile_edit"), fetch_redirect_response=False)

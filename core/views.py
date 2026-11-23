@@ -152,6 +152,10 @@ def signup(request):
     form = SignupForm(request.POST or None)
     if form.is_valid():
         user = form.save(); login(request, user)
+        from .verify import start
+        if start(request, user):   # a code and a link are on their way; the account continues once one is used
+            nxt = safe_next(request)
+            return redirect(reverse("verify_email") + (f"?next={nxt}" if nxt else ""))
         messages.success(request, _("Karibu Sakinah! Complete your profile so others can get to know you."))
         return redirect(safe_next(request) or "m_profile_edit")
     return render(request, "registration/signup.html", {"form": form, "next": safe_next(request) or "", "faces": faces()})
