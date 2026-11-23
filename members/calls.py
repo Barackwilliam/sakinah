@@ -18,24 +18,25 @@ def call_permission(me, other):
     if not me.is_active_member or not other.is_active_member: return False, _l("Calls are not available for this account.")
     if Block.objects.filter(Q(user=me.user, member=other) | Q(user=other.user, member=me)).exists():
         return False, _l("You can't call this member.")
-    if me.allowance("daily_call_seconds") == 0: return False, "premium"
+    if me.call_allowance == 0: return False, "premium"
     if me.call_seconds_left == 0: return False, "spent"
     return True, ""
 
 def call_cap(call):
-    """Seconds this call may still run on the caller's daily allowance, or None when the plan is unlimited."""
+    """Seconds this call may still run on the caller's plan minutes, or None when the plan is unlimited."""
     me = getattr(call.caller, "member", None)
     if me is None: return 0
-    allowed = me.allowance("daily_call_seconds")
+    since, allowed = me.call_period()
     if allowed < 0: return None
-    return max(0, allowed - (me.used_today("daily_call_seconds") - call.seconds))
+    return max(0, allowed - (me.call_seconds_used(since) - call.seconds))
 
 def finish(call, status):
     """Close a call and leave a line in the chat ("Missed video call", "Voice call · 2:31")."""
     if not call.live: return call
     call.status, call.ended_at = status, timezone.now()
-    call.billed_seconds = call.seconds                       # what this call took off the caller's daily allowance
+    call.billed_seconds = call.seconds                       # what this call took off the caller's plan minutes
     call.save(update_fields=["status", "ended_at", "billed_seconds"])
+    if call.billed_seconds: minutes_used_up(getattr(call.caller, "member", None))
     kind = call.get_kind_display().lower()
     text = {"ended": f"{kind.capitalize()} · {call.duration_text}", "declined": f"{kind.capitalize()} declined",
             "missed": f"Missed {kind}", "cancelled": f"Missed {kind}"}[status]
@@ -47,6 +48,14 @@ def finish(call, status):
             Notification.objects.create(user=call.callee, title=f"Missed {kind} from {caller.name if caller else call.caller}",
                                         link=reverse("m_messages_with", args=[caller.pk]) if caller else reverse("m_messages"))
     return call
+
+def minutes_used_up(me):
+    """Tell the member once, when the call minutes of their plan are all used."""
+    if me is None or me.calls_out_noticed or me.call_allowance <= 0 or me.call_seconds_left != 0: return
+    me.calls_out_noticed = True; me.save(update_fields=["calls_out_noticed"])
+    Notification.objects.create(user=me.user, link=reverse("m_membership"), title=_("You have used all your call minutes"),
+        body=_("All the voice and video call minutes on your %(plan)s are used. Messages and everything else on your plan keep working. "
+               "Renew or upgrade to call again.") % {"plan": me.plan.name})
 
 def tidy(qs):
     """Turn calls nobody answered into missed calls."""
@@ -71,7 +80,7 @@ def start(request, pk):
                                  "error": _("Your plan does not include calls. Upgrade to call other members.")}, status=403)
         if reason == "spent":
             return JsonResponse({"ok": False, "premium": True, "url": reverse("m_membership"),
-                                 "error": _("You have used today's call time. It comes back in 24 hours, or upgrade for more.")}, status=403)
+                                 "error": _("You have used all the call minutes on your plan. Renew or upgrade to call again.")}, status=403)
         return JsonResponse({"ok": False, "error": reason}, status=403)
     tidy(Call.objects.filter(Q(caller=other.user) | Q(callee=other.user) | Q(caller=request.user) | Q(callee=request.user)))
     if Call.objects.filter(Q(caller=other.user) | Q(callee=other.user), status__in=["ringing", "accepted"]).exists():

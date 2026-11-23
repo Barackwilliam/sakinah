@@ -181,15 +181,15 @@ class Registrations(Resource):
 @register("plans")
 class Plans(Resource):
     title, icon, nav, model = _l("Membership Plans"), "m-crown", "plans", Plan
-    form = model_form(Plan, ["name", "price", "period", "order", "tagline", "daily_messages", "daily_call_seconds", "features", "popular", "icon"],
+    form = model_form(Plan, ["name", "price", "period", "order", "tagline", "daily_messages", "call_minutes", "features", "popular", "icon"],
                       widgets={"features": AREA(8)},
                       help={"features": _l("One feature per line. Start a line with - for a feature the plan does NOT include. Write 'All Silver features' to include the previous plan."),
                             "daily_messages": _l("Messages this plan may send in 24 hours. 0 = none, -1 = unlimited."),
-                            "daily_call_seconds": _l("Voice and video call time in 24 hours, in seconds (60 = 1 minute). 0 = none, -1 = unlimited.")})
+                            "call_minutes": _l("Voice and video call minutes for each month of the plan. 0 = none, -1 = unlimited.")})
     search, ordering = ["name"], ["order", "pk"]
     columns = [("", thumb("icon")), (_l("Plan"), bold("name", lambda o: o.tagline)), (_l("Price"), lambda o: f"TSh {o.price:,} {o.period}"),
-               (_l("Per day"), lambda o: f"{_l('Unlimited') if o.daily_messages < 0 else o.daily_messages} messages · "
-                                     f"{_l('Unlimited') if o.daily_call_seconds < 0 else str(o.daily_call_seconds // 60) + ' min' if o.daily_call_seconds >= 60 else str(o.daily_call_seconds) + ' sec'} calls"),
+               (_l("Allowance"), lambda o: f"{_l('Unlimited') if o.daily_messages < 0 else o.daily_messages} messages a day · "
+                                     f"{_l('Unlimited') if o.call_minutes < 0 else str(o.call_minutes) + ' min'} calls"),
                (_l("Active members"), lambda o: o.members.filter(premium_until__gte=date.today()).count() if o.price else "—"),
                (_l("Most popular"), yesno("popular", _l("Yes"), "—"))]
 

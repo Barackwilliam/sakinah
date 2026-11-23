@@ -246,7 +246,7 @@ class CallTests(TestCase):
     def setUp(self):
         from core.models import Like
         self.a = User.objects.create_user("omar"); self.b = User.objects.create_user("aisha"); self.c = User.objects.create_user("stranger")
-        plan = Plan.objects.create(name="Gold", price=50000, daily_messages=-1, daily_call_seconds=300)
+        plan = Plan.objects.create(name="Gold", price=50000, daily_messages=-1, call_minutes=5)
         self.ma = Member.objects.create(user=self.a, name="Omar Ali", age=30, gender="M", city="Arusha", plan=plan, premium_until=date.today() + timedelta(days=30))
         self.mb = Member.objects.create(user=self.b, name="Aisha Salim", age=27, gender="F", city="Arusha")
         self.mc = Member.objects.create(user=self.c, name="Other", age=28, gender="F", city="Arusha")
@@ -286,12 +286,12 @@ class CallTests(TestCase):
         self.assertEqual(self.start(self.mb).status_code, 403)                       # blocked
         self.assertFalse(Call.objects.exists())
 
-    def test_the_day_s_call_time_runs_out(self):
+    def test_the_plan_s_call_minutes_run_out(self):
         from core.models import Call
         Call.objects.create(caller=self.a, callee=self.b, status="ended", billed_seconds=300)
         r = self.start(self.mb)
         self.assertEqual(r.status_code, 403)
-        self.assertIn("today's call time", r.json()["error"])
+        self.assertIn("all the call minutes on your plan", r.json()["error"])
 
     def test_unanswered_call_becomes_missed(self):
         from django.utils import timezone

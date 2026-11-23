@@ -66,20 +66,20 @@ class Plan(models.Model):
     icon = models.ImageField(upload_to="plans/", blank=True)
     daily_messages = models.IntegerField(default=0, verbose_name=_("Messages per day"),
                                          help_text=_("How many messages this plan may send in 24 hours. 0 = none, -1 = unlimited."))
-    daily_call_seconds = models.IntegerField(default=0, verbose_name=_("Call seconds per day"),
-                                             help_text=_("Voice and video call time allowed in 24 hours, in seconds. 0 = none, -1 = unlimited."))
+    call_minutes = models.IntegerField(default=0, verbose_name=_("Call minutes per month"),
+                                       help_text=_("Voice and video call minutes for each month of the plan. 0 = none, -1 = unlimited. "
+                                                   "When they are used up the member cannot call until the plan is renewed; everything else keeps working."))
     @property
     def allowance_lines(self):
         """The daily messaging and call allowance, written out for the plan cards."""
         from django.utils.translation import gettext, ngettext
-        n, secs = self.daily_messages, self.daily_call_seconds
+        n, mins = self.daily_messages, self.call_minutes
         msgs = (gettext("Start as many chats as you like") if n < 0 else
                 ngettext("Start %(n)d new chat a day", "Start %(n)d new chats a day", n) % {"n": n} if n else gettext("Cannot start a chat"))
-        if secs < 0: calls = gettext("Unlimited voice and video calls")
-        elif not secs: calls = gettext("No voice or video calls")
-        elif secs % 60 == 0: calls = ngettext("%(n)d minute of calls a day", "%(n)d minutes of calls a day", secs // 60) % {"n": secs // 60}
-        else: calls = gettext("%(n)d seconds of calls a day") % {"n": secs}
-        return [(n != 0, msgs), (secs != 0, calls)]
+        if mins < 0: calls = gettext("Unlimited voice and video calls")
+        elif not mins: calls = gettext("No voice or video calls")
+        else: calls = ngettext("%(n)d minute of voice and video calls", "%(n)d minutes of voice and video calls", mins) % {"n": mins}
+        return [(n != 0, msgs), (mins != 0, calls)]
     @property
     def feature_list(self):
         """Features as written by the admin. The starter wording is translated (core/content_strings.py); new wording shows as typed."""
@@ -156,6 +156,11 @@ class Member(models.Model):
     # True unless we asked: signing up or changing the email sets it to False until the code or link is used
     email_verified = models.BooleanField(default=True, verbose_name=_("Email verified"))
     premium_until = models.DateField(null=True, blank=True)
+    # call minutes: what the paid plan(s) gave since `calls_from` (seconds, -1 unlimited); calls placed since then use them up
+    calls_from = models.DateTimeField(null=True, blank=True, editable=False)
+    call_credit = models.IntegerField(default=0, editable=False)
+    calls_out_noticed = models.BooleanField(default=False, editable=False)
+    plan_end_noticed = models.DateField(null=True, blank=True, editable=False)
     STATUS = [("active", _("Active")), ("rejected", _("Rejected")), ("suspended", _("Suspended"))]
     status = models.CharField(max_length=10, choices=STATUS, default="active", db_index=True,
                               help_text=_("Rejected and suspended members are hidden from everyone and cannot use the member area."))
@@ -308,26 +313,52 @@ class Member(models.Model):
         plan = self.quota_plan
         return getattr(plan, field) if plan else 0
 
-    def used_today(self, field):
-        """How much of the daily allowance is already spent since midnight."""
+    def used_today(self, field="daily_messages"):
+        """How many new chats were started since midnight (the daily message allowance)."""
         if not self.user_id: return 0
         since = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
-        if field == "daily_messages":
-            return Message.objects.filter(sender_id=self.user_id, kind="text", opens=True, created__gte=since).count()
+        return Message.objects.filter(sender_id=self.user_id, kind="text", opens=True, created__gte=since).count()
+
+    def left_today(self, field="daily_messages"):
+        """What is left of the daily allowance: -1 for unlimited, never below 0."""
+        allowed = self.allowance(field)
+        return -1 if allowed < 0 else max(0, allowed - self.used_today(field))
+
+    def call_period(self):
+        """(since, seconds allowed) for calls on the current plan: (None, 0) for none, (None, -1) for unlimited."""
+        plan = self.quota_plan
+        if not plan or not plan.call_minutes: return None, 0
+        if plan.call_minutes < 0: return None, -1
+        if self.calls_from and self.call_credit > 0: return self.calls_from, self.call_credit
+        # the plan was given by hand in the dashboard: the plan's minutes for each month, counted from the current month's start
+        from datetime import datetime, time
+        month = timedelta(days=SiteSetting.load().days_per_month)
+        end = timezone.make_aware(datetime.combine(self.premium_until + timedelta(days=1), time.min))
+        return end - month * -(-(end - timezone.now()) // month), plan.call_minutes * 60
+
+    @property
+    def call_allowance(self): return self.call_period()[1]
+
+    def call_seconds_used(self, since=None):
+        if not self.user_id: return 0
+        since = since or self.call_period()[0]
+        if since is None: return 0
         mine = Call.objects.filter(caller_id=self.user_id, created__gte=since)       # only calls you place cost you time
         spent = mine.aggregate(n=models.Sum("billed_seconds"))["n"] or 0
         live = mine.filter(status="accepted").first()
         return spent + (live.seconds if live else 0)
 
-    def left_today(self, field):
-        """What is left of the daily allowance: -1 for unlimited, never below 0."""
-        allowed = self.allowance(field)
-        return -1 if allowed < 0 else max(0, allowed - self.used_today(field))
-
     @property
     def messages_left(self): return self.left_today("daily_messages")
     @property
-    def call_seconds_left(self): return self.left_today("daily_call_seconds")
+    def call_seconds_left(self):
+        """Call time left on the plan: -1 for unlimited, never below 0."""
+        since, allowed = self.call_period()
+        return allowed if allowed <= 0 else max(0, allowed - self.call_seconds_used(since))
+    @property
+    def call_minutes_left(self):
+        left = self.call_seconds_left
+        return left if left <= 0 else (left + 59) // 60
     @property
     def can_send_messages(self): return self.messages_left != 0
     @property
@@ -624,8 +655,15 @@ class Payment(models.Model):
             end = start.replace(year=y, month=m, day=min(start.day, calendar.monthrange(y, m)[1]))
         else:           # testing: a "month" is a few days, so an ending plan is quick to see
             end = start + timedelta(days=per * self.months)
+        mins = self.plan.call_minutes
+        if mins < 0: member.calls_from, member.call_credit = timezone.now(), -1
+        elif member.is_premium and member.calls_from and member.call_credit > 0:   # renewing early: unused minutes are kept
+            member.call_credit += mins * 60 * self.months
+        else:
+            member.calls_from, member.call_credit = timezone.now(), mins * 60 * self.months
         member.plan, member.premium_until = self.plan, end
-        member.save(update_fields=["plan", "premium_until"])
+        member.calls_out_noticed, member.plan_end_noticed = False, None
+        member.save(update_fields=["plan", "premium_until", "calls_from", "call_credit", "calls_out_noticed", "plan_end_noticed"])
         return True
 
 class Notification(models.Model):

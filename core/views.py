@@ -210,14 +210,14 @@ def call_why(mine, other, ok, reason):
 def call_block_en(mine):
     """The same, in English, for the pages that are written in English."""
     from members.views import call_block_en as en
-    return "premium" if mine and mine.allowance("daily_call_seconds") == 0 else en(mine)
+    return "premium" if mine and mine.call_allowance == 0 else en(mine)
 
 def call_block(mine):
     """Why this member may not place a call right now, in Swahili, or "" when they may."""
     if mine is None: return _l("Kamilisha wasifu wako ili uweze kupiga simu.")
-    if mine.allowance("daily_call_seconds") == 0: return "premium"
+    if mine.call_allowance == 0: return "premium"
     if mine.call_seconds_left == 0:
-        return _l("Umetumia muda wako wote wa simu leo. Utapata mwingine baada ya masaa 24, au ongeza kifurushi.")
+        return _l("Umetumia dakika zote za simu za kifurushi chako. Rudia au ongeza kifurushi ili upige tena.")
     return ""
 
 def message_block(mine, other=None):
