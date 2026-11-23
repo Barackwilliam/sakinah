@@ -171,7 +171,7 @@ class BannerOrderForm(forms.ModelForm):
         fields = ["slot", "business_name", "title", "link", "image"]
         widgets = {
             "business_name": forms.TextInput(attrs={"placeholder": _l("e.g. Al-Noor Events"), "autocomplete": "organization"}),
-            "title": forms.TextInput(attrs={"placeholder": _l("e.g. 20% off all phones this month"), "maxlength": 80}),
+            "title": forms.TextInput(attrs={"placeholder": _l("e.g. Big discounts on all phones this month"), "maxlength": 80}),
             "link": forms.TextInput(attrs={"placeholder": _l("e.g. https://yourshop.co.tz or 0712 345 678")}),
             "image": forms.ClearableFileInput(attrs={"accept": "image/*"}),
         }

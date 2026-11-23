@@ -117,7 +117,10 @@ Mbadala: huduma yoyote ya TURN yenye username/password (mfano metered.ca) — we
 - Ukurasa: `/advertise/`. Mtoa huduma anachagua kifurushi, anajaza maelezo na picha (anaona tangazo likijitengeneza), kisha analipa kwa M-Pesa / Mixx by Yas / Airtel Money / benki na kuweka namba ya muamala.
 - Admin anapata taarifa na beji kwenye **Dashboard → Masoko na Matangazo → Advert Requests**. Akibofya **Confirm payment & publish**, tangazo linachapishwa mara moja kwa siku za kifurushi na kujificha lenyewe likiisha. Kuthibitisha malipo kwenye ukurasa wa Malipo kunachapisha pia.
 - Watangazaji wana **akaunti zao peke yao**, tofauti na za wanachama: usajili `/advertise/register/` (jina kamili, simu, email, nenosiri na kukubali sera ya matangazo), login `/advertise/login/`, na dashboard yao `/advertise/dashboard/` (matangazo yao, kutengeneza tangazo, malipo, taarifa, akaunti). Mtangazaji hawezi kuingia kwenye kurasa za kutafuta wenzi, na mwanachama hawezi kuingia kwa login ya watangazaji. Kitufe **Post Ad** kwenye menu kinapeleka huko.
-- Bei ni za mfano: zibadilishe kwenye **Advert Packages**. Namba ya malipo (Lipa Namba) iandike kwenye **Mipangilio ya Tovuti → Payments → Ad payment instructions**.
+- Matangazo ni ya **kila aina** (maduka, nyumba, magari, ajira, elektroniki, harusi n.k.). Kategoria ziko **Dashboard → Masoko na Matangazo → Aina za Huduma**.
+- **Vifurushi vya matangazo (Featured)** vinahesabiwa kwa siku: Standard Featured siku 7, Platinum Featured siku 15, Premium Featured siku 30. Hakuna tangazo la bure. Kifurushi kikubwa kinakaa juu zaidi kwenye aina yake.
+- **Mabango (banners)**: nafasi tatu, yaani Home Page Full Width (1200×300), Sidebar Square (600×600, pembeni ya Services, Makala na Matukio) na Member Dashboard (1200×250). Mtangazaji anachagua nafasi, anapakia picha (inakatwa yenyewe kwa ukubwa sahihi) na kiungo (tovuti au namba ya WhatsApp), kisha analipa. Baada ya malipo, admin analiidhinisha kwenye **Masoko na Matangazo → Banners**. Bango linaonekana kwa siku za nafasi hiyo, likipokezana na mengine, na linahesabu waliotazama na waliobofya. Bei, siku na idadi ya mabango kwa wakati mmoja zinabadilishwa kwenye **Banner Places**.
+- Bei ni za mfano: zibadilishe kwenye **Advert Packages** na **Banner Places**. Namba ya malipo (Lipa Namba) iandike kwenye **Mipangilio ya Tovuti → Payments → Ad payment instructions**.
 - Malipo yanathibitishwa na admin. Ukipata akaunti ya mfanyabiashara (Selcom, AzamPay, Pesapal), malipo ya moja kwa moja (push kwenye simu) yanaweza kuunganishwa baadaye bila kubadilisha kurasa hizi.
 
 ## Malipo kupitia Pesapal (live)
@@ -127,7 +130,8 @@ Mbadala: huduma yoyote ya TURN yenye username/password (mfano metered.ca) — we
 - Bila funguo hizo, tovuti inarudi kwenye fomu ya zamani (mteja anaweka namba ya muamala, admin anathibitisha).
 
 ## Hali ya majaribio (sasa hivi)
-- Bei ni ndogo za kujaribu: vifurushi TSh 50 / 100 / 150 / 200, matangazo TSh 50 / 100 / 150.
+- Bei ni ndogo za kujaribu: vifurushi TSh 50 / 100 / 150 / 200, matangazo TSh 50 / 100 / 150, mabango TSh 200 / 100 / 150.
+- Wakati wa majaribio muda wa matangazo na mabango nao unabanwa: siku 7 / 15 / 30 zinakuwa siku 1 / 2 / 3.
 - Dakika za simu (sauti na video) kwa kila mwezi wa kifurushi: Basic 5, Silver 10, Gold 15, Tanzanite 20 (Dashboard → *Membership Plans* → *Call minutes per month*). Zikiisha, mwanachama hawezi kupiga simu hadi arudie kifurushi; huduma nyingine zinaendelea. Anapata taarifa dakika zikiisha na kifurushi kikiisha.
 - **Mwezi mmoja = siku 3** (Dashboard → Mipangilio ya Tovuti → Payments → *Days in one month*). Mkimaliza majaribio: weka **30** hapo, na bei halisi kwenye *Membership Plans* na *Advert Packages*.
 
