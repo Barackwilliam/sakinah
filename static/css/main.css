@@ -811,13 +811,14 @@ html[lang=ar] *{letter-spacing:0!important}
 .lang form{min-width:200px}.lang button{gap:12px;padding:11px 12px}.lang button .flag{width:26px;height:18px}.lang button .tick{width:16px;height:16px;margin-inline-start:auto;color:#0b4b34}
 @media(max-width:369px){.lang summary b{display:none}}
 
-/* The header folds into the menu button whenever its links don't fit on one line - in any language, on any screen
-   (static/js/main.js sets html.nav-fold). Same look as the phone header below 1100px. */
-html.nav-fold .nav-in{padding:0 16px}html.nav-fold .nav-auth{display:none}html.nav-fold .burger{display:flex;position:relative;z-index:59}
-html.nav-fold .nav-links{position:fixed;z-index:58;top:0;inset-inline-end:0;bottom:0;width:min(86vw,360px);background:#fff;flex-direction:column;gap:2px;padding:calc(84px + env(safe-area-inset-top)) 18px 24px;transform:translateX(105%);transition:transform .3s ease;overflow:auto;margin:0;font-size:16px;box-shadow:var(--sh-3)}
-html.nav-fold .nav-links.open{transform:none}html.nav-fold .nav-links>a{padding:14px 12px;font-size:16px}html.nav-fold .nav-links>a svg{display:block;width:20px;height:20px}
-html.nav-fold .nav-links>a.on:after{display:none}html.nav-fold .nav-links>a.on{background:var(--pink)}
-html.nav-fold .nav-auth-m{display:flex;flex-direction:column;gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}html.nav-fold .nav-auth-m .btn,html.nav-fold .nav-auth-m form .btn{width:100%;padding:13px}html.nav-fold .nav-auth-m form{width:100%}
-html.nav-fold .nav-auth-m .msgs-l .t,html.nav-fold .nav-auth-m .me-l .t{display:inline}
-html.nav-fold[dir=rtl] .nav-links{transform:translateX(-105%)}html.nav-fold[dir=rtl] .nav-links.open{transform:none}
-html.nav-fold .lang{margin-inline-start:auto}
+
+/* Desktop keeps the bar along the top in every language: on mid-size screens long labels (Kiswahili, French)
+   break onto two short lines and the icons step aside, so the links always fit. The side drawer is for phones and small tablets only. */
+@media(min-width:1101px){
+.nav-in{gap:12px;max-width:1440px}.nav-links{gap:0;align-items:center}
+.nav-links>a{white-space:normal;text-align:center;line-height:1.15;max-width:118px;padding:6px 8px;font-size:13px}
+.nav-links>a svg{display:none}.nav-auth{gap:8px}.nav-auth .ibtn.plain{display:none}.nav-auth .btn{padding:9px 13px;font-size:13.5px}
+.lang summary{padding:7px 9px}}
+@media(min-width:1101px) and (max-width:1260px){
+.nav-in{gap:8px;padding:0 14px}.nav-links>a{max-width:96px;padding:6px 6px;font-size:12.5px}
+.nav-auth .btn{padding:8px 10px;font-size:13px}.nav-auth .msgs-l{padding:8px 9px}.lang summary b{display:none}}

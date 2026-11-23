@@ -3,10 +3,6 @@ const lock=on=>document.body.classList.toggle('lock',on);
 
 // mobile menu drawer
 const burger=$('#burger'),links=$('#navlinks'),scrim=$('#scrim');
-/* fold the header into the menu button when its links don't fit (long words in some languages, mid-size screens) */
-const navIn=$('.nav-in'),root=document.documentElement;
-function fit(){if(!navIn)return;root.classList.remove('nav-fold');if(innerWidth>1100&&navIn.scrollWidth>navIn.clientWidth+1)root.classList.add('nav-fold')}
-fit();addEventListener('resize',fit);addEventListener('load',fit);if(document.fonts){document.fonts.ready.then(fit);document.fonts.addEventListener('loadingdone',fit)}
 function menu(open){if(!links)return;links.classList.toggle('open',open);burger.classList.toggle('x',open);burger.setAttribute('aria-expanded',open);scrim.hidden=!open;lock(open)}
 if(burger){burger.addEventListener('click',()=>menu(!links.classList.contains('open')));scrim.addEventListener('click',()=>menu(false))}
 
