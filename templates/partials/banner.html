@@ -1,0 +1,3 @@
+{% load i18n %}{% if b %}<a class="sbanner sb-{{ place }}" href="{% url 'banner_click' b.token %}" target="_blank" rel="sponsored noopener" style="aspect-ratio:{{ b.slot.size.0 }} / {{ b.slot.size.1 }}">
+  <img src="{{ b.image.url }}" alt="{{ b.title }}" width="{{ b.slot.size.0 }}" height="{{ b.slot.size.1 }}" loading="lazy" decoding="async"><span class="sb-tag">{% translate "Ad" %}</span></a>
+{% elif invite %}<a class="sbanner sb-invite sb-{{ place }}" href="{% url 'ad_banners' %}"><b>{% translate "Your banner here" %}</b><small>{% translate "Reach everyone who opens this page." %}</small><span>{% translate "Book a banner" %} &rarr;</span></a>{% endif %}

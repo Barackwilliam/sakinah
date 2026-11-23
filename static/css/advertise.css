@@ -269,3 +269,20 @@
 @media(max-width:1000px){.ada{grid-template-columns:1fr}.ada-art-in{padding:30px 20px}.ada-pts,.ada-pk{display:none}
 .ada-side{padding:22px 16px 36px}.ada-card{padding:24px 18px}.ada-card h2{font-size:26px}}
 .av-have{margin-top:16px;font-size:14px;color:rgba(255,255,255,.85)}.av-have a{color:#f3c66b;font-weight:700;text-decoration:underline}
+
+/* ---------- banners in the advertiser dashboard ---------- */
+.bn-places{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.bn-place{border:1px solid #f0e4e8;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:6px;background:#fff}
+.bn-place h3{font:700 20px var(--serif,serif);margin:6px 0 0}.bn-place>p{font-size:13.5px;color:#5a5f6c;margin:0;flex:1}
+.bn-shape{display:grid;place-items:center;border-radius:12px;background:linear-gradient(135deg,#fde3ea,#fff4dc);color:#8a5a00;font-size:12px;font-weight:700;border:1px dashed #e8c3cf}
+.bn-home .bn-shape{aspect-ratio:4/1}.bn-sidebar .bn-shape{aspect-ratio:1/1;max-width:140px}.bn-dashboard .bn-shape{aspect-ratio:24/5}
+.bn-free{font-size:12.5px;font-weight:700;color:#1d7a4a}.bn-free.full{color:#c0392b}
+.bn-place .btn[aria-disabled]{opacity:.6;pointer-events:none}
+.bn-th img{object-fit:cover}
+.bn-up{display:block;margin-top:14px;border:2px dashed #e8c3cf;border-radius:14px;padding:22px;text-align:center;cursor:pointer;background:#fffafb}
+.bn-up input{position:absolute;opacity:0;width:1px;height:1px}.bn-up span{display:flex;flex-direction:column;align-items:center;gap:6px}
+.bn-up svg{width:28px;height:28px;color:var(--mag,#a0123c)}.bn-up small{color:#7a7f8c}.bn-up.bad{border-color:#c0392b}
+.bn-prev{aspect-ratio:4/1;border-radius:12px;overflow:hidden;background:#f4eef0;display:grid;place-items:center;color:#8a8f9c;font-size:13px;margin-bottom:14px}
+.bn-prev img{width:100%;height:100%;object-fit:cover}
+.av-pick-i.off{opacity:.5}
+.bn-link a{word-break:break-all}

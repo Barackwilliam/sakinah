@@ -14,13 +14,23 @@ PLANS = [  # name, price, period, tagline, popular, features ("-" = not included
      "All Gold features\nUnlimited profile boosts\nPersonal match recommendations\nDedicated account support\nEarly access to new features\nInvitation to premium events\nProfile verification badge\nVIP priority support"),
 ]
 
-AD_PACKAGES = [  # slug, name, tagline, price, months, photos, featured, home page, popular, features (small test prices; edit them in the dashboard)
-    ("starter", "Starter", "Get your service seen by couples.", 50, 1, 1, False, False, False,
-     "Your advert in its category for 1 month\nInquiries and WhatsApp button\nLocation map and reviews\n1 photo\n-Featured badge\n-Home page spotlight"),
-    ("featured", "Business", "Stand out at the top of your category.", 100, 1, 4, True, False, True,
-     "Everything in Starter\nFeatured badge\nTop of your category\nUp to 4 photos\n-Home page spotlight"),
-    ("spotlight", "Spotlight", "Maximum visibility for serious businesses.", 150, 2, 4, True, True, False,
-     "Everything in Business\nRuns for 2 months\nShown on the home page\nPriority support from our team"),
+AD_PACKAGES = [  # slug, name, tagline, price, days, photos, featured, home page, popular, features (small test prices; edit them in the dashboard)
+    ("standard-featured", "Standard Featured", "A week at the top of your category.", 50, 7, 2, True, False, False,
+     "Featured for 7 days\nFeatured badge\nTop of your category\nInquiries and WhatsApp button\nUp to 2 photos\n-Home page spotlight"),
+    ("platinum-featured", "Platinum Featured", "Two weeks of strong visibility.", 100, 15, 3, True, True, True,
+     "Featured for 15 days\nFeatured badge\nTop of your category\nShown on the home page\nUp to 3 photos"),
+    ("premium-featured", "Premium Featured", "A full month in first place.", 150, 30, 4, True, True, False,
+     "Featured for 30 days\nFirst place in your category\nShown on the home page\nUp to 4 photos\nPriority support from our team"),
+]
+
+# every kind of advert, not only weddings (name, blurb); the wedding categories are kept as they are
+GENERAL_CATEGORIES = [
+    ("Business & Shops", "Shops, wholesalers and local businesses"), ("Property & Land", "Houses, plots and rentals"),
+    ("Vehicles", "Cars, motorbikes and spare parts"), ("Electronics", "Phones, computers and appliances"),
+    ("Fashion & Beauty", "Clothes, cosmetics and salons"), ("Food & Restaurants", "Restaurants, cafés and catering"),
+    ("Education & Training", "Schools, courses and tutors"), ("Jobs", "Vacancies and recruitment"),
+    ("Health", "Clinics, pharmacies and wellness"), ("Travel & Tourism", "Tours, hotels and travel agents"),
+    ("Other Services", "Every other product or service"),
 ]
 
 EVENT_CATEGORIES = [("Seminars", "seminars"), ("Workshops", "workshops"), ("Meetups", "meetups"), ("Community Events", "community-events")]

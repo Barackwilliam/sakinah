@@ -105,7 +105,9 @@ def badge_counts():
                 "n_msgs": Message.objects.filter(created__date=timezone.localdate()).count(), "n_bookings": Booking.objects.filter(status="new").count()}
         from core.models import AdOrder
         data["n_ads"] = AdOrder.objects.filter(status="paid").count()   # payments waiting to be confirmed
-        data["n_alerts"] += data["n_bookings"] + data["n_ads"]
+        from core.models import BannerOrder
+        data["n_banners"] = BannerOrder.objects.filter(status="review").count() + BannerOrder.objects.filter(status="awaiting_payment", payments__status="pending").distinct().count()
+        data["n_alerts"] += data["n_bookings"] + data["n_ads"] + data["n_banners"]
         cache.set("admin-badges", data, 30)
     return data
 
@@ -599,7 +601,7 @@ def payments(request):
              (_l("Paying Members"), f"{paid.exclude(user=None).values('user').distinct().count():,}", None, "people", "#22a052"),
              (_l("Premium Revenue"), f"{cur} {by_kind['premium']:,}", change(r["premium_a"], r["premium_b"]), "crown", "#e0a21a"),
              (_l("Advert Revenue"), f"{cur} {by_kind['advert']:,}", change(r["advert_a"], r["advert_b"]), "doc", "#8b5cf6")]
-    colors = {"membership": "#e23d5a", "premium": "#2f6fe4", "advert": "#22a052", "event": "#f0a020", "other": "#8b5cf6"}
+    colors = {"membership": "#e23d5a", "premium": "#2f6fe4", "advert": "#22a052", "banner": "#0e9aa7", "event": "#f0a020", "other": "#8b5cf6"}
     by_month = {}
     for row in paid.annotate(m=TruncMonth("created")).values("kind", "m").annotate(v=Sum("amount")).order_by():
         if row["m"]: by_month[(row["kind"], row["m"].year, row["m"].month)] = row["v"] or 0

@@ -11,7 +11,7 @@ from .views import safe_next
 
 def services(request):
     q, cat, vendor = request.GET.get("q", ""), request.GET.get("cat", ""), request.GET.get("vendor", "")
-    ads = Advert.objects.live().select_related("vendor", "category").annotate(rating=Avg("reviews__rating"), n_reviews=Count("reviews")).order_by("-featured", "-created")
+    ads = Advert.objects.live().select_related("vendor", "category").annotate(rating=Avg("reviews__rating"), n_reviews=Count("reviews")).order_by("-featured", F("package__price").desc(nulls_last=True), "-created")
     if cat: ads = ads.filter(category__slug=cat)
     if vendor: ads = ads.filter(vendor__slug=vendor)
     if q: ads = ads.filter(Q(title__icontains=q) | Q(vendor__name__icontains=q) | Q(city__icontains=q))

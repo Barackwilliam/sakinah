@@ -10,7 +10,7 @@ MAX_SIDE = 1600          # pixels; enough for the largest place a photo is shown
 MIN_SIDE = 60            # only tiny thumbnails and icons are left alone
 MARK = "sakinah-watermark"   # written into the file so a picture is never stamped twice
 FONT = Path(__file__).parent / "fonts" / "DejaVuSans-Bold.ttf"
-SKIP = ("plans/", "vendors/", "support/", "site/logo")   # plan icons, vendor logos, support attachments and the site logo
+SKIP = ("plans/", "vendors/", "support/", "site/logo", "banners/")   # plan icons, vendor logos, support attachments, the site logo and paid banners
 
 def wants_mark(name):
     return bool(getattr(settings, "WATERMARK_TEXT", "")) and not str(name).replace("\\", "/").startswith(SKIP)

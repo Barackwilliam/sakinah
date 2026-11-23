@@ -515,3 +515,16 @@ html[lang=ar] *{letter-spacing:0!important}
 .lang summary .car{width:14px;height:14px;opacity:.6;transition:transform .2s}.lang[open] summary .car{transform:rotate(180deg)}
 .lang form{min-width:200px}.lang button{gap:12px;padding:11px 12px}.lang button .flag{width:26px;height:18px}.lang button .tick{width:16px;height:16px;margin-inline-start:auto;color:#0b4b34}
 @media(max-width:369px){.lang summary b{display:none}}
+
+/* banner adverts (see partials/banner.html) */
+.sbanner{position:relative;display:block;overflow:hidden;border-radius:16px;background:#f4eef0;box-shadow:0 6px 22px rgba(40,20,30,.08);transition:transform .2s,box-shadow .2s}
+.sbanner:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(40,20,30,.14)}
+.sbanner img{display:block;width:100%;height:100%;object-fit:cover}
+.sb-tag{position:absolute;top:10px;inset-inline-end:10px;background:rgba(20,16,22,.62);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;padding:3px 8px;border-radius:6px}
+.sb-home{max-width:1240px;margin:28px auto 0;width:calc(100% - 32px)}
+.sb-sidebar{margin-bottom:20px}
+.sb-dashboard{margin:0 0 20px}
+.sb-invite{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:6px;padding:22px;aspect-ratio:auto!important;
+  background:linear-gradient(135deg,#4f0d1c,#a1053a);color:#fff;box-shadow:none}
+.sb-invite b{font:700 20px/1.2 var(--serif,serif)}.sb-invite small{opacity:.85;font-size:13px}.sb-invite span{margin-top:6px;color:#f3c66b;font-weight:700;font-size:14px}
+.ad-grid .sbanner.sb-sidebar{margin:0;height:100%}

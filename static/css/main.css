@@ -841,3 +841,16 @@ html[lang=ar] *{letter-spacing:0!important}
 .nav-dd-m,.nav-dd:hover .nav-dd-m,.nav-dd:focus-within .nav-dd-m{position:static;display:none;box-shadow:none;border:0;min-width:0;width:100%;padding:0 0 6px;padding-inline-start:30px}
 .nav-dd.open .nav-dd-m{display:block}.nav-dd.open .nav-dd-x svg{transform:rotate(180deg)}
 .nav-dd-m a{font-size:15px;padding:10px 12px}}
+
+/* banner adverts (see partials/banner.html) */
+.sbanner{position:relative;display:block;overflow:hidden;border-radius:16px;background:#f4eef0;box-shadow:0 6px 22px rgba(40,20,30,.08);transition:transform .2s,box-shadow .2s}
+.sbanner:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(40,20,30,.14)}
+.sbanner img{display:block;width:100%;height:100%;object-fit:cover}
+.sb-tag{position:absolute;top:10px;inset-inline-end:10px;background:rgba(20,16,22,.62);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;padding:3px 8px;border-radius:6px}
+.sb-home{max-width:1240px;margin:28px auto 0;width:calc(100% - 32px)}
+.sb-sidebar{margin-bottom:20px}
+.sb-dashboard{margin:0 0 20px}
+.sb-invite{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:6px;padding:22px;aspect-ratio:auto!important;
+  background:linear-gradient(135deg,#4f0d1c,#a1053a);color:#fff;box-shadow:none}
+.sb-invite b{font:700 20px/1.2 var(--serif,serif)}.sb-invite small{opacity:.85;font-size:13px}.sb-invite span{margin-top:6px;color:#f3c66b;font-weight:700;font-size:14px}
+.ad-grid .sbanner.sb-sidebar{margin:0;height:100%}

@@ -47,7 +47,7 @@ class AdPackage(models.Model):
     slug = models.SlugField(unique=True)
     tagline = models.CharField(max_length=120, blank=True)
     price = models.PositiveIntegerField(help_text=_("Price for the whole period, in TSh."))
-    months = models.PositiveSmallIntegerField(default=1, help_text=_("How long the advert stays on the site, in months (see Days in one month in Site Settings)."))
+    days = models.PositiveSmallIntegerField(default=7, help_text=_("How many days the advert is featured on the site, e.g. 7, 15 or 30."))
     features = models.TextField(blank=True, help_text=_("One per line. Start a line with - for something the package does not include."))
     featured = models.BooleanField(default=False, help_text=_("Featured badge and first place in its category."))
     home_page = models.BooleanField(default=False, help_text=_("Also shown in Featured Vendors on the home page."))
@@ -66,10 +66,12 @@ class AdPackage(models.Model):
         return [(not l.startswith("-"), gettext(l.lstrip("-+ ").strip())) for l in self.features.splitlines() if l.strip()]
 
     @property
-    def days(self):
-        """Days the advert actually runs: months x the site's days in one month (3 while testing, 30 later)."""
+    def run_days(self):
+        """Days the advert actually runs. While testing (Days in one month below 30 in Site Settings) time is squeezed
+        the same way as for plans: 7, 15 and 30 days become 1, 2 and 3, so an ending advert is quick to see."""
         from .models import SiteSetting
-        return self.months * SiteSetting.load().days_per_month
+        per = SiteSetting.load().days_per_month
+        return self.days if per >= 30 else max(1, -(-self.days * per // 30))
 
 
 class AdOrder(models.Model):
@@ -139,7 +141,7 @@ class AdOrder(models.Model):
             for i, p in enumerate([self.photo2, self.photo3, self.photo4]):
                 if p: AdvertPhoto.objects.create(advert=ad, image=p.name, order=i)
         start = max(ad.expires or today, today) if self.advert_id else today
-        ad.expires, ad.active, ad.package = start + timedelta(days=self.package.days), True, self.package
+        ad.expires, ad.active, ad.package = start + timedelta(days=self.package.run_days), True, self.package
         ad.featured = ad.featured or self.package.featured
         ad.save(update_fields=["expires", "active", "package", "featured"])
         first = not self.advert_id

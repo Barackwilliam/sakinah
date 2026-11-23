@@ -837,8 +837,8 @@ class AdvertiseTests(TestCase):
         self._media = override_settings(MEDIA_ROOT=self._tmp.name, WATERMARK_TEXT="")
         self._media.enable()
         self.cat = ServiceCategory.objects.create(name="Catering", slug="catering", blurb="Food")
-        self.basic = AdPackage.objects.create(name="Starter", slug="starter", price=25000, months=1, max_photos=1)
-        self.spot = AdPackage.objects.create(name="Spotlight", slug="spotlight", price=150000, months=2, max_photos=4,
+        self.basic = AdPackage.objects.create(name="Starter", slug="starter", price=25000, days=30, max_photos=1)
+        self.spot = AdPackage.objects.create(name="Spotlight", slug="spotlight", price=150000, days=60, max_photos=4,
                                              featured=True, home_page=True, popular=True)
         import secrets
         self.staff = User.objects.create_user("boss", "boss@example.com", secrets.token_urlsafe(16), is_staff=True)
@@ -1043,7 +1043,7 @@ class PesapalTests(TestCase):
         from django.core.files.uploadedfile import SimpleUploadedFile
         import tempfile
         cat = ServiceCategory.objects.create(name="Catering", slug="catering", blurb="Food")
-        pkg = AdPackage.objects.create(name="Starter", slug="starter", price=50, months=1, max_photos=1)
+        pkg = AdPackage.objects.create(name="Starter", slug="starter", price=50, days=30, max_photos=1)
         buf = BytesIO(); Image.new("RGB", (40, 30), (200, 80, 90)).save(buf, "JPEG")
         Advertiser.objects.create(user=self.user, name="Asha", phone="0713222333")
         with tempfile.TemporaryDirectory() as tmp, override_settings(MEDIA_ROOT=tmp, WATERMARK_TEXT=""):
@@ -1129,6 +1129,105 @@ class AdvertiserAccountTests(TestCase):
         r = self.client.get("/")
         self.assertContains(r, reverse("services") + "?cat=catering")
         self.assertContains(r, reverse("services") + "?cat=wedding-venues")
+
+
+class BannerTests(TestCase):
+    """Banner adverts: book a place, pay, our team approves, it shows in its place, counts views and clicks, and ends."""
+    def setUp(self):
+        import secrets, tempfile
+        self._tmp = tempfile.TemporaryDirectory()
+        self._media = override_settings(MEDIA_ROOT=self._tmp.name, WATERMARK_TEXT=""); self._media.enable()
+        self.home = BannerSlot.objects.get(place="home")
+        BannerSlot.objects.filter(pk=self.home.pk).update(max_live=1); self.home.refresh_from_db()
+        self.user = User.objects.create_user("baraka", "baraka@example.com", secrets.token_urlsafe(16))
+        Advertiser.objects.create(user=self.user, name="Juma Baraka", phone="0712 345 678")
+        self.staff = User.objects.create_user("boss", "boss@example.com", secrets.token_urlsafe(16), is_staff=True)
+        self.client.force_login(self.user)
+
+    def tearDown(self): self._media.disable(); self._tmp.cleanup()
+
+    def picture(self, size=(1600, 900)):
+        from io import BytesIO
+        from PIL import Image
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        buf = BytesIO(); Image.new("RGB", size, (20, 90, 60)).save(buf, "JPEG")
+        return SimpleUploadedFile("b.jpg", buf.getvalue(), "image/jpeg")
+
+    def book(self, slot=None, link="0712 345 678"):
+        return self.client.post(reverse("ad_banner_new"), {"slot": (slot or self.home).pk, "business_name": "Baraka Electronics",
+                                                           "title": "Phones and TVs", "link": link, "image": self.picture()})
+
+    def pay_and_approve(self, b, ref="QK1"):
+        self.client.post(b.get_absolute_url(), {"gateway": "mpesa", "phone": "0712345678", "reference": ref})
+        from django.test import Client
+        staff = Client(); staff.force_login(self.staff)
+        staff.post(reverse("dash_manage_action", args=["banners", b.pk]), {"act": "approve"})
+        b.refresh_from_db(); return b
+
+    def test_the_picture_is_cropped_to_the_place_and_the_link_becomes_whatsapp(self):
+        from PIL import Image
+        r = self.book()
+        b = BannerOrder.objects.get()
+        self.assertRedirects(r, b.get_absolute_url())
+        self.assertEqual(Image.open(b.image.path).size, (1200, 300))
+        self.assertEqual(b.target, "https://wa.me/255712345678")
+        self.assertContains(self.book(link="not a link"), "website address or a WhatsApp number")
+
+    def test_approved_banner_shows_counts_views_and_clicks_then_ends(self):
+        self.book(); b = self.pay_and_approve(BannerOrder.objects.get())
+        self.assertEqual(b.status, "live")
+        self.client.logout()
+        r = self.client.get("/")
+        self.assertContains(r, reverse("banner_click", args=[b.token]))
+        r = self.client.get(reverse("banner_click", args=[b.token]))
+        self.assertEqual(r["Location"], "https://wa.me/255712345678")
+        b.refresh_from_db(); self.assertEqual((b.views, b.clicks), (1, 1))
+        BannerOrder.objects.filter(pk=b.pk).update(expires=timezone.localdate() - timedelta(days=1))
+        self.assertNotContains(self.client.get("/"), reverse("banner_click", args=[b.token]))
+
+    def test_a_full_place_cannot_be_booked_and_a_paused_banner_is_hidden(self):
+        self.book(); b = self.pay_and_approve(BannerOrder.objects.get())
+        self.assertContains(self.book(), "fully booked")
+        from django.test import Client
+        staff = Client(); staff.force_login(self.staff)
+        staff.post(reverse("dash_manage_action", args=["banners", b.pk]), {"act": "pause"})
+        self.assertNotContains(Client().get("/"), reverse("banner_click", args=[b.token]))
+
+    def test_paying_online_waits_for_approval_and_renewing_adds_days(self):
+        from unittest import mock
+        fake = FakePesapal()
+        with mock.patch("core.pesapal._call", fake), override_settings(PESAPAL_CONSUMER_KEY="k", PESAPAL_CONSUMER_SECRET="s"):
+            from django.core.cache import cache
+            cache.clear()
+            self.book(); b = BannerOrder.objects.get()
+            r = self.client.post(b.get_absolute_url())
+            self.assertTrue(r["Location"].startswith("https://pay.pesapal.com/"))
+            self.client.get(reverse("pesapal_callback"), {"OrderTrackingId": "trk-1"})
+            b.refresh_from_db(); self.assertEqual(b.status, "review")          # paid; our team still checks the picture
+            self.assertTrue(Notification.objects.filter(user=self.staff, title__contains="Banner to approve").exists())
+        from django.test import Client
+        staff = Client(); staff.force_login(self.staff)
+        staff.post(reverse("dash_manage_action", args=["banners", b.pk]), {"act": "approve"})
+        b.refresh_from_db(); end = b.expires
+        self.assertEqual(end, timezone.localdate() + timedelta(days=self.home.run_days - 1))
+        b.paid()                                                                 # a renewal while it is live
+        b.refresh_from_db(); self.assertEqual(b.expires, end + timedelta(days=self.home.run_days))
+
+
+class AdPackageDaysTests(TestCase):
+    def test_packages_run_for_days_squeezed_while_testing(self):
+        p = AdPackage.objects.get(slug="premium-featured")
+        self.assertEqual((p.name, p.days, p.price), ("Premium Featured", 30, 150))
+        SiteSetting.objects.update_or_create(pk=1, defaults={"days_per_month": 3})
+        from django.core.cache import cache
+        cache.clear()
+        self.assertEqual([x.run_days for x in AdPackage.objects.order_by("days")], [1, 2, 3])
+        SiteSetting.objects.filter(pk=1).update(days_per_month=30); cache.clear()
+        self.assertEqual([x.run_days for x in AdPackage.objects.order_by("days")], [7, 15, 30])
+
+    def test_general_categories_exist(self):
+        self.assertTrue(ServiceCategory.objects.filter(slug="vehicles").exists())
+        self.assertTrue(ServiceCategory.objects.filter(slug="property-land").exists())
 
 
 class AdminLoginTests(TestCase):

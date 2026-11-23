@@ -1,0 +1,60 @@
+{% extends "advertise/dash_base.html" %}{% load i18n lang humanize assets %}{% block title %}{% translate "Book a banner" %}{% endblock %}
+{% block head %}<link rel="stylesheet" href="{% asset 'css/advertise.css' %}">{% endblock %}
+{% block content %}
+<div class="avx">
+<section class="av-acc-top">
+  <a class="av-back" href="{% url 'ad_banners' %}"><svg><use href="{{ micons }}#m-chev-l"/></svg>{% translate "Banners" %}</a>
+  <h1>{% translate "Book a banner" %}</h1>
+  <ol class="av-track"><li class="on"><i>1</i>{% translate "Your banner" %}</li><li><i>2</i>{% translate "Payment" %}</li><li><i>3</i>{% translate "Approval" %}</li><li><i>4</i>{% translate "Live" %}</li></ol>
+</section>
+<form class="av-form" method="post" enctype="multipart/form-data" novalidate id="bnform">{% csrf_token %}
+  <div class="av-form-main">
+    {% if form.non_field_errors %}<p class="ferr">{{ form.non_field_errors|join:" " }}</p>{% endif %}
+    <section class="av-card"><header><span>1</span><div><h2>{% translate "Choose a place" %}</h2><p>{% translate "Each place has its own size. Your picture is cropped to fit." %}</p></div></header>
+      <div class="av-pick">{% for s in slots %}
+        <label class="av-pick-i{% if not s.free %} off{% endif %}">
+          <input type="radio" name="slot" value="{{ s.pk }}" data-w="{{ s.size.0 }}" data-h="{{ s.size.1 }}" data-price="{{ s.price }}" data-name="{{ s.name }}"
+                 data-days="{% blocktranslate count days=s.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}"
+                 {% if not s.free %}disabled{% endif %} {% if form.slot.value|stringformat:"s" == s.pk|stringformat:"s" or not form.slot.value and s == chosen %}checked{% endif %}>
+          <span class="av-pick-b"><b>{{ s.name }}</b><span class="av-pick-p">{{ site.currency }} {{ s.price|intcomma }}</span>
+            <small>{% blocktranslate count days=s.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %} &middot; {{ s.size_text }}{% if not s.free %} &middot; {% translate "Fully booked" %}{% endif %}</small></span>
+          <svg class="av-pick-ok"><use href="{{ micons }}#m-check-c"/></svg>
+        </label>{% endfor %}</div>
+      {% if form.slot.errors %}<p class="av-err">{{ form.slot.errors.0 }}</p>{% endif %}
+    </section>
+    <section class="av-card"><header><span>2</span><div><h2>{% translate "Your banner" %}</h2><p>{% translate "A clear picture with your name, offer and contact works best." %}</p></div></header>
+      <div class="fgrid two">{% include "members/_field.html" with f=form.business_name %}{% include "members/_field.html" with f=form.title %}
+        {% include "members/_field.html" with f=form.link wide=1 %}</div>
+      <label class="bn-up{% if form.image.errors %} bad{% endif %}"><input type="file" name="image" accept="image/*" id="bn-file">
+        <span><svg><use href="{{ micons }}#m-camera"/></svg><b>{% translate "Upload your banner picture" %}</b><small id="bn-size"></small></span></label>
+      {% if form.image.errors %}<p class="av-err">{{ form.image.errors.0 }}</p>{% endif %}
+    </section>
+    <p class="av-terms"><svg><use href="{{ micons }}#m-shield"/></svg>{% translate "We review every banner. Pictures must suit a family, halal platform." %}</p>
+  </div>
+  <aside class="av-side"><div class="av-side-in">
+    <h3>{% translate "Live preview" %}</h3>
+    <div class="bn-prev" id="bn-prev"><img id="bn-img" alt="" hidden><span id="bn-ph">{% translate "Your picture shows here" %}</span></div>
+    <dl class="av-sum">
+      <div><dt>{% translate "Place" %}</dt><dd id="sum-name">—</dd></div>
+      <div><dt>{% translate "Runs for" %}</dt><dd id="sum-days">—</dd></div>
+      <div class="tot"><dt>{% translate "Total to pay" %}</dt><dd>{{ site.currency }} <b id="sum-price">—</b></dd></div>
+    </dl>
+    <button class="btn lg block" type="submit">{% translate "Continue to payment" %}<svg><use href="{{ micons }}#m-arrow"/></svg></button>
+    <p class="av-side-note"><svg><use href="{{ micons }}#m-lock"/></svg>{% translate "Nothing is charged yet. You pay on the next step." %}</p>
+  </div></aside>
+</form>
+</div>
+{% endblock %}
+{% block scripts %}<script>
+(function(){
+  const f=document.getElementById('bnform'); if(!f) return;
+  const $=id=>document.getElementById(id), prev=$('bn-prev');
+  function slot(){const r=f.querySelector('input[name=slot]:checked'); if(!r) return;
+    $('sum-name').textContent=r.dataset.name; $('sum-days').textContent=r.dataset.days; $('sum-price').textContent=(+r.dataset.price).toLocaleString('en-US');
+    prev.style.aspectRatio=r.dataset.w+' / '+r.dataset.h;
+    $('bn-size').textContent=interpolate(gettext('Best size: %s × %s pixels'),[r.dataset.w,r.dataset.h]);}
+  f.addEventListener('change',e=>{if(e.target.name==='slot')slot();
+    if(e.target.id==='bn-file'){const file=e.target.files[0]; if(file){$('bn-img').src=URL.createObjectURL(file);$('bn-img').hidden=false;$('bn-ph').hidden=true}}});
+  slot();
+})();
+</script>{% endblock %}

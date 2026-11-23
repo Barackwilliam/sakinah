@@ -612,7 +612,7 @@ class ArticleComment(models.Model):
 
 # ----- payments, notifications and admin communications -----
 class Payment(models.Model):
-    KINDS = [("premium", _("Premium plan")), ("advert", _("Advert listing")), ("event", _("Event registration")), ("membership", _("Membership fee")), ("other", _("Other"))]
+    KINDS = [("premium", _("Premium plan")), ("advert", _("Advert listing")), ("banner", _("Banner advert")), ("event", _("Event registration")), ("membership", _("Membership fee")), ("other", _("Other"))]
     GATEWAYS = [("pesapal", _("Pesapal")), ("mpesa", _("M-Pesa")), ("mixx", _("Mixx by Yas")), ("airtel", _("Airtel Money")), ("selcom", _("Selcom")), ("pesapal", _("Pesapal")),
                 ("dpo", _("DPO")), ("card", _("Visa / Mastercard")), ("paypal", _("PayPal")), ("bank", _("Bank transfer")), ("cash", _("Cash"))]
     STATUS = [("pending", _("Pending")), ("completed", _("Completed")), ("failed", _("Failed")), ("refunded", _("Refunded"))]
@@ -631,6 +631,7 @@ class Payment(models.Model):
     created = models.DateTimeField(default=timezone.now)
     recorded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+")
     ad_order = models.ForeignKey("core.AdOrder", on_delete=models.SET_NULL, null=True, blank=True, related_name="payments")
+    banner_order = models.ForeignKey("core.BannerOrder", on_delete=models.SET_NULL, null=True, blank=True, related_name="payments")
     tracking_id = models.CharField(max_length=64, blank=True, db_index=True, help_text=_("Pesapal's order tracking id."))
     pay_method = models.CharField(max_length=40, blank=True, help_text=_("How the payer paid inside Pesapal, e.g. M-Pesa or Visa."))
     class Meta: ordering = ["-created", "-pk"]
@@ -759,6 +760,7 @@ from django.dispatch import receiver  # noqa: E402
 from .models_calls import Call, CallSignal  # noqa: E402,F401
 from .models_honeymoon import Booking, Destination, HoneymoonSave, Package, PackagePhoto, PackageReview  # noqa: E402,F401
 from .models_ads import AdOrder, AdPackage, Advertiser  # noqa: E402,F401
+from .models_banners import BannerOrder, BannerSlot  # noqa: E402,F401
 
 @receiver([post_save, post_delete], sender=Booking)
 @receiver([post_save, post_delete], sender=SupportTicket)

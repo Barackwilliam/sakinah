@@ -1,10 +1,10 @@
 {% extends "advertise/dash_base.html" %}{% load i18n lang humanize assets %}{% block title %}{% translate "My Adverts" %}{% endblock %}
 {% block head %}<link rel="stylesheet" href="{% asset 'css/advertise.css' %}">{% endblock %}
 {% block content %}
-{% include "members/_banner.html" with icon="star" title=_("My Adverts") sub=_("Advertise your wedding service to couples on Sakinah, pay online and follow your results.") quote=_("Na katika kila kitu tumeumba kwa jozi.") ref=_("Qur'an 51:49") art="mosque" %}
+{% include "members/_banner.html" with icon="star" title=_("My Adverts") sub=_("Advertise your business or service on Sakinah, pay online and follow your results.") quote=_("Na katika kila kitu tumeumba kwa jozi.") ref=_("Qur'an 51:49") art="mosque" %}
 <div class="avx av-acc">
   <section class="av-acc-hero">
-    <div><h2>{% translate "Reach couples planning their Nikah" %}</h2>
+    <div><h2>{% translate "Reach thousands of people every day" %}</h2>
       <p>{% translate "Create an advert in a few minutes, pay with Pesapal (M-Pesa, Airtel Money, Mixx by Yas or card) and go live straight away." %}</p>
       <div class="av-acc-cta"><a class="btn lg" href="{% url 'ad_new' %}"><svg><use href="{{ micons }}#m-plus"/></svg>{% translate "Create an advert" %}</a>
         <a class="btn lg o" href="{% url 'advertise' %}" target="_blank">{% translate "How it works" %}</a></div></div>
@@ -34,7 +34,7 @@
       <article class="av-pk-c{% if p.popular %} top{% endif %}">{% if p.popular %}<span class="av-pk-badge"><svg><use href="{{ icons }}#i-crown"/></svg>{% translate "Most popular" %}</span>{% endif %}
         <h3>{{ p.name }}</h3><p class="av-pk-tag">{{ p.tagline|tr }}</p>
         <div class="av-pk-price"><small>{{ site.currency }}</small><b>{{ p.price|intcomma }}</b></div>
-        <p class="av-pk-days">{% blocktranslate count months=p.months %}for {{ months }} month{% plural %}for {{ months }} months{% endblocktranslate %}</p>
+        <p class="av-pk-days">{% blocktranslate count days=p.days %}for {{ days }} day{% plural %}for {{ days }} days{% endblocktranslate %}</p>
         <ul>{% for ok, text in p.feature_list %}<li class="{% if not ok %}no{% endif %}"><svg><use href="{{ icons }}#i-{% if ok %}check-c{% else %}x-c{% endif %}"/></svg>{{ text }}</li>{% endfor %}</ul>
         <a class="btn block{% if not p.popular %} o{% endif %}" href="{% url 'ad_new' %}?package={{ p.slug }}">{% blocktranslate with name=p.name %}Choose {{ name }}{% endblocktranslate %}</a>
       </article>{% endfor %}</div>

@@ -1,0 +1,32 @@
+{% load i18n lang humanize %}{% with p=obj.payment %}
+<section class="apanel tdetail adorder">
+  <div class="aph"><svg><use href="#i-image"/></svg><h2>{{ obj.business_name }}</h2><span class="muted sm-r">{{ obj.created|date:"j M Y H:i" }}</span></div>
+  <div class="ado-grid bn-adm">
+    <div><a href="{{ obj.image.url }}" target="_blank"><img src="{{ obj.image.url }}" alt="{{ obj.title }}" style="width:100%;border-radius:10px;aspect-ratio:{{ obj.slot.size.0 }} / {{ obj.slot.size.1 }};object-fit:cover"></a>
+      <p class="muted" style="font-size:12.5px;margin-top:6px">{{ obj.title }}</p></div>
+    <dl class="ado-dl">
+      <div><dt>{% translate "Status" %}</dt><dd>{% if obj.is_expired %}<span class="pill bad">{% translate "Expired" %}</span>{% else %}<span class="pill {% if obj.status == 'live' %}ok{% elif obj.status == 'review' %}info{% elif obj.status == 'rejected' %}bad{% else %}warn{% endif %}">{{ obj.get_status_display }}</span>{% endif %}</dd></div>
+      <div><dt>{% translate "Place" %}</dt><dd>{{ obj.slot.name }} &middot; TSh {{ obj.slot.price|intcomma }} &middot; {% blocktranslate count days=obj.slot.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %} &middot; {% blocktranslate with taken=obj.slot.taken max=obj.slot.max_live %}{{ taken }} of {{ max }} booked{% endblocktranslate %}</dd></div>
+      <div><dt>{% translate "Link" %}</dt><dd><a class="va" href="{{ obj.target }}" target="_blank" rel="noopener nofollow">{{ obj.link }}</a></dd></div>
+      {% if obj.user %}<div><dt>{% translate "Advertiser" %}</dt><dd>{{ obj.user.advertiser.name|default:obj.user.get_username }}{% if obj.user.advertiser.phone %} &middot; <a class="va" href="tel:{{ obj.user.advertiser.phone }}">{{ obj.user.advertiser.phone }}</a>{% endif %} &middot; {{ obj.user.email }}</dd></div>{% endif %}
+      {% if p %}<div><dt>{% translate "Payment" %}</dt><dd><b>{{ p.pay_method|default:p.get_gateway_display }}</b>{% if p.reference %} &middot; {% translate "Reference" %} <b>{{ p.reference }}</b>{% endif %} &middot; TSh {{ p.amount|intcomma }} <span class="pill {% if p.status == 'completed' %}ok{% elif p.status == 'pending' %}warn{% else %}bad{% endif %}">{{ p.get_status_display }}</span></dd></div>
+      {% else %}<div><dt>{% translate "Payment" %}</dt><dd class="muted">{% translate "The advertiser has not paid yet." %}</dd></div>{% endif %}
+      {% if obj.expires %}<div><dt>{% translate "Runs" %}</dt><dd>{{ obj.starts|date:"j M Y" }} &ndash; {{ obj.expires|date:"j M Y" }} &middot; {{ obj.views|intcomma }} {% translate "views" %} &middot; {{ obj.clicks|intcomma }} {% translate "clicks" %}</dd></div>{% endif %}
+    </dl>
+  </div>
+  <div class="ado-acts">
+    {% if obj.status == 'review' or obj.payment_pending and not obj.is_live %}
+    <form method="post" action="{% url 'dash_manage_action' 'banners' obj.pk %}">{% csrf_token %}<input type="hidden" name="act" value="approve"><input type="hidden" name="back" value="{{ request.get_full_path }}">
+      <button class="ab pl"><svg><use href="#a-check"/></svg>{% if obj.payment_pending %}{% translate "Confirm payment & publish" %}{% else %}{% translate "Approve & publish" %}{% endif %}</button></form>{% endif %}
+    {% if obj.status == 'live' or obj.status == 'paused' %}
+    <form method="post" action="{% url 'dash_manage_action' 'banners' obj.pk %}">{% csrf_token %}<input type="hidden" name="act" value="pause"><input type="hidden" name="back" value="{{ request.get_full_path }}">
+      <button class="ab o">{% if obj.status == 'paused' %}{% translate "Show again" %}{% else %}{% translate "Pause" %}{% endif %}</button></form>{% endif %}
+    {% if obj.status != 'rejected' %}
+    <form method="post" action="{% url 'dash_manage_action' 'banners' obj.pk %}" data-confirm="{% translate 'Do not approve this banner? Write the reason in the note below first, the advertiser will see it.' %}">{% csrf_token %}<input type="hidden" name="act" value="reject"><input type="hidden" name="back" value="{{ request.get_full_path }}">
+      <button class="ab o"><svg><use href="#m-x-c"/></svg>{% translate "Do not approve" %}</button></form>{% endif %}
+    <a class="ab o" href="{{ obj.get_absolute_url }}" target="_blank"><svg><use href="#m-eye"/></svg>{% translate "Advertiser's page" %}</a>
+  </div>
+</section>{% endwith %}
+<style>.adorder .ado-grid{display:grid;grid-template-columns:minmax(0,340px) 1fr;gap:18px;margin:6px 0 14px}
+.ado-dl{display:flex;flex-direction:column;gap:10px;font-size:14px}.ado-dl dt{font-size:12px;color:#7a7f8c;font-weight:600}.ado-acts{display:flex;flex-wrap:wrap;gap:8px}.ado-acts form{display:inline}
+@media(max-width:700px){.adorder .ado-grid{grid-template-columns:1fr}}</style>

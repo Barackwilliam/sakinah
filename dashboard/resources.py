@@ -13,7 +13,7 @@ from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from core.forms import LOCATIONS
 from .forms import PaymentForm
-from core.models import (AdOrder, AdPackage, Advert, Article, ArticleCategory, Booking, Broadcast, Destination, Event, Package, PackagePhoto, PackageReview, EventCategory, EventRegistration, FeatureStrip, Inquiry,
+from core.models import (AdOrder, AdPackage, Advert, BannerOrder, BannerSlot, Article, ArticleCategory, Booking, Broadcast, Destination, Event, Package, PackagePhoto, PackageReview, EventCategory, EventRegistration, FeatureStrip, Inquiry,
                          Member, MessageTemplate, Notification, Payment, Plan, PremiumPerk, Report, ServiceCategory, SupportTicket, Vendor)
 
 # ---------- small column helpers ----------
@@ -369,15 +369,76 @@ class AdOrders(Resource):
 @register("ad-packages")
 class AdPackages(Resource):
     title, icon, nav, model = _l("Advert Packages"), "i-tag", "marketing", AdPackage
-    form = model_form(AdPackage, ["name", "slug", "tagline", "price", "months", "max_photos", "features", "featured", "home_page", "popular", "active", "order"],
+    form = model_form(AdPackage, ["name", "slug", "tagline", "price", "days", "max_photos", "features", "featured", "home_page", "popular", "active", "order"],
                       widgets={"features": AREA(6)})
     note = _l("The packages vendors choose on the Advertise with us page.")
     search, ordering = ["name"], ["order", "price"]
-    columns = [(_l("Package"), bold("name", lambda o: o.tagline)), (_l("Price"), money("price")), (_l("Months"), lambda o: o.months),
+    columns = [(_l("Package"), bold("name", lambda o: o.tagline)), (_l("Price"), money("price")), (_l("Days"), lambda o: o.days),
                (_l("Photos"), lambda o: o.max_photos), (_l("Requests"), lambda o: o.orders.count()),
                (_l("Status"), lambda o: format_html("{} {} {}", pill(_l("Active"), "ok") if o.active else pill(_l("Hidden"), "mut"),
                                                     pill(_l("Featured"), "info") if o.featured else "", pill(_l("Home page"), "info") if o.home_page else ""))]
     actions = {"active": (_l("Show / hide"), "", toggle("active", "is now visible", "is now hidden"))}
+
+# ---------- banners ----------
+def approve_banner(o, r):
+    """Confirm the payment if it is still pending, then publish the banner for the place's days."""
+    p = o.payment
+    if p is None: return "has no payment yet, so it was not published"
+    if p.status in ("failed", "refunded"): return "has a failed or refunded payment, so it was not published"
+    if p.status == "pending": p.status = "completed"; p.recorded_by = r.user; p.save(update_fields=["status", "recorded_by"])
+    if o.is_live: return "is already live"
+    if o.slot.free <= 0 and o.status != "review": return "was not published: the place is fully booked"
+    end = o.go_live(r)
+    return f"is live until {end:%d %b %Y}"
+
+def reject_banner(o, r):
+    p = o.payment
+    if p and p.status == "pending": p.status = "failed"; p.save(update_fields=["status"])
+    o.status = "rejected"; o.save(update_fields=["status"])
+    if o.user_id:
+        Notification.objects.create(user=o.user, link=o.get_absolute_url(), title=f"Your banner was not approved: {o.business_name}"[:120], body=o.admin_note)
+    return "was not approved"
+
+def pause_banner(o, r):
+    if o.status == "paused": o.status = "live"; o.save(update_fields=["status"]); return "is showing again"
+    if o.status != "live": return "is not live"
+    o.status = "paused"; o.save(update_fields=["status"]); return "is paused"
+
+BANNER_TONES = {"awaiting_payment": "warn", "review": "info", "live": "ok", "paused": "mut", "rejected": "bad"}
+
+@register("banners")
+class Banners(Resource):
+    title, icon, nav, model = _l("Banners"), "i-image", "marketing", BannerOrder
+    form = model_form(BannerOrder, ["slot", "business_name", "title", "link", "image", "starts", "expires", "admin_note"],
+                      widgets={"starts": DATE, "expires": DATE, "admin_note": AREA(3)})
+    can_add = False
+    note = _l("Banners booked by advertisers. Check the picture, then approve it to publish; it runs for the place's days.")
+    search = ["business_name", "title", "link"]
+    filters = [("status", _l("All statuses"), lambda: BannerOrder.STATUS, lambda qs, v: qs.filter(status=v)),
+               ("slot", _l("All places"), lambda: [(str(s.pk), s.name) for s in BannerSlot.objects.all()], lambda qs, v: qs.filter(slot_id=v))]
+    def queryset(self): return BannerOrder.objects.select_related("slot").prefetch_related("payments")
+    row_link = lambda self, o: o.get_absolute_url()
+    columns = [("", thumb("image")), (_l("Banner"), bold("business_name", lambda o: o.title)), (_l("Place"), lambda o: o.slot.name),
+               (_l("Amount"), lambda o: f"TSh {o.slot.price:,}"),
+               (_l("Payment"), lambda o: pill(o.payment.get_status_display(), {"pending": "warn", "completed": "ok"}.get(o.payment.status, "bad")) if o.payment else pill(_l("Not paid"), "mut")),
+               (_l("Status"), lambda o: pill(_l("Expired"), "bad") if o.is_expired else pill(o.get_status_display(), BANNER_TONES.get(o.status, "mut"))),
+               (_l("Views / clicks"), lambda o: f"{o.views:,} / {o.clicks:,}"),
+               (_l("Runs until"), lambda o: o.expires.strftime("%d %b %Y") if o.expires else "—")]
+    actions = {"approve": (_l("Approve & publish"), "", approve_banner), "pause": (_l("Pause / show again"), "", pause_banner),
+               "reject": (_l("Do not approve"), "dang", reject_banner)}
+    front = {"approve": lambda o: o.status == "review" or (o.payment_pending and not o.is_live)}
+
+@register("banner-slots")
+class BannerSlots(Resource):
+    title, icon, nav, model = _l("Banner Places"), "i-tag", "marketing", BannerSlot
+    form = model_form(BannerSlot, ["name", "description", "price", "days", "max_live", "active", "order"], widgets={"description": AREA(2)})
+    can_add = can_delete = False
+    note = _l("The three places where banners appear, with their price, days and how many banners take turns there.")
+    ordering = ["order", "pk"]
+    columns = [(_l("Place"), bold("name", lambda o: o.get_place_display())), (_l("Price"), money("price")), (_l("Days"), lambda o: o.days),
+               (_l("Size"), lambda o: o.size_text), (_l("Booked"), lambda o: f"{o.taken()} / {o.max_live}"),
+               (_l("Status"), lambda o: pill(_l("Active"), "ok") if o.active else pill(_l("Hidden"), "mut"))]
+    actions = {"active": (_l("Show / hide"), "", toggle("active", "is now bookable", "is now hidden"))}
 
 @register("vendors")
 class Vendors(Resource):
@@ -491,6 +552,9 @@ def complete_payment(o, r):
     if o.kind == "advert" and o.ad_order_id:   # an Advertise with us payment: publish (or extend) the advert
         ad = o.ad_order.publish(r)
         return f"confirmed, and the advert is live until {ad.expires:%d %b %Y}"
+    if o.kind == "banner" and o.banner_order_id:
+        b = o.banner_order; b.paid(r)
+        return f"confirmed; the banner is live until {b.expires:%d %b %Y}" if b.is_live else "confirmed; approve the banner under Banners to publish it"
     activated = o.activate()
     if activated and o.user_id:
         Notification.objects.create(user=o.user, title=f"{o.plan.name} plan activated", link=reverse("m_membership"),

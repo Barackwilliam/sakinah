@@ -18,11 +18,11 @@
         {% for p in packages %}
         <label class="av-pick-i{% if p.popular %} top{% endif %}">
           <input type="radio" name="package" value="{{ p.pk }}" data-price="{{ p.price }}" data-name="{{ p.name }}" data-photos="{{ p.max_photos }}" data-featured="{{ p.featured|yesno:'1,' }}"
-                 data-months="{% blocktranslate count months=p.months %}{{ months }} month{% plural %}{{ months }} months{% endblocktranslate %}"
+                 data-days="{% blocktranslate count days=p.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}"
                  {% if form.package.value|stringformat:"s" == p.pk|stringformat:"s" or not form.package.value and p == chosen %}checked{% endif %}>
           <span class="av-pick-b">{% if p.popular %}<em>{% translate "Most popular" %}</em>{% endif %}<b>{{ p.name }}</b>
             <span class="av-pick-p">{{ site.currency }} {{ p.price|intcomma }}</span>
-            <small>{% blocktranslate count months=p.months %}{{ months }} month{% plural %}{{ months }} months{% endblocktranslate %} &middot; {% blocktranslate count n=p.max_photos %}{{ n }} photo{% plural %}{{ n }} photos{% endblocktranslate %}{% if p.featured %} &middot; {% translate "Featured" %}{% endif %}</small></span>
+            <small>{% blocktranslate count days=p.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %} &middot; {% blocktranslate count n=p.max_photos %}{{ n }} photo{% plural %}{{ n }} photos{% endblocktranslate %}{% if p.featured %} &middot; {% translate "Featured" %}{% endif %}</small></span>
           <svg class="av-pick-ok"><use href="{{ micons }}#m-check-c"/></svg>
         </label>
         {% endfor %}
@@ -30,7 +30,7 @@
       {% if form.package.errors %}<p class="av-err">{{ form.package.errors.0 }}</p>{% endif %}
     </section>
 
-    <section class="av-card"><header><span>2</span><div><h2>{% translate "Your business" %}</h2><p>{% translate "So couples and our team can reach you." %}</p></div></header>
+    <section class="av-card"><header><span>2</span><div><h2>{% translate "Your business" %}</h2><p>{% translate "So customers and our team can reach you." %}</p></div></header>
       <div class="fgrid two">{% include "members/_field.html" with f=form.business_name %}{% include "members/_field.html" with f=form.contact_name %}
         {% include "members/_field.html" with f=form.phone %}{% include "members/_field.html" with f=form.email %}</div>
     </section>
@@ -67,7 +67,7 @@
     </article>
     <dl class="av-sum">
       <div><dt>{% translate "Package" %}</dt><dd id="sum-name">—</dd></div>
-      <div><dt>{% translate "Runs for" %}</dt><dd id="sum-months">—</dd></div>
+      <div><dt>{% translate "Runs for" %}</dt><dd id="sum-days">—</dd></div>
       <div class="tot"><dt>{% translate "Total to pay" %}</dt><dd>{{ site.currency }} <b id="sum-price">—</b></dd></div>
     </dl>
     <button class="btn lg block" type="submit">{% translate "Continue to payment" %}<svg><use href="{{ micons }}#m-arrow"/></svg></button>
@@ -81,7 +81,7 @@
   const f=document.getElementById('adform'); if(!f) return;
   const $=id=>document.getElementById(id), fmt=n=>(+n||0).toLocaleString('en-US');
   function pkg(){const r=f.querySelector('input[name=package]:checked'); if(!r) return;
-    $('sum-name').textContent=r.dataset.name; $('sum-months').textContent=r.dataset.months; $('sum-price').textContent=fmt(r.dataset.price);
+    $('sum-name').textContent=r.dataset.name; $('sum-days').textContent=r.dataset.days; $('sum-price').textContent=fmt(r.dataset.price);
     $('pv-feat').hidden=!r.dataset.featured;
     const n=+r.dataset.photos; f.querySelectorAll('.av-ph.extra').forEach((el,i)=>{el.classList.toggle('locked',i+2>n); el.querySelector('input').disabled=i+2>n});
     $('phnote').textContent=n>1?'':gettext('This package includes one photo. Choose a bigger package for up to 4.');}

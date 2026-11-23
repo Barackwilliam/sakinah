@@ -32,7 +32,9 @@ def advertise(request):
                 .annotate(rating=Avg("reviews__rating"), n_reviews=Count("reviews")).order_by("-featured", "-views")[:3])
     mine = (AdOrder.objects.filter(user=request.user).select_related("package", "advert")[:5]
             if request.user.is_authenticated and hasattr(request.user, "advertiser") else [])
+    from .models import BannerSlot
     return render(request, "advertise/landing.html", {"packages": AdPackage.objects.filter(active=True), "stats": stats,
+        "slots": BannerSlot.objects.filter(active=True),
         "categories": ServiceCategory.objects.order_by("order", "pk"), "examples": examples, "mine": mine, "wished": set()})
 
 
@@ -176,7 +178,7 @@ def advert_detail(request, token):
     form = None if online else AdPaymentForm(request.POST or None, initial={"phone": order.phone})
     if request.method == "POST" and can_pay:
         renewal = order.status == "live"
-        desc = f"{'Renewal' if renewal else 'Advert'}: {order.title} ({order.package.name}, {order.package.months} month(s))"[:160]
+        desc = f"{'Renewal' if renewal else 'Advert'}: {order.title} ({order.package.name}, {order.package.days} days)"[:160]
         if online:
             pay = Payment.objects.create(user=request.user, payer_name=order.business_name[:100], payer_phone=order.phone, kind="advert",
                                          amount=order.package.price, gateway="pesapal", status="pending", description=desc, ad_order=order)

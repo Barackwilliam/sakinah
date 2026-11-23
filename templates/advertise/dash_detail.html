@@ -20,7 +20,7 @@
         <p>{% if o.admin_note %}{{ o.admin_note|linebreaksbr }}{% else %}{% translate "Our team could not publish this advert. Please contact us for details." %}{% endif %}</p></div></div>
     {% elif o.status == "awaiting_payment" and not o.payment_pending %}
       <div class="av-state"><span class="avi"><svg><use href="{{ micons }}#m-card"/></svg></span><div><h2>{% translate "One last step: pay to publish" %}</h2>
-        <p>{% blocktranslate with amount=o.package.price|intcomma currency=site.currency count months=o.package.months %}Pay {{ currency }} {{ amount }} for {{ months }} month on the site. Your advert goes live as soon as the payment is confirmed.{% plural %}Pay {{ currency }} {{ amount }} for {{ months }} months on the site. Your advert goes live as soon as the payment is confirmed.{% endblocktranslate %}</p></div></div>
+        <p>{% blocktranslate with amount=o.package.price|intcomma currency=site.currency count days=o.package.days %}Pay {{ currency }} {{ amount }} for {{ days }} day on the site. Your advert goes live as soon as the payment is confirmed.{% plural %}Pay {{ currency }} {{ amount }} for {{ days }} days on the site. Your advert goes live as soon as the payment is confirmed.{% endblocktranslate %}</p></div></div>
     {% elif o.status == "paid" or o.status == "awaiting_payment" and o.payment_pending %}
       <div class="av-state wait"><span class="avi"><svg><use href="{{ micons }}#m-clock"/></svg></span><div><h2>{% translate "Payment received, we are confirming it" %}</h2>
         <p>{% translate "Your advert goes live as soon as the payment is confirmed. This page updates on its own." %}</p></div></div>
@@ -29,7 +29,7 @@
         <p>{% blocktranslate with d=o.expires|date:"j M Y" %}It stopped showing on {{ d }}. Renew below to bring it back straight away.{% endblocktranslate %}</p></div></div>
     {% else %}
       <div class="av-state ok"><span class="avi"><svg><use href="{{ micons }}#m-star"/></svg></span><div><h2>{% translate "Your advert is live!" %}</h2>
-        <p>{% blocktranslate with d=o.expires|date:"j M Y" %}Couples can see it until {{ d }}.{% endblocktranslate %}{% if o.payment_pending %} {% translate "Your renewal payment is being confirmed." %}{% endif %}</p>
+        <p>{% blocktranslate with d=o.expires|date:"j M Y" %}Visitors can see it until {{ d }}.{% endblocktranslate %}{% if o.payment_pending %} {% translate "Your renewal payment is being confirmed." %}{% endif %}</p>
         {% if ad %}<a class="btn" href="{% url 'advert' ad.slug %}" target="_blank">{% translate "View my advert" %}<svg><use href="{{ micons }}#m-arrow"/></svg></a>{% endif %}</div></div>
     {% endif %}
 
@@ -39,15 +39,15 @@
       <div><span class="avi mag"><svg><use href="{{ micons }}#m-chat"/></svg></span><b>{{ inquiries|intcomma }}</b><small>{% translate "Inquiries" %}</small></div>
       <div><span class="avi gold"><svg><use href="{{ micons }}#m-cal"/></svg></span><b>{{ o.days_left }}</b><small>{% translate "Days left" %}</small></div>
     </div>
-    {% if not o.is_expired %}<div class="av-left"><span style="--p:{% widthratio o.days_left o.package.days 100 %}%"></span></div>{% endif %}
+    {% if not o.is_expired %}<div class="av-left"><span style="--p:{% widthratio o.days_left o.package.run_days 100 %}%"></span></div>{% endif %}
     {% endif %}
 
     {% if can_pay %}
     {% if o.status == "live" and not o.is_expired and o.days_left > 2 %}<details class="av-renew"{% if form.errors %} open{% endif %}><summary class="btn o block"><svg><use href="{{ micons }}#m-clock"/></svg>{% translate "Renew early" %}</summary>{% endif %}
     <section class="av-card av-pay" id="pay">
       <header><span><svg><use href="{{ micons }}#m-card"/></svg></span><div><h2>{% if o.status == "live" %}{% translate "Renew your advert" %}{% else %}{% translate "Pay for your advert" %}{% endif %}</h2>
-        <p>{% if o.status == "live" %}{% blocktranslate count months=o.package.months %}{{ months }} more month is added to the end of your current period.{% plural %}{{ months }} more months are added to the end of your current period.{% endblocktranslate %}{% elif online %}{% translate "Secure online payment with Pesapal." %}{% else %}{% translate "Mobile money or bank transfer." %}{% endif %}</p></div></header>
-      <div class="av-amount"><small>{% translate "Amount to pay" %}</small><b>{{ site.currency }} {{ o.package.price|intcomma }}</b><span>{{ o.package.name }} &middot; {% blocktranslate count months=o.package.months %}{{ months }} month{% plural %}{{ months }} months{% endblocktranslate %}</span></div>
+        <p>{% if o.status == "live" %}{% blocktranslate count days=o.package.days %}{{ days }} more day is added to the end of your current period.{% plural %}{{ days }} more days are added to the end of your current period.{% endblocktranslate %}{% elif online %}{% translate "Secure online payment with Pesapal." %}{% else %}{% translate "Mobile money or bank transfer." %}{% endif %}</p></div></header>
+      <div class="av-amount"><small>{% translate "Amount to pay" %}</small><b>{{ site.currency }} {{ o.package.price|intcomma }}</b><span>{{ o.package.name }} &middot; {% blocktranslate count days=o.package.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}</span></div>
       <form method="post" class="av-payform" novalidate>{% csrf_token %}
         {% if online %}
           <ul class="av-pp"><li class="gw-mpesa">M-Pesa</li><li class="gw-airtel">Airtel Money</li><li class="gw-mixx">Mixx by Yas</li><li>HaloPesa</li><li class="gw-bank">Visa / Mastercard</li></ul>

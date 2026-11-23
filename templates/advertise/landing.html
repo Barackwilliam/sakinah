@@ -6,8 +6,8 @@
   <div class="av-hero-in">
     <div class="av-hero-t">
       <span class="av-kicker"><svg><use href="{{ icons }}#i-mega"/></svg>{% translate "Advertise with us" %}</span>
-      <h1>{% blocktranslate %}Put your wedding business in front of couples <em>planning their Nikah</em>{% endblocktranslate %}</h1>
-      <p>{% blocktranslate with brand=site.brand %}{{ brand }} is where serious, marriage-minded people meet and plan. Show them your venue, catering, décor, photography or any wedding service, and let them reach you directly.{% endblocktranslate %}</p>
+      <h1>{% blocktranslate %}Put your business in front of <em>thousands of Tanzanians</em>{% endblocktranslate %}</h1>
+      <p>{% blocktranslate with brand=site.brand %}{{ brand }} is visited every day by serious, active people from all over Tanzania. Advertise your shop, service, property, vehicle, job or event, and let customers reach you directly.{% endblocktranslate %}</p>
       <div class="av-cta"><a class="btn btn-gold btn-lg" href="{% url 'ad_new' %}">{% translate "Start my advert" %} <svg><use href="{{ icons }}#i-arrow"/></svg></a>
         <a class="btn btn-ghost btn-lg" href="#packages">{% translate "See packages" %}</a></div>
       {% if not user.is_authenticated %}<p class="av-have">{% translate "Already advertising with us?" %} <a href="{% url 'ad_login' %}">{% translate "Log in to your advertiser account" %}</a></p>
@@ -30,7 +30,7 @@
       {% if stats.views %}<div class="av-float f1"><span class="avi grn"><svg><use href="{{ icons }}#i-eye"/></svg></span><div><b>{{ stats.views|intcomma }}</b><small>{% translate "advert views so far" %}</small></div></div>
       {% else %}<div class="av-float f1"><span class="avi grn"><svg><use href="{{ icons }}#i-star"/></svg></span><div><b>{% translate "Top of your category" %}</b><small>{% translate "with a Featured package" %}</small></div></div>{% endif %}
       <div class="av-float f2"><span class="avi mag"><svg><use href="{{ icons }}#i-chat"/></svg></span><div><b>{% translate "New inquiry" %}</b><small>{% translate "Is 12 June available?" %}</small></div></div>
-      <div class="av-float f3"><span class="avi gold"><svg><use href="{{ icons }}#i-people"/></svg></span><div><b>{{ stats.members|intcomma }}</b><small>{% translate "members planning marriage" %}</small></div></div>
+      <div class="av-float f3"><span class="avi gold"><svg><use href="{{ icons }}#i-people"/></svg></span><div><b>{{ stats.members|intcomma }}</b><small>{% translate "members on Sakinah" %}</small></div></div>
     </div>
   </div>
 </section>
@@ -38,7 +38,7 @@
 <section class="av-stats wrap">
   <div><b>{{ stats.members|intcomma }}</b><span>{% translate "Registered members" %}</span></div>
   {% if stats.views %}<div><b>{{ stats.views|intcomma }}</b><span>{% translate "Advert views" %}</span></div>{% else %}<div><b>{{ stats.regions }}</b><span>{% translate "Regions we reach" %}</span></div>{% endif %}
-  <div><b>{{ stats.vendors|intcomma }}</b><span>{% translate "Vendors on the platform" %}</span></div>
+  <div><b>{{ stats.vendors|intcomma }}</b><span>{% translate "Advertisers on the platform" %}</span></div>
   <div><b>{{ stats.categories }}</b><span>{% translate "Service categories" %}</span></div>
 </section>
 
@@ -53,12 +53,12 @@
 
 <section class="wrap av-sec">
   <div class="av-h"><span class="eyebrow">{% translate "Why advertise here" %}</span><h2>{% translate "The right audience, at the right moment" %}</h2>
-    <p>{% translate "Our members are not just browsing. They are getting ready to marry, and they need trusted services that respect their values." %}</p></div>
+    <p>{% translate "Our members come back every day. Shops, services, property, jobs, events: whatever you offer, show it to people who trust Sakinah." %}</p></div>
   <div class="av-why">
-    <div><span class="avi"><svg><use href="{{ icons }}#i-heart-f"/></svg></span><h3>{% translate "Couples ready to book" %}</h3><p>{% translate "Reach people who are actively planning a Nikah and Walima, not a general crowd." %}</p></div>
-    <div><span class="avi"><svg><use href="{{ icons }}#i-chat"/></svg></span><h3>{% translate "Inquiries straight to you" %}</h3><p>{% translate "Couples check availability and send requests from your advert, with their name and phone number." %}</p></div>
+    <div><span class="avi"><svg><use href="{{ icons }}#i-heart-f"/></svg></span><h3>{% translate "An engaged audience" %}</h3><p>{% translate "Reach serious, active people who use Sakinah every day, not a passing crowd." %}</p></div>
+    <div><span class="avi"><svg><use href="{{ icons }}#i-chat"/></svg></span><h3>{% translate "Inquiries straight to you" %}</h3><p>{% translate "Customers send requests from your advert, with their name and phone number." %}</p></div>
     <div><span class="avi"><svg><use href="{{ icons }}#i-image"/></svg></span><h3>{% translate "A beautiful advert page" %}</h3><p>{% translate "Photos, price, location map, reviews and a WhatsApp button, all on one page that looks great on phones." %}</p></div>
-    <div><span class="avi"><svg><use href="{{ icons }}#i-star"/></svg></span><h3>{% translate "Reviews build trust" %}</h3><p>{% translate "Happy couples leave star ratings and reviews, and new customers see them first." %}</p></div>
+    <div><span class="avi"><svg><use href="{{ icons }}#i-star"/></svg></span><h3>{% translate "Reviews build trust" %}</h3><p>{% translate "Happy customers leave star ratings and reviews, and new customers see them first." %}</p></div>
     <div><span class="avi"><svg><use href="{{ icons }}#i-chart"/></svg></span><h3>{% translate "See your results" %}</h3><p>{% translate "Your advert page shows how many people viewed it and how many sent inquiries." %}</p></div>
     <div><span class="avi"><svg><use href="{{ icons }}#i-shield-c"/></svg></span><h3>{% translate "A trusted, halal platform" %}</h3><p>{% translate "Be seen next to services that share Islamic and family values, on a respectful platform." %}</p></div>
   </div>
@@ -77,8 +77,8 @@
 </section>
 
 <section class="wrap av-sec" id="packages">
-  <div class="av-h"><span class="eyebrow">{% translate "Packages" %}</span><h2>{% translate "Simple prices, no surprises" %}</h2>
-    <p>{% translate "Pay once for the whole period. Renew any time from your advert page." %}</p></div>
+  <div class="av-h"><span class="eyebrow">{% translate "Featured adverts" %}</span><h2>{% translate "Simple prices, no surprises" %}</h2>
+    <p>{% translate "Your advert with photos, price and contacts, at the top of its category. Pay once for the whole period and renew any time." %}</p></div>
   {% if packages %}
   <div class="av-pk">
     {% for p in packages %}
@@ -86,7 +86,7 @@
       {% if p.popular %}<span class="av-pk-badge"><svg><use href="{{ icons }}#i-crown"/></svg>{% translate "Most popular" %}</span>{% endif %}
       <h3>{{ p.name }}</h3><p class="av-pk-tag">{{ p.tagline|tr }}</p>
       <div class="av-pk-price"><small>{{ site.currency }}</small><b>{{ p.price|intcomma }}</b></div>
-      <p class="av-pk-days">{% blocktranslate count months=p.months %}for {{ months }} month{% plural %}for {{ months }} months{% endblocktranslate %}</p>
+      <p class="av-pk-days">{% blocktranslate count days=p.days %}for {{ days }} day{% plural %}for {{ days }} days{% endblocktranslate %}</p>
       <ul>{% for ok, text in p.feature_list %}<li class="{% if not ok %}no{% endif %}"><svg><use href="{{ icons }}#i-{% if ok %}check-c{% else %}x-c{% endif %}"/></svg>{{ text }}</li>{% endfor %}</ul>
       <a class="btn {% if p.popular %}btn-s{% else %}btn-o{% endif %} block" href="{% url 'ad_new' %}?package={{ p.slug }}">{% blocktranslate with name=p.name %}Choose {{ name }}{% endblocktranslate %}</a>
     </article>
@@ -96,8 +96,22 @@
   <p class="av-pay-note"><svg><use href="{{ icons }}#i-lock"/></svg>{% translate "Pay safely with" %} <b>M-Pesa</b> &middot; <b>Mixx by Yas</b> &middot; <b>Airtel Money</b> &middot; <b>{% translate "Bank transfer" %}</b></p>
 </section>
 
+{% if slots %}<section class="wrap av-sec" id="banners">
+  <div class="av-h"><span class="eyebrow">{% translate "Banners" %}</span><h2>{% translate "Put your brand where everyone looks" %}</h2>
+    <p>{% translate "A picture with your link in a fixed place on Sakinah. Our team checks it, then it runs for the whole period." %}</p></div>
+  <div class="bn-places">{% for s in slots %}
+    <article class="bn-place bn-{{ s.place }}">
+      <div class="bn-shape"><span>{{ s.size_text }}</span></div>
+      <h3>{{ s.name }}</h3><p>{{ s.description|tr }}</p>
+      <div class="av-pk-price"><small>{{ site.currency }}</small><b>{{ s.price|intcomma }}</b></div>
+      <p class="av-pk-days">{% blocktranslate count days=s.days %}for {{ days }} day{% plural %}for {{ days }} days{% endblocktranslate %}</p>
+      <p class="bn-free{% if not s.free %} full{% endif %}">{% if s.free %}{% blocktranslate count n=s.free %}{{ n }} place free{% plural %}{{ n }} places free{% endblocktranslate %}{% else %}{% translate "Fully booked" %}{% endif %}</p>
+      <a class="btn btn-o block" href="{% url 'ad_banner_new' %}?place={{ s.place }}">{% blocktranslate with name=s.name %}Book {{ name }}{% endblocktranslate %}</a>
+    </article>{% endfor %}</div>
+</section>{% endif %}
+
 <section class="wrap av-sec">
-  <div class="av-h"><span class="eyebrow">{% translate "Categories" %}</span><h2>{% translate "Every wedding service has a place" %}</h2></div>
+  <div class="av-h"><span class="eyebrow">{% translate "Categories" %}</span><h2>{% translate "Every kind of advert has a place" %}</h2></div>
   <div class="av-cats">{% for c in categories %}<a href="{% url 'ad_new' %}?category={{ c.pk }}" class="av-cat">{% if c.image %}<img src="{{ c.image.url }}" alt="" loading="lazy">{% endif %}<span><b>{{ c.name|tr }}</b><small>{{ c.blurb|tr }}</small></span></a>{% endfor %}</div>
 </section>
 

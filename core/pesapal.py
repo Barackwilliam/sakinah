@@ -127,6 +127,8 @@ def complete(payment, request=None, reference="", method=""):
         payment.refresh_from_db()
         if payment.kind == "advert" and payment.ad_order_id:
             payment.ad_order.publish(request)
+        elif payment.kind == "banner" and payment.banner_order_id:
+            payment.banner_order.paid(request)
         elif payment.kind == "premium" and payment.activate() and payment.user_id:
             m = payment.user.member
             Notification.objects.create(user=payment.user, title=f"{payment.plan.name} plan activated", link=reverse("m_membership"),
