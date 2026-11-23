@@ -1,9 +1,9 @@
-{% extends "members/base.html" %}{% load i18n lang humanize assets %}{% block title %}{% translate "Create your advert" %}{% endblock %}
+{% extends "advertise/dash_base.html" %}{% load i18n lang humanize assets %}{% block title %}{% translate "Create your advert" %}{% endblock %}
 {% block head %}<link rel="stylesheet" href="{% asset 'css/advertise.css' %}">{% endblock %}
 {% block content %}
 <div class="avx">
 <section class="av-acc-top">
-  <a class="av-back" href="{% url 'm_ads' %}"><svg><use href="{{ micons }}#m-chev-l"/></svg>{% translate "My Adverts" %}</a>
+  <a class="av-back" href="{% url 'ad_dashboard' %}"><svg><use href="{{ micons }}#m-chev-l"/></svg>{% translate "My Adverts" %}</a>
   <h1>{% translate "Create your advert" %}</h1>
   <ol class="av-track"><li class="on"><i>1</i>{% translate "Your advert" %}</li><li><i>2</i>{% translate "Payment" %}</li><li><i>3</i>{% translate "Live" %}</li></ol>
 </section>

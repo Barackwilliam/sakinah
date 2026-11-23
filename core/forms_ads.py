@@ -68,3 +68,75 @@ class AdPaymentForm(forms.Form):
         if Payment.objects.filter(reference__iexact=ref).exclude(status__in=["failed", "refunded"]).exists():
             raise forms.ValidationError(_l("This transaction reference has already been used."))
         return ref
+
+
+# ---------- advertiser accounts (separate from members') ----------
+import re
+from django.contrib.auth import get_user_model, password_validation
+from django.utils.crypto import get_random_string
+from django.utils.translation import gettext as _
+from .forms import LoginForm
+from .models import Advertiser
+
+PHONE_RE = re.compile(r"^\+?[0-9][0-9 ]{8,18}$")
+
+
+def clean_phone(value):
+    value = (value or "").strip()
+    if not PHONE_RE.match(value): raise forms.ValidationError(_("Enter a valid phone number, e.g. 0712 345 678."))
+    return value
+
+
+class AdvertiserSignupForm(forms.Form):
+    name = forms.CharField(max_length=100, label=_l("Full name"),
+                           widget=forms.TextInput(attrs={"placeholder": _l("e.g. Amina Hassan"), "autocomplete": "name"}))
+    phone = forms.CharField(max_length=20, label=_l("Phone number"),
+                            widget=forms.TextInput(attrs={"placeholder": _l("e.g. 0712 345 678"), "autocomplete": "tel", "inputmode": "tel"}))
+    email = forms.EmailField(label=_l("Email address"), widget=forms.EmailInput(attrs={"placeholder": _l("you@example.com"), "autocomplete": "email"}))
+    password = forms.CharField(label=_l("Password"), strip=False, help_text=_l("At least 8 characters, not only numbers."),
+                               widget=forms.PasswordInput(attrs={"placeholder": _l("Create a password"), "autocomplete": "new-password"}))
+    agree = forms.BooleanField(label=_l("I agree to the advertising policy"),
+                               error_messages={"required": _l("Please read and accept the advertising policy to continue.")})
+
+    def clean_phone(self): return clean_phone(self.cleaned_data["phone"])
+
+    def clean_email(self):
+        e = self.cleaned_data["email"].strip().lower()
+        if get_user_model().objects.filter(email__iexact=e).exists():
+            raise forms.ValidationError(_("An account with this email already exists. Sign in instead."))
+        return e
+
+    def clean(self):
+        d = super().clean()
+        if d.get("password"):
+            user = get_user_model()(username=d.get("email", ""), email=d.get("email", ""), first_name=d.get("name", "")[:150])
+            try: password_validation.validate_password(d["password"], user)
+            except forms.ValidationError as e: self.add_error("password", e)
+        return d
+
+    def save(self):
+        d, User = self.cleaned_data, get_user_model()
+        base = re.sub(r"[^\w.@+-]", "", d["email"].split("@")[0])[:120] or "advertiser"
+        username = base
+        while User.objects.filter(username__iexact=username).exists(): username = f"{base}{get_random_string(4, '0123456789')}"
+        first, _sp, last = d["name"].strip().partition(" ")
+        user = User.objects.create_user(username=username, email=d["email"], password=d["password"], first_name=first[:150], last_name=last[:150])
+        Advertiser.objects.create(user=user, name=d["name"].strip(), phone=d["phone"])
+        return user
+
+
+class AdvertiserLoginForm(LoginForm):
+    """Advertisers sign in with their email (or username). Member accounts are sent to the member login."""
+    def confirm_login_allowed(self, user):
+        super().confirm_login_allowed(user)
+        if not hasattr(user, "advertiser") and not user.is_staff:
+            raise forms.ValidationError(_("This is a Sakinah member account. Use the member login, or create an advertiser account."),
+                                        code="not_advertiser")
+
+
+class AdvertiserAccountForm(forms.ModelForm):
+    class Meta:
+        model = Advertiser
+        fields = ["name", "phone"]
+        widgets = {"phone": forms.TextInput(attrs={"inputmode": "tel", "autocomplete": "tel"})}
+    def clean_phone(self): return clean_phone(self.cleaned_data["phone"])

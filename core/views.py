@@ -13,8 +13,9 @@ from django.utils import timezone
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
-from .forms import LOCATIONS, LoginForm, SignupForm, ProfileForm, ConversationForm, ReportForm
+from .forms import LOCATIONS, LoginForm, MemberLoginForm, SignupForm, ProfileForm, ConversationForm, ReportForm
 from .models import *
+from .models_ads import is_advertiser
 
 AGES = {"20-35": (20, 35), "25-40": (25, 40), "35+": (35, 99)}
 
@@ -136,7 +137,7 @@ def my_likes(request):
 class LoginView(auth_views.LoginView):
     """Django's LoginView puts the current Site object in the context as "site"; restore our SiteSetting."""
     redirect_authenticated_user = True
-    authentication_form = LoginForm
+    authentication_form = MemberLoginForm
     def get_context_data(self, **kwargs):
         return {**super().get_context_data(**kwargs), "site": SiteSetting.load(), "faces": faces()}
     def form_valid(self, form):
@@ -145,10 +146,11 @@ class LoginView(auth_views.LoginView):
         return response
     def get_default_redirect_url(self):
         # members land on their own dashboard, staff on the admin dashboard
-        return reverse("dashboard" if self.request.user.is_staff else "m_dashboard")
+        return reverse("dashboard" if self.request.user.is_staff else "ad_dashboard" if is_advertiser(self.request.user) else "m_dashboard")
 
 def signup(request):
-    if request.user.is_authenticated: return redirect("dashboard" if request.user.is_staff else "m_dashboard")
+    if request.user.is_authenticated:
+        return redirect("dashboard" if request.user.is_staff else "ad_dashboard" if is_advertiser(request.user) else "m_dashboard")
     form = SignupForm(request.POST or None)
     if form.is_valid():
         user = form.save(); login(request, user)

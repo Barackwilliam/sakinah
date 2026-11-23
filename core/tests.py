@@ -143,7 +143,7 @@ class FlowTests(TestCase):
         r = self.client.get(reverse("login"))
         self.assertContains(r, "Sakinah")
         self.assertContains(r, "Welcome Back")
-        self.assertContains(r, "Admin Login")
+        self.assertNotContains(r, "Admin Login")      # administrators have their own login page now
 
 
 class SiteSectionTests(TestCase):
@@ -843,8 +843,8 @@ class AdvertiseTests(TestCase):
         import secrets
         self.staff = User.objects.create_user("boss", "boss@example.com", secrets.token_urlsafe(16), is_staff=True)
         self.vendor = User.objects.create_user("asha", "asha@example.com", secrets.token_urlsafe(16))
-        Member.objects.create(user=self.vendor, name="Asha", age=30, gender="F", city="Arusha", occupation="Caterer")
-        self.client.force_login(self.vendor)   # adverts are asked for from inside the account
+        Advertiser.objects.create(user=self.vendor, name="Asha Juma", phone="0713 222 333")
+        self.client.force_login(self.vendor)   # adverts are made from the advertiser's own dashboard
 
     def tearDown(self):
         self._media.disable(); self._tmp.cleanup()
@@ -860,7 +860,7 @@ class AdvertiseTests(TestCase):
         data = dict(package=(package or self.spot).pk, business_name="Baraka Catering", contact_name="Asha", phone="0713 222 333",
                     category=self.cat.pk, city="Arusha", title="Halal wedding catering", description="Pilau, biryani and more.",
                     price=12000, price_unit="Per Person", image=self.photo(), photo2=self.photo("b.jpg"), **extra)
-        return self.client.post(reverse("m_ad_new"), data)
+        return self.client.post(reverse("ad_new"), data)
 
     def pay(self, order, ref="QK71ABC2XY"):
         return self.client.post(order.get_absolute_url(), {"gateway": "mpesa", "phone": "0713222333", "reference": ref})
@@ -875,7 +875,7 @@ class AdvertiseTests(TestCase):
     def test_the_landing_page_shows_packages_and_every_button_leads_to_it(self):
         r = self.client.get(reverse("advertise"))
         self.assertContains(r, "Spotlight"); self.assertContains(r, "150,000")
-        self.assertContains(r, reverse("m_ad_new") + "?package=spotlight")
+        self.assertContains(r, reverse("ad_new") + "?package=spotlight")
         for name in ["home", "services"]:
             self.assertContains(self.client.get(reverse(name)), reverse("advertise"))
 
@@ -1045,12 +1045,13 @@ class PesapalTests(TestCase):
         cat = ServiceCategory.objects.create(name="Catering", slug="catering", blurb="Food")
         pkg = AdPackage.objects.create(name="Starter", slug="starter", price=50, months=1, max_photos=1)
         buf = BytesIO(); Image.new("RGB", (40, 30), (200, 80, 90)).save(buf, "JPEG")
+        Advertiser.objects.create(user=self.user, name="Asha", phone="0713222333")
         with tempfile.TemporaryDirectory() as tmp, override_settings(MEDIA_ROOT=tmp, WATERMARK_TEXT=""):
-            self.client.post(reverse("m_ad_new"), {"package": pkg.pk, "business_name": "Baraka", "contact_name": "Asha", "phone": "0713222333",
+            self.client.post(reverse("ad_new"), {"package": pkg.pk, "business_name": "Baraka", "contact_name": "Asha", "phone": "0713222333",
                 "category": cat.pk, "city": "Arusha", "title": "Halal catering", "description": "Pilau", "price": 1000, "price_unit": "Per Person",
                 "image": SimpleUploadedFile("p.jpg", buf.getvalue(), "image/jpeg")})
             order = AdOrder.objects.get()
-            r = self.client.post(reverse("m_ad", args=[order.token]))
+            r = self.client.post(reverse("ad_detail", args=[order.token]))
             self.assertTrue(r["Location"].startswith("https://pay.pesapal.com/"))
             self.client.get(reverse("pesapal_callback"), {"OrderTrackingId": "trk-1"})
         order.refresh_from_db()
@@ -1058,11 +1059,104 @@ class PesapalTests(TestCase):
         self.assertEqual(order.advert.expires, timezone.localdate() + timedelta(days=3))
         self.assertContains(self.client.get(reverse("services")), "Halal catering")
 
-    def test_adverts_live_inside_the_account(self):
+
+
+class AdvertiserAccountTests(TestCase):
+    """Advertisers have their own accounts: their own sign-up, login and dashboard, kept apart from members'."""
+    def setUp(self):
+        import secrets
+        self.pw = secrets.token_urlsafe(12) + "aA1!"
+        self.member = User.objects.create_user("juma", "juma@example.com", self.pw)
+        Member.objects.create(user=self.member, name="Juma Ali", age=30, gender="M", city="Arusha", occupation="Teacher")
+
+    def register(self, **extra):
+        data = dict(name="Amina Hassan", phone="0712 345 678", email="amina@example.com", password=self.pw, agree="on")
+        data.update(extra)
+        return self.client.post(reverse("ad_register"), data)
+
+    def test_visitors_who_post_an_ad_are_asked_to_sign_up_as_advertisers(self):
+        r = self.client.get(reverse("ad_new"))
+        self.assertEqual(r.status_code, 302); self.assertIn(reverse("ad_register"), r["Location"])
+        self.assertRedirects(self.client.get("/advertise/start/"), reverse("ad_new"), fetch_redirect_response=False)
+        self.assertContains(self.client.get("/"), reverse("ad_new"))                    # the Post Ad link in the menu
+
+    def test_sign_up_needs_name_phone_email_password_and_the_policy(self):
+        r = self.register(agree="")
+        self.assertContains(r, "advertising policy")
+        self.assertFalse(User.objects.filter(email="amina@example.com").exists())
+        self.assertContains(self.register(phone="abc", agree="on"), "valid phone number")
+        r = self.register()
+        self.assertRedirects(r, reverse("ad_dashboard"))
+        adv = Advertiser.objects.get(user__email="amina@example.com")
+        self.assertEqual((adv.name, adv.phone), ("Amina Hassan", "0712 345 678"))
+        self.assertFalse(hasattr(adv.user, "member"))                                  # not a member account
+        self.assertContains(self.client.get(reverse("ad_dashboard")), "Amina")
+
+    def test_the_two_kinds_of_account_stay_apart(self):
+        self.register()
+        self.assertRedirects(self.client.get(reverse("m_dashboard")), reverse("ad_dashboard"), fetch_redirect_response=False)
+        self.assertRedirects(self.client.get("/account/adverts/"), reverse("ad_dashboard"), fetch_redirect_response=False)
         self.client.logout()
-        r = self.client.get(reverse("m_ad_new"))
-        self.assertEqual(r.status_code, 302); self.assertIn(reverse("login"), r["Location"])
-        self.assertRedirects(self.client.get("/advertise/start/"), reverse("m_ad_new"), fetch_redirect_response=False)
+        r = self.client.post(reverse("login"), {"username": "amina@example.com", "password": self.pw})
+        self.assertContains(r, "advertiser account")                                     # members' login refuses it
+        r = self.client.post(reverse("ad_login"), {"username": "amina@example.com", "password": self.pw})
+        self.assertRedirects(r, reverse("ad_dashboard"))
+        self.client.logout()
+        r = self.client.post(reverse("ad_login"), {"username": "juma", "password": self.pw})
+        self.assertContains(r, "member account")                                         # advertisers' login refuses a member
+        self.client.post(reverse("login"), {"username": "juma", "password": self.pw})
+        r = self.client.get(reverse("ad_register"))
+        self.assertContains(r, "signed in as a member")
+
+    @override_settings(EMAIL_LIVE=True, EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
+    def test_an_advertiser_confirms_the_email_before_using_the_dashboard(self):
+        from django.core import mail
+        import re
+        r = self.register()
+        self.assertRedirects(r, reverse("verify_email") + "?next=" + reverse("ad_dashboard"), fetch_redirect_response=False)
+        self.assertRedirects(self.client.get(reverse("ad_dashboard")), reverse("verify_email") + "?next=" + reverse("ad_dashboard"),
+                             fetch_redirect_response=False)
+        code = re.search(r"\b(\d{6})\b", mail.outbox[0].body).group(1)
+        r = self.client.post(reverse("verify_email") + "?next=" + reverse("ad_dashboard"), {"action": "code", "code": code})
+        self.assertRedirects(r, reverse("ad_dashboard"))
+        self.assertTrue(Advertiser.objects.get(user__email="amina@example.com").email_verified)
+
+    def test_the_services_menu_lists_every_category(self):
+        from django.core.cache import cache
+        cache.clear()
+        ServiceCategory.objects.create(name="Catering", slug="catering", blurb="Food")
+        ServiceCategory.objects.create(name="Wedding Venues", slug="wedding-venues", blurb="Halls")
+        r = self.client.get("/")
+        self.assertContains(r, reverse("services") + "?cat=catering")
+        self.assertContains(r, reverse("services") + "?cat=wedding-venues")
+
+
+class AdminLoginTests(TestCase):
+    """The admin dashboard has its own login, and its own address once ADMIN_HOST is set."""
+    def setUp(self):
+        import secrets
+        self.pw = secrets.token_urlsafe(12) + "aA1!"
+        self.staff = User.objects.create_user("boss", "boss@example.com", self.pw, is_staff=True)
+        self.user = User.objects.create_user("juma", "juma@example.com", self.pw)
+
+    def test_only_staff_get_through_the_admin_login(self):
+        self.assertRedirects(self.client.get(reverse("dashboard")), f"{reverse('dash_login')}?next={reverse('dashboard')}")
+        r = self.client.post(reverse("dash_login"), {"username": "juma", "password": self.pw})
+        self.assertContains(r, "administrators only")
+        r = self.client.post(reverse("dash_login"), {"username": "boss", "password": self.pw})
+        self.assertRedirects(r, reverse("dashboard"))
+
+    def test_the_admin_address_serves_the_dashboard_and_nothing_else(self):
+        from django.test import Client
+        with override_settings(ADMIN_HOST="admin.sakinah.co.tz", SITE_URL="https://www.sakinah.co.tz", ALLOWED_HOSTS=["*"]):
+            c = Client(HTTP_HOST="admin.sakinah.co.tz")
+            self.assertRedirects(c.get("/"), "/dashboard/", fetch_redirect_response=False)
+            self.assertRedirects(c.get("/dashboard/"), "/dashboard/login/?next=/dashboard/", fetch_redirect_response=False)
+            self.assertEqual(c.get("/dashboard/login/").status_code, 200)
+            self.assertRedirects(c.get("/matches/?q=1"), "https://www.sakinah.co.tz/matches/?q=1", fetch_redirect_response=False)
+            main = Client(HTTP_HOST="www.sakinah.co.tz")
+            self.assertRedirects(main.get("/dashboard/members/"), "https://admin.sakinah.co.tz/dashboard/members/", fetch_redirect_response=False)
+            self.assertEqual(main.get("/").status_code, 200)
 
 
 @override_settings(EMAIL_LIVE=True, EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")

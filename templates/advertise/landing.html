@@ -8,8 +8,10 @@
       <span class="av-kicker"><svg><use href="{{ icons }}#i-mega"/></svg>{% translate "Advertise with us" %}</span>
       <h1>{% blocktranslate %}Put your wedding business in front of couples <em>planning their Nikah</em>{% endblocktranslate %}</h1>
       <p>{% blocktranslate with brand=site.brand %}{{ brand }} is where serious, marriage-minded people meet and plan. Show them your venue, catering, décor, photography or any wedding service, and let them reach you directly.{% endblocktranslate %}</p>
-      <div class="av-cta"><a class="btn btn-gold btn-lg" href="{% url 'm_ad_new' %}">{% translate "Start my advert" %} <svg><use href="{{ icons }}#i-arrow"/></svg></a>
+      <div class="av-cta"><a class="btn btn-gold btn-lg" href="{% url 'ad_new' %}">{% translate "Start my advert" %} <svg><use href="{{ icons }}#i-arrow"/></svg></a>
         <a class="btn btn-ghost btn-lg" href="#packages">{% translate "See packages" %}</a></div>
+      {% if not user.is_authenticated %}<p class="av-have">{% translate "Already advertising with us?" %} <a href="{% url 'ad_login' %}">{% translate "Log in to your advertiser account" %}</a></p>
+      {% elif user.advertiser %}<p class="av-have"><a href="{% url 'ad_dashboard' %}">{% translate "Open my advertiser dashboard" %} &rarr;</a></p>{% endif %}
       <ul class="av-ticks"><li><svg><use href="{{ icons }}#i-check-c"/></svg>{% translate "Live straight after payment" %}</li><li><svg><use href="{{ icons }}#i-check-c"/></svg>{% translate "Secure payment with Pesapal" %}</li><li><svg><use href="{{ icons }}#i-check-c"/></svg>{% translate "No contract" %}</li></ul>
     </div>
     <div class="av-hero-art" aria-hidden="true">
@@ -86,7 +88,7 @@
       <div class="av-pk-price"><small>{{ site.currency }}</small><b>{{ p.price|intcomma }}</b></div>
       <p class="av-pk-days">{% blocktranslate count months=p.months %}for {{ months }} month{% plural %}for {{ months }} months{% endblocktranslate %}</p>
       <ul>{% for ok, text in p.feature_list %}<li class="{% if not ok %}no{% endif %}"><svg><use href="{{ icons }}#i-{% if ok %}check-c{% else %}x-c{% endif %}"/></svg>{{ text }}</li>{% endfor %}</ul>
-      <a class="btn {% if p.popular %}btn-s{% else %}btn-o{% endif %} block" href="{% url 'm_ad_new' %}?package={{ p.slug }}">{% blocktranslate with name=p.name %}Choose {{ name }}{% endblocktranslate %}</a>
+      <a class="btn {% if p.popular %}btn-s{% else %}btn-o{% endif %} block" href="{% url 'ad_new' %}?package={{ p.slug }}">{% blocktranslate with name=p.name %}Choose {{ name }}{% endblocktranslate %}</a>
     </article>
     {% endfor %}
   </div>
@@ -96,7 +98,7 @@
 
 <section class="wrap av-sec">
   <div class="av-h"><span class="eyebrow">{% translate "Categories" %}</span><h2>{% translate "Every wedding service has a place" %}</h2></div>
-  <div class="av-cats">{% for c in categories %}<a href="{% url 'm_ad_new' %}?category={{ c.pk }}" class="av-cat">{% if c.image %}<img src="{{ c.image.url }}" alt="" loading="lazy">{% endif %}<span><b>{{ c.name|tr }}</b><small>{{ c.blurb|tr }}</small></span></a>{% endfor %}</div>
+  <div class="av-cats">{% for c in categories %}<a href="{% url 'ad_new' %}?category={{ c.pk }}" class="av-cat">{% if c.image %}<img src="{{ c.image.url }}" alt="" loading="lazy">{% endif %}<span><b>{{ c.name|tr }}</b><small>{{ c.blurb|tr }}</small></span></a>{% endfor %}</div>
 </section>
 
 {% if examples %}
@@ -120,7 +122,7 @@
 <section class="av-final"><div class="av-final-in">
   <h2>{% translate "Ready to meet your next customers?" %}</h2>
   <p>{% translate "It takes about five minutes to create your advert." %}</p>
-  <a class="btn btn-gold btn-lg" href="{% url 'm_ad_new' %}">{% translate "Start my advert" %} <svg><use href="{{ icons }}#i-arrow"/></svg></a>
+  <a class="btn btn-gold btn-lg" href="{% url 'ad_new' %}">{% translate "Start my advert" %} <svg><use href="{{ icons }}#i-arrow"/></svg></a>
   {% if site.contact_url %}<a class="av-final-help" href="{{ site.contact_url }}" target="_blank" rel="noopener"><svg><use href="{{ icons }}#i-wa-f"/></svg>{% translate "Questions? Talk to our team" %}</a>{% endif %}
 </div></section>
 {% endblock %}

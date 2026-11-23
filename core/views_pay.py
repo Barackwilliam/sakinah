@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 
 
 def after_payment_url(p):
-    if p.kind == "advert" and p.ad_order_id: return reverse("m_ad", args=[p.ad_order.token])
+    if p.kind == "advert" and p.ad_order_id: return reverse("ad_detail", args=[p.ad_order.token])
     if p.kind == "premium": return reverse("m_membership") + "?tab=mine"
     return reverse("home")
 

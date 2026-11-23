@@ -21,19 +21,32 @@ def required():
     return bool(getattr(settings, "EMAIL_LIVE", False))
 
 
+def mark(user, verified):
+    """Members and advertisers both carry the flag; set it on whichever this account is."""
+    from .models import Advertiser, Member
+    Member.objects.filter(user=user).update(email_verified=verified)
+    Advertiser.objects.filter(user=user).update(email_verified=verified)
+
+
+def home_for(user):
+    """Where an account goes once its email is verified: advertisers to their dashboard, members to their profile."""
+    from .models_ads import is_advertiser
+    return "ad_dashboard" if is_advertiser(user) else "m_profile_edit"
+
+
 def start(request, user, email=None):
     """Ask the member to prove the email is theirs. Returns True when an email was sent (verification is on)."""
-    from .models import EmailVerification, Member, SiteSetting
+    from .models import EmailVerification, SiteSetting
     email = (email or user.email or "").strip()
     if not required() or not email:
-        Member.objects.filter(user=user).update(email_verified=True)
+        mark(user, True)
         return False
-    Member.objects.filter(user=user).update(email_verified=False)
+    mark(user, False)
     EmailVerification.objects.filter(user=user, used=False).update(used=True)   # only the newest code works
     code = f"{secrets.randbelow(1_000_000):06d}"
     v = EmailVerification.objects.create(user=user, email=email, code_hash=make_password(code), token=secrets.token_urlsafe(24))
-    site, member = SiteSetting.load(), getattr(user, "member", None)
-    ctx = {"name": member.first_name if member else user.get_username(), "code": code, "site": site,
+    site, who = SiteSetting.load(), getattr(user, "member", None) or getattr(user, "advertiser", None)
+    ctx = {"name": who.first_name if who else user.get_username(), "code": code, "site": site,
            "link": request.build_absolute_uri(reverse("verify_email_link", args=[v.token]))}
     msg = EmailMultiAlternatives(f"{code} - {site.brand}", render_to_string("registration/verify_email.txt", ctx), settings.DEFAULT_FROM_EMAIL, [email])
     msg.attach_alternative(render_to_string("registration/verify_email.html", ctx), "text/html")
@@ -41,7 +54,7 @@ def start(request, user, email=None):
         msg.send()
     except Exception as e:   # a mail outage must not lock the member out
         log.error("Verification email to user %s failed: %s", user.pk, e)
-        Member.objects.filter(user=user).update(email_verified=True)
+        mark(user, True)
         return False
     return True
 
@@ -59,22 +72,21 @@ def check_code(user, code):
 
 
 def finish(v):
-    from .models import Member
     v.used = True; v.save(update_fields=["used"])
     if v.user.email != v.email:
         v.user.email = v.email; v.user.save(update_fields=["email"])
-    Member.objects.filter(user=v.user).update(email_verified=True)
+    mark(v.user, True)
 
 
 def needs_verifying(user):
     if not user.is_authenticated or user.is_staff: return False
-    member = getattr(user, "member", None)
-    return member is not None and not member.email_verified
+    return any(who is not None and not who.email_verified
+               for who in (getattr(user, "member", None), getattr(user, "advertiser", None)))
 
 
 class EmailVerifiedMiddleware:
     """An account whose email isn't verified yet can browse the public site, but not its account, chats or profiles."""
-    BLOCKED = ("/account/", "/messages/", "/members/", "/likes/", "/notifications/", "/profile/")
+    BLOCKED = ("/account/", "/messages/", "/members/", "/likes/", "/notifications/", "/profile/", "/advertise/dashboard/")
     OPEN = ("/account/verify-email/", "/account/password-reset/", "/account/reset/")
 
     def __init__(self, get_response): self.get_response = get_response

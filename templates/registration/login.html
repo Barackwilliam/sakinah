@@ -1,6 +1,5 @@
 {% extends "base.html" %}{% load i18n %}{% load static %}{% block title %}{% blocktranslate with brand=site.brand %}Login - {{ brand }}{% endblocktranslate %}{% endblock %}{% block bodyclass %}auth-page login-page{% endblock %}
 {% block content %}
-{% url 'dashboard' as dash_url %}
 <section class="lg">
   <div class="lg-art" style="--img:url('{% static "img/login_bg.jpg" %}')">
     <div class="lg-art-in">
@@ -18,14 +17,10 @@
   <div class="lg-side">
     <p class="lg-top">{% translate "Don't have an account?" %} <a class="btn btn-s" href="{% url 'signup' %}{% if next %}?next={{ next|urlencode }}{% endif %}">{% translate "Join Free" %}</a></p>
     <div class="lg-card">
-      <h2 id="lg-title">{% if next == dash_url %}{% translate "Admin Login" %}{% else %}{% translate "Welcome Back" %}{% endif %}</h2>
+      <h2 id="lg-title">{% translate "Welcome Back" %}</h2>
       <p class="muted">{% blocktranslate with brand=site.brand %}Login to your {{ brand }} account and continue your journey towards a brighter future.{% endblocktranslate %}</p>
-      <div class="lg-tabs" role="tablist">
-        <button type="button" class="{% if next != dash_url %}on{% endif %}" data-lg="member" data-next="{% if next != dash_url %}{{ next }}{% endif %}"><svg><use href="{{ icons }}#i-user"/></svg>{% translate "Member Login" %}</button>
-        <button type="button" class="{% if next == dash_url %}on{% endif %}" data-lg="admin" data-next="{{ dash_url }}"><svg><use href="{{ icons }}#i-shield-c"/></svg>{% translate "Admin Login" %}</button>
-      </div>
       <form method="post" class="form">{% csrf_token %}{% include "partials/login_fields.html" %}
-        <input type="hidden" name="next" id="lg-next" value="{{ next }}">
+        <input type="hidden" name="next" value="{{ next }}">
         <div class="frow"><label class="agree"><input type="checkbox" name="remember" checked><span>{% translate "Remember me" %}</span></label><a class="lnk" href="{% url 'password_reset' %}">{% translate "Forgot password?" %}</a></div>
         <button class="btn btn-s btn-lg block"><svg><use href="{{ icons }}#i-arrow"/></svg>{% translate "Login" %}</button></form>
       <div class="lg-join"><div><b>{% translate "Don't have an account yet?" %}</b><small>{% blocktranslate with brand=site.brand %}Join {{ brand }} today and take the first step.{% endblocktranslate %}</small></div><a class="btn btn-s" href="{% url 'signup' %}">{% translate "Join Free" %}</a></div>

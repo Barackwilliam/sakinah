@@ -33,7 +33,7 @@ def owner_required(view):
     @wraps(view)
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated or not request.user.is_staff:
-            return redirect(f"{reverse('login')}?next={reverse('dashboard')}")
+            return redirect(f"{reverse('dash_login')}?next={request.get_full_path()}")
         if not is_owner(request.user):
             messages.error(request, _("Only the Super Admin can open that page."))
             return redirect("dashboard")
@@ -44,7 +44,7 @@ def staff_required(view):
     @wraps(view)
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return redirect(f"{reverse('login')}?next={reverse('dashboard')}")
+            return redirect(f"{reverse('dash_login')}?next={request.get_full_path()}")
         if not request.user.is_staff:
             messages.error(request, _("That area is for Sakinah administrators only."))
             return redirect("home")
@@ -665,3 +665,29 @@ def search(request):
                "Articles": [(a.title, f"{a.published:%d %b %Y}", a.get_absolute_url()) for a in Article.objects.filter(title__icontains=q)[:10]],
                "Payments": [(p.invoice_no, f"{p.payer_name} · {p.amount:,}", reverse("dash_receipt", args=[p.pk])) for p in Payment.objects.filter(Q(invoice_no__icontains=q) | Q(payer_name__icontains=q) | Q(reference__icontains=q))[:10]]}
     return page(request, "dashboard/search.html", {"nav": "", "q": q, "res": res})
+
+
+# ---------- admin login (admin.sakinah.co.tz) ----------
+from django.contrib.auth import views as auth_views
+from core.forms import LoginForm
+
+
+class AdminLoginForm(LoginForm):
+    def confirm_login_allowed(self, user):
+        super().confirm_login_allowed(user)
+        if not user.is_staff:
+            from django import forms
+            raise forms.ValidationError(_("This login is for Sakinah administrators only. Members sign in on the main site."), code="not_staff")
+
+
+class AdminLoginView(auth_views.LoginView):
+    """The admin dashboard's own sign-in page. Members and advertisers have theirs on the main site."""
+    template_name = "dashboard/login.html"
+    authentication_form = AdminLoginForm
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.is_staff: return redirect(self.get_success_url())
+        return super().dispatch(request, *args, **kwargs)
+    def get_context_data(self, **kwargs):
+        return {**super().get_context_data(**kwargs), "site": SiteSetting.load(),
+                "site_url": settings.SITE_URL if settings.ADMIN_HOST else ""}
+    def get_default_redirect_url(self): return reverse("dashboard")

@@ -21,7 +21,7 @@ class DashboardTests(TestCase):
 
     def test_only_staff_can_open_dashboard(self):
         url = reverse("dashboard")
-        self.assertRedirects(self.client.get(url), f"{reverse('login')}?next={url}")
+        self.assertRedirects(self.client.get(url), f"{reverse('dash_login')}?next={url}")
         self.client.force_login(self.user)
         self.assertRedirects(self.client.get(url), reverse("home"))
         self.client.force_login(self.admin)

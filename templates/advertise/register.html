@@ -1,0 +1,38 @@
+{% extends "base.html" %}{% load i18n assets %}{% block title %}{% blocktranslate with brand=site.brand %}Advertiser sign up - {{ brand }}{% endblocktranslate %}{% endblock %}{% block bodyclass %}auth-page{% endblock %}
+{% block head %}<link rel="stylesheet" href="{% asset 'css/advertise.css' %}">{% endblock %}
+{% block content %}
+<section class="ada">
+  {% include "advertise/_auth_art.html" %}
+  <div class="ada-side">
+    <div class="ada-card">
+      <span class="ada-tag"><svg><use href="{{ icons }}#i-mega"/></svg>{% translate "Advertiser account" %}</span>
+      {% if form %}
+      <h2>{% translate "Create your advertiser account" %}</h2>
+      <p class="muted">{% translate "Separate from member accounts. It takes one minute." %}</p>
+      <form method="post" class="form" novalidate>{% csrf_token %}<input type="hidden" name="next" value="{{ next }}">
+        {% if form.non_field_errors %}<div class="ferr">{{ form.non_field_errors }}</div>{% endif %}
+        {% include "partials/field.html" with f=form.name icon="user" %}
+        {% include "partials/field.html" with f=form.phone icon="phone" %}
+        {% include "partials/field.html" with f=form.email icon="mail" %}
+        {% include "partials/field.html" with f=form.password icon="lock" %}
+        <details class="ada-policy"><summary>{% translate "Advertising policy" %}</summary>
+          <ul><li>{% translate "Services must suit a family, halal platform: no alcohol, gambling or indecent content." %}</li>
+            <li>{% translate "Names, prices, photos and contacts must be true and your own." %}</li>
+            <li>{% translate "Our team reviews every advert and may refuse or remove one that breaks these rules." %}</li>
+            <li>{% translate "An advert runs for the package you paid for and stops on its own when it ends." %}</li>
+            <li>{% translate "We use your details only to run your adverts and contact you about them." %}</li></ul></details>
+        <label class="agree{% if form.agree.errors %} bad{% endif %}">{{ form.agree }}<span>{% translate "I have read and agree to the advertising policy, and the information I give is true." %}</span></label>
+        {% for e in form.agree.errors %}<p class="ada-err">{{ e }}</p>{% endfor %}
+        <button class="btn btn-s btn-lg block">{% translate "Create my account" %} <svg><use href="{{ icons }}#i-arrow"/></svg></button>
+      </form>
+      <p class="ada-alt">{% translate "Already have an advertiser account?" %} <a href="{% url 'ad_login' %}{% if next %}?next={{ next|urlencode }}{% endif %}">{% translate "Log in" %}</a></p>
+      {% else %}
+      <h2>{% translate "You are signed in as a member" %}</h2>
+      <p class="muted">{% translate "Advertiser accounts are separate from member accounts. Log out, then create an advertiser account or log in to one." %}</p>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}<input type="hidden" name="next" value="{% url 'ad_register' %}">
+        <button class="btn btn-s btn-lg block">{% translate "Log out and continue" %}</button></form>
+      {% endif %}
+    </div>
+    <p class="ada-member">{% translate "Looking for a spouse?" %} <a href="{% url 'signup' %}">{% translate "Create a member account" %}</a></p>
+  </div>
+</section>{% endblock %}

@@ -758,7 +758,7 @@ from django.dispatch import receiver  # noqa: E402
 
 from .models_calls import Call, CallSignal  # noqa: E402,F401
 from .models_honeymoon import Booking, Destination, HoneymoonSave, Package, PackagePhoto, PackageReview  # noqa: E402,F401
-from .models_ads import AdOrder, AdPackage  # noqa: E402,F401
+from .models_ads import AdOrder, AdPackage, Advertiser  # noqa: E402,F401
 
 @receiver([post_save, post_delete], sender=Booking)
 @receiver([post_save, post_delete], sender=SupportTicket)

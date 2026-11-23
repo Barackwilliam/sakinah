@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% load i18n assets %}{% block title %}{% blocktranslate with brand=site.brand %}Advertiser login - {{ brand }}{% endblocktranslate %}{% endblock %}{% block bodyclass %}auth-page{% endblock %}
+{% block head %}<link rel="stylesheet" href="{% asset 'css/advertise.css' %}">{% endblock %}
+{% block content %}
+<section class="ada">
+  {% include "advertise/_auth_art.html" %}
+  <div class="ada-side">
+    <div class="ada-card">
+      <span class="ada-tag"><svg><use href="{{ icons }}#i-mega"/></svg>{% translate "Advertiser account" %}</span>
+      <h2>{% translate "Advertiser login" %}</h2>
+      <p class="muted">{% translate "Log in to manage your adverts, payments and results." %}</p>
+      <form method="post" class="form">{% csrf_token %}{% include "partials/login_fields.html" %}
+        <input type="hidden" name="next" value="{{ next }}">
+        <div class="frow"><label class="agree"><input type="checkbox" name="remember" checked><span>{% translate "Remember me" %}</span></label><a class="lnk" href="{% url 'password_reset' %}">{% translate "Forgot password?" %}</a></div>
+        <button class="btn btn-s btn-lg block"><svg><use href="{{ icons }}#i-arrow"/></svg>{% translate "Login" %}</button></form>
+      <p class="ada-alt">{% translate "New advertiser?" %} <a href="{% url 'ad_register' %}{% if next %}?next={{ next|urlencode }}{% endif %}">{% translate "Create an advertiser account" %}</a></p>
+    </div>
+    <p class="ada-member">{% translate "Looking for a spouse?" %} <a href="{% url 'login' %}">{% translate "Member login" %}</a></p>
+  </div>
+</section>{% endblock %}

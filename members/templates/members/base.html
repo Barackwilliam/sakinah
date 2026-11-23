@@ -11,14 +11,14 @@
 <body class="{% if no_sidebar %}no-sb{% endif %}">
 <header class="mh">
   <button class="mh-burger" id="sb-open" aria-label="{% translate 'Menu' %}"><span></span><span></span><span></span></button>
-  <a class="mh-logo" href="{% url 'm_dashboard' %}">
+  <a class="mh-logo" href="{% block home_url %}{% url 'm_dashboard' %}{% endblock %}">
     <svg viewBox="0 0 48 44" aria-hidden="true"><circle cx="13" cy="6.500" r="5" fill="#a0123c"/><circle cx="35" cy="6.500" r="5" fill="#0f5a39"/>
       <path fill="#a0123c" d="M24 42C13 34 3.500 26.500 3.500 19.500 3.500 14.500 7 12 11 12c2.200 0 4.300.800 6 2.300-2.800.200-5 2.300-5 5.400 0 6.300 6.800 12.600 12 16.300z"/>
       <path fill="#0f5a39" d="M24 42c11-8 20.500-15.500 20.500-22.500 0-5-3.500-7.500-7.500-7.500-5.300 0-9.300 4.400-13 10.700-2.200-3.700-4.500-6.400-7.200-7.800 3.400.600 6.700 3.900 8.200 8.300 3.300-5.200 6.400-7.200 9-7.200 2.500 0 4 1.700 4 4.500 0 6.200-8 13.300-18 21.500z"/>
       <path fill="#e2a83a" d="M24 20c1.500-2.300 3.300-3.800 5-4.300-1.400 1.300-2.700 3.300-3.600 6z"/></svg>
-    <span><b>{{ site.brand }}</b><small>{% translate "Pata Mwenza, Pata Utulivu" %}</small></span></a>
-  {% if not no_search %}<form class="mh-search" action="{% url 'm_find' %}" method="get"><input name="q" placeholder="{{ search_hint|default:_('Search members by name, location, age...') }}" value="{{ request.GET.q|default:'' }}"><button aria-label="{% translate 'Search' %}"><svg><use href="{{ micons }}#m-search"/></svg></button></form>{% endif %}
-  <nav class="mh-nav">
+    <span><b>{{ site.brand }}</b><small>{% block logo_sub %}{% translate "Pata Mwenza, Pata Utulivu" %}{% endblock %}</small></span></a>
+{% block search %}  {% if not no_search %}<form class="mh-search" action="{% url 'm_find' %}" method="get"><input name="q" placeholder="{{ search_hint|default:_('Search members by name, location, age...') }}" value="{{ request.GET.q|default:'' }}"><button aria-label="{% translate 'Search' %}"><svg><use href="{{ micons }}#m-search"/></svg></button></form>{% endif %}
+{% endblock %}{% block mh_nav %}  <nav class="mh-nav">
     {% if header_nav == 'notify' %}
     <a href="{% url 'm_notifications' %}" class="{% if nav == 'notifications' %}on{% endif %}"><span class="ni"><svg><use href="{{ micons }}#m-bell"/></svg>{% if n_notes %}<i>{{ n_notes }}</i>{% endif %}</span>{% translate "Notifications" %}</a>
     {% else %}
@@ -30,16 +30,16 @@
     {% if not hide_events_nav %}<a href="{% url 'm_events' %}" class="{% if nav == 'events' %}on{% endif %}"><span class="ni"><svg><use href="{{ micons }}#m-cal"/></svg></span>{% translate "Events" %}</a>{% endif %}
     {% if no_sidebar %}<a href="{% url 'm_dashboard' %}"><span class="ni"><svg><use href="{{ micons }}#m-more"/></svg></span>{% translate "More" %}</a>{% endif %}
   </nav>
-  {% include "partials/lang_menu.html" %}
-  <details class="mh-user"><summary><span class="av">{% if me.photo %}<img src="{{ me.card_photo.url }}" alt="">{% else %}{{ me.name|default:user.get_username|first|upper }}{% endif %}</span>
+{% endblock %}  {% include "partials/lang_menu.html" %}
+{% block user_menu %}  <details class="mh-user"><summary><span class="av">{% if me.photo %}<img src="{{ me.card_photo.url }}" alt="">{% else %}{{ me.name|default:user.get_username|first|upper }}{% endif %}</span>
     <span class="who"><b>{{ me.first_name|default:user.get_username }}</b><small>{% if me.is_premium %}{% translate "Premium Member" %}{% else %}{% translate "Member" %}{% endif %}</small></span><svg><use href="{{ micons }}#m-chev-d"/></svg></summary>
     <div class="mh-menu"><a href="{% url 'm_profile' %}">{% translate "My Profile" %}</a><a href="{% url 'm_settings' %}">{% translate "Settings" %}</a><a href="{% url 'home' %}">{% translate "Main website" %}</a>{% if user.is_staff %}<a href="{% url 'dashboard' %}">{% translate "Admin dashboard" %}</a>{% endif %}
       <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button>{% translate "Logout" %}</button></form></div></details>
-</header>
+{% endblock %}</header>
 <div class="mwrap">
   {% if not no_sidebar %}
   <aside class="msb" id="msb">
-    <nav>
+{% block sidebar_nav %}    <nav>
       <a href="{% url 'm_dashboard' %}" class="{% if nav == 'dashboard' %}on{% endif %}"><svg><use href="{{ micons }}#m-home"/></svg>{% translate "Dashboard" %}</a>
       <a href="{% url 'm_find' %}" class="{% if nav == 'find' %}on{% endif %}"><svg><use href="{{ micons }}#m-search"/></svg>{% translate "Find a Match" %}</a>
       <a href="{% url 'm_matches' %}" class="{% if nav == 'matches' %}on{% endif %}"><svg><use href="{{ micons }}#m-heart"/></svg>{% translate "My Matches" %}</a>
@@ -50,15 +50,14 @@
       <a href="{% url 'm_activity' %}" class="{% if nav == 'activity' %}on{% endif %}"><svg><use href="{{ micons }}#m-cal"/></svg>{% translate "My Activities" %}</a>
       <a href="{% url 'm_events' %}" class="{% if nav == 'events' %}on{% endif %}"><svg><use href="{{ micons }}#m-cal-o"/></svg>{% translate "Events" %}</a>
       <a href="{% url 'm_membership' %}" class="{% if nav == 'membership' %}on{% endif %}"><svg class="gold"><use href="{{ micons }}#m-crown"/></svg>{% translate "Membership" %}</a>
-      <a href="{% url 'm_ads' %}" class="{% if nav == 'adverts' %}on{% endif %}"><svg><use href="{{ icons }}#i-mega"/></svg>{% translate "My Adverts" %}</a>
       <a href="{% url 'm_safety' %}" class="{% if nav == 'safety' %}on{% endif %}"><svg><use href="{{ micons }}#m-shield"/></svg>{% translate "Safety &amp; Privacy" %}</a>
       <a href="{% url 'm_settings' %}" class="{% if nav == 'settings' %}on{% endif %}"><svg><use href="{{ micons }}#m-gear"/></svg>{% translate "Settings" %}</a>
       <a href="{% url 'm_help' %}" class="{% if nav == 'help' %}on{% endif %}"><svg><use href="{{ micons }}#m-help"/></svg>{% translate "Help &amp; Support" %}</a>
     </nav>
-    <div class="msb-art"><img loading="lazy" decoding="async" src="{% static 'img/member/side_art.jpg' %}" alt="">
+{% endblock %}{% block sidebar_art %}    <div class="msb-art"><img loading="lazy" decoding="async" src="{% static 'img/member/side_art.jpg' %}" alt="">
       <p>{% if nav == 'dashboard' %}{% translate "&ldquo;Na katika Ishara Zake ni kuwa Amekuumbieni wake zenu kutokana na nafsi zenu ili mpate utulivu kwao...&rdquo;" %}<span>{% translate "(Qur'an 30:21)" %}</span>
       {% else %}{% translate "&ldquo;Na katika kila kitu tumeumba kwa jozi.&rdquo;" %}<span>{% translate "(Qur'an 51:49)" %}</span>{% endif %}</p></div>
-  </aside>
+{% endblock %}  </aside>
   <div class="mscrim" id="sb-scrim" hidden></div>
   {% endif %}
   <main class="mmain">
@@ -67,6 +66,6 @@
   </main>
 </div>
 <script src="{% asset 'js/member.js' %}"></script>
-{% include "partials/incoming_call.html" %}
+{% block calls %}{% include "partials/incoming_call.html" %}{% endblock %}
 {% block scripts %}{% endblock %}
 </body></html>

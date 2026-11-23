@@ -21,6 +21,27 @@ def unique_slug(model, text, field="slug"):
     return slug
 
 
+class Advertiser(models.Model):
+    """An advertiser's account. It is separate from a member's (looking for a spouse): its own sign-up and login on
+    /advertise/, and it opens the advertiser dashboard, never the member area."""
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="advertiser")
+    name = models.CharField(_("Full name"), max_length=100)
+    phone = models.CharField(_("Phone number"), max_length=20)
+    email_verified = models.BooleanField(_("Email verified"), default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        verbose_name, verbose_name_plural = _("Advertiser"), _("Advertisers")
+        ordering = ["-created"]
+    def __str__(self): return self.name
+    @property
+    def first_name(self): return self.name.split()[0] if self.name else ""
+
+
+def is_advertiser(user):
+    """True for an advertiser's account (one that is not also a member's)."""
+    return bool(user.is_authenticated and not user.is_staff and hasattr(user, "advertiser") and not hasattr(user, "member"))
+
+
 class AdPackage(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True)
@@ -81,7 +102,7 @@ class AdOrder(models.Model):
 
     class Meta: ordering = ["-created"]
     def __str__(self): return f"{self.business_name} - {self.title}"
-    def get_absolute_url(self): return reverse("m_ad", args=[self.token])
+    def get_absolute_url(self): return reverse("ad_detail", args=[self.token])
 
     @property
     def photos(self): return [p for p in (self.image, self.photo2, self.photo3, self.photo4) if p]
