@@ -21,7 +21,7 @@ from core.models import (Block, ConversationState, Event, EventCategory, EventRe
                          Message, Notification, Payment, Plan, PremiumPerk, ProfileView, SearchLog, Shortlist, SiteSetting, SupportTicket)
 from core.views import safe_next
 from . import data
-from .forms import (AccountForm, MemberProfileForm, PaymentRequestForm, PhotoForm, PreferencesForm, PrivacyForm, ProfileSettingsForm, SettingsPrefsForm,
+from .forms import (PlanCheckoutForm, AccountForm, MemberProfileForm, PaymentRequestForm, PhotoForm, PreferencesForm, PrivacyForm, ProfileSettingsForm, SettingsPrefsForm,
                     TicketForm, NotifyForm, AppearanceForm)
 
 AGES = [("18", "18"), ("20", "20"), ("25", "25"), ("30", "30"), ("35", "35"), ("40", "40"), ("45", "45"), ("50", "50"), ("60", "60+")]
@@ -535,10 +535,29 @@ def membership(request):
     for i, p in enumerate(plans):   # style by name when it is one of the mockup tiers, otherwise by rank
         p.style = "ps-" + (p.name.lower() if p.name.lower() in PLAN_STYLE else PLAN_STYLE[min(i, 4)])
         p.icon_n = PLAN_STYLE.index(p.style[3:]) + 1
-    form = PaymentRequestForm(request.POST or None, plans=plans, initial={"plan": request.GET.get("pay"), "phone": me.phone})
+    from core import pesapal
+    online = pesapal.configured()
+    for p in Payment.objects.filter(user=request.user, status="pending", gateway="pesapal").exclude(tracking_id="")[:3]:
+        try: pesapal.refresh(p, request)      # catch up if Pesapal's notice was missed
+        except pesapal.PesapalError: pass
+    me.refresh_from_db()
+    Form = PlanCheckoutForm if online else PaymentRequestForm
+    form = Form(request.POST or None, plans=plans, initial={"plan": request.GET.get("pay"), "phone": me.phone})
     free = next((p for p in plans if not p.price), plans[0] if plans else None)
     current = next((p for p in plans if me.is_premium and p.pk == me.plan_id), free)
-    if request.method == "POST" and form.is_valid():
+    if request.method == "POST" and online and form.is_valid():
+        d = form.cleaned_data
+        pay = Payment.objects.create(user=request.user, payer_name=me.name, payer_phone=me.phone, kind="premium", plan=d["plan"], months=d["months"],
+                                     amount=d["plan"].price * d["months"], gateway="pesapal", status="pending",
+                                     description=f"{d['plan'].name} plan, {d['months']} month(s)")
+        try:
+            return redirect(pesapal.checkout(pay, request, email=request.user.email, phone=me.phone, name=me.name))
+        except pesapal.PesapalError as e:
+            pay.status = "failed"; pay.save(update_fields=["status"])
+            import logging; logging.getLogger(__name__).error("Pesapal checkout failed for %s: %s", pay.invoice_no, e)
+            messages.error(request, _("We could not open the payment page right now. Please try again in a moment."))
+            return redirect(reverse("m_membership") + f"?pay={d['plan'].pk}")
+    if request.method == "POST" and not online and form.is_valid():
         d = form.cleaned_data
         Payment.objects.create(user=request.user, payer_name=me.name, payer_phone=d["phone"], kind="premium", plan=d["plan"], months=d["months"],
             amount=d["plan"].price * d["months"], gateway=d["gateway"], reference=d["reference"], status="pending",
@@ -562,7 +581,7 @@ def membership(request):
     compare = [(t, [t in inc for inc in included]) for t in feats]
     return page(request, "members/membership.html", {"me": me, "plans": plans, "tab": tab, "form": form, "faq": faq, "benefits": benefits,
         "history": Payment.objects.filter(user=request.user).select_related("plan"), "compare": compare, "show_pay": request.method == "POST" or "pay" in request.GET,
-        "current": current, "prices": {str(p.pk): p.price for p in plans}, "pending": Payment.objects.filter(user=request.user, status="pending").select_related("plan").first()}, "membership", search_hint=_l("Search members, events, topics..."))
+        "current": current, "prices": {str(p.pk): p.price for p in plans}, "online": online, "pending": Payment.objects.filter(user=request.user, status="pending").select_related("plan").first()}, "membership", search_hint=_l("Search members, events, topics..."))
 
 @login_required
 def receipt(request, pk):
@@ -600,7 +619,14 @@ def settings_page(request):
     section = request.POST.get("section")
     forms = {k: F(request.POST if section == k else None, request.FILES if section == k else None, instance=me, prefix=k) for k, F in SETTINGS_FORMS.items()}
     if section in forms and forms[section].is_valid():
+        old_email = request.user.email
         forms[section].save()
+        request.user.refresh_from_db()
+        if section == "account" and request.user.email.lower() != (old_email or "").lower():
+            from core.verify import start
+            if start(request, request.user, request.user.email):   # a new address is confirmed before it counts
+                messages.info(request, _("We sent a code to your new email address. Enter it to confirm the change."))
+                return redirect(reverse("verify_email") + "?next=" + reverse("m_settings"))
         if section == "look" and me.ui_language:   # the new language takes over at once, starting with this confirmation
             from django.utils import translation
             from core.lang import remember

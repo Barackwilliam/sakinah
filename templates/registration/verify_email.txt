@@ -1,0 +1,12 @@
+{% load i18n %}{% blocktranslate %}Assalamu Alaikum {{ name }},{% endblocktranslate %}
+
+{% translate "Welcome to Sakinah! To finish creating your account, enter this code on the sign-up page:" %}
+
+    {{ code }}
+
+{% translate "Or activate your account with one tap:" %}
+{{ link }}
+
+{% translate "The code and the link work for 24 hours. If you did not create an account, you can ignore this email." %}
+
+{{ site.brand }}

@@ -22,7 +22,7 @@
     {% empty %}<tr><td colspan="8" class="muted">{% translate "No payments recorded yet. Use <b>Record Manual Payment</b> when a member pays by mobile money, bank or cash." %}</td></tr>{% endfor %}</tbody></table></div></section>
   <section class="panel"><div class="pn-h"><svg><use href="#i-crown"/></svg><h2>{% translate "Subscription Plans Revenue" %}</h2><a class="va" href="{% url 'dash_manage' 'plans' %}">{% translate "Plans" %}</a></div>
     <div class="tw"><table class="plans-t"><thead><tr><th>{% translate "Plan" %}</th><th class="r">{% translate "Subscribers" %}</th><th class="r">{% blocktranslate with currency=site.currency %}Revenue ({{ currency }}){% endblocktranslate %}</th><th class="r">%</th></tr></thead><tbody>
-    {% for p in plans %}<tr><td><svg class="gold"><use href="#i-crown"/></svg>{{ p.name|tr }}</td><td class="r">{{ p.subs|intcomma }}</td><td class="r">{{ p.revenue|intcomma }}</td><td class="r">{{ p.pct }}%</td></tr>{% endfor %}</tbody>
+    {% for p in plans %}<tr><td><svg class="gold"><use href="#i-crown"/></svg>{{ p.name }}</td><td class="r">{{ p.subs|intcomma }}</td><td class="r">{{ p.revenue|intcomma }}</td><td class="r">{{ p.pct }}%</td></tr>{% endfor %}</tbody>
     <tfoot><tr><td>{% translate "Total" %}</td><td class="r">{{ plan_totals.0|intcomma }}</td><td class="r">{{ plan_totals.1|intcomma }}</td><td class="r">100%</td></tr></tfoot></table></div></section>
 </div>
 <div class="g2">

@@ -806,3 +806,18 @@ html[lang=ar] *{letter-spacing:0!important}
 @media(max-width:1100px){[dir=rtl] .nav-links{transform:translateX(-105%)}[dir=rtl] .nav-links.open{transform:none}}
 [dir=rtl] :is(.more:hover,.svc:hover .svc-go,.hm-go:hover) svg{transform:scaleX(-1) translateX(3px)}
 [dir=rtl] .fld select{background-position:left 12px center}
+.lang summary{gap:7px;padding:7px 11px}.lang summary b{font-weight:600;letter-spacing:0;font-size:13px}.lang .flag{width:22px;height:15px;border-radius:3px;object-fit:cover;box-shadow:0 0 0 1px rgba(0,0,0,.08);flex:none}
+.lang summary .car{width:14px;height:14px;opacity:.6;transition:transform .2s}.lang[open] summary .car{transform:rotate(180deg)}
+.lang form{min-width:200px}.lang button{gap:12px;padding:11px 12px}.lang button .flag{width:26px;height:18px}.lang button .tick{width:16px;height:16px;margin-inline-start:auto;color:#0b4b34}
+@media(max-width:369px){.lang summary b{display:none}}
+
+/* The header folds into the menu button whenever its links don't fit on one line - in any language, on any screen
+   (static/js/main.js sets html.nav-fold). Same look as the phone header below 1100px. */
+html.nav-fold .nav-in{padding:0 16px}html.nav-fold .nav-auth{display:none}html.nav-fold .burger{display:flex;position:relative;z-index:59}
+html.nav-fold .nav-links{position:fixed;z-index:58;top:0;inset-inline-end:0;bottom:0;width:min(86vw,360px);background:#fff;flex-direction:column;gap:2px;padding:calc(84px + env(safe-area-inset-top)) 18px 24px;transform:translateX(105%);transition:transform .3s ease;overflow:auto;margin:0;font-size:16px;box-shadow:var(--sh-3)}
+html.nav-fold .nav-links.open{transform:none}html.nav-fold .nav-links>a{padding:14px 12px;font-size:16px}html.nav-fold .nav-links>a svg{display:block;width:20px;height:20px}
+html.nav-fold .nav-links>a.on:after{display:none}html.nav-fold .nav-links>a.on{background:var(--pink)}
+html.nav-fold .nav-auth-m{display:flex;flex-direction:column;gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}html.nav-fold .nav-auth-m .btn,html.nav-fold .nav-auth-m form .btn{width:100%;padding:13px}html.nav-fold .nav-auth-m form{width:100%}
+html.nav-fold .nav-auth-m .msgs-l .t,html.nav-fold .nav-auth-m .me-l .t{display:inline}
+html.nav-fold[dir=rtl] .nav-links{transform:translateX(-105%)}html.nav-fold[dir=rtl] .nav-links.open{transform:none}
+html.nav-fold .lang{margin-inline-start:auto}

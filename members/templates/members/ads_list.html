@@ -1,0 +1,43 @@
+{% extends "members/base.html" %}{% load i18n lang humanize assets %}{% block title %}{% translate "My Adverts" %}{% endblock %}
+{% block head %}<link rel="stylesheet" href="{% asset 'css/advertise.css' %}">{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="star" title=_("My Adverts") sub=_("Advertise your wedding service to couples on Sakinah, pay online and follow your results.") quote=_("Na katika kila kitu tumeumba kwa jozi.") ref=_("Qur'an 51:49") art="mosque" %}
+<div class="avx av-acc">
+  <section class="av-acc-hero">
+    <div><h2>{% translate "Reach couples planning their Nikah" %}</h2>
+      <p>{% translate "Create an advert in a few minutes, pay with Pesapal (M-Pesa, Airtel Money, Mixx by Yas or card) and go live straight away." %}</p>
+      <div class="av-acc-cta"><a class="btn lg" href="{% url 'm_ad_new' %}"><svg><use href="{{ micons }}#m-plus"/></svg>{% translate "Create an advert" %}</a>
+        <a class="btn lg o" href="{% url 'advertise' %}" target="_blank">{% translate "How it works" %}</a></div></div>
+    <ul class="av-acc-kpi">
+      <li><b>{{ orders|length }}</b><small>{% translate "Adverts" %}</small></li>
+      <li><b>{{ n_live }}</b><small>{% translate "Live now" %}</small></li>
+      <li><b>{{ n_views|intcomma }}</b><small>{% translate "Views" %}</small></li>
+    </ul>
+  </section>
+
+  {% if orders %}
+  <section class="box"><h3 class="bh"><svg class="mag"><use href="{{ micons }}#m-list"/></svg>{% translate "Your adverts" %}</h3>
+    <div class="av-mine-l">{% for o in orders %}<a href="{% url 'm_ad' o.token %}" class="av-mine-i">
+      <span class="av-mine-img">{% if o.image %}<img src="{{ o.image.url }}" alt="" loading="lazy">{% endif %}</span>
+      <span><b>{{ o.title }}</b><small>{{ o.business_name }} &middot; {{ o.package.name }}{% if o.expires %} &middot; {% blocktranslate with d=o.expires|date:"j M Y" %}until {{ d }}{% endblocktranslate %}{% endif %}</small></span>
+      {% if o.advert and o.status == "live" %}<span class="av-mine-v"><svg><use href="{{ micons }}#m-eye"/></svg>{{ o.advert.views|intcomma }}</span>{% endif %}
+      <span class="av-st st-{{ o.status }}{% if o.is_expired %} st-expired{% endif %}">{% if o.is_expired %}{% translate "Expired" %}{% else %}{{ o.get_status_display }}{% endif %}</span>
+      <svg class="av-mine-go"><use href="{{ micons }}#m-chev-r"/></svg></a>{% endfor %}</div>
+  </section>
+  {% else %}
+  <section class="box av-empty"><span class="avi"><svg><use href="{{ icons }}#i-mega"/></svg></span>
+    <h3>{% translate "You have no adverts yet" %}</h3><p>{% translate "Choose a package below to create your first advert." %}</p></section>
+  {% endif %}
+
+  <section class="box"><h3 class="bh"><svg class="gold"><use href="{{ micons }}#m-tag"/></svg>{% translate "Packages" %}</h3>
+    <div class="av-pk sm">{% for p in packages %}
+      <article class="av-pk-c{% if p.popular %} top{% endif %}">{% if p.popular %}<span class="av-pk-badge"><svg><use href="{{ icons }}#i-crown"/></svg>{% translate "Most popular" %}</span>{% endif %}
+        <h3>{{ p.name }}</h3><p class="av-pk-tag">{{ p.tagline|tr }}</p>
+        <div class="av-pk-price"><small>{{ site.currency }}</small><b>{{ p.price|intcomma }}</b></div>
+        <p class="av-pk-days">{% blocktranslate count months=p.months %}for {{ months }} month{% plural %}for {{ months }} months{% endblocktranslate %}</p>
+        <ul>{% for ok, text in p.feature_list %}<li class="{% if not ok %}no{% endif %}"><svg><use href="{{ icons }}#i-{% if ok %}check-c{% else %}x-c{% endif %}"/></svg>{{ text }}</li>{% endfor %}</ul>
+        <a class="btn block{% if not p.popular %} o{% endif %}" href="{% url 'm_ad_new' %}?package={{ p.slug }}">{% blocktranslate with name=p.name %}Choose {{ name }}{% endblocktranslate %}</a>
+      </article>{% endfor %}</div>
+  </section>
+</div>
+{% endblock %}

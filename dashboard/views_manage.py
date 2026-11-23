@@ -186,7 +186,7 @@ def staff_delete(request, pk):
 class SettingsForm(forms.ModelForm):
     class Meta:
         model = SiteSetting
-        fields = ["brand", "tagline", "currency", "contact_email", "contact_whatsapp", "payment_instructions", "ad_payment_instructions", "hero_title_1", "hero_title_2",
+        fields = ["brand", "tagline", "currency", "contact_email", "contact_whatsapp", "payment_instructions", "ad_payment_instructions", "days_per_month", "hero_title_1", "hero_title_2",
                   "hero_text", "hero_quote", "offer_text", "logo", "hero_image", "premium_image", "advert_image"]
         widgets = {"payment_instructions": forms.Textarea(attrs={"rows": 4}), "hero_text": forms.Textarea(attrs={"rows": 3}), "hero_quote": forms.Textarea(attrs={"rows": 2})}
 
@@ -194,7 +194,7 @@ from .resources import pretty_files
 pretty_files(SettingsForm)
 
 SETTINGS_SECTIONS = [(_l("Business details"), ["brand", "tagline", "currency", "contact_email", "contact_whatsapp"]),
-                     (_l("Payments"), ["payment_instructions", "ad_payment_instructions"]),
+                     (_l("Payments"), ["days_per_month", "payment_instructions", "ad_payment_instructions"]),
                      (_l("Home page"), ["hero_title_1", "hero_title_2", "hero_text", "hero_quote", "offer_text"]),
                      (_l("Images"), ["logo", "hero_image", "premium_image", "advert_image"])]
 

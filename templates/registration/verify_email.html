@@ -1,0 +1,17 @@
+{% load i18n lang %}{% get_current_language as LANG %}{% get_current_language_bidi as BIDI %}<!doctype html><html lang="{{ LANG }}" dir="{% if BIDI %}rtl{% else %}ltr{% endif %}"><body style="margin:0;padding:0;background:#fdf1f3;font-family:Arial,Helvetica,sans-serif;color:#1b1f2e">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fdf1f3;padding:28px 12px"><tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #f1dfe5">
+  <tr><td style="background:#7a0429;background:linear-gradient(135deg,#c00a46,#7a0429);padding:22px 28px;color:#ffffff">
+    <div style="font:bold 26px Georgia,serif">{{ site.brand }}</div><div style="font-size:12px;letter-spacing:2px;opacity:.85;text-transform:uppercase">{{ site.tagline|tr }}</div></td></tr>
+  <tr><td style="padding:28px">
+    <p style="margin:0 0 12px;font-size:16px">{% blocktranslate %}Assalamu Alaikum <b>{{ name }}</b>,{% endblocktranslate %}</p>
+    <p style="margin:0 0 18px;font-size:15px;line-height:1.55">{% translate "Welcome to Sakinah! To finish creating your account, enter this code on the sign-up page:" %}</p>
+    <p style="margin:0 0 22px;text-align:center"><span style="display:inline-block;font:bold 34px/1 'Courier New',monospace;letter-spacing:10px;color:#7a0429;background:#fdf1f3;border:1px dashed #e6b9c7;border-radius:14px;padding:16px 22px" dir="ltr">{{ code }}</span></p>
+    <p style="margin:0 0 14px;font-size:15px;text-align:center">{% translate "Or activate your account with one tap:" %}</p>
+    <p style="margin:0 0 22px;text-align:center"><a href="{{ link }}" style="display:inline-block;background:#a1053a;color:#ffffff;text-decoration:none;font-weight:bold;padding:14px 28px;border-radius:12px;font-size:15px">{% translate "Activate my account" %}</a></p>
+    <p style="margin:0 0 8px;font-size:12.5px;color:#6b6f7b">{% translate "Button not working? Copy this link into your browser:" %}</p>
+    <p style="margin:0 0 20px;font-size:12.5px;word-break:break-all"><a href="{{ link }}" style="color:#a1053a">{{ link }}</a></p>
+    <p style="margin:0;font-size:12.5px;color:#6b6f7b;line-height:1.5">{% translate "The code and the link work for 24 hours. If you did not create an account, you can ignore this email." %}</p>
+  </td></tr>
+  <tr><td style="padding:16px 28px;background:#fdf6f4;font-size:12px;color:#6b6f7b;text-align:center">{{ site.brand }} &middot; {{ site.tagline|tr }}</td></tr>
+</table></td></tr></table></body></html>

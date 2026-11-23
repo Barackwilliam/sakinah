@@ -369,11 +369,11 @@ class AdOrders(Resource):
 @register("ad-packages")
 class AdPackages(Resource):
     title, icon, nav, model = _l("Advert Packages"), "i-tag", "marketing", AdPackage
-    form = model_form(AdPackage, ["name", "slug", "tagline", "price", "days", "max_photos", "features", "featured", "home_page", "popular", "active", "order"],
+    form = model_form(AdPackage, ["name", "slug", "tagline", "price", "months", "max_photos", "features", "featured", "home_page", "popular", "active", "order"],
                       widgets={"features": AREA(6)})
     note = _l("The packages vendors choose on the Advertise with us page.")
     search, ordering = ["name"], ["order", "price"]
-    columns = [(_l("Package"), bold("name", lambda o: o.tagline)), (_l("Price"), money("price")), (_l("Days"), lambda o: o.days),
+    columns = [(_l("Package"), bold("name", lambda o: o.tagline)), (_l("Price"), money("price")), (_l("Months"), lambda o: o.months),
                (_l("Photos"), lambda o: o.max_photos), (_l("Requests"), lambda o: o.orders.count()),
                (_l("Status"), lambda o: format_html("{} {} {}", pill(_l("Active"), "ok") if o.active else pill(_l("Hidden"), "mut"),
                                                     pill(_l("Featured"), "info") if o.featured else "", pill(_l("Home page"), "info") if o.home_page else ""))]

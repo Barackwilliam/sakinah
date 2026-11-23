@@ -100,6 +100,12 @@ class TicketForm(forms.ModelForm):
         fields = ["subject", "message", "attachment"]
         widgets = {"message": forms.Textarea(attrs={"rows": 4})}
 
+class PlanCheckoutForm(forms.Form):
+    """Online payment with Pesapal: the member only chooses the plan and how long; Pesapal takes care of the rest."""
+    plan = forms.ModelChoiceField(queryset=Plan.objects.filter(price__gt=0), label=_l("Plan"))
+    months = forms.TypedChoiceField(coerce=int, choices=[(1, _l("1 month")), (3, _l("3 months")), (6, _l("6 months")), (12, _l("12 months"))], initial=1, label=_l("Months"))
+    def __init__(self, *a, plans=None, **kw): super().__init__(*a, **kw)
+
 class PaymentRequestForm(forms.Form):
     plan = forms.ModelChoiceField(queryset=Plan.objects.filter(price__gt=0))
     months = forms.TypedChoiceField(coerce=int, choices=[(1, _l("1 month")), (3, _l("3 months")), (6, _l("6 months")), (12, _l("12 months"))], initial=1)

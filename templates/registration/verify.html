@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% load i18n %}{% block title %}{% translate "Confirm your email" %} - {{ site.brand }}{% endblock %}
+{% block content %}<div class="wrap page narrow vf-page">
+  <div class="box vf">
+    <span class="vf-ic"><svg><use href="{{ icons }}#i-mail"/></svg></span>
+    <h1>{% translate "Confirm your email" %}</h1>
+    <p class="vf-sub">{% blocktranslate with email=user.email %}We sent a 6-digit code to <b>{{ email }}</b>. Enter it below, or tap the button in the email.{% endblocktranslate %}</p>
+    <form method="post" class="vf-code" autocomplete="off">{% csrf_token %}<input type="hidden" name="action" value="code">
+      <input name="code" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••••" aria-label="{% translate '6-digit code' %}" autofocus required dir="ltr">
+      <button class="btn btn-s btn-lg block">{% translate "Confirm and continue" %} <svg><use href="{{ icons }}#i-arrow"/></svg></button></form>
+    <p class="vf-tip">{% translate "Can't find it? Check your spam or promotions folder. The code works for 24 hours." %}</p>
+    <div class="vf-more">
+      <form method="post">{% csrf_token %}<input type="hidden" name="action" value="resend"><button class="btn btn-o">{% translate "Send a new code" %}</button></form>
+      <details{% if fix.errors %} open{% endif %}><summary>{% translate "Wrong email address?" %}</summary>
+        <form method="post" class="vf-fix">{% csrf_token %}<input type="hidden" name="action" value="fix">
+          {% include "partials/field.html" with f=fix.email icon="mail" %}<button class="btn btn-o">{% translate "Send the code there" %}</button></form></details>
+    </div>
+    <form method="post" action="{% url 'logout' %}" class="vf-out">{% csrf_token %}<button>{% translate "Log out" %}</button></form>
+  </div>
+</div>
+<style>.vf-page{max-width:520px;padding-top:40px;padding-bottom:60px}.vf{text-align:center;padding:34px 28px;border-radius:22px}
+.vf-ic{width:64px;height:64px;margin:0 auto 14px;border-radius:20px;display:grid;place-items:center;background:var(--pink);color:var(--mag)}.vf-ic svg{width:30px;height:30px}
+.vf h1{font-size:28px;color:var(--navy)}.vf-sub{color:var(--mut);margin:8px 0 22px;line-height:1.6}
+.vf-code{display:flex;flex-direction:column;gap:14px}.vf-code input{width:100%;text-align:center;font:700 32px/1 'Courier New',monospace;letter-spacing:12px;padding:16px;border:2px solid var(--line);border-radius:16px;background:#fcfafb;color:var(--ink)}
+.vf-code input:focus{outline:0;border-color:var(--mag);box-shadow:0 0 0 4px rgba(161,5,58,.12)}
+.vf-tip{font-size:13px;color:var(--mut);margin:14px 0 18px}.vf-more{display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:16px;border-top:1px dashed var(--line)}
+.vf-more summary{cursor:pointer;color:var(--mag);font-weight:700;font-size:14px}.vf-fix{display:flex;flex-direction:column;gap:10px;margin-top:12px;text-align:start}
+.vf-out{margin-top:18px}.vf-out button{background:none;border:0;color:var(--mut);font:inherit;font-size:13px;cursor:pointer;text-decoration:underline}</style>
+{% endblock %}

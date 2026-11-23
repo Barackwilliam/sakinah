@@ -39,6 +39,11 @@ services:
       - key: DEFAULT_FROM_EMAIL
         sync: false
       # Voice/video calls: TURN relay so calls connect on mobile data (Cloudflare Realtime TURN, 1,000 GB free a month)
+      # Payments: Pesapal API 3.0 (live). Keys from the Pesapal merchant dashboard (Settings > API keys).
+      - key: PESAPAL_CONSUMER_KEY
+        sync: false
+      - key: PESAPAL_CONSUMER_SECRET
+        sync: false
       - key: CLOUDFLARE_TURN_KEY_ID
         sync: false
       - key: CLOUDFLARE_TURN_API_TOKEN

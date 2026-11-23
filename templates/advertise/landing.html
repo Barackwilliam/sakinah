@@ -8,9 +8,9 @@
       <span class="av-kicker"><svg><use href="{{ icons }}#i-mega"/></svg>{% translate "Advertise with us" %}</span>
       <h1>{% blocktranslate %}Put your wedding business in front of couples <em>planning their Nikah</em>{% endblocktranslate %}</h1>
       <p>{% blocktranslate with brand=site.brand %}{{ brand }} is where serious, marriage-minded people meet and plan. Show them your venue, catering, décor, photography or any wedding service, and let them reach you directly.{% endblocktranslate %}</p>
-      <div class="av-cta"><a class="btn btn-gold btn-lg" href="{% url 'advertise_start' %}">{% translate "Start my advert" %} <svg><use href="{{ icons }}#i-arrow"/></svg></a>
+      <div class="av-cta"><a class="btn btn-gold btn-lg" href="{% url 'm_ad_new' %}">{% translate "Start my advert" %} <svg><use href="{{ icons }}#i-arrow"/></svg></a>
         <a class="btn btn-ghost btn-lg" href="#packages">{% translate "See packages" %}</a></div>
-      <ul class="av-ticks"><li><svg><use href="{{ icons }}#i-check-c"/></svg>{% translate "Live within hours" %}</li><li><svg><use href="{{ icons }}#i-check-c"/></svg>{% translate "Pay by mobile money" %}</li><li><svg><use href="{{ icons }}#i-check-c"/></svg>{% translate "No contract" %}</li></ul>
+      <ul class="av-ticks"><li><svg><use href="{{ icons }}#i-check-c"/></svg>{% translate "Live straight after payment" %}</li><li><svg><use href="{{ icons }}#i-check-c"/></svg>{% translate "Secure payment with Pesapal" %}</li><li><svg><use href="{{ icons }}#i-check-c"/></svg>{% translate "No contract" %}</li></ul>
     </div>
     <div class="av-hero-art" aria-hidden="true">
       <div class="av-phone"><div class="av-phone-bar"><i></i></div>
@@ -45,7 +45,7 @@
   <h2>{% translate "Your adverts" %}</h2>
   <div class="av-mine-l">{% for o in mine %}<a href="{{ o.get_absolute_url }}" class="av-mine-i">
     <span class="av-mine-img">{% if o.image %}<img src="{{ o.image.url }}" alt="" loading="lazy">{% endif %}</span>
-    <span><b>{{ o.title }}</b><small>{{ o.package.name|tr }}{% if o.expires %} &middot; {% blocktranslate with d=o.expires|date:"j M Y" %}until {{ d }}{% endblocktranslate %}{% endif %}</small></span>
+    <span><b>{{ o.title }}</b><small>{{ o.package.name }}{% if o.expires %} &middot; {% blocktranslate with d=o.expires|date:"j M Y" %}until {{ d }}{% endblocktranslate %}{% endif %}</small></span>
     <span class="av-st st-{{ o.status }}{% if o.is_expired %} st-expired{% endif %}">{% if o.is_expired %}{% translate "Expired" %}{% else %}{{ o.get_status_display }}{% endif %}</span></a>{% endfor %}</div>
 </section>{% endif %}
 
@@ -68,8 +68,8 @@
     <ol class="av-steps">
       <li><span>1</span><svg><use href="{{ icons }}#i-tag"/></svg><h3>{% translate "Choose a package" %}</h3><p>{% translate "Pick how long and how prominently you want to appear." %}</p></li>
       <li><span>2</span><svg><use href="{{ icons }}#i-doc"/></svg><h3>{% translate "Describe your service" %}</h3><p>{% translate "Add a title, description, price and your best photos. You see the advert as you type." %}</p></li>
-      <li><span>3</span><svg><use href="{{ icons }}#i-phone"/></svg><h3>{% translate "Pay by mobile money" %}</h3><p>{% translate "M-Pesa, Mixx by Yas, Airtel Money or bank. Enter the transaction reference." %}</p></li>
-      <li><span>4</span><svg><use href="{{ icons }}#i-spark"/></svg><h3>{% translate "Go live" %}</h3><p>{% translate "We confirm the payment and your advert appears straight away, usually within a few hours." %}</p></li>
+      <li><span>3</span><svg><use href="{{ icons }}#i-phone"/></svg><h3>{% translate "Pay by mobile money" %}</h3><p>{% translate "Pay securely with Pesapal: M-Pesa, Airtel Money, Mixx by Yas, HaloPesa or card." %}</p></li>
+      <li><span>4</span><svg><use href="{{ icons }}#i-spark"/></svg><h3>{% translate "Go live" %}</h3><p>{% translate "As soon as Pesapal confirms the payment your advert appears, automatically." %}</p></li>
     </ol>
   </div>
 </section>
@@ -82,11 +82,11 @@
     {% for p in packages %}
     <article class="av-pk-c{% if p.popular %} top{% endif %}">
       {% if p.popular %}<span class="av-pk-badge"><svg><use href="{{ icons }}#i-crown"/></svg>{% translate "Most popular" %}</span>{% endif %}
-      <h3>{{ p.name|tr }}</h3><p class="av-pk-tag">{{ p.tagline|tr }}</p>
+      <h3>{{ p.name }}</h3><p class="av-pk-tag">{{ p.tagline|tr }}</p>
       <div class="av-pk-price"><small>{{ site.currency }}</small><b>{{ p.price|intcomma }}</b></div>
-      <p class="av-pk-days">{% blocktranslate count days=p.days %}for {{ days }} day{% plural %}for {{ days }} days{% endblocktranslate %} &middot; {% blocktranslate with per=p.per_day|intcomma currency=site.currency %}about {{ currency }} {{ per }} a day{% endblocktranslate %}</p>
+      <p class="av-pk-days">{% blocktranslate count months=p.months %}for {{ months }} month{% plural %}for {{ months }} months{% endblocktranslate %}</p>
       <ul>{% for ok, text in p.feature_list %}<li class="{% if not ok %}no{% endif %}"><svg><use href="{{ icons }}#i-{% if ok %}check-c{% else %}x-c{% endif %}"/></svg>{{ text }}</li>{% endfor %}</ul>
-      <a class="btn {% if p.popular %}btn-s{% else %}btn-o{% endif %} block" href="{% url 'advertise_start' %}?package={{ p.slug }}">{% blocktranslate with name=p.name|tr %}Choose {{ name }}{% endblocktranslate %}</a>
+      <a class="btn {% if p.popular %}btn-s{% else %}btn-o{% endif %} block" href="{% url 'm_ad_new' %}?package={{ p.slug }}">{% blocktranslate with name=p.name %}Choose {{ name }}{% endblocktranslate %}</a>
     </article>
     {% endfor %}
   </div>
@@ -96,7 +96,7 @@
 
 <section class="wrap av-sec">
   <div class="av-h"><span class="eyebrow">{% translate "Categories" %}</span><h2>{% translate "Every wedding service has a place" %}</h2></div>
-  <div class="av-cats">{% for c in categories %}<a href="{% url 'advertise_start' %}?category={{ c.pk }}" class="av-cat">{% if c.image %}<img src="{{ c.image.url }}" alt="" loading="lazy">{% endif %}<span><b>{{ c.name|tr }}</b><small>{{ c.blurb|tr }}</small></span></a>{% endfor %}</div>
+  <div class="av-cats">{% for c in categories %}<a href="{% url 'm_ad_new' %}?category={{ c.pk }}" class="av-cat">{% if c.image %}<img src="{{ c.image.url }}" alt="" loading="lazy">{% endif %}<span><b>{{ c.name|tr }}</b><small>{{ c.blurb|tr }}</small></span></a>{% endfor %}</div>
 </section>
 
 {% if examples %}
@@ -108,9 +108,9 @@
 <section class="wrap av-sec av-faq">
   <div class="av-h"><span class="eyebrow">{% translate "Questions" %}</span><h2>{% translate "Frequently asked questions" %}</h2></div>
   <div class="av-faq-l">
-    <details open><summary>{% translate "How soon does my advert appear?" %}<svg><use href="{{ icons }}#i-chev-d"/></svg></summary><p>{% translate "As soon as our team confirms your payment, usually within a few hours during the day. You can follow every step on your advert page." %}</p></details>
-    <details><summary>{% translate "How do I pay?" %}<svg><use href="{{ icons }}#i-chev-d"/></svg></summary><p>{% translate "After you submit your advert you see the amount and our payment number. Pay with M-Pesa, Mixx by Yas, Airtel Money or bank, then enter the transaction reference." %}</p></details>
-    <details><summary>{% translate "Do I need an account?" %}<svg><use href="{{ icons }}#i-chev-d"/></svg></summary><p>{% translate "No. You get a private link to your advert page; keep it to pay, follow progress and renew. If you are logged in, your adverts are also listed here." %}</p></details>
+    <details open><summary>{% translate "How soon does my advert appear?" %}<svg><use href="{{ icons }}#i-chev-d"/></svg></summary><p>{% translate "Straight after you pay. Pesapal confirms the payment within moments and your advert is published automatically. You can follow it under My Adverts in your account." %}</p></details>
+    <details><summary>{% translate "How do I pay?" %}<svg><use href="{{ icons }}#i-chev-d"/></svg></summary><p>{% translate "Online with Pesapal: M-Pesa, Airtel Money, Mixx by Yas, HaloPesa, Visa or Mastercard. You are taken to Pesapal's secure page and brought back to your account." %}</p></details>
+    <details><summary>{% translate "Do I need an account?" %}<svg><use href="{{ icons }}#i-chev-d"/></svg></summary><p>{% translate "Yes, a free Sakinah account. Your adverts, payments and results are kept together under My Adverts, so you can renew any time from any device." %}</p></details>
     <details><summary>{% translate "What happens when my package ends?" %}<svg><use href="{{ icons }}#i-chev-d"/></svg></summary><p>{% translate "Your advert is hidden automatically on its last day. Renew from your advert page before or after it ends, and the new days are added on." %}</p></details>
     <details><summary>{% translate "Can I change my advert later?" %}<svg><use href="{{ icons }}#i-chev-d"/></svg></summary><p>{% translate "Yes. Contact our team with the changes and we will update it for you." %}</p></details>
     <details><summary>{% translate "What if my advert is not approved?" %}<svg><use href="{{ icons }}#i-chev-d"/></svg></summary><p>{% translate "We only publish services that suit a family, halal platform. If we cannot publish yours, we tell you why on your advert page and refund the payment." %}</p></details>
@@ -120,7 +120,7 @@
 <section class="av-final"><div class="av-final-in">
   <h2>{% translate "Ready to meet your next customers?" %}</h2>
   <p>{% translate "It takes about five minutes to create your advert." %}</p>
-  <a class="btn btn-gold btn-lg" href="{% url 'advertise_start' %}">{% translate "Start my advert" %} <svg><use href="{{ icons }}#i-arrow"/></svg></a>
+  <a class="btn btn-gold btn-lg" href="{% url 'm_ad_new' %}">{% translate "Start my advert" %} <svg><use href="{{ icons }}#i-arrow"/></svg></a>
   {% if site.contact_url %}<a class="av-final-help" href="{{ site.contact_url }}" target="_blank" rel="noopener"><svg><use href="{{ icons }}#i-wa-f"/></svg>{% translate "Questions? Talk to our team" %}</a>{% endif %}
 </div></section>
 {% endblock %}

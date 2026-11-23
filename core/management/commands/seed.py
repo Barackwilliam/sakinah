@@ -66,8 +66,8 @@ class Command(BaseCommand):
             if not plan.features:
                 plan.period, plan.tagline, plan.popular, plan.features = period, tagline, popular, features; plan.save()
             attach(plan, "icon", IMG / "v3" / f"plan_icon{i + 1}.jpg")
-        for i, (slug, n, tag, price, days, photos, feat, home, pop, features) in enumerate(AD_PACKAGES):
-            AdPackage.objects.get_or_create(slug=slug, defaults=dict(name=n, tagline=tag, price=price, days=days, max_photos=photos, featured=feat,
+        for i, (slug, n, tag, price, months, photos, feat, home, pop, features) in enumerate(AD_PACKAGES):
+            AdPackage.objects.get_or_create(slug=slug, defaults=dict(name=n, tagline=tag, price=price, months=months, max_photos=photos, featured=feat,
                                                                      home_page=home, popular=pop, features=features, order=i))
         for i,t in enumerate(["See who likes you","Advanced matching","Unlimited messaging","Incognito mode","Voice & video calls","Priority support"]):
             PremiumPerk.objects.get_or_create(text=t,defaults=dict(order=i))

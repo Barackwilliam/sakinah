@@ -15,7 +15,7 @@
     <label>{% translate "Gender" %}<select name="gender"><option value="">{% translate "All" %}</option><option value="M" {% if f.gender == 'M' %}selected{% endif %}>{% translate "Male" %}</option><option value="F" {% if f.gender == 'F' %}selected{% endif %}>{% translate "Female" %}</option></select></label>
     <label>{% translate "Age Range" %}<select name="age"><option value="">{% translate "All" %}</option>{% for k in ages %}<option {% if f.age == k %}selected{% endif %}>{{ k }}</option>{% endfor %}</select></label>
     <label>{% translate "Location" %}<select name="city"><option value="">{% translate "All Regions" %}</option>{% for l in locations %}<option {% if f.city == l %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
-    <label>{% translate "Membership Plan" %}<select name="plan"><option value="">{% translate "All Plans" %}</option><option value="free" {% if f.plan == 'free' %}selected{% endif %}>{% translate "Free" %}</option>{% for p in plans %}<option value="{{ p.pk }}" {% if f.plan == p.pk|stringformat:'d' %}selected{% endif %}>{{ p.name|tr }}</option>{% endfor %}</select></label>
+    <label>{% translate "Membership Plan" %}<select name="plan"><option value="">{% translate "All Plans" %}</option><option value="free" {% if f.plan == 'free' %}selected{% endif %}>{% translate "Free" %}</option>{% for p in plans %}<option value="{{ p.pk }}" {% if f.plan == p.pk|stringformat:'d' %}selected{% endif %}>{{ p.name }}</option>{% endfor %}</select></label>
     <label>{% translate "Status" %}<select name="status"><option value="">{% translate "All Status" %}</option><option value="verified" {% if f.status == 'verified' %}selected{% endif %}>{% translate "Verified" %}</option><option value="pending" {% if f.status == 'pending' %}selected{% endif %}>{% translate "Pending" %}</option><option value="rejected" {% if f.status == 'rejected' %}selected{% endif %}>{% translate "Rejected" %}</option><option value="suspended" {% if f.status == 'suspended' %}selected{% endif %}>{% translate "Suspended" %}</option></select></label>
     <div class="mbtns"><button class="ab g">{% translate "Filter" %}</button><a class="ab lt" href="{% url 'dash_members' %}">{% translate "Reset" %}</a></div>
     <div class="adv" id="adv" {% if not f.featured and not f.photo %}hidden{% endif %}>
@@ -35,7 +35,7 @@
     <td>{% include "dashboard/_gender.html" %}</td>
     <td>{{ m.age }}</td>
     <td class="nw"><span class="loc"><svg><use href="#m-pin"/></svg>{{ m.city }}</span></td>
-    <td class="nw">{% if m.is_premium %}<span class="plan"><svg class="pc-{{ m.plan.name|tr|lower }}"><use href="#m-crown"/></svg>{{ m.plan.name|tr }}</span>{% else %}<span class="plan free"><svg><use href="#m-user"/></svg>{% translate "Free" %}</span>{% endif %}</td>
+    <td class="nw">{% if m.is_premium %}<span class="plan"><svg class="pc-{{ m.plan.name|lower }}"><use href="#m-crown"/></svg>{{ m.plan.name }}</span>{% else %}<span class="plan free"><svg><use href="#m-user"/></svg>{% translate "Free" %}</span>{% endif %}</td>
     <td><span class="pill st-{{ m.state.1 }}"><svg><use href="#m-{% if m.state.1 == 'ok' %}check-c{% elif m.state.1 == 'warn' %}clock{% else %}x-c{% endif %}"/></svg>{{ m.state.0 }}</span>{% if m.featured %}<span class="pill info sm">{% translate "Featured" %}</span>{% endif %}</td>
     <td class="nw">{{ m.joined|date:"j M Y" }}</td>
     <td class="nw"><span class="dotc{% if m.online %} on{% endif %}">{% if m.online %}<i></i>{% endif %}{{ m.seen_text }}</span></td>

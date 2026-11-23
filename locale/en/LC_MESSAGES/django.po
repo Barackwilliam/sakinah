@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sakinah\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-21 04:38+0300\n"
+"POT-Creation-Date: 2026-11-23 03:26+0300\n"
 "PO-Revision-Date: 2026-11-20 00:00+0300\n"
 "Last-Translator: Sakinah\n"
 "Language-Team: Sakinah\n"
@@ -397,10 +397,6 @@ msgstr ""
 msgid "Stunning landscapes, wine tours and romantic getaways."
 msgstr ""
 
-#| msgid ""
-#| "Lipa kwa M-Pesa, Mixx by Yas au Airtel Money, kisha weka namba ya muamala "
-#| "(transaction reference) hapa chini. Tutathibitisha malipo na kuwasha mpango "
-#| "wako."
 msgid ""
 "Lipa kwa M-Pesa, Mixx by Yas au Airtel Money kwa namba yetu ya malipo (Lipa "
 "Namba), kisha weka namba ya simu uliyotumia na namba ya muamala hapa chini. "
@@ -420,7 +416,7 @@ msgstr ""
 msgid "Get your service seen by couples."
 msgstr ""
 
-msgid "Your advert in its category for 30 days"
+msgid "Your advert in its category for 1 month"
 msgstr ""
 
 msgid "Inquiries and WhatsApp button"
@@ -462,7 +458,7 @@ msgstr ""
 msgid "Everything in Business"
 msgstr ""
 
-msgid "Runs for 60 days"
+msgid "Runs for 2 months"
 msgstr ""
 
 msgid "Shown on the home page"
@@ -1322,6 +1318,14 @@ msgid ""
 "number."
 msgstr ""
 
+msgid "Days in one month"
+msgstr ""
+
+msgid ""
+"How many days count as one month of membership or advertising. Use a small "
+"number like 3 while testing payments, then 30."
+msgstr ""
+
 msgid "WhatsApp number with country code, e.g. 255712345678"
 msgstr ""
 
@@ -1453,7 +1457,7 @@ msgid ""
 "before the photo is saved."
 msgstr ""
 
-msgid "Automatic (my browser's language)"
+msgid "Default (Kiswahili)"
 msgstr ""
 
 msgid "Light Mode"
@@ -1466,6 +1470,9 @@ msgid "Language"
 msgstr ""
 
 msgid "Theme"
+msgstr ""
+
+msgid "Email verified"
 msgstr ""
 
 msgid "Rejected"
@@ -1644,6 +1651,9 @@ msgstr ""
 msgid "Membership fee"
 msgstr ""
 
+msgid "Pesapal"
+msgstr ""
+
 msgid "M-Pesa"
 msgstr ""
 
@@ -1654,9 +1664,6 @@ msgid "Airtel Money"
 msgstr ""
 
 msgid "Selcom"
-msgstr ""
-
-msgid "Pesapal"
 msgstr ""
 
 msgid "DPO"
@@ -1687,6 +1694,12 @@ msgid "Refunded"
 msgstr ""
 
 msgid "Transaction / receipt number from the gateway"
+msgstr ""
+
+msgid "Pesapal's order tracking id."
+msgstr ""
+
+msgid "How the payer paid inside Pesapal, e.g. M-Pesa or Visa."
 msgstr ""
 
 #, python-brace-format
@@ -1738,7 +1751,9 @@ msgstr ""
 msgid "Price for the whole period, in TSh."
 msgstr ""
 
-msgid "How many days the advert stays on the site."
+msgid ""
+"How long the advert stays on the site, in months (see Days in one month in "
+"Site Settings)."
 msgstr ""
 
 msgid ""
@@ -2086,6 +2101,10 @@ msgid "Please check the highlighted fields."
 msgstr ""
 
 msgid ""
+"We could not open the payment page right now. Please try again in a moment."
+msgstr ""
+
+msgid ""
 "Asante! We received your payment details. Your advert goes live as soon as "
 "our team confirms the payment."
 msgstr ""
@@ -2215,6 +2234,47 @@ msgid "Asante! Your request was sent to %(name)s. They will contact you soon."
 msgstr ""
 
 msgid "Please add your name and phone number so the vendor can reach you."
+msgstr ""
+
+msgid ""
+"We could not find that payment. If money left your account, please contact "
+"us."
+msgstr ""
+
+msgid "Payment received, thank you! It is confirmed and already active."
+msgstr ""
+
+msgid "The payment did not go through. You can try again."
+msgstr ""
+
+msgid ""
+"Your payment is being processed. This page updates as soon as Pesapal "
+"confirms it."
+msgstr ""
+
+msgid "Email address"
+msgstr ""
+
+msgid "Your email is verified. Welcome to Sakinah!"
+msgstr ""
+
+msgid "That code is not right. Check the email and try again."
+msgstr ""
+
+msgid "Too many wrong tries. We can send you a new code."
+msgstr ""
+
+msgid "That code has expired. We can send you a new one."
+msgstr ""
+
+msgid "Please wait a minute before asking for another code."
+msgstr ""
+
+#, python-format
+msgid "We sent a new code to %(email)s."
+msgstr ""
+
+msgid "This link has expired or was already used. Sign in to get a new code."
 msgstr ""
 
 msgid "All"
@@ -4290,6 +4350,226 @@ msgstr ""
 msgid "Search and like profiles that match your preferences"
 msgstr ""
 
+msgid "My Adverts"
+msgstr ""
+
+#, python-format
+msgid "created %(d)s"
+msgstr ""
+
+msgid "Advert created"
+msgstr ""
+
+msgid "Your advert was not approved"
+msgstr ""
+
+msgid "Our team could not publish this advert. Please contact us for details."
+msgstr ""
+
+msgid "One last step: pay to publish"
+msgstr ""
+
+#, python-format
+msgid ""
+"Pay %(currency)s %(amount)s for %(months)s month on the site. Your advert "
+"goes live as soon as the payment is confirmed."
+msgid_plural ""
+"Pay %(currency)s %(amount)s for %(months)s months on the site. Your advert "
+"goes live as soon as the payment is confirmed."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Payment received, we are confirming it"
+msgstr ""
+
+msgid ""
+"Your advert goes live as soon as the payment is confirmed. This page updates"
+" on its own."
+msgstr ""
+
+msgid "Your advert has ended"
+msgstr ""
+
+#, python-format
+msgid ""
+"It stopped showing on %(d)s. Renew below to bring it back straight away."
+msgstr ""
+
+msgid "Your advert is live!"
+msgstr ""
+
+#, python-format
+msgid "Couples can see it until %(d)s."
+msgstr ""
+
+msgid "Your renewal payment is being confirmed."
+msgstr ""
+
+msgid "View my advert"
+msgstr ""
+
+msgid "Inquiries"
+msgstr ""
+
+msgid "Days left"
+msgstr ""
+
+msgid "Renew early"
+msgstr ""
+
+msgid "Renew your advert"
+msgstr ""
+
+msgid "Pay for your advert"
+msgstr ""
+
+#, python-format
+msgid "%(months)s more month is added to the end of your current period."
+msgid_plural ""
+"%(months)s more months are added to the end of your current period."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Secure online payment with Pesapal."
+msgstr ""
+
+msgid "Mobile money or bank transfer."
+msgstr ""
+
+msgid "Amount to pay"
+msgstr ""
+
+#, python-format
+msgid "%(months)s month"
+msgid_plural "%(months)s months"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "Pay %(currency)s %(amount)s with Pesapal"
+msgstr ""
+
+msgid ""
+"You will be taken to Pesapal's secure page, then brought back here. Your "
+"advert goes live automatically once the payment is complete."
+msgstr ""
+
+msgid "I have paid - submit"
+msgstr ""
+
+msgid ""
+"Our team checks every payment against the transaction reference before "
+"publishing."
+msgstr ""
+
+msgid "Your advert"
+msgstr ""
+
+msgid "Need help? Talk to our team"
+msgstr ""
+
+msgid "Create your advert"
+msgstr ""
+
+msgid "You can renew or upgrade later."
+msgstr ""
+
+#, python-format
+msgid "%(n)s photo"
+msgid_plural "%(n)s photos"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Your business"
+msgstr ""
+
+msgid "So couples and our team can reach you."
+msgstr ""
+
+msgid "Clear, honest details get more inquiries."
+msgstr ""
+
+msgid "Bright, real photos of your work. The first one is the cover."
+msgstr ""
+
+msgid "Cover photo"
+msgstr ""
+
+msgid "Add photo"
+msgstr ""
+
+msgid "We review every advert. Services must suit a family, halal platform."
+msgstr ""
+
+msgid "Live preview"
+msgstr ""
+
+msgid "Your advert title"
+msgstr ""
+
+msgid "Runs for"
+msgstr ""
+
+msgid "Total to pay"
+msgstr ""
+
+msgid "Continue to payment"
+msgstr ""
+
+msgid "Nothing is charged yet. You pay on the next step."
+msgstr ""
+
+msgid ""
+"Advertise your wedding service to couples on Sakinah, pay online and follow "
+"your results."
+msgstr ""
+
+msgid "Na katika kila kitu tumeumba kwa jozi."
+msgstr "And of everything We created pairs."
+
+msgid "Qur'an 51:49"
+msgstr ""
+
+msgid "Reach couples planning their Nikah"
+msgstr ""
+
+msgid ""
+"Create an advert in a few minutes, pay with Pesapal (M-Pesa, Airtel Money, "
+"Mixx by Yas or card) and go live straight away."
+msgstr ""
+
+msgid "Create an advert"
+msgstr ""
+
+msgid "How it works"
+msgstr ""
+
+msgid "Live now"
+msgstr ""
+
+msgid "Your adverts"
+msgstr ""
+
+#, python-format
+msgid "until %(d)s"
+msgstr ""
+
+msgid "You have no adverts yet"
+msgstr ""
+
+msgid "Choose a package below to create your first advert."
+msgstr ""
+
+#, python-format
+msgid "for %(months)s month"
+msgid_plural "for %(months)s months"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "Choose %(name)s"
+msgstr ""
+
 msgid "Search members by name, location, age..."
 msgstr ""
 
@@ -4532,12 +4812,6 @@ msgstr ""
 msgid ""
 "Join Islamic and community events to learn, connect and build a stronger "
 "future together."
-msgstr ""
-
-msgid "Na katika kila kitu tumeumba kwa jozi."
-msgstr "And of everything We created pairs."
-
-msgid "Qur'an 51:49"
 msgstr ""
 
 msgid "My Registrations"
@@ -5013,6 +5287,18 @@ msgstr ""
 msgid "How to pay"
 msgstr ""
 
+msgid "Choose your plan and how many months."
+msgstr ""
+
+msgid ""
+"Pay on Pesapal's secure page with M-Pesa, Airtel Money, Mixx by Yas, "
+"HaloPesa or card."
+msgstr ""
+
+msgid ""
+"Your plan is activated automatically as soon as the payment is complete."
+msgstr ""
+
 msgid "Pay the amount for your plan by mobile money or bank."
 msgstr ""
 
@@ -5023,6 +5309,9 @@ msgid "Our team confirms the payment and activates your plan."
 msgstr ""
 
 msgid "Total:"
+msgstr ""
+
+msgid "Pay with Pesapal"
 msgstr ""
 
 msgid "Submit Payment Details"
@@ -6203,6 +6492,10 @@ msgstr ""
 msgid "%(name)s unblocked."
 msgstr ""
 
+msgid ""
+"We sent a code to your new email address. Enter it to confirm the change."
+msgstr ""
+
 #, python-format
 msgid "Logged out of %(n)d other session."
 msgid_plural "Logged out of %(n)d other sessions."
@@ -6502,10 +6795,10 @@ msgstr ""
 msgid "See packages"
 msgstr ""
 
-msgid "Live within hours"
+msgid "Live straight after payment"
 msgstr ""
 
-msgid "Pay by mobile money"
+msgid "Secure payment with Pesapal"
 msgstr ""
 
 msgid "No contract"
@@ -6542,13 +6835,6 @@ msgid "Vendors on the platform"
 msgstr ""
 
 msgid "Service categories"
-msgstr ""
-
-msgid "Your adverts"
-msgstr ""
-
-#, python-format
-msgid "until %(d)s"
 msgstr ""
 
 msgid "Why advertise here"
@@ -6610,9 +6896,6 @@ msgid ""
 "respectful platform."
 msgstr ""
 
-msgid "How it works"
-msgstr ""
-
 msgid "Live in four simple steps"
 msgstr ""
 
@@ -6627,36 +6910,25 @@ msgid ""
 "you type."
 msgstr ""
 
+msgid "Pay by mobile money"
+msgstr ""
+
 msgid ""
-"M-Pesa, Mixx by Yas, Airtel Money or bank. Enter the transaction reference."
+"Pay securely with Pesapal: M-Pesa, Airtel Money, Mixx by Yas, HaloPesa or "
+"card."
 msgstr ""
 
 msgid "Go live"
 msgstr ""
 
 msgid ""
-"We confirm the payment and your advert appears straight away, usually within"
-" a few hours."
+"As soon as Pesapal confirms the payment your advert appears, automatically."
 msgstr ""
 
 msgid "Simple prices, no surprises"
 msgstr ""
 
 msgid "Pay once for the whole period. Renew any time from your advert page."
-msgstr ""
-
-#, python-format
-msgid "for %(days)s day"
-msgid_plural "for %(days)s days"
-msgstr[0] ""
-msgstr[1] ""
-
-#, python-format
-msgid "about %(currency)s %(per)s a day"
-msgstr ""
-
-#, python-format
-msgid "Choose %(name)s"
 msgstr ""
 
 msgid "Pay safely with"
@@ -6684,22 +6956,23 @@ msgid "How soon does my advert appear?"
 msgstr ""
 
 msgid ""
-"As soon as our team confirms your payment, usually within a few hours during"
-" the day. You can follow every step on your advert page."
+"Straight after you pay. Pesapal confirms the payment within moments and your"
+" advert is published automatically. You can follow it under My Adverts in "
+"your account."
 msgstr ""
 
 msgid ""
-"After you submit your advert you see the amount and our payment number. Pay "
-"with M-Pesa, Mixx by Yas, Airtel Money or bank, then enter the transaction "
-"reference."
+"Online with Pesapal: M-Pesa, Airtel Money, Mixx by Yas, HaloPesa, Visa or "
+"Mastercard. You are taken to Pesapal's secure page and brought back to your "
+"account."
 msgstr ""
 
 msgid "Do I need an account?"
 msgstr ""
 
 msgid ""
-"No. You get a private link to your advert page; keep it to pay, follow "
-"progress and renew. If you are logged in, your adverts are also listed here."
+"Yes, a free Sakinah account. Your adverts, payments and results are kept "
+"together under My Adverts, so you can renew any time from any device."
 msgstr ""
 
 msgid "What happens when my package ends?"
@@ -6731,178 +7004,6 @@ msgid "It takes about five minutes to create your advert."
 msgstr ""
 
 msgid "Questions? Talk to our team"
-msgstr ""
-
-msgid "Your advert"
-msgstr ""
-
-#, python-format
-msgid "created %(d)s"
-msgstr ""
-
-msgid "Advert created"
-msgstr ""
-
-msgid "Confirmation"
-msgstr ""
-
-msgid "Your advert was not approved"
-msgstr ""
-
-msgid "Our team could not publish this advert. Please contact us for details."
-msgstr ""
-
-msgid "One last step: pay to publish"
-msgstr ""
-
-#, python-format
-msgid ""
-"Pay %(currency)s %(amount)s for %(days)s days on the site, then enter the "
-"payment details below."
-msgstr ""
-
-msgid "Payment received, we are confirming it"
-msgstr ""
-
-msgid ""
-"Our team is checking your payment. Your advert goes live as soon as it is "
-"confirmed, usually within a few hours. You can close this page; it updates "
-"on its own."
-msgstr ""
-
-msgid "Your advert has ended"
-msgstr ""
-
-#, python-format
-msgid ""
-"It stopped showing on %(d)s. Renew below to bring it back straight away."
-msgstr ""
-
-msgid "Your advert is live!"
-msgstr ""
-
-#, python-format
-msgid "Couples can see it until %(d)s."
-msgstr ""
-
-msgid "Your renewal payment is being confirmed."
-msgstr ""
-
-msgid "View my advert"
-msgstr ""
-
-msgid "Inquiries"
-msgstr ""
-
-msgid "Days left"
-msgstr ""
-
-msgid "Renew early"
-msgstr ""
-
-msgid "Renew your advert"
-msgstr ""
-
-msgid "Pay for your advert"
-msgstr ""
-
-#, python-format
-msgid "%(days)s more days are added to the end of your current period."
-msgstr ""
-
-msgid "Mobile money or bank transfer."
-msgstr ""
-
-msgid "Amount to pay"
-msgstr ""
-
-msgid "I have paid - submit"
-msgstr ""
-
-msgid ""
-"Our team checks every payment against the transaction reference before "
-"publishing."
-msgstr ""
-
-msgid "Keep this page"
-msgstr ""
-
-msgid ""
-"This private link is how you pay, follow progress and renew. Save it or send"
-" it to yourself on WhatsApp."
-msgstr ""
-
-msgid "Your advert link"
-msgstr ""
-
-msgid "Copied"
-msgstr ""
-
-msgid "Copy"
-msgstr ""
-
-msgid "Send to my WhatsApp"
-msgstr ""
-
-msgid "Need help? Talk to our team"
-msgstr ""
-
-#, python-format
-msgid "Create your advert - %(brand)s"
-msgstr ""
-
-msgid "Create your advert"
-msgstr ""
-
-msgid "You can renew or upgrade later."
-msgstr ""
-
-#, python-format
-msgid "%(n)s photo"
-msgid_plural "%(n)s photos"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Your business"
-msgstr ""
-
-msgid "So couples and our team can reach you."
-msgstr ""
-
-msgid "Clear, honest details get more inquiries."
-msgstr ""
-
-msgid "Bright, real photos of your work. The first one is the cover."
-msgstr ""
-
-msgid "Cover photo"
-msgstr ""
-
-msgid "Add photo"
-msgstr ""
-
-msgid "We review every advert. Services must suit a family, halal platform."
-msgstr ""
-
-msgid "Live preview"
-msgstr ""
-
-msgid "Your advert title"
-msgstr ""
-
-msgid "Runs for"
-msgstr ""
-
-msgid "days"
-msgstr ""
-
-msgid "Total to pay"
-msgstr ""
-
-msgid "Continue to payment"
-msgstr ""
-
-msgid "Nothing is charged yet. You pay on the next step."
 msgstr ""
 
 #, python-format
@@ -8031,10 +8132,10 @@ msgid "Sikiliza ujumbe wa sauti"
 msgstr "Listen to voice message"
 
 #, python-format
-msgid "Premium Membership - %(brand)s"
+msgid "Packages - %(brand)s"
 msgstr ""
 
-msgid "Premium Membership"
+msgid "Membership Packages"
 msgstr ""
 
 msgid "More Features. Better Matches. A Brighter Future."
@@ -8099,10 +8200,8 @@ msgid "Ready to upgrade?"
 msgstr ""
 
 msgid ""
-"Mobile money payments (M-Pesa, Mixx by Yas, Airtel Money) are coming soon."
-msgstr ""
-
-msgid "Contact us to upgrade today."
+"Pay securely online with M-Pesa, Airtel Money, Mixx by Yas, HaloPesa or "
+"card. Your plan starts straight away."
 msgstr ""
 
 msgid "Join Free First"
@@ -8282,6 +8381,58 @@ msgid "Create my account"
 msgstr ""
 
 msgid "Already a member?"
+msgstr ""
+
+msgid "Confirm your email"
+msgstr ""
+
+#, python-format
+msgid ""
+"We sent a 6-digit code to <b>%(email)s</b>. Enter it below, or tap the "
+"button in the email."
+msgstr ""
+
+msgid "6-digit code"
+msgstr ""
+
+msgid "Confirm and continue"
+msgstr ""
+
+msgid ""
+"Can't find it? Check your spam or promotions folder. The code works for 24 "
+"hours."
+msgstr ""
+
+msgid "Send a new code"
+msgstr ""
+
+msgid "Wrong email address?"
+msgstr ""
+
+msgid "Send the code there"
+msgstr ""
+
+msgid "Log out"
+msgstr ""
+
+msgid ""
+"Welcome to Sakinah! To finish creating your account, enter this code on the "
+"sign-up page:"
+msgstr ""
+
+msgid "Or activate your account with one tap:"
+msgstr ""
+
+msgid "Activate my account"
+msgstr ""
+
+msgid ""
+"The code and the link work for 24 hours. If you did not create an account, "
+"you can ignore this email."
+msgstr ""
+
+#, python-format
+msgid "Assalamu Alaikum %(name)s,"
 msgstr ""
 
 #, python-format

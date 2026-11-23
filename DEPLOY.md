@@ -112,3 +112,17 @@ Mbadala: huduma yoyote ya TURN yenye username/password (mfano metered.ca) — we
 - Mtoa huduma anapata kiungo cha siri cha kufuatilia tangazo, kuona waliotazama na maulizo, na kuhuisha.
 - Bei ni za mfano: zibadilishe kwenye **Advert Packages**. Namba ya malipo (Lipa Namba) iandike kwenye **Mipangilio ya Tovuti → Payments → Ad payment instructions**.
 - Malipo yanathibitishwa na admin. Ukipata akaunti ya mfanyabiashara (Selcom, AzamPay, Pesapal), malipo ya moja kwa moja (push kwenye simu) yanaweza kuunganishwa baadaye bila kubadilisha kurasa hizi.
+
+## Malipo kupitia Pesapal (live)
+- Kwenye Render → Environment, weka **`PESAPAL_CONSUMER_KEY`** na **`PESAPAL_CONSUMER_SECRET`** (kutoka kwenye akaunti yako ya Pesapal: *Settings → API keys*). Usiziweke kwenye GitHub.
+- Ukishaziweka, malipo yote (vifurushi vya uanachama na matangazo) yanakwenda Pesapal: mteja anapelekwa ukurasa salama wa Pesapal (M-Pesa, Airtel Money, Mixx by Yas, HaloPesa, kadi), kisha anarudishwa. Malipo yakithibitishwa, kifurushi kinawashwa / tangazo linachapishwa **lenyewe**, bila admin.
+- Mfumo unasajili wenyewe anwani ya IPN (`/payments/pesapal/ipn/`) kwa Pesapal mara ya kwanza mtu anapolipa. Tunathibitisha kila malipo kwa kuuliza Pesapal moja kwa moja, kwa hiyo hakuna anayeweza kudanganya kwa kufungua kiungo.
+- Bila funguo hizo, tovuti inarudi kwenye fomu ya zamani (mteja anaweka namba ya muamala, admin anathibitisha).
+
+## Hali ya majaribio (sasa hivi)
+- Bei ni ndogo za kujaribu: vifurushi TSh 50 / 100 / 150 / 200, matangazo TSh 50 / 100 / 150.
+- **Mwezi mmoja = siku 3** (Dashboard → Mipangilio ya Tovuti → Payments → *Days in one month*). Mkimaliza majaribio: weka **30** hapo, na bei halisi kwenye *Membership Plans* na *Advert Packages*.
+
+## Lugha ya msingi na uthibitisho wa barua pepe
+- Tovuti inafunguka kwa **Kiswahili** kwa kila mtu mpaka achague lugha nyingine kwenye menyu (lugha ya kivinjari haitumiki). Kubadilisha: weka `SITE_LANGUAGE=en` (au `ar`, `fr`) kwenye Render.
+- Anayejisajili anatumiwa barua pepe yenye **code ya tarakimu 6** na **kiungo cha kuwezesha**; hawezi kuingia kwenye akaunti yake mpaka atumie mojawapo. Hii inafanya kazi tu ikiwa seva inaweza kutuma barua pepe (`BREVO_API_KEY` au `RESEND_API_KEY` au `EMAIL_HOST`); vinginevyo uthibitisho unaachwa ili watu wasikwame.
