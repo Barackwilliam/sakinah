@@ -45,7 +45,7 @@
   <h2>{% translate "Your adverts" %}</h2>
   <div class="av-mine-l">{% for o in mine %}<a href="{{ o.get_absolute_url }}" class="av-mine-i">
     <span class="av-mine-img">{% if o.image %}<img src="{{ o.image.url }}" alt="" loading="lazy">{% endif %}</span>
-    <span><b>{{ o.title }}</b><small>{{ o.package.name|tr }}{% if o.expires %} &middot; {% blocktranslate with d=o.expires|date:"j M Y" %}until {{ d }}{% endblocktranslate %}{% endif %}</small></span>
+    <span><b>{{ o.title }}</b><small>{{ o.package.name }}{% if o.expires %} &middot; {% blocktranslate with d=o.expires|date:"j M Y" %}until {{ d }}{% endblocktranslate %}{% endif %}</small></span>
     <span class="av-st st-{{ o.status }}{% if o.is_expired %} st-expired{% endif %}">{% if o.is_expired %}{% translate "Expired" %}{% else %}{{ o.get_status_display }}{% endif %}</span></a>{% endfor %}</div>
 </section>{% endif %}
 
@@ -82,11 +82,11 @@
     {% for p in packages %}
     <article class="av-pk-c{% if p.popular %} top{% endif %}">
       {% if p.popular %}<span class="av-pk-badge"><svg><use href="{{ icons }}#i-crown"/></svg>{% translate "Most popular" %}</span>{% endif %}
-      <h3>{{ p.name|tr }}</h3><p class="av-pk-tag">{{ p.tagline|tr }}</p>
+      <h3>{{ p.name }}</h3><p class="av-pk-tag">{{ p.tagline|tr }}</p>
       <div class="av-pk-price"><small>{{ site.currency }}</small><b>{{ p.price|intcomma }}</b></div>
       <p class="av-pk-days">{% blocktranslate count months=p.months %}for {{ months }} month{% plural %}for {{ months }} months{% endblocktranslate %}</p>
       <ul>{% for ok, text in p.feature_list %}<li class="{% if not ok %}no{% endif %}"><svg><use href="{{ icons }}#i-{% if ok %}check-c{% else %}x-c{% endif %}"/></svg>{{ text }}</li>{% endfor %}</ul>
-      <a class="btn {% if p.popular %}btn-s{% else %}btn-o{% endif %} block" href="{% url 'm_ad_new' %}?package={{ p.slug }}">{% blocktranslate with name=p.name|tr %}Choose {{ name }}{% endblocktranslate %}</a>
+      <a class="btn {% if p.popular %}btn-s{% else %}btn-o{% endif %} block" href="{% url 'm_ad_new' %}?package={{ p.slug }}">{% blocktranslate with name=p.name %}Choose {{ name }}{% endblocktranslate %}</a>
     </article>
     {% endfor %}
   </div>

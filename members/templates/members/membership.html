@@ -40,7 +40,7 @@
       <article class="plan {{ p.style }}{% if p.popular %} pop{% endif %}{% if p.pk == current.pk %} cur{% endif %}">
         {% if p.popular %}<span class="pop-tag">{% translate "Most Popular" %}</span>{% endif %}
         {% if p.icon %}<img loading="lazy" decoding="async" src="{{ p.icon.url }}" alt="">{% else %}<img loading="lazy" decoding="async" src="{% static 'img/member/plan' %}{{ p.icon_n }}.jpg" alt="">{% endif %}
-        <h3>{{ p.name|tr }}</h3><small>{{ p.tagline|tr|default:"&nbsp;" }}</small>
+        <h3>{{ p.name }}</h3><small>{{ p.tagline|tr|default:"&nbsp;" }}</small>
         <div class="pp"><b>{% blocktranslate with price=p.price|intcomma %}TSh {{ price }}{% endblocktranslate %}</b><span>{{ p.period|tr }}</span></div>
         <ul class="tlist">{% for ok, t in p.feature_list %}{% if ok %}<li><svg><use href="{{ micons }}#m-check-c"/></svg>{{ t }}</li>{% endif %}{% endfor %}</ul>
         {% if p.pk == current.pk %}<span class="btn pbtn curb">{% translate "Current Plan" %}</span>
@@ -62,7 +62,7 @@
     {% endif %}
 
     {% if tab == 'compare' %}
-    <section class="box tbl-wrap"><table class="ctable"><thead><tr><th>{% translate "Feature" %}</th>{% for p in plans %}<th class="{{ p.style }}">{{ p.name|tr }}<small>{% blocktranslate with price=p.price|intcomma %}TSh {{ price }}{% endblocktranslate %}</small></th>{% endfor %}</tr></thead>
+    <section class="box tbl-wrap"><table class="ctable"><thead><tr><th>{% translate "Feature" %}</th>{% for p in plans %}<th class="{{ p.style }}">{{ p.name }}<small>{% blocktranslate with price=p.price|intcomma %}TSh {{ price }}{% endblocktranslate %}</small></th>{% endfor %}</tr></thead>
       <tbody>{% for t, row in compare %}<tr><td>{{ t }}</td>{% for ok in row %}<td>{% if ok %}<svg class="ok"><use href="{{ micons }}#m-check-c"/></svg>{% else %}<svg class="muted"><use href="{{ micons }}#m-x-c"/></svg>{% endif %}</td>{% endfor %}</tr>{% endfor %}
       <tr><td></td>{% for p in plans %}<td>{% if p.pk == current.pk %}<span class="muted">{% translate "Current" %}</span>{% elif p.price %}<a class="btn sm" href="?tab=compare&amp;pay={{ p.pk }}#pay">{% translate "Choose" %}</a>{% endif %}</td>{% endfor %}</tr></tbody></table></section>
     {% endif %}

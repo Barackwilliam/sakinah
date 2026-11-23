@@ -142,7 +142,7 @@ msgid "More visibility and better connections."
 msgstr "Kuonekana zaidi na mawasiliano bora."
 
 msgid "All Free features"
-msgstr "Vipengele vyote vya Bure"
+msgstr "Vipengele vyote vya Free"
 
 msgid "Full profile access"
 msgstr "Kuona wasifu wote kikamilifu"
@@ -166,7 +166,7 @@ msgid "Connect more and get better matches."
 msgstr "Ungana zaidi na upate wenza bora."
 
 msgid "All Basic features"
-msgstr "Vipengele vyote vya Msingi"
+msgstr "Vipengele vyote vya Basic"
 
 msgid "Priority in search results"
 msgstr "Kipaumbele kwenye matokeo ya utafutaji"
@@ -190,7 +190,7 @@ msgid "Maximum visibility and serious connections."
 msgstr "Kuonekana zaidi kabisa na mahusiano ya dhati."
 
 msgid "All Silver features"
-msgstr "Vipengele vyote vya Fedha"
+msgstr "Vipengele vyote vya Silver"
 
 msgid "Unlimited messages"
 msgstr "Ujumbe bila kikomo"
@@ -217,7 +217,7 @@ msgid "Ultimate experience for serious marriage seekers."
 msgstr "Uzoefu wa hali ya juu kwa wanaotafuta ndoa kwa dhati."
 
 msgid "All Gold features"
-msgstr "Vipengele vyote vya Dhahabu"
+msgstr "Vipengele vyote vya Gold"
 
 msgid "Unlimited profile boosts"
 msgstr "Kuongeza mwonekano bila kikomo"
@@ -443,7 +443,7 @@ msgid "Stand out at the top of your category."
 msgstr "Jitokeze juu kabisa ya aina yako."
 
 msgid "Everything in Starter"
-msgstr "Kila kitu cha Mwanzo"
+msgstr "Kila kitu cha Starter"
 
 msgid "Top of your category"
 msgstr "Juu kabisa ya aina yako"
@@ -458,7 +458,7 @@ msgid "Maximum visibility for serious businesses."
 msgstr "Kuonekana zaidi kabisa kwa biashara makini."
 
 msgid "Everything in Business"
-msgstr "Kila kitu cha Biashara"
+msgstr "Kila kitu cha Business"
 
 msgid "Runs for 2 months"
 msgstr "Linadumu miezi 2"
@@ -8485,7 +8485,7 @@ msgstr ""
 
 #, python-format
 msgid "%(name)s Plan"
-msgstr "Kifurushi cha %(name)s"
+msgstr "%(name)s Plan"
 
 msgid "Your current plan"
 msgstr "Kifurushi chako cha sasa"

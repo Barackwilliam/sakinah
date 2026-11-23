@@ -17,10 +17,10 @@
       <div class="av-pick">
         {% for p in packages %}
         <label class="av-pick-i{% if p.popular %} top{% endif %}">
-          <input type="radio" name="package" value="{{ p.pk }}" data-price="{{ p.price }}" data-name="{{ p.name|tr }}" data-photos="{{ p.max_photos }}" data-featured="{{ p.featured|yesno:'1,' }}"
+          <input type="radio" name="package" value="{{ p.pk }}" data-price="{{ p.price }}" data-name="{{ p.name }}" data-photos="{{ p.max_photos }}" data-featured="{{ p.featured|yesno:'1,' }}"
                  data-months="{% blocktranslate count months=p.months %}{{ months }} month{% plural %}{{ months }} months{% endblocktranslate %}"
                  {% if form.package.value|stringformat:"s" == p.pk|stringformat:"s" or not form.package.value and p == chosen %}checked{% endif %}>
-          <span class="av-pick-b">{% if p.popular %}<em>{% translate "Most popular" %}</em>{% endif %}<b>{{ p.name|tr }}</b>
+          <span class="av-pick-b">{% if p.popular %}<em>{% translate "Most popular" %}</em>{% endif %}<b>{{ p.name }}</b>
             <span class="av-pick-p">{{ site.currency }} {{ p.price|intcomma }}</span>
             <small>{% blocktranslate count months=p.months %}{{ months }} month{% plural %}{{ months }} months{% endblocktranslate %} &middot; {% blocktranslate count n=p.max_photos %}{{ n }} photo{% plural %}{{ n }} photos{% endblocktranslate %}{% if p.featured %} &middot; {% translate "Featured" %}{% endif %}</small></span>
           <svg class="av-pick-ok"><use href="{{ micons }}#m-check-c"/></svg>

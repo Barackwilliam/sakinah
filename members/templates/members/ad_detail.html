@@ -5,7 +5,7 @@
 <section class="av-acc-top">
   <a class="av-back" href="{% url 'm_ads' %}"><svg><use href="{{ micons }}#m-chev-l"/></svg>{% translate "My Adverts" %}</a>
   <h1>{{ o.title }}</h1>
-  <p class="av-top-sub">{{ o.business_name }} &middot; {{ o.package.name|tr }} &middot; {% blocktranslate with d=o.created|date:"j M Y" %}created {{ d }}{% endblocktranslate %}</p>
+  <p class="av-top-sub">{{ o.business_name }} &middot; {{ o.package.name }} &middot; {% blocktranslate with d=o.created|date:"j M Y" %}created {{ d }}{% endblocktranslate %}</p>
   <ol class="av-track">
     <li class="done"><i><svg><use href="{{ micons }}#m-tick2"/></svg></i>{% translate "Advert created" %}</li>
     <li class="{% if o.step >= 2 %}done{% elif o.status != 'rejected' %}now{% endif %}"><i>{% if o.step >= 2 %}<svg><use href="{{ micons }}#m-tick2"/></svg>{% else %}2{% endif %}</i>{% translate "Payment" %}</li>
@@ -47,7 +47,7 @@
     <section class="av-card av-pay" id="pay">
       <header><span><svg><use href="{{ micons }}#m-card"/></svg></span><div><h2>{% if o.status == "live" %}{% translate "Renew your advert" %}{% else %}{% translate "Pay for your advert" %}{% endif %}</h2>
         <p>{% if o.status == "live" %}{% blocktranslate count months=o.package.months %}{{ months }} more month is added to the end of your current period.{% plural %}{{ months }} more months are added to the end of your current period.{% endblocktranslate %}{% elif online %}{% translate "Secure online payment with Pesapal." %}{% else %}{% translate "Mobile money or bank transfer." %}{% endif %}</p></div></header>
-      <div class="av-amount"><small>{% translate "Amount to pay" %}</small><b>{{ site.currency }} {{ o.package.price|intcomma }}</b><span>{{ o.package.name|tr }} &middot; {% blocktranslate count months=o.package.months %}{{ months }} month{% plural %}{{ months }} months{% endblocktranslate %}</span></div>
+      <div class="av-amount"><small>{% translate "Amount to pay" %}</small><b>{{ site.currency }} {{ o.package.price|intcomma }}</b><span>{{ o.package.name }} &middot; {% blocktranslate count months=o.package.months %}{{ months }} month{% plural %}{{ months }} months{% endblocktranslate %}</span></div>
       <form method="post" class="av-payform" novalidate>{% csrf_token %}
         {% if online %}
           <ul class="av-pp"><li class="gw-mpesa">M-Pesa</li><li class="gw-airtel">Airtel Money</li><li class="gw-mixx">Mixx by Yas</li><li>HaloPesa</li><li class="gw-bank">Visa / Mastercard</li></ul>
@@ -82,7 +82,7 @@
     </article>
     <dl class="av-sum">
       <div><dt>{% translate "Status" %}</dt><dd><span class="av-st st-{{ o.status }}{% if o.is_expired %} st-expired{% endif %}">{% if o.is_expired %}{% translate "Expired" %}{% else %}{{ o.get_status_display }}{% endif %}</span></dd></div>
-      <div><dt>{% translate "Package" %}</dt><dd>{{ o.package.name|tr }}</dd></div>
+      <div><dt>{% translate "Package" %}</dt><dd>{{ o.package.name }}</dd></div>
       {% if o.expires %}<div><dt>{% translate "Runs until" %}</dt><dd>{{ o.expires|date:"j M Y" }}</dd></div>{% endif %}
       <div><dt>{% translate "Contact" %}</dt><dd>{{ o.phone }}</dd></div>
     </dl>
