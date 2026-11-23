@@ -42,6 +42,13 @@ Mradi una `render.yaml` (Render Blueprint) na `build.sh`. Database na picha zina
 ## 3. Domain yako (hiari)
 Render → service → **Settings** → **Custom Domains** → ongeza domain, kisha weka DNS records unazopewa. Ongeza domain hiyo kwenye `ALLOWED_HOSTS` na `CSRF_TRUSTED_ORIGINS`.
 
+## 3b. Admin kwenye admin.sakinah.co.tz
+Login ya admin iko `/dashboard/login/` (ukurasa wake peke yake; login ya wanachama haina tena kitufe cha admin). Kuiweka kwenye anwani yake:
+1. Kwa mtoa huduma wa domain (DNS), ongeza **CNAME**: jina `admin`, thamani ni anwani ya Render (`xxxx.onrender.com`).
+2. Render → service → **Settings → Custom Domains** → ongeza `admin.sakinah.co.tz`, subiri cheti (SSL) kiwe tayari.
+3. Render → **Environment** → ongeza `ADMIN_HOST` = `admin.sakinah.co.tz` (na `SITE_URL` = `https://www.sakinah.co.tz` kama tovuti kuu iko kwenye anwani nyingine).
+Baada ya hapo `admin.sakinah.co.tz` inafungua login ya admin moja kwa moja, na viungo vya `/dashboard/` kwenye tovuti kuu vinapelekwa huko. Usiweke `ADMIN_HOST` kabla hatua 1-2 hazijakamilika, la sivyo admin hataweza kufika kwenye dashboard.
+
 ## 4. Email (hiari, kwa "Forgot password")
 **Render free plan inazuia SMTP** (ports 25, 465 na 587; tangu Septemba 2025), kwa hiyo Gmail SMTP haifanyi kazi huko. Tumia **Brevo** (bure, email 300 kwa siku):
 1. Jisajili [brevo.com](https://www.brevo.com), kisha **Senders** → ongeza na uthibitishe email utakayotumia kutuma (mfano `no-reply@sakinah.co.tz` au Gmail yako).
@@ -109,7 +116,7 @@ Mbadala: huduma yoyote ya TURN yenye username/password (mfano metered.ca) — we
 ## Tangaza Nasi (Advertise with us)
 - Ukurasa: `/advertise/`. Mtoa huduma anachagua kifurushi, anajaza maelezo na picha (anaona tangazo likijitengeneza), kisha analipa kwa M-Pesa / Mixx by Yas / Airtel Money / benki na kuweka namba ya muamala.
 - Admin anapata taarifa na beji kwenye **Dashboard → Masoko na Matangazo → Advert Requests**. Akibofya **Confirm payment & publish**, tangazo linachapishwa mara moja kwa siku za kifurushi na kujificha lenyewe likiisha. Kuthibitisha malipo kwenye ukurasa wa Malipo kunachapisha pia.
-- Mtoa huduma anapata kiungo cha siri cha kufuatilia tangazo, kuona waliotazama na maulizo, na kuhuisha.
+- Watangazaji wana **akaunti zao peke yao**, tofauti na za wanachama: usajili `/advertise/register/` (jina kamili, simu, email, nenosiri na kukubali sera ya matangazo), login `/advertise/login/`, na dashboard yao `/advertise/dashboard/` (matangazo yao, kutengeneza tangazo, malipo, taarifa, akaunti). Mtangazaji hawezi kuingia kwenye kurasa za kutafuta wenzi, na mwanachama hawezi kuingia kwa login ya watangazaji. Kitufe **Post Ad** kwenye menu kinapeleka huko.
 - Bei ni za mfano: zibadilishe kwenye **Advert Packages**. Namba ya malipo (Lipa Namba) iandike kwenye **Mipangilio ya Tovuti → Payments → Ad payment instructions**.
 - Malipo yanathibitishwa na admin. Ukipata akaunti ya mfanyabiashara (Selcom, AzamPay, Pesapal), malipo ya moja kwa moja (push kwenye simu) yanaweza kuunganishwa baadaye bila kubadilisha kurasa hizi.
 
@@ -121,6 +128,7 @@ Mbadala: huduma yoyote ya TURN yenye username/password (mfano metered.ca) — we
 
 ## Hali ya majaribio (sasa hivi)
 - Bei ni ndogo za kujaribu: vifurushi TSh 50 / 100 / 150 / 200, matangazo TSh 50 / 100 / 150.
+- Dakika za simu (sauti na video) kwa kila mwezi wa kifurushi: Basic 5, Silver 10, Gold 15, Tanzanite 20 (Dashboard → *Membership Plans* → *Call minutes per month*). Zikiisha, mwanachama hawezi kupiga simu hadi arudie kifurushi; huduma nyingine zinaendelea. Anapata taarifa dakika zikiisha na kifurushi kikiisha.
 - **Mwezi mmoja = siku 3** (Dashboard → Mipangilio ya Tovuti → Payments → *Days in one month*). Mkimaliza majaribio: weka **30** hapo, na bei halisi kwenye *Membership Plans* na *Advert Packages*.
 
 ## Lugha ya msingi na uthibitisho wa barua pepe

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sakinah\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-23 03:26+0300\n"
+"POT-Creation-Date: 2026-11-24 01:07+0300\n"
 "PO-Revision-Date: 2026-11-20 00:00+0300\n"
 "Last-Translator: Sakinah\n"
 "Language-Team: Sakinah\n"
@@ -16,7 +16,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
 
 msgid "Imani • Mapenzi • Ndoa"
 msgstr "إيمان • محبة • زواج"
@@ -402,8 +403,8 @@ msgid ""
 "Namba), kisha weka namba ya simu uliyotumia na namba ya muamala hapa chini. "
 "Tutathibitisha malipo na tangazo lako litaanza kuonekana mara moja."
 msgstr ""
-"ادفع عبر M-Pesa أو Mixx by Yas أو Airtel Money إلى رقم الدفع الخاص بنا (Lipa"
-" Namba)، ثم أدخل رقم الهاتف الذي استخدمته ورقم المعاملة أدناه. سنؤكد الدفع "
+"ادفع عبر M-Pesa أو Mixx by Yas أو Airtel Money إلى رقم الدفع الخاص بنا (Lipa "
+"Namba)، ثم أدخل رقم الهاتف الذي استخدمته ورقم المعاملة أدناه. سنؤكد الدفع "
 "ويبدأ ظهور إعلانك فورًا."
 
 msgid "Per Event / Day"
@@ -552,8 +553,7 @@ msgid "Hide my face"
 msgstr "إخفاء وجهي"
 
 msgid ""
-"Cover your face with a soft blur so only people you choose can recognise "
-"you."
+"Cover your face with a soft blur so only people you choose can recognise you."
 msgstr "غطِّ وجهك بتمويه ناعم بحيث لا يتعرّف عليك إلا من تختارهم."
 
 msgid "About family"
@@ -1117,6 +1117,9 @@ msgstr "أدخل بريدك الإلكتروني"
 msgid "Enter your password"
 msgstr "أدخل كلمة المرور"
 
+msgid "This is an advertiser account. Please use the advertiser login."
+msgstr "هذا حساب معلن. يرجى استخدام صفحة دخول المعلنين."
+
 msgid "Tell the vendor about your event"
 msgstr "أخبر المزوّد عن مناسبتك"
 
@@ -1223,6 +1226,29 @@ msgstr "مثل QK71ABC2XY"
 
 msgid "This transaction reference has already been used."
 msgstr "تم استخدام رقم المعاملة هذا بالفعل."
+
+msgid "Enter a valid phone number, e.g. 0712 345 678."
+msgstr "أدخل رقم هاتف صحيحًا، مثل 0712 345 678."
+
+msgid "Phone number"
+msgstr "رقم الهاتف"
+
+msgid "Email address"
+msgstr "عنوان البريد الإلكتروني"
+
+msgid "I agree to the advertising policy"
+msgstr "أوافق على سياسة الإعلانات"
+
+msgid "Please read and accept the advertising policy to continue."
+msgstr "يرجى قراءة سياسة الإعلانات والموافقة عليها للمتابعة."
+
+msgid "An account with this email already exists. Sign in instead."
+msgstr "يوجد حساب بهذا البريد الإلكتروني بالفعل. سجّل الدخول بدلًا من ذلك."
+
+msgid ""
+"This is a Sakinah member account. Use the member login, or create an "
+"advertiser account."
+msgstr "هذا حساب عضو في سكينة. استخدم دخول الأعضاء، أو أنشئ حساب معلن."
 
 msgid "Call ended"
 msgstr "انتهت المكالمة"
@@ -1354,8 +1380,8 @@ msgid ""
 "How many days count as one month of membership or advertising. Use a small "
 "number like 3 while testing payments, then 30."
 msgstr ""
-"عدد الأيام التي تُحتسب شهرًا واحدًا للعضوية أو الإعلانات. استخدم رقمًا "
-"صغيرًا مثل 3 أثناء اختبار المدفوعات، ثم 30."
+"عدد الأيام التي تُحتسب شهرًا واحدًا للعضوية أو الإعلانات. استخدم رقمًا صغيرًا مثل "
+"3 أثناء اختبار المدفوعات، ثم 30."
 
 msgid "WhatsApp number with country code, e.g. 255712345678"
 msgstr "رقم واتساب مع رمز الدولة، مثل 255712345678"
@@ -1374,18 +1400,20 @@ msgstr "الرسائل يوميًا"
 msgid ""
 "How many messages this plan may send in 24 hours. 0 = none, -1 = unlimited."
 msgstr ""
-"عدد الرسائل التي يمكن لهذه الباقة إرسالها خلال 24 ساعة. 0 = لا شيء، ‎-1 = "
-"غير محدود."
+"عدد الرسائل التي يمكن لهذه الباقة إرسالها خلال 24 ساعة. 0 = لا شيء، ‎-1 = غير "
+"محدود."
 
-msgid "Call seconds per day"
-msgstr "ثواني المكالمات يوميًا"
+msgid "Call minutes per month"
+msgstr "دقائق المكالمات في الشهر"
 
 msgid ""
-"Voice and video call time allowed in 24 hours, in seconds. 0 = none, -1 = "
-"unlimited."
+"Voice and video call minutes for each month of the plan. 0 = none, -1 = "
+"unlimited. When they are used up the member cannot call until the plan is "
+"renewed; everything else keeps working."
 msgstr ""
-"مدة المكالمات الصوتية والمرئية المسموح بها خلال 24 ساعة بالثواني. 0 = لا "
-"شيء، ‎-1 = غير محدود."
+"دقائق المكالمات الصوتية والمرئية لكل شهر من الباقة. 0 = لا شيء، ‎-1 = غير "
+"محدود. عند نفادها لا يستطيع العضو الاتصال حتى يجدد الباقة، وتبقى بقية "
+"الخدمات تعمل."
 
 msgid "Start as many chats as you like"
 msgstr "ابدأ محادثات بقدر ما تشاء"
@@ -1410,18 +1438,14 @@ msgid "No voice or video calls"
 msgstr "لا مكالمات صوتية أو مرئية"
 
 #, python-format
-msgid "%(n)d minute of calls a day"
-msgid_plural "%(n)d minutes of calls a day"
-msgstr[0] "%(n)d دقيقة مكالمات يوميًا"
-msgstr[1] "دقيقة واحدة من المكالمات يوميًا"
-msgstr[2] "دقيقتان من المكالمات يوميًا"
-msgstr[3] "%(n)d دقائق من المكالمات يوميًا"
-msgstr[4] "%(n)d دقيقة من المكالمات يوميًا"
-msgstr[5] "%(n)d دقيقة من المكالمات يوميًا"
-
-#, python-format
-msgid "%(n)d seconds of calls a day"
-msgstr "%(n)d ثانية من المكالمات يوميًا"
+msgid "%(n)d minute of voice and video calls"
+msgid_plural "%(n)d minutes of voice and video calls"
+msgstr[0] "%(n)d دقيقة من المكالمات الصوتية والمرئية"
+msgstr[1] "دقيقة واحدة (%(n)d) من المكالمات الصوتية والمرئية"
+msgstr[2] "دقيقتان (%(n)d) من المكالمات الصوتية والمرئية"
+msgstr[3] "%(n)d دقائق من المكالمات الصوتية والمرئية"
+msgstr[4] "%(n)d دقيقة من المكالمات الصوتية والمرئية"
+msgstr[5] "%(n)d دقيقة من المكالمات الصوتية والمرئية"
 
 msgid "Woman"
 msgstr "امرأة"
@@ -1793,6 +1817,12 @@ msgstr "مغلق"
 msgid "Answer from the support team; the member sees it as a notification."
 msgstr "رد من فريق الدعم؛ يراه العضو كإشعار."
 
+msgid "Advertiser"
+msgstr "معلن"
+
+msgid "Advertisers"
+msgstr "المعلنون"
+
 msgid "Price for the whole period, in TSh."
 msgstr "السعر للمدة كاملة بالشلن التنزاني."
 
@@ -1804,8 +1834,7 @@ msgstr ""
 "الموقع)."
 
 msgid ""
-"One per line. Start a line with - for something the package does not "
-"include."
+"One per line. Start a line with - for something the package does not include."
 msgstr "عنصر في كل سطر. ابدأ السطر بـ - لما لا تتضمنه الباقة."
 
 msgid "Featured badge and first place in its category."
@@ -2014,8 +2043,8 @@ msgid "Third feature on the card, e.g. Airport Transfer, Candle Dinner."
 msgstr "الميزة الثالثة على البطاقة، مثل النقل من المطار، عشاء على ضوء الشموع."
 
 msgid ""
-"Icon for the extra: car, plane, map, dive, heart, villa, safari, wave, hike,"
-" gift."
+"Icon for the extra: car, plane, map, dive, heart, villa, safari, wave, hike, "
+"gift."
 msgstr ""
 "أيقونة الإضافة: car, plane, map, dive, heart, villa, safari, wave, hike, "
 "gift."
@@ -2123,6 +2152,12 @@ msgstr "لا يمكنك الاتصال بهذا العضو."
 msgid "Simu haipatikani kwa akaunti hii kwa sasa."
 msgstr "المكالمات غير متاحة لهذا الحساب حاليًا."
 
+msgid ""
+"Umetumia dakika zote za simu za kifurushi chako. Rudia au ongeza kifurushi "
+"ili upige tena."
+msgstr ""
+"لقد استخدمت كل دقائق المكالمات في باقتك. جدّد الباقة أو رقّها لتتصل مجددًا."
+
 msgid "Kamilisha wasifu wako ili uweze kutuma ujumbe."
 msgstr "أكمل ملفك الشخصي لتتمكن من إرسال الرسائل."
 
@@ -2133,8 +2168,8 @@ msgstr ""
 "باقتك لا تسمح ببدء محادثة. اشترك في باقة لتبدأ؛ الرد على من راسلك مجاني."
 
 msgid ""
-"Umefikia kikomo cha mazungumzo mapya ya leo. Utaweza kuanzisha mengine baada"
-" ya masaa 24, au ongeza kifurushi."
+"Umefikia kikomo cha mazungumzo mapya ya leo. Utaweza kuanzisha mengine baada "
+"ya masaa 24, au ongeza kifurushi."
 msgstr ""
 "لقد بلغت حد المحادثات الجديدة لهذا اليوم. يمكنك بدء المزيد بعد 24 ساعة، أو "
 "قم بترقية باقتك."
@@ -2146,14 +2181,23 @@ msgstr "لا يمكنك مراسلة هذا العضو."
 msgid "%(first_name)s anapokea ujumbe kutoka kwa %(lower)s pekee."
 msgstr "%(first_name)s يقبل الرسائل من %(lower)s فقط."
 
+msgid "Karibu! Your advertiser account is ready. Create your first advert."
+msgstr "مرحبًا! حساب المعلن الخاص بك جاهز. أنشئ إعلانك الأول."
+
+msgid "Your details are saved."
+msgstr "تم حفظ بياناتك."
+
+msgid "Your password is changed."
+msgstr "تم تغيير كلمة المرور."
+
+msgid "Please check the highlighted fields."
+msgstr "يرجى مراجعة الحقول المميزة."
+
 msgid "Advert packages are being prepared. Please check back soon."
 msgstr "باقات الإعلانات قيد الإعداد. يرجى العودة قريبًا."
 
 msgid "Your advert is ready. One last step: pay to publish it."
 msgstr "إعلانك جاهز. خطوة أخيرة: ادفع لنشره."
-
-msgid "Please check the highlighted fields."
-msgstr "يرجى مراجعة الحقول المميزة."
 
 msgid ""
 "We could not open the payment page right now. Please try again in a moment."
@@ -2260,8 +2304,8 @@ msgid ""
 "Asante! Your request for %(title)s was sent. Our travel team will contact "
 "you on %(phone)s very soon."
 msgstr ""
-"شكرًا! تم إرسال طلبك لـ %(title)s. سيتواصل معك فريق السفر على %(phone)s "
-"قريبًا جدًا."
+"شكرًا! تم إرسال طلبك لـ %(title)s. سيتواصل معك فريق السفر على %(phone)s قريبًا "
+"جدًا."
 
 #, python-format
 msgid "Please check the booking form. %(errors)s"
@@ -2308,9 +2352,6 @@ msgid ""
 "Your payment is being processed. This page updates as soon as Pesapal "
 "confirms it."
 msgstr "يتم معالجة دفعتك. تتحدث هذه الصفحة فور تأكيد Pesapal."
-
-msgid "Email address"
-msgstr "عنوان البريد الإلكتروني"
 
 msgid "Your email is verified. Welcome to Sakinah!"
 msgstr "تم توثيق بريدك الإلكتروني. مرحبًا بك في سكينة!"
@@ -2457,14 +2498,14 @@ msgstr ""
 "محدود."
 
 msgid ""
-"Voice and video call time in 24 hours, in seconds (60 = 1 minute). 0 = none,"
-" -1 = unlimited."
+"Voice and video call minutes for each month of the plan. 0 = none, -1 = "
+"unlimited."
 msgstr ""
-"مدة المكالمات الصوتية والمرئية خلال 24 ساعة بالثواني (60 = دقيقة). 0 = لا "
-"شيء، ‎-1 = غير محدود."
+"دقائق المكالمات الصوتية والمرئية لكل شهر من الباقة. 0 = لا شيء، ‎-1 = غير "
+"محدود."
 
-msgid "Per day"
-msgstr "يوميًا"
+msgid "Allowance"
+msgstr "الحصة"
 
 msgid "Active members"
 msgstr "الأعضاء النشطون"
@@ -2601,8 +2642,8 @@ msgid ""
 "Vendors who used Advertise with us. Confirm the payment to publish the "
 "advert; it then runs for the package's days."
 msgstr ""
-"المزوّدون الذين استخدموا «أعلن معنا». أكّد الدفع لنشر الإعلان، ثم يستمر لعدد"
-" أيام الباقة."
+"المزوّدون الذين استخدموا «أعلن معنا». أكّد الدفع لنشر الإعلان، ثم يستمر لعدد "
+"أيام الباقة."
 
 msgid "Amount"
 msgstr "المبلغ"
@@ -2644,8 +2685,8 @@ msgid "Service Categories"
 msgstr "فئات الخدمات"
 
 msgid ""
-"Hongera! Your honeymoon booking is confirmed. Our team will share the travel"
-" details with you."
+"Hongera! Your honeymoon booking is confirmed. Our team will share the travel "
+"details with you."
 msgstr "مبروك! تم تأكيد حجز شهر العسل. سيشاركك فريقنا تفاصيل السفر."
 
 msgid ""
@@ -2979,8 +3020,8 @@ msgid ""
 "Add BREVO_API_KEY (or RESEND_API_KEY) on Render to send real email. In-app "
 "messages and notifications work now."
 msgstr ""
-"لم يتم إعداد البريد الإلكتروني بعد، لذا تُطبع الرسائل في سجل الخادم فقط. أضف"
-" BREVO_API_KEY (أو RESEND_API_KEY) على Render لإرسال بريد حقيقي. الرسائل "
+"لم يتم إعداد البريد الإلكتروني بعد، لذا تُطبع الرسائل في سجل الخادم فقط. أضف "
+"BREVO_API_KEY (أو RESEND_API_KEY) على Render لإرسال بريد حقيقي. الرسائل "
 "الداخلية والإشعارات تعمل الآن."
 
 msgid "Only Males"
@@ -3052,9 +3093,45 @@ msgstr "المجموعة"
 msgid "Members"
 msgstr "الأعضاء"
 
+#, python-format
+msgid "Admin Login - %(brand)s"
+msgstr "دخول المشرف - %(brand)s"
+
+msgid "Sakinah Administration"
+msgstr "إدارة سكينة"
+
 msgid ""
-"Manage member matches, activities and events to build meaningful "
-"connections."
+"Manage members, payments, adverts, events and the content of the site from "
+"one place."
+msgstr ""
+"أدر الأعضاء والمدفوعات والإعلانات والفعاليات ومحتوى الموقع من مكان واحد."
+
+msgid "Approve, verify and support members."
+msgstr "اعتمد الأعضاء وتحقق منهم وادعمهم."
+
+msgid "Review and publish advertisers' adverts."
+msgstr "راجع إعلانات المعلنين وانشرها."
+
+msgid "Payments"
+msgstr "المدفوعات"
+
+msgid "Follow every Pesapal payment."
+msgstr "تابع كل دفعة عبر Pesapal."
+
+msgid "For Sakinah administrators and staff only."
+msgstr "لمشرفي سكينة وموظفيها فقط."
+
+msgid "Login"
+msgstr "تسجيل الدخول"
+
+msgid "Not an administrator?"
+msgstr "لست مشرفًا؟"
+
+msgid "Go to the member login"
+msgstr "انتقل إلى دخول الأعضاء"
+
+msgid ""
+"Manage member matches, activities and events to build meaningful connections."
 msgstr "أدر تطابقات الأعضاء وأنشطتهم وفعالياتهم لبناء علاقات هادفة."
 
 msgid "Find Potential Matches"
@@ -3326,8 +3403,7 @@ msgid "Showing %(start_index)s to %(end_index)s of %(v_count)s members"
 msgstr "عرض %(start_index)s إلى %(end_index)s من %(v_count)s عضو"
 
 msgid ""
-"Exports the selected members, or everyone in this list when none are "
-"selected"
+"Exports the selected members, or everyone in this list when none are selected"
 msgstr "يصدّر الأعضاء المحددين، أو كل من في هذه القائمة إن لم يُحدَّد أحد"
 
 msgid ""
@@ -3340,8 +3416,8 @@ msgstr "أرسل رسالة إلى الأعضاء المحددين"
 
 #, python-brace-format
 msgid ""
-"It arrives as a notification in their member dashboard. Use "
-"<code>{name}</code> for the member's first name."
+"It arrives as a notification in their member dashboard. Use <code>{name}</"
+"code> for the member's first name."
 msgstr ""
 "تصلهم كإشعار في لوحة العضو. استخدم <code>{name}</code> للاسم الأول للعضو."
 
@@ -3383,8 +3459,7 @@ msgstr "لوحة تحكم المدير"
 msgid "Welcome, Super Admin"
 msgstr "مرحبًا أيها المدير العام"
 
-msgid ""
-"Manage Sakinah platform, members, content, payments and all activities."
+msgid "Manage Sakinah platform, members, content, payments and all activities."
 msgstr "أدر منصة سكينة والأعضاء والمحتوى والمدفوعات وجميع الأنشطة."
 
 msgid "Monitor, manage and grow the Sakinah platform."
@@ -3543,8 +3618,8 @@ msgid ""
 "No payments recorded yet. Use <b>Record Manual Payment</b> when a member "
 "pays by mobile money, bank or cash."
 msgstr ""
-"لم تُسجَّل أي مدفوعات بعد. استخدم <b>تسجيل دفعة يدوية</b> عندما يدفع عضو عبر"
-" المحفظة الهاتفية أو البنك أو نقدًا."
+"لم تُسجَّل أي مدفوعات بعد. استخدم <b>تسجيل دفعة يدوية</b> عندما يدفع عضو عبر "
+"المحفظة الهاتفية أو البنك أو نقدًا."
 
 msgid "Subscription Plans Revenue"
 msgstr "إيرادات باقات الاشتراك"
@@ -3570,8 +3645,8 @@ msgstr "حفظ الدفعة"
 
 msgid ""
 "Online gateways (Selcom, Pesapal, AzamPay) are not connected yet, so record "
-"mobile money, bank and cash payments here. A completed Premium payment for a"
-" member activates their plan immediately."
+"mobile money, bank and cash payments here. A completed Premium payment for a "
+"member activates their plan immediately."
 msgstr ""
 "بوابات الدفع الإلكتروني (Selcom وPesapal وAzamPay) غير متصلة بعد، لذا سجّل "
 "هنا المدفوعات عبر المحفظة الهاتفية والبنك والنقد. الدفعة المكتملة لباقة "
@@ -3969,8 +4044,8 @@ msgid_plural ""
 "Skipped %(n)d rows with missing or invalid name, age, gender or city (rows "
 "%(rows)s)."
 msgstr[0] ""
-"تم تخطي %(n)d صف بسبب اسم أو عمر أو جنس أو مدينة مفقودة أو غير صالحة (الصفوف"
-" %(rows)s)."
+"تم تخطي %(n)d صف بسبب اسم أو عمر أو جنس أو مدينة مفقودة أو غير صالحة (الصفوف "
+"%(rows)s)."
 msgstr[1] ""
 "تم تخطي صف واحد بسبب اسم أو عمر أو جنس أو مدينة مفقودة أو غير صالحة (الصفوف "
 "%(rows)s)."
@@ -3984,8 +4059,8 @@ msgstr[4] ""
 "تم تخطي %(n)d صفًا بسبب اسم أو عمر أو جنس أو مدينة مفقودة أو غير صالحة "
 "(الصفوف %(rows)s)."
 msgstr[5] ""
-"تم تخطي %(n)d صف بسبب اسم أو عمر أو جنس أو مدينة مفقودة أو غير صالحة (الصفوف"
-" %(rows)s)."
+"تم تخطي %(n)d صف بسبب اسم أو عمر أو جنس أو مدينة مفقودة أو غير صالحة (الصفوف "
+"%(rows)s)."
 
 msgid "Total Matches"
 msgstr "إجمالي التطابقات"
@@ -4053,9 +4128,6 @@ msgstr "إعلانات جديدة"
 
 msgid "Event registrations"
 msgstr "تسجيلات الفعاليات"
-
-msgid "Payments"
-msgstr "المدفوعات"
 
 msgid "Revenue"
 msgstr "الإيرادات"
@@ -4136,6 +4208,11 @@ msgstr "صافي الإيرادات"
 #, python-format
 msgid "%(invoice_no)s %(result)s."
 msgstr "%(invoice_no)s: %(result)s."
+
+msgid ""
+"This login is for Sakinah administrators only. Members sign in on the main "
+"site."
+msgstr "هذا الدخول لمشرفي سكينة فقط. يسجّل الأعضاء الدخول من الموقع الرئيسي."
 
 #, python-format
 msgid "%(item)s added."
@@ -4226,6 +4303,17 @@ msgstr "المكالمات غير متاحة لهذا الحساب."
 msgid "You can't call this member."
 msgstr "لا يمكنك الاتصال بهذا العضو."
 
+msgid "You have used all your call minutes"
+msgstr "لقد استخدمت كل دقائق مكالماتك"
+
+#, python-format
+msgid ""
+"All the voice and video call minutes on your %(plan)s are used. Messages and "
+"everything else on your plan keep working. Renew or upgrade to call again."
+msgstr ""
+"نفدت كل دقائق المكالمات الصوتية والمرئية في باقة %(plan)s. تبقى الرسائل "
+"وبقية خدمات باقتك تعمل. جدّد الباقة أو رقّها لتتصل مجددًا."
+
 msgid "Complete your profile first."
 msgstr "أكمل ملفك الشخصي أولًا."
 
@@ -4233,10 +4321,10 @@ msgid "Your plan does not include calls. Upgrade to call other members."
 msgstr "باقتك لا تشمل المكالمات. قم بالترقية للاتصال بالأعضاء الآخرين."
 
 msgid ""
-"You have used today's call time. It comes back in 24 hours, or upgrade for "
-"more."
+"You have used all the call minutes on your plan. Renew or upgrade to call "
+"again."
 msgstr ""
-"لقد استهلكت وقت المكالمات لليوم. يعود بعد 24 ساعة، أو قم بالترقية للمزيد."
+"لقد استخدمت كل دقائق المكالمات في باقتك. جدّد الباقة أو رقّها لتتصل مجددًا."
 
 #, python-format
 msgid "%(first_name)s is on another call. Try again in a few minutes."
@@ -4502,264 +4590,6 @@ msgstr "كن نشطًا وردّ على الرسائل"
 msgid "Search and like profiles that match your preferences"
 msgstr "ابحث عن الملفات التي تناسب تفضيلاتك وأعجب بها"
 
-msgid "My Adverts"
-msgstr "إعلاناتي"
-
-#, python-format
-msgid "created %(d)s"
-msgstr "أُنشئ في %(d)s"
-
-msgid "Advert created"
-msgstr "تم إنشاء الإعلان"
-
-msgid "Your advert was not approved"
-msgstr "لم تتم الموافقة على إعلانك"
-
-msgid "Our team could not publish this advert. Please contact us for details."
-msgstr "لم يتمكن فريقنا من نشر هذا الإعلان. يرجى التواصل معنا للتفاصيل."
-
-msgid "One last step: pay to publish"
-msgstr "خطوة أخيرة: ادفع للنشر"
-
-#, python-format
-msgid ""
-"Pay %(currency)s %(amount)s for %(months)s month on the site. Your advert "
-"goes live as soon as the payment is confirmed."
-msgid_plural ""
-"Pay %(currency)s %(amount)s for %(months)s months on the site. Your advert "
-"goes live as soon as the payment is confirmed."
-msgstr[0] ""
-"ادفع %(amount)s %(currency)s مقابل %(months)s شهر على الموقع. سيظهر إعلانك "
-"فور تأكيد الدفع."
-msgstr[1] ""
-"ادفع %(amount)s %(currency)s مقابل شهر واحد على الموقع. سيظهر إعلانك فور "
-"تأكيد الدفع."
-msgstr[2] ""
-"ادفع %(amount)s %(currency)s مقابل شهرين على الموقع. سيظهر إعلانك فور تأكيد "
-"الدفع."
-msgstr[3] ""
-"ادفع %(amount)s %(currency)s مقابل %(months)s أشهر على الموقع. سيظهر إعلانك "
-"فور تأكيد الدفع."
-msgstr[4] ""
-"ادفع %(amount)s %(currency)s مقابل %(months)s شهرًا على الموقع. سيظهر إعلانك"
-" فور تأكيد الدفع."
-msgstr[5] ""
-"ادفع %(amount)s %(currency)s مقابل %(months)s شهر على الموقع. سيظهر إعلانك "
-"فور تأكيد الدفع."
-
-msgid "Payment received, we are confirming it"
-msgstr "تم استلام الدفع ونحن نؤكده"
-
-msgid ""
-"Your advert goes live as soon as the payment is confirmed. This page updates"
-" on its own."
-msgstr "سيظهر إعلانك فور تأكيد الدفع. تتحدث هذه الصفحة تلقائيًا."
-
-msgid "Your advert has ended"
-msgstr "انتهى إعلانك"
-
-#, python-format
-msgid ""
-"It stopped showing on %(d)s. Renew below to bring it back straight away."
-msgstr "توقف عن الظهور في %(d)s. جدّد أدناه لإعادته فورًا."
-
-msgid "Your advert is live!"
-msgstr "إعلانك منشور!"
-
-#, python-format
-msgid "Couples can see it until %(d)s."
-msgstr "يمكن للأزواج رؤيته حتى %(d)s."
-
-msgid "Your renewal payment is being confirmed."
-msgstr "يتم تأكيد دفعة التجديد."
-
-msgid "View my advert"
-msgstr "عرض إعلاني"
-
-msgid "Inquiries"
-msgstr "الاستفسارات"
-
-msgid "Days left"
-msgstr "الأيام المتبقية"
-
-msgid "Renew early"
-msgstr "جدّد مبكرًا"
-
-msgid "Renew your advert"
-msgstr "جدّد إعلانك"
-
-msgid "Pay for your advert"
-msgstr "ادفع مقابل إعلانك"
-
-#, python-format
-msgid "%(months)s more month is added to the end of your current period."
-msgid_plural ""
-"%(months)s more months are added to the end of your current period."
-msgstr[0] "يُضاف %(months)s شهر إلى نهاية مدتك الحالية."
-msgstr[1] "يُضاف شهر واحد إلى نهاية مدتك الحالية."
-msgstr[2] "يُضاف شهران إلى نهاية مدتك الحالية."
-msgstr[3] "تُضاف %(months)s أشهر إلى نهاية مدتك الحالية."
-msgstr[4] "يُضاف %(months)s شهرًا إلى نهاية مدتك الحالية."
-msgstr[5] "يُضاف %(months)s شهر إلى نهاية مدتك الحالية."
-
-msgid "Secure online payment with Pesapal."
-msgstr "دفع إلكتروني آمن عبر Pesapal."
-
-msgid "Mobile money or bank transfer."
-msgstr "المحفظة الهاتفية أو التحويل البنكي."
-
-msgid "Amount to pay"
-msgstr "المبلغ المطلوب"
-
-#, python-format
-msgid "%(months)s month"
-msgid_plural "%(months)s months"
-msgstr[0] "%(months)s شهر"
-msgstr[1] "شهر واحد"
-msgstr[2] "شهران"
-msgstr[3] "%(months)s أشهر"
-msgstr[4] "%(months)s شهرًا"
-msgstr[5] "%(months)s شهر"
-
-#, python-format
-msgid "Pay %(currency)s %(amount)s with Pesapal"
-msgstr "ادفع %(amount)s %(currency)s عبر Pesapal"
-
-msgid ""
-"You will be taken to Pesapal's secure page, then brought back here. Your "
-"advert goes live automatically once the payment is complete."
-msgstr ""
-"ستنتقل إلى صفحة Pesapal الآمنة ثم تعود إلى هنا. يُنشر إعلانك تلقائيًا بعد "
-"اكتمال الدفع."
-
-msgid "I have paid - submit"
-msgstr "لقد دفعت - إرسال"
-
-msgid ""
-"Our team checks every payment against the transaction reference before "
-"publishing."
-msgstr "يتحقق فريقنا من كل دفعة برقم المعاملة قبل النشر."
-
-msgid "Your advert"
-msgstr "إعلانك"
-
-msgid "Need help? Talk to our team"
-msgstr "تحتاج مساعدة؟ تحدّث مع فريقنا"
-
-msgid "Create your advert"
-msgstr "أنشئ إعلانك"
-
-msgid "You can renew or upgrade later."
-msgstr "يمكنك التجديد أو الترقية لاحقًا."
-
-#, python-format
-msgid "%(n)s photo"
-msgid_plural "%(n)s photos"
-msgstr[0] "%(n)s صورة"
-msgstr[1] "صورة واحدة"
-msgstr[2] "صورتان"
-msgstr[3] "%(n)s صور"
-msgstr[4] "%(n)s صورة"
-msgstr[5] "%(n)s صورة"
-
-msgid "Your business"
-msgstr "نشاطك التجاري"
-
-msgid "So couples and our team can reach you."
-msgstr "ليتمكن الأزواج وفريقنا من التواصل معك."
-
-msgid "Clear, honest details get more inquiries."
-msgstr "التفاصيل الواضحة والصادقة تجلب استفسارات أكثر."
-
-msgid "Bright, real photos of your work. The first one is the cover."
-msgstr "صور واضحة وحقيقية لعملك. الأولى هي صورة الغلاف."
-
-msgid "Cover photo"
-msgstr "صورة الغلاف"
-
-msgid "Add photo"
-msgstr "أضف صورة"
-
-msgid "We review every advert. Services must suit a family, halal platform."
-msgstr "نراجع كل إعلان. يجب أن تناسب الخدمات منصة عائلية وحلال."
-
-msgid "Live preview"
-msgstr "معاينة مباشرة"
-
-msgid "Your advert title"
-msgstr "عنوان إعلانك"
-
-msgid "Runs for"
-msgstr "المدة"
-
-msgid "Total to pay"
-msgstr "الإجمالي المطلوب"
-
-msgid "Continue to payment"
-msgstr "المتابعة إلى الدفع"
-
-msgid "Nothing is charged yet. You pay on the next step."
-msgstr "لن يُخصم شيء الآن. تدفع في الخطوة التالية."
-
-msgid ""
-"Advertise your wedding service to couples on Sakinah, pay online and follow "
-"your results."
-msgstr ""
-"أعلن عن خدمة الأعراس الخاصة بك للأزواج على سكينة، وادفع إلكترونيًا وتابع "
-"نتائجك."
-
-msgid "Na katika kila kitu tumeumba kwa jozi."
-msgstr "وَمِن كُلِّ شَيْءٍ خَلَقْنَا زَوْجَيْنِ."
-
-msgid "Qur'an 51:49"
-msgstr "الذاريات 51:49"
-
-msgid "Reach couples planning their Nikah"
-msgstr "صل إلى الأزواج الذين يخططون لنكاحهم"
-
-msgid ""
-"Create an advert in a few minutes, pay with Pesapal (M-Pesa, Airtel Money, "
-"Mixx by Yas or card) and go live straight away."
-msgstr ""
-"أنشئ إعلانًا في دقائق، وادفع عبر Pesapal (M-Pesa أو Airtel Money أو Mixx by "
-"Yas أو البطاقة) وانشره فورًا."
-
-msgid "Create an advert"
-msgstr "أنشئ إعلانًا"
-
-msgid "How it works"
-msgstr "كيف يعمل"
-
-msgid "Live now"
-msgstr "منشورة الآن"
-
-msgid "Your adverts"
-msgstr "إعلاناتك"
-
-#, python-format
-msgid "until %(d)s"
-msgstr "حتى %(d)s"
-
-msgid "You have no adverts yet"
-msgstr "ليس لديك إعلانات بعد"
-
-msgid "Choose a package below to create your first advert."
-msgstr "اختر باقة أدناه لإنشاء إعلانك الأول."
-
-#, python-format
-msgid "for %(months)s month"
-msgid_plural "for %(months)s months"
-msgstr[0] "لمدة %(months)s شهر"
-msgstr[1] "لمدة شهر"
-msgstr[2] "لمدة شهرين"
-msgstr[3] "لمدة %(months)s أشهر"
-msgstr[4] "لمدة %(months)s شهرًا"
-msgstr[5] "لمدة %(months)s شهر"
-
-#, python-format
-msgid "Choose %(name)s"
-msgstr "اختر %(name)s"
-
 msgid "Search members by name, location, age..."
 msgstr "ابحث عن الأعضاء بالاسم أو الموقع أو العمر..."
 
@@ -4799,9 +4629,7 @@ msgstr "المساعدة والدعم"
 msgid ""
 "&ldquo;Na katika Ishara Zake ni kuwa Amekuumbieni wake zenu kutokana na "
 "nafsi zenu ili mpate utulivu kwao...&rdquo;"
-msgstr ""
-"&ldquo;وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا "
-"لِّتَسْكُنُوا إِلَيْهَا...&rdquo;"
+msgstr "&ldquo;وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا...&rdquo;"
 
 msgid "(Qur'an 30:21)"
 msgstr "(الروم 30:21)"
@@ -4942,8 +4770,7 @@ msgstr "نشط حتى %(premium_until)s"
 msgid ""
 "Pata Mwenza, Pata Utulivu. Tunakuunganisha na watu waaminifu kwa ajili ya "
 "ndoa yenye baraka."
-msgstr ""
-"اعثر على شريك، اعثر على السكينة. نصلك بأشخاص صادقين من أجل زواج مبارك."
+msgstr "اعثر على شريك، اعثر على السكينة. نصلك بأشخاص صادقين من أجل زواج مبارك."
 
 msgid "Back to Events"
 msgstr "العودة إلى الفعاليات"
@@ -5002,6 +4829,12 @@ msgid ""
 msgstr ""
 "انضم إلى الفعاليات الإسلامية والمجتمعية لتتعلّم وتتواصل وتبني معًا مستقبلًا "
 "أقوى."
+
+msgid "Na katika kila kitu tumeumba kwa jozi."
+msgstr "وَمِن كُلِّ شَيْءٍ خَلَقْنَا زَوْجَيْنِ."
+
+msgid "Qur'an 51:49"
+msgstr "الذاريات 51:49"
 
 msgid "My Registrations"
 msgstr "تسجيلاتي"
@@ -5112,8 +4945,7 @@ msgid "Search Members"
 msgstr "البحث عن الأعضاء"
 
 msgid ""
-"Search and connect with genuine members for a serious and halal "
-"relationship."
+"Search and connect with genuine members for a serious and halal relationship."
 msgstr "ابحث وتواصل مع أعضاء حقيقيين من أجل علاقة جادة وحلال."
 
 msgid "Search by name, keyword, or location..."
@@ -5150,10 +4982,8 @@ msgstr[3] "تم العثور على %(v_count)s أعضاء"
 msgstr[4] "تم العثور على %(v_count)s عضوًا"
 msgstr[5] "تم العثور على %(v_count)s عضو"
 
-msgid ""
-"No members match these filters. Try widening the age range or location."
-msgstr ""
-"لا يوجد أعضاء يطابقون هذه الفلاتر. جرّب توسيع الفئة العمرية أو الموقع."
+msgid "No members match these filters. Try widening the age range or location."
+msgstr "لا يوجد أعضاء يطابقون هذه الفلاتر. جرّب توسيع الفئة العمرية أو الموقع."
 
 msgid "Help & Support"
 msgstr "المساعدة والدعم"
@@ -5408,9 +5238,7 @@ msgstr "أشخاص يطابقون تفضيلاتك ويبادلونك الاهت
 msgid ""
 "Na Miongoni mwa Aya zake ni kwamba amekuumbieni wake zenu mpate utulivu "
 "katikao."
-msgstr ""
-"وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا"
-" إِلَيْهَا."
+msgstr "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا."
 
 msgid "Qur'an 30:21"
 msgstr "الروم 30:21"
@@ -5580,6 +5408,25 @@ msgstr "(متبقٍ %(premium_until)s)"
 msgid "(expired)"
 msgstr "(منتهية)"
 
+msgid "Call minutes left"
+msgstr "دقائق المكالمات المتبقية"
+
+msgid "Unlimited"
+msgstr "غير محدود"
+
+msgid "All used - renew or upgrade to call again"
+msgstr "نفدت - جدّد أو رقِّ الباقة لتتصل مجددًا"
+
+#, python-format
+msgid "%(n)s minute"
+msgid_plural "%(n)s minutes"
+msgstr[0] "%(n)s دقيقة"
+msgstr[1] "دقيقة واحدة (%(n)s)"
+msgstr[2] "دقيقتان (%(n)s)"
+msgstr[3] "%(n)s دقائق"
+msgstr[4] "%(n)s دقيقة"
+msgstr[5] "%(n)s دقيقة"
+
 msgid "Auto-renewal"
 msgstr "التجديد التلقائي"
 
@@ -5618,6 +5465,19 @@ msgstr "الباقة:"
 
 msgid "Valid Until:"
 msgstr "صالحة حتى:"
+
+msgid "Call minutes:"
+msgstr "دقائق المكالمات:"
+
+#, python-format
+msgid "%(n)s left"
+msgid_plural "%(n)s left"
+msgstr[0] "متبقٍ %(n)s"
+msgstr[1] "متبقية %(n)s"
+msgstr[2] "متبقيتان %(n)s"
+msgstr[3] "متبقية %(n)s"
+msgstr[4] "متبقية %(n)s"
+msgstr[5] "متبقية %(n)s"
 
 msgid "Status:"
 msgstr "الحالة:"
@@ -5809,11 +5669,11 @@ msgid "My Photos (%(n_photos)s/6)"
 msgstr "صوري (%(n_photos)s/6)"
 
 msgid ""
-"Turn this on before adding a photo: your face is covered with a soft blur so"
-" you cannot be recognised. You decide."
+"Turn this on before adding a photo: your face is covered with a soft blur so "
+"you cannot be recognised. You decide."
 msgstr ""
-"فعّل هذا قبل إضافة صورة: يُغطّى وجهك بتمويه ناعم فلا يمكن التعرّف عليك. "
-"القرار لك."
+"فعّل هذا قبل إضافة صورة: يُغطّى وجهك بتمويه ناعم فلا يمكن التعرّف عليك. القرار "
+"لك."
 
 msgid ""
 "Hide your face on this photo? This cannot be undone; upload the photo again "
@@ -5875,8 +5735,8 @@ msgid "Change in Privacy Settings"
 msgstr "غيّر ذلك في إعدادات الخصوصية"
 
 msgid ""
-"These settings decide who appears in your suggested matches on the dashboard"
-" and the default filters in Find a Match."
+"These settings decide who appears in your suggested matches on the dashboard "
+"and the default filters in Find a Match."
 msgstr ""
 "تحدد هذه الإعدادات من يظهر في التطابقات المقترحة في لوحة التحكم والفلاتر "
 "الافتراضية في «ابحث عن شريك»."
@@ -6161,8 +6021,8 @@ msgid "Verify my profile"
 msgstr "وثّق ملفي الشخصي"
 
 msgid ""
-"Blocked members cannot see your profile or message you, and you will not see"
-" them."
+"Blocked members cannot see your profile or message you, and you will not see "
+"them."
 msgstr "لا يمكن للأعضاء المحظورين رؤية ملفك أو مراسلتك، ولن تراهم أنت."
 
 #, python-format
@@ -6371,8 +6231,7 @@ msgid "Reactivate your account and show your profile again?"
 msgstr "إعادة تفعيل حسابك وإظهار ملفك الشخصي مجددًا؟"
 
 msgid ""
-"Deactivate your account? Your profile will be hidden until you reactivate "
-"it."
+"Deactivate your account? Your profile will be hidden until you reactivate it."
 msgstr "إلغاء تفعيل حسابك؟ سيُخفى ملفك الشخصي حتى تعيد تفعيله."
 
 msgid "Reactivate Account"
@@ -6394,8 +6253,7 @@ msgid "Permanently delete your account"
 msgstr "احذف حسابك نهائيًا"
 
 msgid ""
-"This permanently deletes your account, profile, messages and likes. "
-"Continue?"
+"This permanently deletes your account, profile, messages and likes. Continue?"
 msgstr ""
 "سيؤدي هذا إلى حذف حسابك وملفك ورسائلك وإعجاباتك نهائيًا. هل تريد المتابعة؟"
 
@@ -6427,8 +6285,8 @@ msgstr "أرسلت طلب توثيق في %(created)s. سيراجعه فريقن
 
 msgid ""
 "Verified members get more trust and more responses. Upload a clear photo of "
-"your National ID (NIDA), passport or driving licence. It is only seen by our"
-" admin team."
+"your National ID (NIDA), passport or driving licence. It is only seen by our "
+"admin team."
 msgstr ""
 "الأعضاء الموثّقون يحظون بثقة أكبر وردود أكثر. ارفع صورة واضحة لبطاقة الهوية "
 "الوطنية (NIDA) أو جواز السفر أو رخصة القيادة. لا يراها إلا فريق الإدارة."
@@ -6491,6 +6349,17 @@ msgstr "الآن"
 #, python-format
 msgid "%(time)s ago"
 msgstr "منذ %(time)s"
+
+#, python-format
+msgid ""
+"Your %(plan)s ended on %(date)s. You are now on the free plan. Renew any "
+"time to get its features back."
+msgstr ""
+"انتهت باقة %(plan)s في %(date)s. أنت الآن على الباقة المجانية. جدّد في أي وقت "
+"لاستعادة مزاياها."
+
+msgid "Your package has ended"
+msgstr "انتهت باقتك"
 
 msgid "People who liked you"
 msgstr "من أُعجبوا بك"
@@ -6656,8 +6525,8 @@ msgid ""
 "No. Plans do not renew automatically, so you are never charged without "
 "asking. Renew any time from this page."
 msgstr ""
-"لا. لا تتجدد الباقات تلقائيًا، لذا لن تُخصم منك أي مبالغ دون طلبك. جدّد في "
-"أي وقت من هذه الصفحة."
+"لا. لا تتجدد الباقات تلقائيًا، لذا لن تُخصم منك أي مبالغ دون طلبك. جدّد في أي "
+"وقت من هذه الصفحة."
 
 msgid "Can I change my plan?"
 msgstr "هل يمكنني تغيير باقتي؟"
@@ -6666,8 +6535,8 @@ msgid ""
 "Yes. Pay for the new plan and it starts after confirmation. Remaining time "
 "on a paid plan is kept."
 msgstr ""
-"نعم. ادفع للباقة الجديدة وتبدأ بعد التأكيد. يُحتفظ بالمدة المتبقية من الباقة"
-" المدفوعة."
+"نعم. ادفع للباقة الجديدة وتبدأ بعد التأكيد. يُحتفظ بالمدة المتبقية من الباقة "
+"المدفوعة."
 
 msgid "Advanced Search"
 msgstr "بحث متقدم"
@@ -6769,15 +6638,15 @@ msgid ""
 "Join free, complete your profile with a clear photo, set your partner "
 "preferences, then use Find a Match."
 msgstr ""
-"انضم مجانًا، وأكمل ملفك بصورة واضحة، وحدد تفضيلات الشريك، ثم استخدم «ابحث عن"
-" شريك»."
+"انضم مجانًا، وأكمل ملفك بصورة واضحة، وحدد تفضيلات الشريك، ثم استخدم «ابحث عن "
+"شريك»."
 
 msgid "Is Sakinah free?"
 msgstr "هل سكينة مجانية؟"
 
 msgid ""
-"Yes. Creating a profile, searching and sending likes are free. Premium plans"
-" add more features."
+"Yes. Creating a profile, searching and sending likes are free. Premium plans "
+"add more features."
 msgstr ""
 "نعم. إنشاء الملف والبحث وإرسال الإعجابات مجانية. باقات بريميوم تضيف ميزات "
 "أكثر."
@@ -6822,8 +6691,7 @@ msgstr "لماذا لا أستطيع مراسلة شخص ما؟"
 msgid ""
 "Some members only accept messages from verified or matched members. Check "
 "their profile."
-msgstr ""
-"بعض الأعضاء يقبلون الرسائل من الموثّقين أو المتطابقين فقط. راجع ملفهم."
+msgstr "بعض الأعضاء يقبلون الرسائل من الموثّقين أو المتطابقين فقط. راجع ملفهم."
 
 msgid "Membership & Payments"
 msgstr "العضوية والمدفوعات"
@@ -6853,8 +6721,8 @@ msgid "Who can see my profile?"
 msgstr "من يمكنه رؤية ملفي الشخصي؟"
 
 msgid ""
-"You decide in Safety & Privacy: everyone, verified members, premium members,"
-" or hidden."
+"You decide in Safety & Privacy: everyone, verified members, premium members, "
+"or hidden."
 msgstr ""
 "أنت تقرر في الأمان والخصوصية: الجميع أو الموثّقون أو أعضاء بريميوم أو مخفي."
 
@@ -6862,8 +6730,8 @@ msgid "How do I block someone?"
 msgstr "كيف أحظر شخصًا؟"
 
 msgid ""
-"Open their profile or conversation and choose Block. Manage blocked users in"
-" Safety & Privacy."
+"Open their profile or conversation and choose Block. Manage blocked users in "
+"Safety & Privacy."
 msgstr "افتح ملفه أو محادثته واختر حظر. أدر المحظورين في الأمان والخصوصية."
 
 msgid "Technical Support"
@@ -6899,8 +6767,8 @@ msgid ""
 "Fake profiles, inappropriate photos, harassment, asking for money and "
 "sharing contact details too early."
 msgstr ""
-"الملفات المزيفة والصور غير اللائقة والتحرش وطلب المال ومشاركة بيانات الاتصال"
-" مبكرًا."
+"الملفات المزيفة والصور غير اللائقة والتحرش وطلب المال ومشاركة بيانات الاتصال "
+"مبكرًا."
 
 msgid "What happens when I report someone?"
 msgstr "ماذا يحدث عندما أبلغ عن شخص؟"
@@ -6912,8 +6780,7 @@ msgstr "يراجع فريقنا كل بلاغ بسرية وقد يحذّر ال�
 msgid ""
 "Asante! Our support team received your message and will reply by email or "
 "notification."
-msgstr ""
-"شكرًا! تلقى فريق الدعم رسالتك وسيرد عبر البريد الإلكتروني أو الإشعارات."
+msgstr "شكرًا! تلقى فريق الدعم رسالتك وسيرد عبر البريد الإلكتروني أو الإشعارات."
 
 msgid "Search members, topics, or help articles..."
 msgstr "ابحث عن الأعضاء أو المواضيع أو مقالات المساعدة..."
@@ -7033,12 +6900,316 @@ msgstr "يصل طلبك إلى المزوّد الذي سيتصل بك."
 msgid "Send Request"
 msgstr "إرسال الطلب"
 
+msgid "Advertise with us"
+msgstr "أعلن معنا"
+
+msgid "Grow your wedding business with <em>Sakinah</em>"
+msgstr "نمِّ عملك في مجال الأعراس مع <em>سكينة</em>"
+
+msgid ""
+"Your own advertiser account: create adverts, pay with M-Pesa, Airtel Money, "
+"Mixx by Yas or card, and follow your views and inquiries."
+msgstr ""
+"حساب معلن خاص بك: أنشئ الإعلانات، وادفع عبر M-Pesa أو Airtel Money أو Mixx "
+"by Yas أو البطاقة، وتابع المشاهدات والاستفسارات."
+
+msgid "Reach serious couples"
+msgstr "صِل إلى الأزواج الجادين"
+
+msgid "People planning their Nikah find you here."
+msgstr "يجدك هنا من يخططون لنكاحهم."
+
+msgid "Live straight after payment"
+msgstr "منشور فور الدفع"
+
+msgid "Secure payment with Pesapal."
+msgstr "دفع آمن عبر Pesapal."
+
+msgid "See your results"
+msgstr "شاهد نتائجك"
+
+msgid "Views and inquiries in your dashboard."
+msgstr "المشاهدات والاستفسارات في لوحة التحكم."
+
+msgid "My account"
+msgstr "حسابي"
+
+msgid "Your advertiser details and password."
+msgstr "بيانات المعلن وكلمة المرور."
+
+msgid "Your details"
+msgstr "بياناتك"
+
+msgid "Save details"
+msgstr "حفظ البيانات"
+
+msgid "Advertiser dashboard"
+msgstr "لوحة المعلن"
+
+msgid "My Adverts"
+msgstr "إعلاناتي"
+
+msgid "Post Ad"
+msgstr "أضف إعلانًا"
+
+msgid "See services on the site"
+msgstr "شاهد الخدمات على الموقع"
+
+#, python-format
+msgid "created %(d)s"
+msgstr "أُنشئ في %(d)s"
+
+msgid "Advert created"
+msgstr "تم إنشاء الإعلان"
+
+msgid "Your advert was not approved"
+msgstr "لم تتم الموافقة على إعلانك"
+
+msgid "Our team could not publish this advert. Please contact us for details."
+msgstr "لم يتمكن فريقنا من نشر هذا الإعلان. يرجى التواصل معنا للتفاصيل."
+
+msgid "One last step: pay to publish"
+msgstr "خطوة أخيرة: ادفع للنشر"
+
+#, python-format
+msgid ""
+"Pay %(currency)s %(amount)s for %(months)s month on the site. Your advert "
+"goes live as soon as the payment is confirmed."
+msgid_plural ""
+"Pay %(currency)s %(amount)s for %(months)s months on the site. Your advert "
+"goes live as soon as the payment is confirmed."
+msgstr[0] ""
+"ادفع %(amount)s %(currency)s مقابل %(months)s شهر على الموقع. سيظهر إعلانك "
+"فور تأكيد الدفع."
+msgstr[1] ""
+"ادفع %(amount)s %(currency)s مقابل شهر واحد على الموقع. سيظهر إعلانك فور "
+"تأكيد الدفع."
+msgstr[2] ""
+"ادفع %(amount)s %(currency)s مقابل شهرين على الموقع. سيظهر إعلانك فور تأكيد "
+"الدفع."
+msgstr[3] ""
+"ادفع %(amount)s %(currency)s مقابل %(months)s أشهر على الموقع. سيظهر إعلانك "
+"فور تأكيد الدفع."
+msgstr[4] ""
+"ادفع %(amount)s %(currency)s مقابل %(months)s شهرًا على الموقع. سيظهر إعلانك "
+"فور تأكيد الدفع."
+msgstr[5] ""
+"ادفع %(amount)s %(currency)s مقابل %(months)s شهر على الموقع. سيظهر إعلانك "
+"فور تأكيد الدفع."
+
+msgid "Payment received, we are confirming it"
+msgstr "تم استلام الدفع ونحن نؤكده"
+
+msgid ""
+"Your advert goes live as soon as the payment is confirmed. This page updates "
+"on its own."
+msgstr "سيظهر إعلانك فور تأكيد الدفع. تتحدث هذه الصفحة تلقائيًا."
+
+msgid "Your advert has ended"
+msgstr "انتهى إعلانك"
+
+#, python-format
+msgid ""
+"It stopped showing on %(d)s. Renew below to bring it back straight away."
+msgstr "توقف عن الظهور في %(d)s. جدّد أدناه لإعادته فورًا."
+
+msgid "Your advert is live!"
+msgstr "إعلانك منشور!"
+
+#, python-format
+msgid "Couples can see it until %(d)s."
+msgstr "يمكن للأزواج رؤيته حتى %(d)s."
+
+msgid "Your renewal payment is being confirmed."
+msgstr "يتم تأكيد دفعة التجديد."
+
+msgid "View my advert"
+msgstr "عرض إعلاني"
+
+msgid "Inquiries"
+msgstr "الاستفسارات"
+
+msgid "Days left"
+msgstr "الأيام المتبقية"
+
+msgid "Renew early"
+msgstr "جدّد مبكرًا"
+
+msgid "Renew your advert"
+msgstr "جدّد إعلانك"
+
+msgid "Pay for your advert"
+msgstr "ادفع مقابل إعلانك"
+
+#, python-format
+msgid "%(months)s more month is added to the end of your current period."
+msgid_plural ""
+"%(months)s more months are added to the end of your current period."
+msgstr[0] "يُضاف %(months)s شهر إلى نهاية مدتك الحالية."
+msgstr[1] "يُضاف شهر واحد إلى نهاية مدتك الحالية."
+msgstr[2] "يُضاف شهران إلى نهاية مدتك الحالية."
+msgstr[3] "تُضاف %(months)s أشهر إلى نهاية مدتك الحالية."
+msgstr[4] "يُضاف %(months)s شهرًا إلى نهاية مدتك الحالية."
+msgstr[5] "يُضاف %(months)s شهر إلى نهاية مدتك الحالية."
+
+msgid "Secure online payment with Pesapal."
+msgstr "دفع إلكتروني آمن عبر Pesapal."
+
+msgid "Mobile money or bank transfer."
+msgstr "المحفظة الهاتفية أو التحويل البنكي."
+
+msgid "Amount to pay"
+msgstr "المبلغ المطلوب"
+
+#, python-format
+msgid "%(months)s month"
+msgid_plural "%(months)s months"
+msgstr[0] "%(months)s شهر"
+msgstr[1] "شهر واحد"
+msgstr[2] "شهران"
+msgstr[3] "%(months)s أشهر"
+msgstr[4] "%(months)s شهرًا"
+msgstr[5] "%(months)s شهر"
+
+#, python-format
+msgid "Pay %(currency)s %(amount)s with Pesapal"
+msgstr "ادفع %(amount)s %(currency)s عبر Pesapal"
+
+msgid ""
+"You will be taken to Pesapal's secure page, then brought back here. Your "
+"advert goes live automatically once the payment is complete."
+msgstr ""
+"ستنتقل إلى صفحة Pesapal الآمنة ثم تعود إلى هنا. يُنشر إعلانك تلقائيًا بعد "
+"اكتمال الدفع."
+
+msgid "I have paid - submit"
+msgstr "لقد دفعت - إرسال"
+
+msgid ""
+"Our team checks every payment against the transaction reference before "
+"publishing."
+msgstr "يتحقق فريقنا من كل دفعة برقم المعاملة قبل النشر."
+
+msgid "Your advert"
+msgstr "إعلانك"
+
+msgid "Need help? Talk to our team"
+msgstr "تحتاج مساعدة؟ تحدّث مع فريقنا"
+
+msgid ""
+"Advertise your wedding service to couples on Sakinah, pay online and follow "
+"your results."
+msgstr ""
+"أعلن عن خدمة الأعراس الخاصة بك للأزواج على سكينة، وادفع إلكترونيًا وتابع "
+"نتائجك."
+
+msgid "Reach couples planning their Nikah"
+msgstr "صل إلى الأزواج الذين يخططون لنكاحهم"
+
+msgid ""
+"Create an advert in a few minutes, pay with Pesapal (M-Pesa, Airtel Money, "
+"Mixx by Yas or card) and go live straight away."
+msgstr ""
+"أنشئ إعلانًا في دقائق، وادفع عبر Pesapal (M-Pesa أو Airtel Money أو Mixx by "
+"Yas أو البطاقة) وانشره فورًا."
+
+msgid "Create an advert"
+msgstr "أنشئ إعلانًا"
+
+msgid "How it works"
+msgstr "كيف يعمل"
+
+msgid "Live now"
+msgstr "منشورة الآن"
+
+msgid "Your adverts"
+msgstr "إعلاناتك"
+
+#, python-format
+msgid "until %(d)s"
+msgstr "حتى %(d)s"
+
+msgid "You have no adverts yet"
+msgstr "ليس لديك إعلانات بعد"
+
+msgid "Choose a package below to create your first advert."
+msgstr "اختر باقة أدناه لإنشاء إعلانك الأول."
+
+#, python-format
+msgid "for %(months)s month"
+msgid_plural "for %(months)s months"
+msgstr[0] "لمدة %(months)s شهر"
+msgstr[1] "لمدة شهر"
+msgstr[2] "لمدة شهرين"
+msgstr[3] "لمدة %(months)s أشهر"
+msgstr[4] "لمدة %(months)s شهرًا"
+msgstr[5] "لمدة %(months)s شهر"
+
+#, python-format
+msgid "Choose %(name)s"
+msgstr "اختر %(name)s"
+
+msgid "Create your advert"
+msgstr "أنشئ إعلانك"
+
+msgid "You can renew or upgrade later."
+msgstr "يمكنك التجديد أو الترقية لاحقًا."
+
+#, python-format
+msgid "%(n)s photo"
+msgid_plural "%(n)s photos"
+msgstr[0] "%(n)s صورة"
+msgstr[1] "صورة واحدة"
+msgstr[2] "صورتان"
+msgstr[3] "%(n)s صور"
+msgstr[4] "%(n)s صورة"
+msgstr[5] "%(n)s صورة"
+
+msgid "Your business"
+msgstr "نشاطك التجاري"
+
+msgid "So couples and our team can reach you."
+msgstr "ليتمكن الأزواج وفريقنا من التواصل معك."
+
+msgid "Clear, honest details get more inquiries."
+msgstr "التفاصيل الواضحة والصادقة تجلب استفسارات أكثر."
+
+msgid "Bright, real photos of your work. The first one is the cover."
+msgstr "صور واضحة وحقيقية لعملك. الأولى هي صورة الغلاف."
+
+msgid "Cover photo"
+msgstr "صورة الغلاف"
+
+msgid "Add photo"
+msgstr "أضف صورة"
+
+msgid "We review every advert. Services must suit a family, halal platform."
+msgstr "نراجع كل إعلان. يجب أن تناسب الخدمات منصة عائلية وحلال."
+
+msgid "Live preview"
+msgstr "معاينة مباشرة"
+
+msgid "Your advert title"
+msgstr "عنوان إعلانك"
+
+msgid "Runs for"
+msgstr "المدة"
+
+msgid "Total to pay"
+msgstr "الإجمالي المطلوب"
+
+msgid "Continue to payment"
+msgstr "المتابعة إلى الدفع"
+
+msgid "Nothing is charged yet. You pay on the next step."
+msgstr "لن يُخصم شيء الآن. تدفع في الخطوة التالية."
+
+msgid "Updates about your adverts and payments."
+msgstr "تحديثات حول إعلاناتك ومدفوعاتك."
+
 #, python-format
 msgid "Advertise with us - %(brand)s"
 msgstr "أعلن معنا - %(brand)s"
-
-msgid "Advertise with us"
-msgstr "أعلن معنا"
 
 msgid ""
 "Put your wedding business in front of couples <em>planning their Nikah</em>"
@@ -7050,8 +7221,8 @@ msgid ""
 "your venue, catering, décor, photography or any wedding service, and let "
 "them reach you directly."
 msgstr ""
-"%(brand)s هي المكان الذي يلتقي فيه الجادّون الساعون إلى الزواج ويخططون. اعرض"
-" عليهم قاعتك أو التموين أو الديكور أو التصوير أو أي خدمة أعراس، ودعهم "
+"%(brand)s هي المكان الذي يلتقي فيه الجادّون الساعون إلى الزواج ويخططون. اعرض "
+"عليهم قاعتك أو التموين أو الديكور أو التصوير أو أي خدمة أعراس، ودعهم "
 "يتواصلون معك مباشرة."
 
 msgid "Start my advert"
@@ -7060,8 +7231,14 @@ msgstr "ابدأ إعلاني"
 msgid "See packages"
 msgstr "عرض الباقات"
 
-msgid "Live straight after payment"
-msgstr "منشور فور الدفع"
+msgid "Already advertising with us?"
+msgstr "هل تعلن معنا بالفعل؟"
+
+msgid "Log in to your advertiser account"
+msgstr "سجّل الدخول إلى حساب المعلن"
+
+msgid "Open my advertiser dashboard"
+msgstr "افتح لوحة المعلن"
 
 msgid "Secure payment with Pesapal"
 msgstr "دفع آمن عبر Pesapal"
@@ -7109,8 +7286,8 @@ msgid "The right audience, at the right moment"
 msgstr "الجمهور المناسب في الوقت المناسب"
 
 msgid ""
-"Our members are not just browsing. They are getting ready to marry, and they"
-" need trusted services that respect their values."
+"Our members are not just browsing. They are getting ready to marry, and they "
+"need trusted services that respect their values."
 msgstr ""
 "أعضاؤنا لا يتصفحون فقط؛ إنهم يستعدون للزواج ويحتاجون إلى خدمات موثوقة تحترم "
 "قيمهم."
@@ -7148,15 +7325,10 @@ msgstr "التقييمات تبني الثقة"
 msgid ""
 "Happy couples leave star ratings and reviews, and new customers see them "
 "first."
-msgstr ""
-"يترك الأزواج السعداء تقييمات بالنجوم وآراء، ويراها العملاء الجدد أولًا."
-
-msgid "See your results"
-msgstr "شاهد نتائجك"
+msgstr "يترك الأزواج السعداء تقييمات بالنجوم وآراء، ويراها العملاء الجدد أولًا."
 
 msgid ""
-"Your advert page shows how many people viewed it and how many sent "
-"inquiries."
+"Your advert page shows how many people viewed it and how many sent inquiries."
 msgstr "تعرض صفحة إعلانك عدد من شاهده وعدد من أرسل استفسارات."
 
 msgid "A trusted, halal platform"
@@ -7188,8 +7360,8 @@ msgid ""
 "Pay securely with Pesapal: M-Pesa, Airtel Money, Mixx by Yas, HaloPesa or "
 "card."
 msgstr ""
-"ادفع بأمان عبر Pesapal: M-Pesa أو Airtel Money أو Mixx by Yas أو HaloPesa أو"
-" البطاقة."
+"ادفع بأمان عبر Pesapal: M-Pesa أو Airtel Money أو Mixx by Yas أو HaloPesa أو "
+"البطاقة."
 
 msgid "Go live"
 msgstr "انطلق"
@@ -7229,20 +7401,20 @@ msgid "How soon does my advert appear?"
 msgstr "متى يظهر إعلاني؟"
 
 msgid ""
-"Straight after you pay. Pesapal confirms the payment within moments and your"
-" advert is published automatically. You can follow it under My Adverts in "
+"Straight after you pay. Pesapal confirms the payment within moments and your "
+"advert is published automatically. You can follow it under My Adverts in "
 "your account."
 msgstr ""
-"مباشرة بعد الدفع. يؤكد Pesapal الدفع خلال لحظات ويُنشر إعلانك تلقائيًا. "
-"يمكنك متابعته في «إعلاناتي» داخل حسابك."
+"مباشرة بعد الدفع. يؤكد Pesapal الدفع خلال لحظات ويُنشر إعلانك تلقائيًا. يمكنك "
+"متابعته في «إعلاناتي» داخل حسابك."
 
 msgid ""
 "Online with Pesapal: M-Pesa, Airtel Money, Mixx by Yas, HaloPesa, Visa or "
 "Mastercard. You are taken to Pesapal's secure page and brought back to your "
 "account."
 msgstr ""
-"إلكترونيًا عبر Pesapal: M-Pesa أو Airtel Money أو Mixx by Yas أو HaloPesa أو"
-" Visa أو Mastercard. تنتقل إلى صفحة Pesapal الآمنة ثم تعود إلى حسابك."
+"إلكترونيًا عبر Pesapal: M-Pesa أو Airtel Money أو Mixx by Yas أو HaloPesa أو "
+"Visa أو Mastercard. تنتقل إلى صفحة Pesapal الآمنة ثم تعود إلى حسابك."
 
 msgid "Do I need an account?"
 msgstr "هل أحتاج إلى حساب؟"
@@ -7251,8 +7423,8 @@ msgid ""
 "Yes, a free Sakinah account. Your adverts, payments and results are kept "
 "together under My Adverts, so you can renew any time from any device."
 msgstr ""
-"نعم، حساب مجاني في سكينة. تبقى إعلاناتك ومدفوعاتك ونتائجك معًا في "
-"«إعلاناتي»، فيمكنك التجديد في أي وقت ومن أي جهاز."
+"نعم، حساب مجاني في سكينة. تبقى إعلاناتك ومدفوعاتك ونتائجك معًا في «إعلاناتي»، "
+"فيمكنك التجديد في أي وقت ومن أي جهاز."
 
 msgid "What happens when my package ends?"
 msgstr "ماذا يحدث عند انتهاء باقتي؟"
@@ -7288,6 +7460,104 @@ msgstr "يستغرق إنشاء إعلانك حوالي خمس دقائق."
 
 msgid "Questions? Talk to our team"
 msgstr "أسئلة؟ تحدّث مع فريقنا"
+
+#, python-format
+msgid "Advertiser login - %(brand)s"
+msgstr "دخول المعلنين - %(brand)s"
+
+msgid "Advertiser account"
+msgstr "حساب معلن"
+
+msgid "Advertiser login"
+msgstr "دخول المعلنين"
+
+msgid "Log in to manage your adverts, payments and results."
+msgstr "سجّل الدخول لإدارة إعلاناتك ومدفوعاتك ونتائجك."
+
+msgid "Remember me"
+msgstr "تذكّرني"
+
+msgid "Forgot password?"
+msgstr "نسيت كلمة المرور؟"
+
+msgid "New advertiser?"
+msgstr "معلن جديد؟"
+
+msgid "Create an advertiser account"
+msgstr "أنشئ حساب معلن"
+
+msgid "Looking for a spouse?"
+msgstr "تبحث عن شريك حياة؟"
+
+msgid "Member login"
+msgstr "دخول الأعضاء"
+
+#, python-format
+msgid "Advertiser sign up - %(brand)s"
+msgstr "تسجيل المعلنين - %(brand)s"
+
+msgid "Create your advertiser account"
+msgstr "أنشئ حساب المعلن الخاص بك"
+
+msgid "Separate from member accounts. It takes one minute."
+msgstr "منفصل عن حسابات الأعضاء. يستغرق دقيقة واحدة."
+
+msgid "Advertising policy"
+msgstr "سياسة الإعلانات"
+
+msgid ""
+"Services must suit a family, halal platform: no alcohol, gambling or "
+"indecent content."
+msgstr ""
+"يجب أن تناسب الخدمات منصة عائلية حلال: لا خمور ولا قمار ولا محتوى غير لائق."
+
+msgid "Names, prices, photos and contacts must be true and your own."
+msgstr "يجب أن تكون الأسماء والأسعار والصور وبيانات الاتصال صحيحة وخاصة بك."
+
+msgid ""
+"Our team reviews every advert and may refuse or remove one that breaks these "
+"rules."
+msgstr "يراجع فريقنا كل إعلان وقد يرفض أو يحذف أي إعلان يخالف هذه القواعد."
+
+msgid ""
+"An advert runs for the package you paid for and stops on its own when it "
+"ends."
+msgstr ""
+"يعمل الإعلان طوال مدة الباقة التي دفعت ثمنها ويتوقف تلقائيًا عند انتهائها."
+
+msgid ""
+"We use your details only to run your adverts and contact you about them."
+msgstr "نستخدم بياناتك فقط لتشغيل إعلاناتك والتواصل معك بشأنها."
+
+msgid ""
+"I have read and agree to the advertising policy, and the information I give "
+"is true."
+msgstr "قرأت سياسة الإعلانات وأوافق عليها، والمعلومات التي أقدمها صحيحة."
+
+msgid "Create my account"
+msgstr "أنشئ حسابي"
+
+msgid "Already have an advertiser account?"
+msgstr "لديك حساب معلن بالفعل؟"
+
+msgid "Log in"
+msgstr "تسجيل الدخول"
+
+msgid "You are signed in as a member"
+msgstr "أنت مسجّل الدخول كعضو"
+
+msgid ""
+"Advertiser accounts are separate from member accounts. Log out, then create "
+"an advertiser account or log in to one."
+msgstr ""
+"حسابات المعلنين منفصلة عن حسابات الأعضاء. سجّل الخروج، ثم أنشئ حساب معلن أو "
+"ادخل إلى حسابك."
+
+msgid "Log out and continue"
+msgstr "سجّل الخروج وتابع"
+
+msgid "Create a member account"
+msgstr "أنشئ حساب عضو"
 
 #, python-format
 msgid "Comments (%(comments)s)"
@@ -7390,8 +7660,8 @@ msgid "Meet, Learn and Connect"
 msgstr "التقِ وتعلّم وتواصل"
 
 msgid ""
-"Join our events, workshops and seminars designed to guide, support and bring"
-" people together for meaningful relationships and successful marriages."
+"Join our events, workshops and seminars designed to guide, support and bring "
+"people together for meaningful relationships and successful marriages."
 msgstr ""
 "انضم إلى فعالياتنا وورشنا وندواتنا المصممة للإرشاد والدعم وجمع الناس من أجل "
 "علاقات هادفة وزيجات ناجحة."
@@ -7409,8 +7679,8 @@ msgid "Build connections"
 msgstr "ابنِ علاقات"
 
 msgid ""
-"&ldquo;Good events create better opportunities for righteous "
-"connections.&rdquo;"
+"&ldquo;Good events create better opportunities for righteous connections."
+"&rdquo;"
 msgstr "&ldquo;الفعاليات الجيدة تصنع فرصًا أفضل لعلاقات صالحة.&rdquo;"
 
 msgid "Search events..."
@@ -7451,8 +7721,8 @@ msgstr "استضف فعالية"
 
 #, python-format
 msgid ""
-"Are you a vendor, expert or organization? You can host your marriage-related"
-" event on %(brand)s."
+"Are you a vendor, expert or organization? You can host your marriage-related "
+"event on %(brand)s."
 msgstr ""
 "هل أنت مزوّد أو خبير أو مؤسسة؟ يمكنك استضافة فعاليتك المتعلقة بالزواج على "
 "%(brand)s."
@@ -7530,8 +7800,7 @@ msgstr "النكاح والزفاف"
 msgid "Everything you need for your Nikah"
 msgstr "كل ما تحتاجه لنكاحك"
 
-msgid ""
-"Discover trusted vendors and services to make your special day perfect."
+msgid "Discover trusted vendors and services to make your special day perfect."
 msgstr "اكتشف مزوّدين وخدمات موثوقة لتجعل يومك المميز مثاليًا."
 
 msgid "View All Services"
@@ -8204,14 +8473,14 @@ msgstr "الانضمام مجاني، والترقية في أي وقت"
 msgid "Real, verified people<br>across Tanzania"
 msgstr "أشخاص حقيقيون موثّقون<br>في جميع أنحاء تنزانيا"
 
+msgid "My adverts"
+msgstr "إعلاناتي"
+
 msgid "My dashboard"
 msgstr "لوحتي"
 
 msgid "My Dashboard"
 msgstr "لوحتي"
-
-msgid "Login"
-msgstr "تسجيل الدخول"
 
 msgid "Join Free"
 msgstr "انضم مجانًا"
@@ -8226,8 +8495,7 @@ msgstr "انضم إلى %(brand)s"
 msgid ""
 "Ili kutazama profaili au kuwasiliana na mwanachama, jisajili bure au ingia "
 "kwenye akaunti yako."
-msgstr ""
-"لعرض الملفات الشخصية أو التواصل مع عضو، سجّل مجانًا أو ادخل إلى حسابك."
+msgstr "لعرض الملفات الشخصية أو التواصل مع عضو، سجّل مجانًا أو ادخل إلى حسابك."
 
 msgid "Jisajili"
 msgstr "التسجيل"
@@ -8255,8 +8523,7 @@ msgstr "ابدأ رحلة زواجك اليوم"
 
 #, python-format
 msgid ""
-"Join %(brand)s free and meet verified people who share your faith and "
-"values."
+"Join %(brand)s free and meet verified people who share your faith and values."
 msgstr ""
 "انضم إلى %(brand)s مجانًا وتعرّف على أشخاص موثّقين يشاركونك الإيمان والقيم."
 
@@ -8326,6 +8593,15 @@ msgstr "أُعجبت"
 
 msgid "Online sasa"
 msgstr "متصل الآن"
+
+msgid "Services"
+msgstr "الخدمات"
+
+msgid "Show all services"
+msgstr "عرض كل الخدمات"
+
+msgid "All services"
+msgstr "كل الخدمات"
 
 msgid "Search members"
 msgstr "البحث عن الأعضاء"
@@ -8436,8 +8712,8 @@ msgid ""
 "verified members, communicate freely and increase your chances of finding "
 "the right partner."
 msgstr ""
-"قم بالترقية إلى بريميوم وافتح ميزات متقدمة للتواصل مع أعضاء جادّين وموثّقين،"
-" والتحدث بحرية، وزيادة فرصك في إيجاد الشريك المناسب."
+"قم بالترقية إلى بريميوم وافتح ميزات متقدمة للتواصل مع أعضاء جادّين وموثّقين، "
+"والتحدث بحرية، وزيادة فرصك في إيجاد الشريك المناسب."
 
 msgid "Unlimited Messaging"
 msgstr "مراسلة غير محدودة"
@@ -8448,8 +8724,7 @@ msgstr "اعرف من أُعجب بك"
 msgid "Priority Support"
 msgstr "دعم ذو أولوية"
 
-msgid ""
-"&ldquo;Invest in your future. Find a partner with shared values.&rdquo;"
+msgid "&ldquo;Invest in your future. Find a partner with shared values.&rdquo;"
 msgstr "&ldquo;استثمر في مستقبلك. اعثر على شريك يشاركك القيم.&rdquo;"
 
 #, python-format
@@ -8547,26 +8822,17 @@ msgid ""
 "yourselves that you may find tranquility in them, and He placed between you "
 "affection and mercy.&rdquo;"
 msgstr ""
-"&ldquo;وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا "
-"لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً&rdquo;"
+"&ldquo;وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً "
+"وَرَحْمَةً&rdquo;"
 
 msgid "Don't have an account?"
 msgstr "ليس لديك حساب؟"
 
 #, python-format
 msgid ""
-"Login to your %(brand)s account and continue your journey towards a brighter"
-" future."
+"Login to your %(brand)s account and continue your journey towards a brighter "
+"future."
 msgstr "سجّل الدخول إلى حسابك في %(brand)s وواصل رحلتك نحو مستقبل أجمل."
-
-msgid "Member Login"
-msgstr "دخول العضو"
-
-msgid "Remember me"
-msgstr "تذكّرني"
-
-msgid "Forgot password?"
-msgstr "نسيت كلمة المرور؟"
 
 msgid "Don't have an account yet?"
 msgstr "ليس لديك حساب بعد؟"
@@ -8601,17 +8867,17 @@ msgid "Check your email"
 msgstr "تحقق من بريدك الإلكتروني"
 
 msgid ""
-"If we found an account, a link to choose a new password is on its way to the"
-" email on that account. It can take a few minutes, so check your <b>spam</b>"
-" or <b>promotions</b> folder too. The link works for 3 days."
+"If we found an account, a link to choose a new password is on its way to the "
+"email on that account. It can take a few minutes, so check your <b>spam</b> "
+"or <b>promotions</b> folder too. The link works for 3 days."
 msgstr ""
 "إذا وجدنا حسابًا، فإن رابط اختيار كلمة مرور جديدة في طريقه إلى البريد "
 "الإلكتروني لهذا الحساب. قد يستغرق ذلك بضع دقائق، لذا تحقق أيضًا من مجلد "
 "<b>الرسائل غير المرغوبة</b> أو <b>العروض</b>. يعمل الرابط لمدة 3 أيام."
 
 msgid ""
-"No email after 10 minutes, or no email on your account? Our support team can"
-" send you a reset link directly"
+"No email after 10 minutes, or no email on your account? Our support team can "
+"send you a reset link directly"
 msgstr ""
 "لم يصلك بريد بعد 10 دقائق، أو لا يوجد بريد في حسابك؟ يمكن لفريق الدعم إرسال "
 "رابط إعادة التعيين إليك مباشرة"
@@ -8641,8 +8907,8 @@ msgid "Button not working? Copy this link into your browser:"
 msgstr "الزر لا يعمل؟ انسخ هذا الرابط في متصفحك:"
 
 msgid ""
-"The link works for 3 days and only once. If you did not ask for this, ignore"
-" this email; your password stays the same."
+"The link works for 3 days and only once. If you did not ask for this, ignore "
+"this email; your password stays the same."
 msgstr ""
 "يعمل الرابط لمدة 3 أيام ولمرة واحدة فقط. إن لم تطلب ذلك فتجاهل هذه الرسالة؛ "
 "ستبقى كلمة مرورك كما هي."
@@ -8688,9 +8954,6 @@ msgstr "أنشئ حسابك"
 msgid "It takes less than two minutes."
 msgstr "يستغرق أقل من دقيقتين."
 
-msgid "Create my account"
-msgstr "أنشئ حسابي"
-
 msgid "Already a member?"
 msgstr "عضو بالفعل؟"
 
@@ -8733,8 +8996,7 @@ msgstr "تسجيل الخروج"
 msgid ""
 "Welcome to Sakinah! To finish creating your account, enter this code on the "
 "sign-up page:"
-msgstr ""
-"مرحبًا بك في سكينة! لإكمال إنشاء حسابك، أدخل هذا الرمز في صفحة التسجيل:"
+msgstr "مرحبًا بك في سكينة! لإكمال إنشاء حسابك، أدخل هذا الرمز في صفحة التسجيل:"
 
 msgid "Or activate your account with one tap:"
 msgstr "أو فعّل حسابك بلمسة واحدة:"
@@ -8745,8 +9007,7 @@ msgstr "تفعيل حسابي"
 msgid ""
 "The code and the link work for 24 hours. If you did not create an account, "
 "you can ignore this email."
-msgstr ""
-"يعمل الرمز والرابط لمدة 24 ساعة. إذا لم تنشئ حسابًا فتجاهل هذه الرسالة."
+msgstr "يعمل الرمز والرابط لمدة 24 ساعة. إذا لم تنشئ حسابًا فتجاهل هذه الرسالة."
 
 #, python-format
 msgid "Assalamu Alaikum %(name)s,"
