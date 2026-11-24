@@ -1,0 +1,17 @@
+{% extends "advertise/dash_base.html" %}{% load i18n %}{% block title %}{% translate "My account" %}{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="user" title=_("My account") sub=_("Your advertiser details and password.") quote=_("Na katika kila kitu tumeumba kwa jozi.") ref=_("Qur'an 51:49") art="mosque" %}
+<div class="page-g">
+  <section class="box fsec"><h3 class="bh"><svg class="mag"><use href="{{ micons }}#m-user"/></svg>{% translate "Your details" %}</h3>
+    <form method="post" novalidate>{% csrf_token %}<input type="hidden" name="action" value="details">
+      <div class="fgrid two">{% include "members/_field.html" with f=form.name %}{% include "members/_field.html" with f=form.phone %}
+        <label class="ff wide"><span>{% translate "Email address" %}</span><input value="{{ user.email }}" disabled></label></div>
+      <div class="fbtns" style="justify-content:flex-start"><button class="btn">{% translate "Save details" %}</button></div></form>
+  </section>
+  <section class="box fsec"><h3 class="bh"><svg class="gold"><use href="{{ micons }}#m-lock"/></svg>{% translate "Change password" %}</h3>
+    <form method="post" novalidate>{% csrf_token %}<input type="hidden" name="action" value="password">
+      <div class="fgrid">{% include "members/_field.html" with f=pw.old_password %}{% include "members/_field.html" with f=pw.new_password1 %}{% include "members/_field.html" with f=pw.new_password2 %}</div>
+      <div class="fbtns" style="justify-content:flex-start"><button class="btn">{% translate "Change password" %}</button></div></form>
+  </section>
+</div>
+{% endblock %}

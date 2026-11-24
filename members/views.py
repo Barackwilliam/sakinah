@@ -33,8 +33,18 @@ def me_or_create(request):
                                   city=LOCATIONS[0], occupation="")
     return m
 
+def plan_ended(request, me):
+    """Tell the member once, on their next visit, that their paid plan has ended (they are back on the free plan)."""
+    if not (me.plan_id and me.premium_until and me.plan.price) or me.is_premium or me.plan_end_noticed == me.premium_until: return
+    me.plan_end_noticed = me.premium_until; me.save(update_fields=["plan_end_noticed"])
+    text = _("Your %(plan)s ended on %(date)s. You are now on the free plan. Renew any time to get its features back.") % {
+        "plan": me.plan.name, "date": me.premium_until.strftime("%d/%m/%Y")}
+    Notification.objects.create(user=me.user, title=_("Your package has ended"), body=text, link=reverse("m_membership"))
+    messages.warning(request, text)
+
 def page(request, template, ctx, nav, **opts):
     me = ctx.get("me") or me_or_create(request)
+    plan_ended(request, me)
     if me.status != "active" and nav not in ("help", "settings"):   # suspended / rejected accounts only reach support and settings
         template, ctx, nav = "members/blocked_account.html", {"me": me}, "blocked"
     base = {"site": SiteSetting.load(), "me": me, "nav": nav, "header_nav": opts.get("header", "main"), **data.counts(request.user, me),
@@ -168,10 +178,10 @@ def message_block_en(me, other=None):
 def call_block_en(me):
     """Why this member may not place a call right now, or "" when they may."""
     if me is None: return _l("Complete your profile before calling.")
-    if me.allowance("daily_call_seconds") == 0:
+    if me.call_allowance == 0:
         return _l("Your plan does not include calls. Upgrade to call other members.")
     if me.call_seconds_left == 0:
-        return _l("You have used today's call time. It comes back in 24 hours, or upgrade for more.")
+        return _l("You have used all the call minutes on your plan. Renew or upgrade to call again.")
     return ""
 
 def messages_page(request, pk=None):

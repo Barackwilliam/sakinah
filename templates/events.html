@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n lang %}{% load static %}{% block title %}{% blocktranslate with brand=site.brand %}Events - {{ brand }}{% endblocktranslate %}{% endblock %}
+{% extends "base.html" %}{% load i18n lang banners %}{% load static %}{% block title %}{% blocktranslate with brand=site.brand %}Events - {{ brand }}{% endblocktranslate %}{% endblock %}
 {% block content %}
 <section class="phero">
   <div class="phero-img" style="--img:url('{% static "img/hero_events.jpg" %}')"></div>
@@ -40,7 +40,7 @@
       {% else %}<div class="empty box"><p>{% translate "No events match your search right now." %}</p></div>{% endif %}
     </section>
 
-    <aside class="rcol">
+    <aside class="rcol">{% banner "sidebar" invite=True %}
       <div class="box"><div class="box-h"><svg><use href="{{ icons }}#i-cal-f"/></svg><h3>{% translate "Event Calendar" %}</h3></div>
         <div class="box-b cal"><div class="cal-h"><a href="?month={{ prev_month }}" aria-label="{% translate 'Previous month' %}"><svg><use href="{{ icons }}#i-chev-l"/></svg></a><b>{{ cal_title|date:"F Y" }}</b><a href="?month={{ next_month }}" aria-label="{% translate 'Next month' %}"><svg><use href="{{ icons }}#i-chev-r"/></svg></a></div>
           <table><thead><tr><th>{% translate "Sun" %}</th><th>{% translate "Mon" %}</th><th>{% translate "Tue" %}</th><th>{% translate "Wed" %}</th><th>{% translate "Thu" %}</th><th>{% translate "Fri" %}</th><th>{% translate "Sat" %}</th></tr></thead>

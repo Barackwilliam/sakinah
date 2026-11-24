@@ -1,4 +1,8 @@
-{% load i18n %}{% if user.is_authenticated %}
+{% load i18n %}{% if user.is_authenticated and user.advertiser and not user.member and not user.is_staff %}
+<a class="btn btn-o msgs-l" href="{% url 'ad_dashboard' %}" title="{% translate 'My adverts' %}"><svg><use href="{{ icons }}#i-mega"/></svg><span class="t">{% translate "My Adverts" %}</span></a>
+<a class="btn btn-o msgs-l" href="{% url 'ad_notifications' %}" aria-label="{% translate 'Notifications' %}" title="{% translate 'Notifications' %}"><svg><use href="{{ icons }}#i-bell"/></svg><span class="t">{% translate "Notifications" %}</span>{% if n_notes %}<span class="badge">{{ n_notes }}</span>{% endif %}</a>
+<form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn btn-s">{% translate "Logout" %}</button></form>
+{% elif user.is_authenticated %}
 {% if user.is_staff %}<a class="btn btn-o msgs-l" href="{% url 'dashboard' %}" aria-label="{% translate 'Admin dashboard' %}" title="{% translate 'Admin dashboard' %}"><svg><use href="{{ icons }}#i-grid"/></svg><span class="t">{% translate "Dashboard" %}</span></a>
 {% else %}<a class="btn btn-o msgs-l" href="{% url 'm_dashboard' %}" aria-label="{% translate 'My dashboard' %}" title="{% translate 'My dashboard' %}"><svg><use href="{{ icons }}#i-grid"/></svg><span class="t">{% translate "My Dashboard" %}</span></a>{% endif %}
 <a class="btn btn-o msgs-l" href="{% if user.is_staff %}{% url 'notifications' %}{% else %}{% url 'm_notifications' %}{% endif %}" aria-label="{% translate 'Notifications' %}" title="{% translate 'Notifications' %}"><svg><use href="{{ icons }}#i-bell"/></svg><span class="t">{% translate "Notifications" %}</span>{% if n_notes %}<span class="badge">{{ n_notes }}</span>{% endif %}</a>

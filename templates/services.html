@@ -1,11 +1,11 @@
-{% extends "base.html" %}{% load i18n lang %}{% load static %}{% block title %}{% blocktranslate with brand=site.brand %}Marriage Services - {{ brand }}{% endblocktranslate %}{% endblock %}
+{% extends "base.html" %}{% load i18n lang banners %}{% load static %}{% block title %}{% blocktranslate with brand=site.brand %}Services - {{ brand }}{% endblocktranslate %}{% endblock %}
 {% block content %}
 <section class="phero">
   <div class="phero-img" style="--img:url('{% static "img/hero_events.jpg" %}')"></div>
   <div class="phero-in"><div class="phero-txt">
-    <h1>{% translate "Marriage Services" %}</h1><h2>{% translate "Trusted vendors for your Nikah &amp; Walima" %}</h2>
-    <p>{% translate "Venues, catering, decoration, photography and more from vendors who respect your values." %}</p>
-    <form class="phero-search" method="get"><div class="sel"><svg><use href="{{ icons }}#i-search"/></svg><input name="q" value="{{ q }}" placeholder="{% translate 'Search venues, vendors or cities' %}"></div>
+    <h1>{% translate "Services" %}</h1><h2>{% translate "Trusted businesses and services" %}</h2>
+    <p>{% translate "Wedding services, shops, property, vehicles, jobs and more from advertisers who respect your values." %}</p>
+    <form class="phero-search" method="get"><div class="sel"><svg><use href="{{ icons }}#i-search"/></svg><input name="q" value="{{ q }}" placeholder="{% translate 'Search adverts, businesses or cities' %}"></div>
       {% if cat %}<input type="hidden" name="cat" value="{{ cat }}">{% endif %}<button class="btn btn-s">{% translate "Search" %}</button></form>
   </div></div>
   <blockquote class="phero-q"><span>{% translate "&ldquo;The most blessed marriage is the one with the least burden.&rdquo;" %}</span><i></i></blockquote>
@@ -15,8 +15,8 @@
     {% for c in categories %}<a href="?cat={{ c.slug }}" class="{% if cat == c.slug %}on{% endif %}" id="{{ c.slug }}">{{ c.name|tr }} <i>{{ c.n }}</i></a>{% endfor %}</nav>
   <div class="sec-h"><div><h2>{% if vendor %}{% blocktranslate with name=vendor.name %}Adverts by {{ name }}{% endblocktranslate %}{% elif cat %}{% for c in categories %}{% if c.slug == cat %}{{ c.name|tr }}{% endif %}{% endfor %}{% else %}{% translate "All adverts" %}{% endif %}</h2>
     <p>{% blocktranslate count ads=ads|length %}{{ ads }} advert{% plural %}{{ ads }} adverts{% endblocktranslate %}{% if q %} {% blocktranslate %}matching &ldquo;{{ q }}&rdquo;{% endblocktranslate %}{% endif %}</p></div></div>
-  {% if ads %}<div class="ad-grid">{% for a in ads %}{% include "partials/ad_card.html" %}{% endfor %}</div>
+  {% if ads %}<div class="ad-grid">{% banner "sidebar" %}{% for a in ads %}{% include "partials/ad_card.html" %}{% endfor %}</div>
   {% else %}<div class="empty box"><p>{% translate "No adverts here yet." %}</p></div>{% endif %}
-  <div class="adv cta"><div class="adv-t"><h3>{% translate "Advertise Your Marriage Service" %}</h3><p>{% translate "Reach couples who are planning their Nikah. Create your advert in minutes and pay by mobile money." %}</p>
-    <a class="btn btn-o xs" href="{% url 'advertise' %}"><svg class="gold"><use href="{{ icons }}#i-mega"/></svg>{% translate "Advertise Now" %}</a></div></div>
+  <div class="adv cta"><div class="adv-t"><h3>{% translate "Advertise your business" %}</h3><p>{% translate "Reach thousands of people on Sakinah. Create your advert in minutes and pay with Pesapal." %}</p>
+    <a class="btn btn-o xs" href="{% url 'ad_new' %}"><svg class="gold"><use href="{{ icons }}#i-mega"/></svg>{% translate "Post Ad" %}</a></div></div>
 </div>{% endblock %}

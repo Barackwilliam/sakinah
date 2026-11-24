@@ -64,9 +64,6 @@ const adT=$('#ad-thumbs');if(adT)adT.addEventListener('click',e=>{const t=e.targ
 // in-page tabs: highlight the clicked tab
 $$('.tabs').forEach(tb=>tb.addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;$$('a',tb).forEach(x=>x.classList.toggle('on',x===a))}));
 
-// login page: member / admin tabs only change where you land after login
-$$('[data-lg]').forEach(t=>t.addEventListener('click',()=>{$$('[data-lg]').forEach(x=>x.classList.toggle('on',x===t));
-  $('#lg-next').value=t.dataset.next;$('#lg-title').textContent=t.dataset.lg==='admin'?gettext('Admin Login'):gettext('Welcome Back')}));
 
 // honeymoon: gallery arrows / thumbnails, tabs, sort and destination pickers, mobile filters
 $$('[data-gallery]').forEach(g=>{const list=JSON.parse($('[data-gal-list]',g).textContent||'[]'),img=$('[data-gal-img]',g),n=$('[data-gal-n]',g);let i=0;
@@ -143,3 +140,7 @@ $$('[data-toggle-filters]').forEach(b=>b.addEventListener('click',()=>{const f=$
     document.addEventListener('touchstart', (e) => { const a = e.target.closest('a'); if (a) warm(a); }, { passive: true });
   }
 })();
+
+// Services menu in the phone drawer: the arrow opens the list of services
+(function(){const dd=document.getElementById('nav-dd'); if(!dd) return; const b=dd.querySelector('.nav-dd-x');
+  b.addEventListener('click',()=>{const o=dd.classList.toggle('open'); b.setAttribute('aria-expanded',o)});})();

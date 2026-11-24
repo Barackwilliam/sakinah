@@ -1,0 +1,10 @@
+{% extends "advertise/dash_base.html" %}{% load i18n member_tags %}{% block title %}{% translate "Notifications" %}{% endblock %}
+{% block content %}
+{% include "members/_banner.html" with icon="bell" title=_("Notifications") sub=_("Updates about your adverts and payments.") quote=_("Na katika kila kitu tumeumba kwa jozi.") ref=_("Qur'an 51:49") art="lantern" %}
+<section class="box afeed">
+  <h3 class="bh"><span class="bh-ic"><svg><use href="{{ micons }}#m-bell"/></svg></span>{% translate "All Notifications" %}</h3>
+  <ul class="nlist">{% for n in notes %}<li class="{% if not n.read %}new{% endif %}">{% if n.link %}<a href="{{ n.link }}">{% else %}<div>{% endif %}<span class="fi" style="--c:#a0123c"><svg><use href="{{ micons }}#m-bell"/></svg></span>
+    <span><b>{{ n.title }}</b>{% if n.body %}<small>{{ n.body }}</small>{% endif %}</span><time>{{ n.created|ago }}</time>{% if n.link %}</a>{% else %}</div>{% endif %}</li>
+  {% empty %}<li class="empty">{% translate "You have no notifications yet." %}</li>{% endfor %}</ul>
+</section>
+{% endblock %}

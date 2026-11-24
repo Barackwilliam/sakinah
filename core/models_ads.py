@@ -21,12 +21,33 @@ def unique_slug(model, text, field="slug"):
     return slug
 
 
+class Advertiser(models.Model):
+    """An advertiser's account. It is separate from a member's (looking for a spouse): its own sign-up and login on
+    /advertise/, and it opens the advertiser dashboard, never the member area."""
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="advertiser")
+    name = models.CharField(_("Full name"), max_length=100)
+    phone = models.CharField(_("Phone number"), max_length=20)
+    email_verified = models.BooleanField(_("Email verified"), default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        verbose_name, verbose_name_plural = _("Advertiser"), _("Advertisers")
+        ordering = ["-created"]
+    def __str__(self): return self.name
+    @property
+    def first_name(self): return self.name.split()[0] if self.name else ""
+
+
+def is_advertiser(user):
+    """True for an advertiser's account (one that is not also a member's)."""
+    return bool(user.is_authenticated and not user.is_staff and hasattr(user, "advertiser") and not hasattr(user, "member"))
+
+
 class AdPackage(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True)
     tagline = models.CharField(max_length=120, blank=True)
     price = models.PositiveIntegerField(help_text=_("Price for the whole period, in TSh."))
-    months = models.PositiveSmallIntegerField(default=1, help_text=_("How long the advert stays on the site, in months (see Days in one month in Site Settings)."))
+    days = models.PositiveSmallIntegerField(default=7, help_text=_("How many days the advert is featured on the site, e.g. 7, 15 or 30."))
     features = models.TextField(blank=True, help_text=_("One per line. Start a line with - for something the package does not include."))
     featured = models.BooleanField(default=False, help_text=_("Featured badge and first place in its category."))
     home_page = models.BooleanField(default=False, help_text=_("Also shown in Featured Vendors on the home page."))
@@ -45,10 +66,12 @@ class AdPackage(models.Model):
         return [(not l.startswith("-"), gettext(l.lstrip("-+ ").strip())) for l in self.features.splitlines() if l.strip()]
 
     @property
-    def days(self):
-        """Days the advert actually runs: months x the site's days in one month (3 while testing, 30 later)."""
+    def run_days(self):
+        """Days the advert actually runs. While testing (Days in one month below 30 in Site Settings) time is squeezed
+        the same way as for plans: 7, 15 and 30 days become 1, 2 and 3, so an ending advert is quick to see."""
         from .models import SiteSetting
-        return self.months * SiteSetting.load().days_per_month
+        per = SiteSetting.load().days_per_month
+        return self.days if per >= 30 else max(1, -(-self.days * per // 30))
 
 
 class AdOrder(models.Model):
@@ -81,7 +104,7 @@ class AdOrder(models.Model):
 
     class Meta: ordering = ["-created"]
     def __str__(self): return f"{self.business_name} - {self.title}"
-    def get_absolute_url(self): return reverse("m_ad", args=[self.token])
+    def get_absolute_url(self): return reverse("ad_detail", args=[self.token])
 
     @property
     def photos(self): return [p for p in (self.image, self.photo2, self.photo3, self.photo4) if p]
@@ -118,7 +141,7 @@ class AdOrder(models.Model):
             for i, p in enumerate([self.photo2, self.photo3, self.photo4]):
                 if p: AdvertPhoto.objects.create(advert=ad, image=p.name, order=i)
         start = max(ad.expires or today, today) if self.advert_id else today
-        ad.expires, ad.active, ad.package = start + timedelta(days=self.package.days), True, self.package
+        ad.expires, ad.active, ad.package = start + timedelta(days=self.package.run_days), True, self.package
         ad.featured = ad.featured or self.package.featured
         ad.save(update_fields=["expires", "active", "package", "featured"])
         first = not self.advert_id

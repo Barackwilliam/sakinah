@@ -1,6 +1,6 @@
 from django.contrib.auth import views as auth
 from django.urls import path
-from . import views, views_ads, views_content, views_honeymoon as hm, views_market, views_pay, views_verify
+from . import views, views_ads, views_banners, views_content, views_honeymoon as hm, views_market, views_pay, views_verify
 urlpatterns = [
     path("", views.home, name="home"),
     path("matches/", views.matches, name="matches"),
@@ -25,6 +25,17 @@ urlpatterns = [
     path("payments/pesapal/ipn/", views_pay.ipn, name="pesapal_ipn"),
     path("advertise/", views_ads.advertise, name="advertise"),
     path("advertise/start/", views_ads.advertise_start, name="advertise_start"),
+    path("advertise/register/", views_ads.register, name="ad_register"),
+    path("advertise/login/", views_ads.LoginView.as_view(), name="ad_login"),
+    path("advertise/dashboard/", views_ads.my_adverts, name="ad_dashboard"),
+    path("advertise/dashboard/new/", views_ads.new_advert, name="ad_new"),
+    path("advertise/dashboard/account/", views_ads.account, name="ad_account"),
+    path("advertise/dashboard/notifications/", views_ads.notifications, name="ad_notifications"),
+    path("advertise/dashboard/banners/", views_banners.banners, name="ad_banners"),
+    path("advertise/dashboard/banners/new/", views_banners.new_banner, name="ad_banner_new"),
+    path("advertise/dashboard/banners/<str:token>/", views_banners.banner_detail, name="ad_banner"),
+    path("advertise/dashboard/<str:token>/", views_ads.advert_detail, name="ad_detail"),
+    path("b/<str:token>/", views_banners.click, name="banner_click"),
     path("advertise/order/<str:token>/", views_ads.ad_order, name="ad_order"),
     path("services/", views_market.services, name="services"),
     path("services/<slug:slug>/", views_market.advert, name="advert"),

@@ -5,7 +5,7 @@ from django.utils.translation import gettext_noop as N
 
 JS_STRINGS = [
     N('Call ended'),
-    N("Your plan's call time for today is finished"),
+    N("Your plan's call minutes are used up"),
     N('Allow microphone access to make calls'),
     N('The connection failed. Check your internet and try again.'),
     N('Call declined'),
@@ -38,4 +38,5 @@ JS_STRINGS = [
     N('Andika ujumbe wako hapa...'),
     N('not sent'),
     N('This package includes one photo. Choose a bigger package for up to 4.'),
+    N('Best size: %s × %s pixels'),
 ]

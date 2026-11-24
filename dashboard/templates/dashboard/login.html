@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% load i18n static %}{% block title %}{% blocktranslate with brand=site.brand %}Admin Login - {{ brand }}{% endblocktranslate %}{% endblock %}{% block bodyclass %}auth-page login-page admin-login{% endblock %}
+{% block navbar %}{% endblock %}{% block footer %}{% endblock %}
+{% block content %}
+<section class="lg">
+  <div class="lg-art" style="--img:url('{% static "img/login_bg.jpg" %}')">
+    <div class="lg-art-in">
+      {% include "partials/logo.html" %}
+      <h1>{% translate "Sakinah Administration" %}</h1>
+      <p>{% translate "Manage members, payments, adverts, events and the content of the site from one place." %}</p>
+      <ul class="lg-feats">
+        <li><span><svg><use href="{{ icons }}#i-people"/></svg></span><div><b>{% translate "Members" %}</b><small>{% translate "Approve, verify and support members." %}</small></div></li>
+        <li><span><svg><use href="{{ icons }}#i-mega"/></svg></span><div><b>{% translate "Adverts" %}</b><small>{% translate "Review and publish advertisers' adverts." %}</small></div></li>
+        <li><span><svg><use href="{{ icons }}#i-cal-f"/></svg></span><div><b>{% translate "Payments" %}</b><small>{% translate "Follow every Pesapal payment." %}</small></div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="lg-side">
+    <div class="lg-card">
+      <h2><svg style="width:26px;height:26px;vertical-align:-4px;margin-inline-end:8px"><use href="{{ icons }}#i-shield-c"/></svg>{% translate "Admin Login" %}</h2>
+      <p class="muted">{% translate "For Sakinah administrators and staff only." %}</p>
+      <form method="post" class="form">{% csrf_token %}{% include "partials/login_fields.html" %}
+        <input type="hidden" name="next" value="{{ next }}">
+        <button class="btn btn-s btn-lg block"><svg><use href="{{ icons }}#i-arrow"/></svg>{% translate "Login" %}</button></form>
+      <p class="muted" style="margin-top:18px;font-size:13px">{% translate "Not an administrator?" %} <a class="lnk" href="{{ site_url }}/login/">{% translate "Go to the member login" %}</a></p>
+    </div>
+  </div>
+</section>{% endblock %}

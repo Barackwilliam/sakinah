@@ -41,6 +41,8 @@ class Command(BaseCommand):
         for i,(n,b) in enumerate(cats):
             ServiceCategory.objects.get_or_create(slug=n.lower().replace(" & ","-").replace(" ","-"),
               defaults=dict(name=n,blurb=b.replace("\n"," "),order=i,button_label="View Venues" if n=="Wedding Venues" else "View Advert"))
+        for i, (n, b) in enumerate(GENERAL_CATEGORIES, start=len(cats)):
+            ServiceCategory.objects.get_or_create(slug=slugify(n), defaults=dict(name=n, blurb=b, order=i))
         for c in ServiceCategory.objects.all(): attach(c, "image", IMG / "site" / f"svc_{c.slug}.jpg")
         people = [  # name, age, city, occupation, compat, gender, featured, image, religion, education, bio
             ("Amina",28,"Dar es Salaam","Accountant",91,"F",1,"amina","Islam","Shahada ya Uhasibu","Ninathamini imani, familia na heshima. Natafuta mume mcha Mungu kwa ajili ya ndoa ya kudumu."),
@@ -66,8 +68,8 @@ class Command(BaseCommand):
             if not plan.features:
                 plan.period, plan.tagline, plan.popular, plan.features = period, tagline, popular, features; plan.save()
             attach(plan, "icon", IMG / "v3" / f"plan_icon{i + 1}.jpg")
-        for i, (slug, n, tag, price, months, photos, feat, home, pop, features) in enumerate(AD_PACKAGES):
-            AdPackage.objects.get_or_create(slug=slug, defaults=dict(name=n, tagline=tag, price=price, months=months, max_photos=photos, featured=feat,
+        for i, (slug, n, tag, price, days, photos, feat, home, pop, features) in enumerate(AD_PACKAGES):
+            AdPackage.objects.get_or_create(slug=slug, defaults=dict(name=n, tagline=tag, price=price, days=days, max_photos=photos, featured=feat,
                                                                      home_page=home, popular=pop, features=features, order=i))
         for i,t in enumerate(["See who likes you","Advanced matching","Unlimited messaging","Incognito mode","Voice & video calls","Priority support"]):
             PremiumPerk.objects.get_or_create(text=t,defaults=dict(order=i))

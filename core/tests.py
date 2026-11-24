@@ -143,7 +143,7 @@ class FlowTests(TestCase):
         r = self.client.get(reverse("login"))
         self.assertContains(r, "Sakinah")
         self.assertContains(r, "Welcome Back")
-        self.assertContains(r, "Admin Login")
+        self.assertNotContains(r, "Admin Login")      # administrators have their own login page now
 
 
 class SiteSectionTests(TestCase):
@@ -223,8 +223,8 @@ class SiteSectionTests(TestCase):
 
     def test_plan_features(self):
         p = Plan.objects.create(name="Gold", price=50000, features="Priority support\n-Incognito mode", popular=True,
-                                daily_messages=-1, daily_call_seconds=300)
-        self.assertEqual(p.feature_list, [(True, "Start as many chats as you like"), (True, "5 minutes of calls a day"),
+                                daily_messages=-1, call_minutes=5)
+        self.assertEqual(p.feature_list, [(True, "Start as many chats as you like"), (True, "5 minutes of voice and video calls"),
                                           (True, "Priority support"), (False, "Incognito mode")])
         r = self.client.get(reverse("premium"))
         self.assertContains(r, "Most Popular"); self.assertContains(r, "Incognito mode")
@@ -442,7 +442,7 @@ class PublicChatTests(TestCase):
         self.her_user = User.objects.create_user("amina2")
         self.her = Member.objects.create(user=self.her_user, name="Amina Hassan", age=27, gender="F", city="Arusha")
         self.other = Member.objects.create(name="Zahra Said", age=26, gender="F", city="Mwanza")   # no login yet
-        self.plan = Plan.objects.create(name="Chat test", price=5000, daily_messages=-1, daily_call_seconds=0)
+        self.plan = Plan.objects.create(name="Chat test", price=5000, daily_messages=-1, call_minutes=0)
         Member.objects.filter(pk=self.mine.pk).update(plan=self.plan, premium_until=timezone.localdate() + timedelta(days=30))
         self.mine.refresh_from_db()
         self.client.force_login(self.me)
@@ -452,33 +452,33 @@ class PublicChatTests(TestCase):
 
     @override_settings(LANGUAGE_CODE="en")
     def test_the_profile_page_carries_call_buttons(self):
-        plan = Plan.objects.create(name="Profile plan", price=20000, daily_messages=10, daily_call_seconds=300)
+        plan = Plan.objects.create(name="Profile plan", price=20000, daily_messages=10, call_minutes=5)
         Member.objects.filter(pk=self.mine.pk).update(plan=plan, premium_until=timezone.localdate() + timedelta(days=30))
         r = self.client.get(reverse("member", args=[self.her.pk]))
         self.assertContains(r, "Voice Call"); self.assertContains(r, "Video Call")
         self.assertContains(r, 'data-call="video"')
-        Plan.objects.filter(pk=plan.pk).update(daily_call_seconds=0)
+        Plan.objects.filter(pk=plan.pk).update(call_minutes=0)
         r = self.client.get(reverse("member", args=[self.her.pk]))
         self.assertNotContains(r, 'data-call="video"')
         self.assertContains(r, "btn-vid up")                       # it points at the plans instead
 
     @override_settings(LANGUAGE_CODE="en")
     def test_the_match_cards_carry_call_buttons(self):
-        plan = Plan.objects.create(name="Call plan", price=20000, daily_messages=10, daily_call_seconds=300)
+        plan = Plan.objects.create(name="Call plan", price=20000, daily_messages=10, call_minutes=5)
         Member.objects.filter(pk=self.mine.pk).update(plan=plan, premium_until=timezone.localdate() + timedelta(days=30))
         r = self.client.get(reverse("matches"))
         self.assertContains(r, 'data-call="voice"')
         self.assertContains(r, 'data-call="video"')
         self.assertContains(r, '#i-phone"/></svg>Call'); self.assertContains(r, "Video Call")   # "Piga Simu" in Swahili
         self.assertNotContains(r, "Tuma Ujumbe")        # WhatsApp duplicated the chat button; it lives on the profile page
-        Plan.objects.filter(pk=plan.pk).update(daily_call_seconds=0)        # no call time on the plan
+        Plan.objects.filter(pk=plan.pk).update(call_minutes=0)        # no call time on the plan
         r = self.client.get(reverse("matches"))
         self.assertNotContains(r, 'data-call="voice"')
         self.assertContains(r, "pc-b4 up")                                  # it points at the plans instead
 
     def test_the_call_buttons_always_show_and_say_why_when_they_are_off(self):
         # a member without a login cannot be called at all: grey buttons, with the reason in Swahili
-        Plan.objects.filter(pk=self.plan.pk).update(daily_call_seconds=300)
+        Plan.objects.filter(pk=self.plan.pk).update(call_minutes=5)
         r = self.client.get(self.url(self.other))
         self.assertContains(r, 'class="ch-ib off"', count=2)
         self.assertContains(r, "bado hajaanza kutumia simu")
@@ -488,7 +488,7 @@ class PublicChatTests(TestCase):
         self.assertContains(r, 'class="ch-ib off"', count=2)
         self.assertContains(r, "Umetumia muda wako wote wa simu leo")
         # a plan with no call time at all points at the plans instead
-        Plan.objects.filter(pk=self.plan.pk).update(daily_call_seconds=0)
+        Plan.objects.filter(pk=self.plan.pk).update(call_minutes=0)
         self.assertContains(self.client.get(self.url(self.her)), "ch-ib up")
 
     def test_list_search_and_opening_a_chat(self):
@@ -563,7 +563,7 @@ class PublicChatTests(TestCase):
 
 @override_settings(LANGUAGE_CODE="sw")   # these check the Swahili wording, so they browse the site in Swahili
 class PlanAllowanceTests(TestCase):
-    """What each plan may send and call in 24 hours."""
+    """What each plan may send in 24 hours, and the call minutes it gives for each month."""
     def setUp(self):
         self.me = User.objects.create_user("juma3")
         self.mine = Member.objects.create(user=self.me, name="Juma Ali", age=30, gender="M", city="Arusha")
@@ -571,8 +571,8 @@ class PlanAllowanceTests(TestCase):
         self.her = Member.objects.create(user=self.her_user, name="Amina Hassan", age=27, gender="F", city="Arusha")
         self.client.force_login(self.me)
 
-    def on(self, messages_a_day, call_seconds):
-        plan = Plan.objects.create(name="Test", price=1000, daily_messages=messages_a_day, daily_call_seconds=call_seconds)
+    def on(self, messages_a_day, call_minutes):
+        plan = Plan.objects.create(name="Test", price=1000, daily_messages=messages_a_day, call_minutes=call_minutes)
         Member.objects.filter(pk=self.mine.pk).update(plan=plan, premium_until=timezone.localdate() + timedelta(days=30))
         self.mine.refresh_from_db()
         return plan
@@ -587,7 +587,7 @@ class PlanAllowanceTests(TestCase):
         self.assertEqual(Message.objects.count(), 0)
 
     def test_a_plan_stops_at_its_daily_count_of_new_conversations(self):
-        self.on(2, 30)
+        self.on(2, 1)
         others = [Member.objects.create(user=User.objects.create_user(f"mtu{i}"), name=f"Mtu {i}", age=25, gender="F", city="Tanga")
                   for i in range(3)]
         for m in others[:2]: self.client.post(reverse("thread", args=[m.pk]), {"body": "Salaam"})
@@ -607,7 +607,7 @@ class PlanAllowanceTests(TestCase):
         self.assertTrue(self.mine.can_send_messages)
 
     def test_call_logs_do_not_eat_the_message_allowance(self):
-        self.on(2, 60)
+        self.on(2, 1)
         Message.objects.create(sender=self.her_user, to=self.mine, body="Missed voice call", kind="call")
         Message.objects.create(sender=self.me, to=self.her, body="Voice call", kind="call")
         self.assertEqual(self.mine.messages_left, 2)
@@ -615,28 +615,57 @@ class PlanAllowanceTests(TestCase):
     def test_calls_need_call_time_on_the_plan(self):
         from members.calls import call_permission
         self.assertEqual(call_permission(self.mine, self.her), (False, "premium"))   # no plan at all
-        self.on(10, 30)
+        self.on(10, 1)
         self.assertEqual(call_permission(self.mine, self.her), (True, ""))
         Call.objects.create(caller=self.me, callee=self.her_user, kind="voice", status="ended",
-                            answered_at=timezone.now(), ended_at=timezone.now(), billed_seconds=30)
+                            answered_at=timezone.now(), ended_at=timezone.now(), billed_seconds=60)
         self.assertEqual(self.mine.call_seconds_left, 0)
         self.assertEqual(call_permission(self.mine, self.her), (False, "spent"))
 
     def test_a_call_is_capped_at_the_time_that_is_left_and_is_billed(self):
         from members.calls import call_cap, finish
-        self.on(10, 90)
-        Call.objects.create(caller=self.me, callee=self.her_user, status="ended", billed_seconds=60)
+        self.on(10, 2)
+        Call.objects.create(caller=self.me, callee=self.her_user, status="ended", billed_seconds=90)
         call = Call.objects.create(caller=self.me, callee=self.her_user, status="accepted",
                                    answered_at=timezone.now() - timedelta(seconds=5))
-        self.assertEqual(call_cap(call), 30)                               # 90 allowed, 60 already spent
+        self.assertEqual(call_cap(call), 30)                               # 2 minutes allowed, 90 seconds already spent
         finish(call, "ended")
         call.refresh_from_db()
         self.assertGreaterEqual(call.billed_seconds, 5)
 
+    def test_call_minutes_last_the_whole_plan_not_one_day(self):
+        self.on(10, 5)
+        Call.objects.create(caller=self.me, callee=self.her_user, status="ended", billed_seconds=180)
+        Call.objects.filter(caller=self.me).update(created=timezone.now() - timedelta(days=1))   # yesterday's call still counts
+        self.assertEqual(self.mine.call_seconds_left, 120)
+        self.assertEqual(self.mine.call_minutes_left, 2)
+
+    def test_used_up_minutes_stop_calls_only_and_the_member_is_told_once(self):
+        from members.calls import call_permission, finish
+        self.on(10, 1)
+        call = Call.objects.create(caller=self.me, callee=self.her_user, status="accepted", answered_at=timezone.now() - timedelta(seconds=61))
+        finish(call, "ended")
+        self.mine.refresh_from_db()
+        self.assertEqual(call_permission(self.mine, self.her), (False, "spent"))
+        self.assertTrue(self.mine.can_send_messages)                       # messages and the rest keep working
+        self.assertEqual(Notification.objects.filter(user=self.me).exclude(link="").filter(link=reverse("m_membership")).count(), 1)
+        finish(Call.objects.create(caller=self.me, callee=self.her_user, status="accepted", answered_at=timezone.now()), "ended")
+        self.assertEqual(Notification.objects.filter(user=self.me, link=reverse("m_membership")).count(), 1)
+
+    def test_paying_gives_the_plan_minutes_for_each_month_and_renewing_keeps_what_is_left(self):
+        plan = Plan.objects.create(name="Basic", price=50, daily_messages=10, call_minutes=5)
+        pay = Payment.objects.create(user=self.me, payer_name="Juma", amount=50, kind="premium", plan=plan, months=1, status="completed")
+        pay.activate(); self.mine.refresh_from_db()
+        self.assertEqual(self.mine.call_seconds_left, 300)
+        Call.objects.create(caller=self.me, callee=self.her_user, status="ended", billed_seconds=120)
+        again = Payment.objects.create(user=self.me, payer_name="Juma", amount=100, kind="premium", plan=plan, months=2, status="completed")
+        again.activate(); self.mine.refresh_from_db()
+        self.assertEqual(self.mine.call_seconds_left, 180 + 600)
+
     @override_settings(LANGUAGE_CODE="en")
     def test_the_plan_card_prints_the_allowance(self):
-        plan = Plan.objects.create(name="Gold test", price=50000, daily_messages=100, daily_call_seconds=300)
-        self.assertEqual(plan.allowance_lines, [(True, "Start 100 new chats a day"), (True, "5 minutes of calls a day")])
+        plan = Plan.objects.create(name="Gold test", price=50000, daily_messages=100, call_minutes=5)
+        self.assertEqual(plan.allowance_lines, [(True, "Start 100 new chats a day"), (True, "5 minutes of voice and video calls")])
         free = Plan.objects.create(name="Free test", price=0)
         self.assertEqual(free.allowance_lines, [(False, "Cannot start a chat"), (False, "No voice or video calls")])
 
@@ -649,7 +678,7 @@ class ReplyRuleTests(TestCase):
         self.mine = Member.objects.create(user=self.me, name="Hamisi Juma", age=32, gender="M", city="Mbeya")
         self.her_user = User.objects.create_user("rehema")
         self.her = Member.objects.create(user=self.her_user, name="Rehema Ally", age=28, gender="F", city="Mbeya")
-        self.plan = Plan.objects.create(name="Gold", price=50000, daily_messages=2, daily_call_seconds=300)
+        self.plan = Plan.objects.create(name="Gold", price=50000, daily_messages=2, call_minutes=5)
         self.client.force_login(self.me)                      # Hamisi has no plan
 
     def url(self, m): return reverse("thread", args=[m.pk])
@@ -808,14 +837,14 @@ class AdvertiseTests(TestCase):
         self._media = override_settings(MEDIA_ROOT=self._tmp.name, WATERMARK_TEXT="")
         self._media.enable()
         self.cat = ServiceCategory.objects.create(name="Catering", slug="catering", blurb="Food")
-        self.basic = AdPackage.objects.create(name="Starter", slug="starter", price=25000, months=1, max_photos=1)
-        self.spot = AdPackage.objects.create(name="Spotlight", slug="spotlight", price=150000, months=2, max_photos=4,
+        self.basic = AdPackage.objects.create(name="Starter", slug="starter", price=25000, days=30, max_photos=1)
+        self.spot = AdPackage.objects.create(name="Spotlight", slug="spotlight", price=150000, days=60, max_photos=4,
                                              featured=True, home_page=True, popular=True)
         import secrets
         self.staff = User.objects.create_user("boss", "boss@example.com", secrets.token_urlsafe(16), is_staff=True)
         self.vendor = User.objects.create_user("asha", "asha@example.com", secrets.token_urlsafe(16))
-        Member.objects.create(user=self.vendor, name="Asha", age=30, gender="F", city="Arusha", occupation="Caterer")
-        self.client.force_login(self.vendor)   # adverts are asked for from inside the account
+        Advertiser.objects.create(user=self.vendor, name="Asha Juma", phone="0713 222 333")
+        self.client.force_login(self.vendor)   # adverts are made from the advertiser's own dashboard
 
     def tearDown(self):
         self._media.disable(); self._tmp.cleanup()
@@ -831,7 +860,7 @@ class AdvertiseTests(TestCase):
         data = dict(package=(package or self.spot).pk, business_name="Baraka Catering", contact_name="Asha", phone="0713 222 333",
                     category=self.cat.pk, city="Arusha", title="Halal wedding catering", description="Pilau, biryani and more.",
                     price=12000, price_unit="Per Person", image=self.photo(), photo2=self.photo("b.jpg"), **extra)
-        return self.client.post(reverse("m_ad_new"), data)
+        return self.client.post(reverse("ad_new"), data)
 
     def pay(self, order, ref="QK71ABC2XY"):
         return self.client.post(order.get_absolute_url(), {"gateway": "mpesa", "phone": "0713222333", "reference": ref})
@@ -846,7 +875,7 @@ class AdvertiseTests(TestCase):
     def test_the_landing_page_shows_packages_and_every_button_leads_to_it(self):
         r = self.client.get(reverse("advertise"))
         self.assertContains(r, "Spotlight"); self.assertContains(r, "150,000")
-        self.assertContains(r, reverse("m_ad_new") + "?package=spotlight")
+        self.assertContains(r, reverse("ad_new") + "?package=spotlight")
         for name in ["home", "services"]:
             self.assertContains(self.client.get(reverse(name)), reverse("advertise"))
 
@@ -1014,14 +1043,15 @@ class PesapalTests(TestCase):
         from django.core.files.uploadedfile import SimpleUploadedFile
         import tempfile
         cat = ServiceCategory.objects.create(name="Catering", slug="catering", blurb="Food")
-        pkg = AdPackage.objects.create(name="Starter", slug="starter", price=50, months=1, max_photos=1)
+        pkg = AdPackage.objects.create(name="Starter", slug="starter", price=50, days=30, max_photos=1)
         buf = BytesIO(); Image.new("RGB", (40, 30), (200, 80, 90)).save(buf, "JPEG")
+        Advertiser.objects.create(user=self.user, name="Asha", phone="0713222333")
         with tempfile.TemporaryDirectory() as tmp, override_settings(MEDIA_ROOT=tmp, WATERMARK_TEXT=""):
-            self.client.post(reverse("m_ad_new"), {"package": pkg.pk, "business_name": "Baraka", "contact_name": "Asha", "phone": "0713222333",
+            self.client.post(reverse("ad_new"), {"package": pkg.pk, "business_name": "Baraka", "contact_name": "Asha", "phone": "0713222333",
                 "category": cat.pk, "city": "Arusha", "title": "Halal catering", "description": "Pilau", "price": 1000, "price_unit": "Per Person",
                 "image": SimpleUploadedFile("p.jpg", buf.getvalue(), "image/jpeg")})
             order = AdOrder.objects.get()
-            r = self.client.post(reverse("m_ad", args=[order.token]))
+            r = self.client.post(reverse("ad_detail", args=[order.token]))
             self.assertTrue(r["Location"].startswith("https://pay.pesapal.com/"))
             self.client.get(reverse("pesapal_callback"), {"OrderTrackingId": "trk-1"})
         order.refresh_from_db()
@@ -1029,11 +1059,203 @@ class PesapalTests(TestCase):
         self.assertEqual(order.advert.expires, timezone.localdate() + timedelta(days=3))
         self.assertContains(self.client.get(reverse("services")), "Halal catering")
 
-    def test_adverts_live_inside_the_account(self):
+
+
+class AdvertiserAccountTests(TestCase):
+    """Advertisers have their own accounts: their own sign-up, login and dashboard, kept apart from members'."""
+    def setUp(self):
+        import secrets
+        self.pw = secrets.token_urlsafe(12) + "aA1!"
+        self.member = User.objects.create_user("juma", "juma@example.com", self.pw)
+        Member.objects.create(user=self.member, name="Juma Ali", age=30, gender="M", city="Arusha", occupation="Teacher")
+
+    def register(self, **extra):
+        data = dict(name="Amina Hassan", phone="0712 345 678", email="amina@example.com", password=self.pw, agree="on")
+        data.update(extra)
+        return self.client.post(reverse("ad_register"), data)
+
+    def test_visitors_who_post_an_ad_are_asked_to_sign_up_as_advertisers(self):
+        r = self.client.get(reverse("ad_new"))
+        self.assertEqual(r.status_code, 302); self.assertIn(reverse("ad_register"), r["Location"])
+        self.assertRedirects(self.client.get("/advertise/start/"), reverse("ad_new"), fetch_redirect_response=False)
+        self.assertContains(self.client.get("/"), reverse("ad_new"))                    # the Post Ad link in the menu
+
+    def test_sign_up_needs_name_phone_email_password_and_the_policy(self):
+        r = self.register(agree="")
+        self.assertContains(r, "advertising policy")
+        self.assertFalse(User.objects.filter(email="amina@example.com").exists())
+        self.assertContains(self.register(phone="abc", agree="on"), "valid phone number")
+        r = self.register()
+        self.assertRedirects(r, reverse("ad_dashboard"))
+        adv = Advertiser.objects.get(user__email="amina@example.com")
+        self.assertEqual((adv.name, adv.phone), ("Amina Hassan", "0712 345 678"))
+        self.assertFalse(hasattr(adv.user, "member"))                                  # not a member account
+        self.assertContains(self.client.get(reverse("ad_dashboard")), "Amina")
+
+    def test_the_two_kinds_of_account_stay_apart(self):
+        self.register()
+        self.assertRedirects(self.client.get(reverse("m_dashboard")), reverse("ad_dashboard"), fetch_redirect_response=False)
+        self.assertRedirects(self.client.get("/account/adverts/"), reverse("ad_dashboard"), fetch_redirect_response=False)
         self.client.logout()
-        r = self.client.get(reverse("m_ad_new"))
-        self.assertEqual(r.status_code, 302); self.assertIn(reverse("login"), r["Location"])
-        self.assertRedirects(self.client.get("/advertise/start/"), reverse("m_ad_new"), fetch_redirect_response=False)
+        r = self.client.post(reverse("login"), {"username": "amina@example.com", "password": self.pw})
+        self.assertContains(r, "advertiser account")                                     # members' login refuses it
+        r = self.client.post(reverse("ad_login"), {"username": "amina@example.com", "password": self.pw})
+        self.assertRedirects(r, reverse("ad_dashboard"))
+        self.client.logout()
+        r = self.client.post(reverse("ad_login"), {"username": "juma", "password": self.pw})
+        self.assertContains(r, "member account")                                         # advertisers' login refuses a member
+        self.client.post(reverse("login"), {"username": "juma", "password": self.pw})
+        r = self.client.get(reverse("ad_register"))
+        self.assertContains(r, "signed in as a member")
+
+    @override_settings(EMAIL_LIVE=True, EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
+    def test_an_advertiser_confirms_the_email_before_using_the_dashboard(self):
+        from django.core import mail
+        import re
+        r = self.register()
+        self.assertRedirects(r, reverse("verify_email") + "?next=" + reverse("ad_dashboard"), fetch_redirect_response=False)
+        self.assertRedirects(self.client.get(reverse("ad_dashboard")), reverse("verify_email") + "?next=" + reverse("ad_dashboard"),
+                             fetch_redirect_response=False)
+        code = re.search(r"\b(\d{6})\b", mail.outbox[0].body).group(1)
+        r = self.client.post(reverse("verify_email") + "?next=" + reverse("ad_dashboard"), {"action": "code", "code": code})
+        self.assertRedirects(r, reverse("ad_dashboard"))
+        self.assertTrue(Advertiser.objects.get(user__email="amina@example.com").email_verified)
+
+    def test_the_services_menu_lists_every_category(self):
+        from django.core.cache import cache
+        cache.clear()
+        ServiceCategory.objects.create(name="Catering", slug="catering", blurb="Food")
+        ServiceCategory.objects.create(name="Wedding Venues", slug="wedding-venues", blurb="Halls")
+        r = self.client.get("/")
+        self.assertContains(r, reverse("services") + "?cat=catering")
+        self.assertContains(r, reverse("services") + "?cat=wedding-venues")
+
+
+class BannerTests(TestCase):
+    """Banner adverts: book a place, pay, our team approves, it shows in its place, counts views and clicks, and ends."""
+    def setUp(self):
+        import secrets, tempfile
+        self._tmp = tempfile.TemporaryDirectory()
+        self._media = override_settings(MEDIA_ROOT=self._tmp.name, WATERMARK_TEXT=""); self._media.enable()
+        self.home = BannerSlot.objects.get(place="home")
+        BannerSlot.objects.filter(pk=self.home.pk).update(max_live=1); self.home.refresh_from_db()
+        self.user = User.objects.create_user("baraka", "baraka@example.com", secrets.token_urlsafe(16))
+        Advertiser.objects.create(user=self.user, name="Juma Baraka", phone="0712 345 678")
+        self.staff = User.objects.create_user("boss", "boss@example.com", secrets.token_urlsafe(16), is_staff=True)
+        self.client.force_login(self.user)
+
+    def tearDown(self): self._media.disable(); self._tmp.cleanup()
+
+    def picture(self, size=(1600, 900)):
+        from io import BytesIO
+        from PIL import Image
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        buf = BytesIO(); Image.new("RGB", size, (20, 90, 60)).save(buf, "JPEG")
+        return SimpleUploadedFile("b.jpg", buf.getvalue(), "image/jpeg")
+
+    def book(self, slot=None, link="0712 345 678"):
+        return self.client.post(reverse("ad_banner_new"), {"slot": (slot or self.home).pk, "business_name": "Baraka Electronics",
+                                                           "title": "Phones and TVs", "link": link, "image": self.picture()})
+
+    def pay_and_approve(self, b, ref="QK1"):
+        self.client.post(b.get_absolute_url(), {"gateway": "mpesa", "phone": "0712345678", "reference": ref})
+        from django.test import Client
+        staff = Client(); staff.force_login(self.staff)
+        staff.post(reverse("dash_manage_action", args=["banners", b.pk]), {"act": "approve"})
+        b.refresh_from_db(); return b
+
+    def test_the_picture_is_cropped_to_the_place_and_the_link_becomes_whatsapp(self):
+        from PIL import Image
+        r = self.book()
+        b = BannerOrder.objects.get()
+        self.assertRedirects(r, b.get_absolute_url())
+        self.assertEqual(Image.open(b.image.path).size, (1200, 300))
+        self.assertEqual(b.target, "https://wa.me/255712345678")
+        self.assertContains(self.book(link="not a link"), "website address or a WhatsApp number")
+
+    def test_approved_banner_shows_counts_views_and_clicks_then_ends(self):
+        self.book(); b = self.pay_and_approve(BannerOrder.objects.get())
+        self.assertEqual(b.status, "live")
+        self.client.logout()
+        r = self.client.get("/")
+        self.assertContains(r, reverse("banner_click", args=[b.token]))
+        r = self.client.get(reverse("banner_click", args=[b.token]))
+        self.assertEqual(r["Location"], "https://wa.me/255712345678")
+        b.refresh_from_db(); self.assertEqual((b.views, b.clicks), (1, 1))
+        BannerOrder.objects.filter(pk=b.pk).update(expires=timezone.localdate() - timedelta(days=1))
+        self.assertNotContains(self.client.get("/"), reverse("banner_click", args=[b.token]))
+
+    def test_a_full_place_cannot_be_booked_and_a_paused_banner_is_hidden(self):
+        self.book(); b = self.pay_and_approve(BannerOrder.objects.get())
+        self.assertContains(self.book(), "fully booked")
+        from django.test import Client
+        staff = Client(); staff.force_login(self.staff)
+        staff.post(reverse("dash_manage_action", args=["banners", b.pk]), {"act": "pause"})
+        self.assertNotContains(Client().get("/"), reverse("banner_click", args=[b.token]))
+
+    def test_paying_online_waits_for_approval_and_renewing_adds_days(self):
+        from unittest import mock
+        fake = FakePesapal()
+        with mock.patch("core.pesapal._call", fake), override_settings(PESAPAL_CONSUMER_KEY="k", PESAPAL_CONSUMER_SECRET="s"):
+            from django.core.cache import cache
+            cache.clear()
+            self.book(); b = BannerOrder.objects.get()
+            r = self.client.post(b.get_absolute_url())
+            self.assertTrue(r["Location"].startswith("https://pay.pesapal.com/"))
+            self.client.get(reverse("pesapal_callback"), {"OrderTrackingId": "trk-1"})
+            b.refresh_from_db(); self.assertEqual(b.status, "review")          # paid; our team still checks the picture
+            self.assertTrue(Notification.objects.filter(user=self.staff, title__contains="Banner to approve").exists())
+        from django.test import Client
+        staff = Client(); staff.force_login(self.staff)
+        staff.post(reverse("dash_manage_action", args=["banners", b.pk]), {"act": "approve"})
+        b.refresh_from_db(); end = b.expires
+        self.assertEqual(end, timezone.localdate() + timedelta(days=self.home.run_days - 1))
+        b.paid()                                                                 # a renewal while it is live
+        b.refresh_from_db(); self.assertEqual(b.expires, end + timedelta(days=self.home.run_days))
+
+
+class AdPackageDaysTests(TestCase):
+    def test_packages_run_for_days_squeezed_while_testing(self):
+        p = AdPackage.objects.get(slug="premium-featured")
+        self.assertEqual((p.name, p.days, p.price), ("Premium Featured", 30, 150))
+        SiteSetting.objects.update_or_create(pk=1, defaults={"days_per_month": 3})
+        from django.core.cache import cache
+        cache.clear()
+        self.assertEqual([x.run_days for x in AdPackage.objects.order_by("days")], [1, 2, 3])
+        SiteSetting.objects.filter(pk=1).update(days_per_month=30); cache.clear()
+        self.assertEqual([x.run_days for x in AdPackage.objects.order_by("days")], [7, 15, 30])
+
+    def test_general_categories_exist(self):
+        self.assertTrue(ServiceCategory.objects.filter(slug="vehicles").exists())
+        self.assertTrue(ServiceCategory.objects.filter(slug="property-land").exists())
+
+
+class AdminLoginTests(TestCase):
+    """The admin dashboard has its own login, and its own address once ADMIN_HOST is set."""
+    def setUp(self):
+        import secrets
+        self.pw = secrets.token_urlsafe(12) + "aA1!"
+        self.staff = User.objects.create_user("boss", "boss@example.com", self.pw, is_staff=True)
+        self.user = User.objects.create_user("juma", "juma@example.com", self.pw)
+
+    def test_only_staff_get_through_the_admin_login(self):
+        self.assertRedirects(self.client.get(reverse("dashboard")), f"{reverse('dash_login')}?next={reverse('dashboard')}")
+        r = self.client.post(reverse("dash_login"), {"username": "juma", "password": self.pw})
+        self.assertContains(r, "administrators only")
+        r = self.client.post(reverse("dash_login"), {"username": "boss", "password": self.pw})
+        self.assertRedirects(r, reverse("dashboard"))
+
+    def test_the_admin_address_serves_the_dashboard_and_nothing_else(self):
+        from django.test import Client
+        with override_settings(ADMIN_HOST="admin.sakinah.co.tz", SITE_URL="https://www.sakinah.co.tz", ALLOWED_HOSTS=["*"]):
+            c = Client(HTTP_HOST="admin.sakinah.co.tz")
+            self.assertRedirects(c.get("/"), "/dashboard/", fetch_redirect_response=False)
+            self.assertRedirects(c.get("/dashboard/"), "/dashboard/login/?next=/dashboard/", fetch_redirect_response=False)
+            self.assertEqual(c.get("/dashboard/login/").status_code, 200)
+            self.assertRedirects(c.get("/matches/?q=1"), "https://www.sakinah.co.tz/matches/?q=1", fetch_redirect_response=False)
+            main = Client(HTTP_HOST="www.sakinah.co.tz")
+            self.assertRedirects(main.get("/dashboard/members/"), "https://admin.sakinah.co.tz/dashboard/members/", fetch_redirect_response=False)
+            self.assertEqual(main.get("/").status_code, 200)
 
 
 @override_settings(EMAIL_LIVE=True, EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")

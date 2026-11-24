@@ -21,7 +21,7 @@ class DashboardTests(TestCase):
 
     def test_only_staff_can_open_dashboard(self):
         url = reverse("dashboard")
-        self.assertRedirects(self.client.get(url), f"{reverse('login')}?next={url}")
+        self.assertRedirects(self.client.get(url), f"{reverse('dash_login')}?next={url}")
         self.client.force_login(self.user)
         self.assertRedirects(self.client.get(url), reverse("home"))
         self.client.force_login(self.admin)
@@ -316,7 +316,7 @@ class PaymentApprovalTests(TestCase):
         self.admin = User.objects.create_user("boss2", "boss2@example.com", "S3cure-pass-123", is_staff=True)
         self.user = User.objects.create_user("amina4", "amina4@example.com", "S3cure-pass-123")
         self.me = Member.objects.create(user=self.user, name="Amina", age=27, gender="F", city="Arusha")
-        self.plan = Plan.objects.create(name="Tanzanite", price=100000, daily_messages=-1, daily_call_seconds=1800)
+        self.plan = Plan.objects.create(name="Tanzanite", price=100000, daily_messages=-1, call_minutes=30)
         self.client.force_login(self.admin)
 
     def pending(self, **kw):

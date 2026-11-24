@@ -29,6 +29,47 @@ class HideDjangoAdminMiddleware:
         return self.get_response(request)
 
 
+class AccountTypeMiddleware:
+    """Advertisers and members have separate accounts. An advertiser who opens a member page (find a match, chats,
+    the member dashboard) is taken to the advertiser dashboard instead."""
+    MEMBER_ONLY = ("/account/", "/messages/", "/members/", "/likes/", "/notifications/", "/profile/", "/matches/")
+    OPEN = ("/account/verify-email/", "/account/password-reset/", "/account/reset/")
+
+    def __init__(self, get_response): self.get_response = get_response
+
+    def __call__(self, request):
+        p = request.path
+        if p.startswith(self.MEMBER_ONLY) and not p.startswith(self.OPEN):
+            from .models_ads import is_advertiser
+            if is_advertiser(request.user):
+                from django.shortcuts import redirect
+                return redirect("ad_dashboard")
+        return self.get_response(request)
+
+
+class AdminHostMiddleware:
+    """With ADMIN_HOST set, the admin dashboard and its login answer only on that address (admin.sakinah.co.tz):
+    its home page is the admin login, and the public site's pages send visitors back to the main address. The main
+    address sends /dashboard/ links over to the admin address."""
+    ADMIN_PATHS = ("/dashboard/", "/static/", "/media/", "/i18n/", "/logout/", "/favicon", "/robots.txt")
+
+    def __init__(self, get_response):
+        from django.conf import settings
+        self.get_response, self.host, self.site = get_response, settings.ADMIN_HOST, settings.SITE_URL
+        self.admin_paths = self.ADMIN_PATHS + ("/" + settings.ADMIN_URL,)
+
+    def __call__(self, request):
+        if not self.host: return self.get_response(request)
+        from django.shortcuts import redirect
+        path, on_admin = request.get_full_path(), request.get_host().split(":")[0].lower() == self.host
+        if on_admin:
+            if request.path == "/": return redirect("/dashboard/")
+            if not request.path.startswith(self.admin_paths): return redirect(self.site + path)
+        elif request.path.startswith("/dashboard/"):
+            return redirect(f"https://{self.host}{path}")
+        return self.get_response(request)
+
+
 class GZipPagesMiddleware(GZipMiddleware):
     """Compress pages, but not photos and other files that are already compressed."""
     def process_response(self, request, response):

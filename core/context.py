@@ -24,10 +24,17 @@ def _sprite(name):
     try: return asset(name)
     except Exception: return f"{settings.STATIC_URL}{name}"
 
+def _nav_categories():
+    """The service categories for the Services menu, refreshed every 5 minutes."""
+    from django.core.cache import cache
+    from .models import ServiceCategory
+    return cache.get_or_set("nav-categories", lambda: list(ServiceCategory.objects.order_by("order", "pk").values("name", "slug")), 300)
+
 def site(request):
     ctx = {"site": SiteSetting.load(), "media_host": MEDIA_HOST,
            "icons": _sprite("icons.svg"), "micons": _sprite("micons.svg"),
-           "current": request.resolver_match.url_name if request.resolver_match else ""}
+           "current": request.resolver_match.url_name if request.resolver_match else "",
+           "nav_categories": SimpleLazyObject(_nav_categories)}
     user = getattr(request, "user", None)
     if user is None: return ctx
     if user.is_authenticated:

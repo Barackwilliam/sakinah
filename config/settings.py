@@ -34,11 +34,20 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.lang.MemberLanguageMiddleware",
-    "core.verify.EmailVerifiedMiddleware",     # new accounts confirm their email (code or link) before going further       # a member's saved language follows them to new devices
+    "core.verify.EmailVerifiedMiddleware",
+    "core.middleware.AccountTypeMiddleware",   # advertisers stay in their own dashboard, members in theirs     # new accounts confirm their email (code or link) before going further       # a member's saved language follows them to new devices
     "core.middleware.LastSeenMiddleware",
     "core.middleware.HideDjangoAdminMiddleware",
+    "core.middleware.AdminHostMiddleware",     # the dashboard lives on admin.sakinah.co.tz (when ADMIN_HOST is set)
 ]
 ROOT_URLCONF = "config.urls"
+# The admin dashboard on its own address, e.g. admin.sakinah.co.tz. Set ADMIN_HOST on the server only once that address
+# points at this site (DNS + Render custom domain); until then the dashboard stays at /dashboard/ on the main address.
+ADMIN_HOST = os.getenv("ADMIN_HOST", "").strip().lower()
+SITE_URL = os.getenv("SITE_URL", "https://www.sakinah.co.tz").strip().rstrip("/")   # where the admin address sends everything else
+if ADMIN_HOST:
+    if ALLOWED_HOSTS and "*" not in ALLOWED_HOSTS: ALLOWED_HOSTS.append(ADMIN_HOST)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{ADMIN_HOST}")
 # Django's built-in admin is for the developer only: it lives at a secret path and answers 404 to everyone
 # who is not a superuser. Set DJANGO_ADMIN_URL on the server to your own hard-to-guess value.
 ADMIN_URL = (os.getenv("DJANGO_ADMIN_URL", "").strip().strip("/") or "devadmin") + "/"   # never empty: that would take over the home page

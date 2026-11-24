@@ -1,4 +1,4 @@
-{% extends "members/base.html" %}{% load i18n lang %}{% load static %}{% block title %}{% translate "Dashboard" %}{% endblock %}
+{% extends "members/base.html" %}{% load i18n lang banners %}{% load static %}{% block title %}{% translate "Dashboard" %}{% endblock %}
 {% block content %}
 <section class="dhero">
   <div class="dh-l">
@@ -10,6 +10,7 @@
   </div>
   <img class="dh-art" src="{% static 'img/member/hero_art.jpg' %}" alt="{% translate 'Ndoa ni Ibadah, Utulivu na Baraka' %}">
 </section>
+{% banner "dashboard" %}
 <div class="dtiles">
   <a class="dt pink" href="{% url 'm_matches' %}"><span class="dt-ic" style="background:#a0123c"><svg><use href="{{ micons }}#m-heart"/></svg></span><div><b>{{ n_matches }}</b><h3>{% translate "Matches" %}</h3><small>{% translate "People matched with you" %}</small></div><svg class="chev"><use href="{{ micons }}#m-chev-r"/></svg></a>
   <a class="dt grn" href="{% url 'm_find' %}"><span class="dt-ic" style="background:#16883f"><svg><use href="{{ micons }}#m-search"/></svg></span><div><h3>{% translate "Find a Match" %}</h3><small>{% translate "Search members by your preference" %}</small></div><svg class="chev"><use href="{{ micons }}#m-chev-r"/></svg></a>

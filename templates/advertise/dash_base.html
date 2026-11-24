@@ -1,0 +1,29 @@
+{% extends "members/base.html" %}{% load i18n %}
+{% block home_url %}{% url 'ad_dashboard' %}{% endblock %}
+{% block logo_sub %}{% translate "Advertiser dashboard" %}{% endblock %}
+{% block search %}{% endblock %}
+{% block mh_nav %}  <nav class="mh-nav">
+    <a href="{% url 'home' %}"><span class="ni"><svg><use href="{{ micons }}#m-home"/></svg></span>{% translate "Home" %}</a>
+    <a href="{% url 'ad_dashboard' %}" class="{% if nav == 'adverts' %}on{% endif %}"><span class="ni"><svg><use href="{{ icons }}#i-mega"/></svg></span>{% translate "My Adverts" %}</a>
+    <a href="{% url 'ad_new' %}" class="{% if nav == 'new' %}on{% endif %}"><span class="ni"><svg><use href="{{ micons }}#m-plus"/></svg></span>{% translate "Post Ad" %}</a>
+    <a href="{% url 'ad_banners' %}" class="{% if nav == 'banners' %}on{% endif %}"><span class="ni"><svg><use href="{{ micons }}#m-image"/></svg></span>{% translate "Banners" %}</a>
+    <a href="{% url 'ad_notifications' %}" class="{% if nav == 'notifications' %}on{% endif %}"><span class="ni"><svg><use href="{{ micons }}#m-bell"/></svg>{% if n_notes %}<i>{{ n_notes }}</i>{% endif %}</span>{% translate "Notifications" %}</a>
+  </nav>
+{% endblock %}
+{% block user_menu %}  <details class="mh-user"><summary><span class="av">{{ adv.name|default:user.get_username|first|upper }}</span>
+    <span class="who"><b>{{ adv.first_name|default:user.get_username }}</b><small>{% translate "Advertiser" %}</small></span><svg><use href="{{ micons }}#m-chev-d"/></svg></summary>
+    <div class="mh-menu"><a href="{% url 'ad_account' %}">{% translate "My account" %}</a><a href="{% url 'home' %}">{% translate "Main website" %}</a>{% if user.is_staff %}<a href="{% url 'dashboard' %}">{% translate "Admin dashboard" %}</a>{% endif %}
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button>{% translate "Logout" %}</button></form></div></details>
+{% endblock %}
+{% block sidebar_nav %}    <nav>
+      <a href="{% url 'ad_dashboard' %}" class="{% if nav == 'adverts' %}on{% endif %}"><svg><use href="{{ micons }}#m-home"/></svg>{% translate "Dashboard" %}</a>
+      <a href="{% url 'ad_new' %}" class="{% if nav == 'new' %}on{% endif %}"><svg><use href="{{ micons }}#m-plus"/></svg>{% translate "Post Ad" %}</a>
+      <a href="{% url 'ad_banners' %}" class="{% if nav == 'banners' %}on{% endif %}"><svg><use href="{{ micons }}#m-image"/></svg>{% translate "Banners" %}</a>
+      <a href="{% url 'ad_notifications' %}" class="{% if nav == 'notifications' %}on{% endif %}"><svg><use href="{{ micons }}#m-bell"/></svg>{% translate "Notifications" %}{% if n_notes %}<i>{{ n_notes }}</i>{% endif %}</a>
+      <a href="{% url 'advertise' %}#packages"><svg class="gold"><use href="{{ micons }}#m-tag"/></svg>{% translate "Packages" %}</a>
+      <a href="{% url 'services' %}"><svg><use href="{{ micons }}#m-eye"/></svg>{% translate "See services on the site" %}</a>
+      <a href="{% url 'ad_account' %}" class="{% if nav == 'account' %}on{% endif %}"><svg><use href="{{ micons }}#m-gear"/></svg>{% translate "My account" %}</a>
+      {% if site.contact_url %}<a href="{{ site.contact_url }}" target="_blank" rel="noopener"><svg><use href="{{ micons }}#m-help"/></svg>{% translate "Help &amp; Support" %}</a>{% endif %}
+    </nav>
+{% endblock %}
+{% block calls %}{% endblock %}

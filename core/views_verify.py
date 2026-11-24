@@ -23,7 +23,7 @@ class FixEmailForm(forms.Form):
 
 
 def _next(request):
-    return safe_next(request) or "m_profile_edit"
+    return safe_next(request) or verify.home_for(request.user)
 
 
 @login_required
@@ -64,5 +64,5 @@ def verify_email_link(request, token):
         return redirect("login")
     verify.finish(v)
     messages.success(request, _("Your email is verified. Welcome to Sakinah!"))
-    if request.user.is_authenticated and request.user.pk == v.user_id: return redirect("m_profile_edit")
-    return redirect("login")
+    if request.user.is_authenticated and request.user.pk == v.user_id: return redirect(verify.home_for(request.user))
+    return redirect("ad_login" if hasattr(v.user, "advertiser") and not hasattr(v.user, "member") else "login")

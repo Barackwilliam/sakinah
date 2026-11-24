@@ -106,6 +106,14 @@ class LoginForm(AuthenticationForm):
         self.fields["password"].widget.attrs["placeholder"] = _l("Enter your password")
 
 
+class MemberLoginForm(LoginForm):
+    """The member login. Advertiser accounts are separate and sign in on the advertiser page."""
+    def confirm_login_allowed(self, user):
+        super().confirm_login_allowed(user)
+        if hasattr(user, "advertiser") and not hasattr(user, "member") and not user.is_staff:
+            raise forms.ValidationError(_("This is an advertiser account. Please use the advertiser login."), code="advertiser")
+
+
 class InquiryForm(forms.ModelForm):
     class Meta:
         model = Inquiry

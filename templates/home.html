@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n lang %}{% load static %}
+{% extends "base.html" %}{% load i18n lang banners %}{% load static %}
 {% block content %}
 <section class="hero" {% if site.hero_image %}style="--hero:url('{{ site.hero_image.url }}')"{% endif %}>
   <div class="hero-in">
@@ -29,6 +29,7 @@
   </div>
 </section>
 
+{% banner "home" %}
 <section class="wrap steps reveal">
   <div class="sec-h center"><span class="eyebrow">{% translate "Jinsi inavyofanya kazi" %}</span><h2>{% translate "Four steps to your Nikah" %}</h2></div>
   <ol class="step-list">

@@ -34,7 +34,7 @@
       const left = cap - s;
       $('timer').textContent = `${clock(s)} · ${clock(Math.max(0, left))} left`;
       $('timer').classList.toggle('low', left <= 10);
-      if (left <= 0 && !done) { post(D.end); leave(gettext('Your plan\'s call time for today is finished'), 1600); }
+      if (left <= 0 && !done) { post(D.end); leave(gettext('Your plan\'s call minutes are used up'), 1600); }
     };
     show(); tick = setInterval(show, 1000);
   };

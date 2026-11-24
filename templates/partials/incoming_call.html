@@ -1,4 +1,4 @@
-{% load i18n %}{% load static assets %}{% if user.is_authenticated and not user.is_staff %}<link rel="stylesheet" href="{% asset 'css/calls.css' %}">
+{% load i18n %}{% load static assets %}{% if user.is_authenticated and not user.is_staff and not user.advertiser %}<link rel="stylesheet" href="{% asset 'css/calls.css' %}">
 <div class="ic-wrap" id="incoming-call" data-poll="{% url 'm_call_incoming' %}" hidden role="dialog" aria-live="assertive" aria-label="{% translate 'Incoming call' %}">
   <div class="ic-card">
     <div class="ic-av"><span class="ic-ring"></span><span class="ic-ring r2"></span><img class="ic-photo" alt="" hidden><b class="ic-letter"></b></div>
