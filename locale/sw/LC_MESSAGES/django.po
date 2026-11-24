@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sakinah\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-24 01:57+0300\n"
+"POT-Creation-Date: 2026-11-25 01:01+0300\n"
 "PO-Revision-Date: 2026-11-20 00:00+0300\n"
 "Last-Translator: Sakinah\n"
 "Language-Team: Sakinah\n"
@@ -1492,6 +1492,15 @@ msgstr ""
 msgid "Best size: %s × %s pixels"
 msgstr "Ukubwa bora: pikseli %s × %s"
 
+msgid "Payment received"
+msgstr "Malipo yamepokelewa"
+
+msgid "Payment failed"
+msgstr "Malipo hayakufanikiwa"
+
+msgid "Opening payment…"
+msgstr "Inafungua malipo…"
+
 msgid "Couple photo on the Go Premium card"
 msgstr "Picha ya wanandoa kwenye kadi ya Go Premium"
 
@@ -1911,6 +1920,10 @@ msgstr "Namba ya muamala / risiti kutoka kwa mtoa huduma wa malipo"
 
 msgid "Pesapal's order tracking id."
 msgstr "Namba ya ufuatiliaji wa oda ya Pesapal."
+
+msgid "Pesapal's payment page, shown inside our own checkout page."
+msgstr ""
+"Ukurasa wa malipo wa Pesapal, unaoonyeshwa ndani ya ukurasa wetu wa malipo."
 
 msgid "How the payer paid inside Pesapal, e.g. M-Pesa or Visa."
 msgstr "Jinsi mlipaji alivyolipa ndani ya Pesapal, mfano M-Pesa au Visa."
@@ -2603,6 +2616,18 @@ msgid ""
 msgstr ""
 "Malipo yako yanashughulikiwa. Ukurasa huu utasasishwa mara Pesapal "
 "itakapoyathibitisha."
+
+#, python-format
+msgid "%(n)d month of membership"
+msgid_plural "%(n)d months of membership"
+msgstr[0] "Mwezi %(n)d wa uanachama"
+msgstr[1] "Miezi %(n)d ya uanachama"
+
+#, python-format
+msgid "%(n)d day"
+msgid_plural "%(n)d days"
+msgstr[0] "Siku %(n)d"
+msgstr[1] "Siku %(n)d"
 
 msgid "Your email is verified. Welcome to Sakinah!"
 msgstr "Barua pepe yako imethibitishwa. Karibu Sakinah!"
@@ -5631,8 +5656,8 @@ msgstr "Maswali"
 msgid "Upgrade your plan"
 msgstr "Pandisha kifurushi chako"
 
-msgid "How to pay"
-msgstr "Jinsi ya kulipa"
+msgid "Pay for several months"
+msgstr "Lipia miezi kadhaa"
 
 msgid "Choose your plan and how many months."
 msgstr "Chagua kifurushi chako na idadi ya miezi."
@@ -5647,6 +5672,9 @@ msgstr ""
 msgid ""
 "Your plan is activated automatically as soon as the payment is complete."
 msgstr "Kifurushi chako kinawashwa chenyewe mara malipo yakikamilika."
+
+msgid "How to pay"
+msgstr "Jinsi ya kulipa"
 
 msgid "Pay the amount for your plan by mobile money or bank."
 msgstr "Lipa kiasi cha kifurushi chako kwa pesa ya simu au benki."
@@ -5675,6 +5703,9 @@ msgstr "Kifurushi cha Sasa"
 
 msgid "Free Plan"
 msgstr "Kifurushi cha Bure"
+
+msgid "Renew Plan"
+msgstr "Huisha Kifurushi"
 
 msgid "Switch Plan"
 msgstr "Badilisha Kifurushi"
@@ -9194,6 +9225,56 @@ msgstr "Jiunge"
 
 msgid "Sikiliza ujumbe wa sauti"
 msgstr "Sikiliza ujumbe wa sauti"
+
+#, python-format
+msgid "Secure payment - %(brand)s"
+msgstr "Malipo salama - %(brand)s"
+
+msgid "Secure checkout"
+msgstr "Malipo salama"
+
+msgid "You are paying for"
+msgstr "Unalipia"
+
+msgid "Choose how to pay in the secure form."
+msgstr "Chagua njia ya kulipa kwenye fomu salama."
+
+msgid "Confirm on your phone with your PIN, or enter your card."
+msgstr "Thibitisha kwenye simu yako kwa PIN, au weka kadi yako."
+
+msgid "We switch it on straight away. No need to send us a reference."
+msgstr "Tunakiwasha papo hapo. Huhitaji kututumia namba ya muamala."
+
+msgid "Ways to pay"
+msgstr "Njia za kulipa"
+
+msgid ""
+"The payment is handled by Pesapal. Sakinah never sees your PIN or card "
+"number."
+msgstr ""
+"Malipo yanashughulikiwa na Pesapal. Sakinah haioni kamwe PIN wala namba ya "
+"kadi yako."
+
+msgid "Waiting for your payment"
+msgstr "Inasubiri malipo yako"
+
+msgid "Opening the secure payment form…"
+msgstr "Inafungua fomu salama ya malipo…"
+
+msgid "Pesapal secure payment"
+msgstr "Malipo salama ya Pesapal"
+
+msgid "Form not showing?"
+msgstr "Fomu haionekani?"
+
+msgid "Open Pesapal in a new window"
+msgstr "Fungua Pesapal kwenye dirisha jipya"
+
+msgid "Payment received. Taking you back…"
+msgstr "Malipo yamepokelewa. Tunakurudisha…"
+
+msgid "Continue"
+msgstr "Endelea"
 
 #, python-format
 msgid "Packages - %(brand)s"

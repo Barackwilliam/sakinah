@@ -633,6 +633,7 @@ class Payment(models.Model):
     ad_order = models.ForeignKey("core.AdOrder", on_delete=models.SET_NULL, null=True, blank=True, related_name="payments")
     banner_order = models.ForeignKey("core.BannerOrder", on_delete=models.SET_NULL, null=True, blank=True, related_name="payments")
     tracking_id = models.CharField(max_length=64, blank=True, db_index=True, help_text=_("Pesapal's order tracking id."))
+    checkout_url = models.URLField(max_length=500, blank=True, editable=False, help_text=_("Pesapal's payment page, shown inside our own checkout page."))
     pay_method = models.CharField(max_length=40, blank=True, help_text=_("How the payer paid inside Pesapal, e.g. M-Pesa or Visa."))
     class Meta: ordering = ["-created", "-pk"]
     def __str__(self): return f"{self.invoice_no} {self.payer_name} {self.amount}"

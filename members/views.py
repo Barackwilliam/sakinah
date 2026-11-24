@@ -561,7 +561,8 @@ def membership(request):
                                      amount=d["plan"].price * d["months"], gateway="pesapal", status="pending",
                                      description=f"{d['plan'].name} plan, {d['months']} month(s)")
         try:
-            return redirect(pesapal.checkout(pay, request, email=request.user.email, phone=me.phone, name=me.name))
+            pesapal.checkout(pay, request, email=request.user.email, phone=me.phone, name=me.name)
+            return redirect(pesapal.pay_page(pay))
         except pesapal.PesapalError as e:
             pay.status = "failed"; pay.save(update_fields=["status"])
             import logging; logging.getLogger(__name__).error("Pesapal checkout failed for %s: %s", pay.invoice_no, e)

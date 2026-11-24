@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sakinah\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-24 01:57+0300\n"
+"POT-Creation-Date: 2026-11-25 01:01+0300\n"
 "PO-Revision-Date: 2026-11-20 00:00+0300\n"
 "Last-Translator: Sakinah\n"
 "Language-Team: Sakinah\n"
@@ -1502,6 +1502,15 @@ msgstr ""
 msgid "Best size: %s × %s pixels"
 msgstr "Taille idéale : %s × %s pixels"
 
+msgid "Payment received"
+msgstr "Paiement reçu"
+
+msgid "Payment failed"
+msgstr "Paiement échoué"
+
+msgid "Opening payment…"
+msgstr "Ouverture du paiement…"
+
 msgid "Couple photo on the Go Premium card"
 msgstr "Photo du couple sur la carte Go Premium"
 
@@ -1927,6 +1936,10 @@ msgstr "Numéro de transaction / reçu fourni par la passerelle de paiement"
 
 msgid "Pesapal's order tracking id."
 msgstr "Identifiant de suivi Pesapal."
+
+msgid "Pesapal's payment page, shown inside our own checkout page."
+msgstr ""
+"La page de paiement Pesapal, affichée dans notre propre page de paiement."
 
 msgid "How the payer paid inside Pesapal, e.g. M-Pesa or Visa."
 msgstr "Moyen de paiement utilisé sur Pesapal, par ex. M-Pesa ou Visa."
@@ -2618,6 +2631,18 @@ msgid ""
 msgstr ""
 "Votre paiement est en cours de traitement. Cette page se met à jour dès que "
 "Pesapal le confirme."
+
+#, python-format
+msgid "%(n)d month of membership"
+msgid_plural "%(n)d months of membership"
+msgstr[0] "%(n)d mois d'adhésion"
+msgstr[1] "%(n)d mois d'adhésion"
+
+#, python-format
+msgid "%(n)d day"
+msgid_plural "%(n)d days"
+msgstr[0] "%(n)d jour"
+msgstr[1] "%(n)d jours"
 
 msgid "Your email is verified. Welcome to Sakinah!"
 msgstr "Votre e-mail est vérifié. Bienvenue sur Sakinah !"
@@ -5669,8 +5694,8 @@ msgstr "FAQ"
 msgid "Upgrade your plan"
 msgstr "Améliorer votre offre"
 
-msgid "How to pay"
-msgstr "Comment payer"
+msgid "Pay for several months"
+msgstr "Payer plusieurs mois"
 
 msgid "Choose your plan and how many months."
 msgstr "Choisissez votre formule et le nombre de mois."
@@ -5686,6 +5711,9 @@ msgid ""
 "Your plan is activated automatically as soon as the payment is complete."
 msgstr ""
 "Votre formule est activée automatiquement dès que le paiement est effectué."
+
+msgid "How to pay"
+msgstr "Comment payer"
 
 msgid "Pay the amount for your plan by mobile money or bank."
 msgstr ""
@@ -5717,6 +5745,9 @@ msgstr "Offre actuelle"
 
 msgid "Free Plan"
 msgstr "Offre gratuite"
+
+msgid "Renew Plan"
+msgstr "Renouveler"
 
 msgid "Switch Plan"
 msgstr "Changer d’offre"
@@ -9317,6 +9348,57 @@ msgstr "S’inscrire"
 
 msgid "Sikiliza ujumbe wa sauti"
 msgstr "Écouter le message vocal"
+
+#, python-format
+msgid "Secure payment - %(brand)s"
+msgstr "Paiement sécurisé - %(brand)s"
+
+msgid "Secure checkout"
+msgstr "Paiement sécurisé"
+
+msgid "You are paying for"
+msgstr "Vous payez pour"
+
+msgid "Choose how to pay in the secure form."
+msgstr "Choisissez votre moyen de paiement dans le formulaire sécurisé."
+
+msgid "Confirm on your phone with your PIN, or enter your card."
+msgstr ""
+"Confirmez sur votre téléphone avec votre code, ou saisissez votre carte."
+
+msgid "We switch it on straight away. No need to send us a reference."
+msgstr "Nous l'activons aussitôt. Inutile de nous envoyer une référence."
+
+msgid "Ways to pay"
+msgstr "Moyens de paiement"
+
+msgid ""
+"The payment is handled by Pesapal. Sakinah never sees your PIN or card "
+"number."
+msgstr ""
+"Le paiement est géré par Pesapal. Sakinah ne voit jamais votre code ni votre"
+" numéro de carte."
+
+msgid "Waiting for your payment"
+msgstr "En attente de votre paiement"
+
+msgid "Opening the secure payment form…"
+msgstr "Ouverture du formulaire de paiement sécurisé…"
+
+msgid "Pesapal secure payment"
+msgstr "Paiement sécurisé Pesapal"
+
+msgid "Form not showing?"
+msgstr "Le formulaire ne s'affiche pas ?"
+
+msgid "Open Pesapal in a new window"
+msgstr "Ouvrir Pesapal dans une nouvelle fenêtre"
+
+msgid "Payment received. Taking you back…"
+msgstr "Paiement reçu. Retour en cours…"
+
+msgid "Continue"
+msgstr "Continuer"
 
 #, python-format
 msgid "Packages - %(brand)s"

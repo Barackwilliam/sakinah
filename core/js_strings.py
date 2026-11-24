@@ -39,4 +39,7 @@ JS_STRINGS = [
     N('not sent'),
     N('This package includes one photo. Choose a bigger package for up to 4.'),
     N('Best size: %s × %s pixels'),
+    N('Payment received'),
+    N('Payment failed'),
+    N('Opening payment…'),
 ]

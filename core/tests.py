@@ -999,7 +999,11 @@ class PesapalTests(TestCase):
 
     def test_paying_for_a_plan_sends_the_member_to_pesapal_with_the_right_order(self):
         r = self.buy_gold(months=3)
-        self.assertEqual(r.status_code, 302); self.assertTrue(r["Location"].startswith("https://pay.pesapal.com/"))
+        p = Payment.objects.get()
+        self.assertRedirects(r, reverse("pay", args=[p.invoice_no]), fetch_redirect_response=False)   # our checkout page
+        page = self.client.get(r["Location"])
+        self.assertContains(page, 'src="https://pay.pesapal.com/iframe?OrderTrackingId=trk-1"')       # Pesapal's form inside it
+        self.assertContains(page, "Gold")
         p = Payment.objects.get()
         self.assertEqual((p.gateway, p.status, p.amount, p.months, p.tracking_id), ("pesapal", "pending", 450, 3, "trk-1"))
         order = next(d for m, path, d in self.fake.calls if path == "/Transactions/SubmitOrderRequest")
@@ -1010,11 +1014,34 @@ class PesapalTests(TestCase):
     def test_a_completed_payment_activates_the_plan_for_three_days_a_month(self):
         self.buy_gold()
         r = self.client.get(reverse("pesapal_callback"), {"OrderTrackingId": "trk-1", "OrderMerchantReference": Payment.objects.get().invoice_no})
-        self.assertRedirects(r, reverse("m_membership") + "?tab=mine", fetch_redirect_response=False)
+        self.assertContains(r, reverse("m_membership") + "?tab=mine")             # the return page takes the whole window there
+        self.assertEqual(r["X-Frame-Options"], "SAMEORIGIN")                       # it opens inside our checkout page's frame
         p = Payment.objects.get(); self.me.refresh_from_db()
         self.assertEqual((p.status, p.reference, p.pay_method), ("completed", "PP123XYZ", "MpesaTZ"))
         self.assertEqual(self.me.plan, self.gold)
         self.assertEqual(self.me.premium_until, timezone.localdate() + timedelta(days=3))   # 1 "month" while testing = 3 days
+
+    def test_one_tap_on_a_plan_opens_the_checkout_and_it_follows_the_payment(self):
+        r = self.client.post(reverse("m_membership"), {"plan": self.gold.pk, "months": 1})     # the button on the plan card
+        p = Payment.objects.get()
+        self.assertEqual((p.amount, p.months, p.checkout_url), (150, 1, "https://pay.pesapal.com/iframe?OrderTrackingId=trk-1"))
+        self.assertRedirects(r, reverse("pay", args=[p.invoice_no]), fetch_redirect_response=False)
+        page = self.client.get(reverse("pay", args=[p.invoice_no]))
+        self.assertContains(page, p.invoice_no); self.assertContains(page, "<iframe")
+        status = self.client.get(reverse("pay_status", args=[p.invoice_no])).json()      # Pesapal says completed
+        self.assertEqual(status, {"status": "completed", "next": reverse("m_membership") + "?tab=mine"})
+        self.assertRedirects(self.client.get(reverse("pay", args=[p.invoice_no])), reverse("m_membership") + "?tab=mine",
+                             fetch_redirect_response=False)                                  # paid: the checkout page is done
+        self.client.logout()
+        other = User.objects.create_user("other", "o@example.com", "x-Pass-12345")
+        self.client.force_login(other)
+        self.assertEqual(self.client.get(reverse("pay", args=[p.invoice_no])).status_code, 404)
+
+    def test_the_plan_cards_post_straight_to_checkout(self):
+        with override_settings(PESAPAL_CONSUMER_KEY="k", PESAPAL_CONSUMER_SECRET="s"):
+            r = self.client.get(reverse("m_membership"))
+        self.assertContains(r, 'class="buy"')
+        self.assertContains(r, f'name="plan" value="{self.gold.pk}"')
 
     def test_pesapal_telling_us_twice_activates_only_once(self):
         self.buy_gold()
@@ -1052,7 +1079,7 @@ class PesapalTests(TestCase):
                 "image": SimpleUploadedFile("p.jpg", buf.getvalue(), "image/jpeg")})
             order = AdOrder.objects.get()
             r = self.client.post(reverse("ad_detail", args=[order.token]))
-            self.assertTrue(r["Location"].startswith("https://pay.pesapal.com/"))
+            self.assertTrue(r["Location"].startswith("/payments/pay/INV-"))
             self.client.get(reverse("pesapal_callback"), {"OrderTrackingId": "trk-1"})
         order.refresh_from_db()
         self.assertEqual(order.status, "live")
@@ -1201,7 +1228,7 @@ class BannerTests(TestCase):
             cache.clear()
             self.book(); b = BannerOrder.objects.get()
             r = self.client.post(b.get_absolute_url())
-            self.assertTrue(r["Location"].startswith("https://pay.pesapal.com/"))
+            self.assertTrue(r["Location"].startswith("/payments/pay/INV-"))
             self.client.get(reverse("pesapal_callback"), {"OrderTrackingId": "trk-1"})
             b.refresh_from_db(); self.assertEqual(b.status, "review")          # paid; our team still checks the picture
             self.assertTrue(Notification.objects.filter(user=self.staff, title__contains="Banner to approve").exists())
