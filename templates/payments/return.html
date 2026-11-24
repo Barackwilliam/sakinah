@@ -1,0 +1,5 @@
+{% load i18n %}<!doctype html><html lang="{{ LANGUAGE_CODE }}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="2;url={{ next }}"><title>{% translate "Payment" %}</title>
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;font:500 15px system-ui,sans-serif;color:#4a4f5c;background:#fff}</style></head>
+<body><p>{% translate "Payment received. Taking you back…" %} <a href="{{ next }}" target="_top">{% translate "Continue" %}</a></p>
+<script>var u="{{ next|escapejs }}";try{window.top.location.replace(u)}catch(e){location.replace(u)}</script></body></html>

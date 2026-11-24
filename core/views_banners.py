@@ -61,13 +61,13 @@ def banner_detail(request, token):
             pay = Payment.objects.create(user=request.user, payer_name=name[:100], payer_phone=phone, kind="banner", amount=b.slot.price,
                                          gateway="pesapal", status="pending", description=desc, banner_order=b)
             try:
-                url = pesapal.checkout(pay, request, email=request.user.email, phone=phone, name=name)
+                pesapal.checkout(pay, request, email=request.user.email, phone=phone, name=name)
             except pesapal.PesapalError as e:
                 log.error("Pesapal checkout failed for %s: %s", pay.invoice_no, e)
                 pay.status = "failed"; pay.save(update_fields=["status"])
                 messages.error(request, _("We could not open the payment page right now. Please try again in a moment."))
                 return redirect("ad_banner", token=b.token)
-            return redirect(url)
+            return redirect(pesapal.pay_page(pay))
         if form.is_valid():   # no Pesapal keys: the payer gives the mobile-money reference and our team confirms it
             d = form.cleaned_data
             pay = Payment.objects.create(user=request.user, payer_name=name[:100], payer_phone=d["phone"], kind="banner", amount=b.slot.price,

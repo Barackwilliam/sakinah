@@ -1,0 +1,60 @@
+{% extends "base.html" %}{% load i18n humanize assets %}
+{% block title %}{% blocktranslate with brand=site.brand %}Secure payment - {{ brand }}{% endblocktranslate %}{% endblock %}
+{% block bodyclass %}checkout-page{% endblock %}
+{% block head %}<link rel="stylesheet" href="{% asset 'css/checkout.css' %}">{% endblock %}
+{% block navbar %}{% endblock %}{% block footer %}{% endblock %}
+{% block content %}
+<div class="co">
+  <header class="co-top">
+    {% include "partials/logo.html" %}
+    <span class="co-secure"><svg><use href="{{ icons }}#i-lock"/></svg>{% translate "Secure checkout" %}</span>
+    <a class="co-cancel" href="{{ back }}"><svg><use href="{{ icons }}#i-chev-l"/></svg>{% translate "Cancel" %}</a>
+  </header>
+
+  <div class="co-grid">
+    <aside class="co-sum">
+      <span class="co-kick">{% translate "You are paying for" %}</span>
+      <h1>{{ title }}</h1>
+      <p class="co-detail">{{ detail }}</p>
+      <div class="co-amount"><small>{% translate "Total" %}</small><b><span>{{ site.currency }}</span> {{ p.amount|intcomma }}</b></div>
+      <dl class="co-dl">
+        <div><dt>{% translate "Invoice" %}</dt><dd>{{ p.invoice_no }}</dd></div>
+        <div><dt>{% translate "Name" %}</dt><dd>{{ p.payer_name }}</dd></div>
+        {% if p.payer_phone %}<div><dt>{% translate "Phone" %}</dt><dd>{{ p.payer_phone }}</dd></div>{% endif %}
+      </dl>
+      <ol class="co-steps">
+        <li><i>1</i><span>{% translate "Choose how to pay in the secure form." %}</span></li>
+        <li><i>2</i><span>{% translate "Confirm on your phone with your PIN, or enter your card." %}</span></li>
+        <li><i>3</i><span>{% translate "We switch it on straight away. No need to send us a reference." %}</span></li>
+      </ol>
+      <ul class="co-methods" aria-label="{% translate 'Ways to pay' %}">
+        <li class="m-mpesa">M-Pesa</li><li class="m-airtel">Airtel Money</li><li class="m-mixx">Mixx by Yas</li><li class="m-halo">HaloPesa</li><li class="m-card">Visa · Mastercard</li>
+      </ul>
+      <p class="co-safe"><svg><use href="{{ icons }}#i-shield-c"/></svg>{% translate "The payment is handled by Pesapal. Sakinah never sees your PIN or card number." %}</p>
+    </aside>
+
+    <section class="co-pay">
+      <div class="co-pay-h"><b><svg><use href="{{ icons }}#i-lock"/></svg>Pesapal</b><span class="co-st" id="co-st"><i></i>{% translate "Waiting for your payment" %}</span></div>
+      <div class="co-frame">
+        <div class="co-load" id="co-load"><span class="co-spin"></span>{% translate "Opening the secure payment form…" %}</div>
+        <iframe id="co-if" onload="document.getElementById('co-load').hidden=true" src="{{ p.checkout_url }}" title="{% translate 'Pesapal secure payment' %}" allow="payment" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <p class="co-alt">{% translate "Form not showing?" %} <a href="{{ p.checkout_url }}" target="_blank" rel="noopener">{% translate "Open Pesapal in a new window" %}</a></p>
+    </section>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script>
+(function(){
+  const f=document.getElementById('co-if'), load=document.getElementById('co-load'), st=document.getElementById('co-st');
+  f.addEventListener('load',()=>{load.hidden=true});
+  setTimeout(()=>{load.hidden=true},12000);
+  let busy=false;
+  async function check(){ if(busy) return; busy=true;
+    try{const r=await fetch("{{ status_url }}",{headers:{'Accept':'application/json'},credentials:'same-origin'}); const d=await r.json();
+      if(d.next){st.classList.add(d.status==='completed'?'ok':'bad'); st.lastChild.textContent=d.status==='completed'?gettext('Payment received'):gettext('Payment failed');
+        setTimeout(()=>location.replace(d.next),900); return;}
+    }catch(e){} busy=false; }
+  setInterval(check,5000);
+})();
+</script>{% endblock %}

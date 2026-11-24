@@ -528,3 +528,6 @@ html[lang=ar] *{letter-spacing:0!important}
   background:linear-gradient(135deg,#4f0d1c,#a1053a);color:#fff;box-shadow:none}
 .sb-invite b{font:700 20px/1.2 var(--serif,serif)}.sb-invite small{opacity:.85;font-size:13px}.sb-invite span{margin-top:6px;color:#f3c66b;font-weight:700;font-size:14px}
 .ad-grid .sbanner.sb-sidebar{margin:0;height:100%}
+.plan form.buy{margin-top:auto;width:100%}.plan form.buy .pbtn{margin-top:0}
+.ctable form.buy{display:inline}
+.btn.wait{opacity:.75;pointer-events:none}

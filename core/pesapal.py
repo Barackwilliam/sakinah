@@ -95,9 +95,14 @@ def checkout(payment, request, email="", phone="", name=""):
     body = _call("POST", "/Transactions/SubmitOrderRequest", order, token())
     if not body.get("redirect_url") or not body.get("order_tracking_id"):
         raise PesapalError("Pesapal did not return a checkout page.")
-    payment.tracking_id = body["order_tracking_id"]
-    payment.save(update_fields=["tracking_id"])
+    payment.tracking_id, payment.checkout_url = body["order_tracking_id"], body["redirect_url"][:500]
+    payment.save(update_fields=["tracking_id", "checkout_url"])
     return body["redirect_url"]
+
+
+def pay_page(payment):
+    """Our own checkout page, with Pesapal's payment form opened inside it."""
+    return reverse("pay", args=[payment.invoice_no])
 
 
 def refresh(payment, request=None):

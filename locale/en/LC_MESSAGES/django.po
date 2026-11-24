@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sakinah\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-24 01:57+0300\n"
+"POT-Creation-Date: 2026-11-25 01:01+0300\n"
 "PO-Revision-Date: 2026-11-20 00:00+0300\n"
 "Last-Translator: Sakinah\n"
 "Language-Team: Sakinah\n"
@@ -1474,6 +1474,15 @@ msgstr ""
 msgid "Best size: %s × %s pixels"
 msgstr ""
 
+msgid "Payment received"
+msgstr ""
+
+msgid "Payment failed"
+msgstr ""
+
+msgid "Opening payment…"
+msgstr ""
+
 msgid "Couple photo on the Go Premium card"
 msgstr ""
 
@@ -1872,6 +1881,9 @@ msgid "Transaction / receipt number from the gateway"
 msgstr ""
 
 msgid "Pesapal's order tracking id."
+msgstr ""
+
+msgid "Pesapal's payment page, shown inside our own checkout page."
 msgstr ""
 
 msgid "How the payer paid inside Pesapal, e.g. M-Pesa or Visa."
@@ -2523,6 +2535,18 @@ msgid ""
 "Your payment is being processed. This page updates as soon as Pesapal "
 "confirms it."
 msgstr ""
+
+#, python-format
+msgid "%(n)d month of membership"
+msgid_plural "%(n)d months of membership"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "%(n)d day"
+msgid_plural "%(n)d days"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Your email is verified. Welcome to Sakinah!"
 msgstr ""
@@ -5447,7 +5471,7 @@ msgstr ""
 msgid "Upgrade your plan"
 msgstr ""
 
-msgid "How to pay"
+msgid "Pay for several months"
 msgstr ""
 
 msgid "Choose your plan and how many months."
@@ -5460,6 +5484,9 @@ msgstr ""
 
 msgid ""
 "Your plan is activated automatically as soon as the payment is complete."
+msgstr ""
+
+msgid "How to pay"
 msgstr ""
 
 msgid "Pay the amount for your plan by mobile money or bank."
@@ -5488,6 +5515,9 @@ msgid "Current Plan"
 msgstr ""
 
 msgid "Free Plan"
+msgstr ""
+
+msgid "Renew Plan"
 msgstr ""
 
 msgid "Switch Plan"
@@ -8815,6 +8845,54 @@ msgstr ""
 
 msgid "Sikiliza ujumbe wa sauti"
 msgstr "Listen to voice message"
+
+#, python-format
+msgid "Secure payment - %(brand)s"
+msgstr ""
+
+msgid "Secure checkout"
+msgstr ""
+
+msgid "You are paying for"
+msgstr ""
+
+msgid "Choose how to pay in the secure form."
+msgstr ""
+
+msgid "Confirm on your phone with your PIN, or enter your card."
+msgstr ""
+
+msgid "We switch it on straight away. No need to send us a reference."
+msgstr ""
+
+msgid "Ways to pay"
+msgstr ""
+
+msgid ""
+"The payment is handled by Pesapal. Sakinah never sees your PIN or card "
+"number."
+msgstr ""
+
+msgid "Waiting for your payment"
+msgstr ""
+
+msgid "Opening the secure payment form…"
+msgstr ""
+
+msgid "Pesapal secure payment"
+msgstr ""
+
+msgid "Form not showing?"
+msgstr ""
+
+msgid "Open Pesapal in a new window"
+msgstr ""
+
+msgid "Payment received. Taking you back…"
+msgstr ""
+
+msgid "Continue"
+msgstr ""
 
 #, python-format
 msgid "Packages - %(brand)s"

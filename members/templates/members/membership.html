@@ -17,7 +17,7 @@
       <h3 class="bh"><svg class="mag"><use href="{{ micons }}#m-card"/></svg>{% translate "Upgrade your plan" %}<a class="ed" href="?tab={{ tab }}">{% translate "Close" %}</a></h3>
       <div class="pay-g">
         {% if online %}
-        <div class="pay-how"><b>{% translate "How to pay" %}</b>
+        <div class="pay-how"><b>{% translate "Pay for several months" %}</b>
           <ol><li>{% translate "Choose your plan and how many months." %}</li><li>{% translate "Pay on Pesapal's secure page with M-Pesa, Airtel Money, Mixx by Yas, HaloPesa or card." %}</li><li>{% translate "Your plan is activated automatically as soon as the payment is complete." %}</li></ol></div>
         {% else %}
         <div class="pay-how"><b>{% translate "How to pay" %}</b><p>{{ site.payment_instructions|tr|linebreaksbr }}</p>
@@ -43,8 +43,10 @@
         <h3>{{ p.name }}</h3><small>{{ p.tagline|tr|default:"&nbsp;" }}</small>
         <div class="pp"><b>{% blocktranslate with price=p.price|intcomma %}TSh {{ price }}{% endblocktranslate %}</b><span>{{ p.period|tr }}</span></div>
         <ul class="tlist">{% for ok, t in p.feature_list %}{% if ok %}<li><svg><use href="{{ micons }}#m-check-c"/></svg>{{ t }}</li>{% endif %}{% endfor %}</ul>
-        {% if p.pk == current.pk %}<span class="btn pbtn curb">{% translate "Current Plan" %}</span>
-        {% elif not p.price %}<span class="btn pbtn curb">{% translate "Free Plan" %}</span>
+        {% if not p.price %}<span class="btn pbtn curb">{% if p.pk == current.pk %}{% translate "Current Plan" %}{% else %}{% translate "Free Plan" %}{% endif %}</span>
+        {% elif online %}<form method="post" class="buy">{% csrf_token %}<input type="hidden" name="plan" value="{{ p.pk }}"><input type="hidden" name="months" value="1">
+          <button class="btn pbtn">{% if p.pk == current.pk %}{% translate "Renew Plan" %}{% elif me.is_premium and p.price < current.price %}{% translate "Switch Plan" %}{% else %}{% translate "Upgrade Now" %}{% endif %}</button></form>
+        {% elif p.pk == current.pk %}<span class="btn pbtn curb">{% translate "Current Plan" %}</span>
         {% else %}<a class="btn pbtn" href="?tab=plans&amp;pay={{ p.pk }}#pay">{% if me.is_premium and p.price < current.price %}{% translate "Switch Plan" %}{% else %}{% translate "Upgrade Now" %}{% endif %}</a>{% endif %}
       </article>
       {% endfor %}
@@ -64,7 +66,7 @@
     {% if tab == 'compare' %}
     <section class="box tbl-wrap"><table class="ctable"><thead><tr><th>{% translate "Feature" %}</th>{% for p in plans %}<th class="{{ p.style }}">{{ p.name }}<small>{% blocktranslate with price=p.price|intcomma %}TSh {{ price }}{% endblocktranslate %}</small></th>{% endfor %}</tr></thead>
       <tbody>{% for t, row in compare %}<tr><td>{{ t }}</td>{% for ok in row %}<td>{% if ok %}<svg class="ok"><use href="{{ micons }}#m-check-c"/></svg>{% else %}<svg class="muted"><use href="{{ micons }}#m-x-c"/></svg>{% endif %}</td>{% endfor %}</tr>{% endfor %}
-      <tr><td></td>{% for p in plans %}<td>{% if p.pk == current.pk %}<span class="muted">{% translate "Current" %}</span>{% elif p.price %}<a class="btn sm" href="?tab=compare&amp;pay={{ p.pk }}#pay">{% translate "Choose" %}</a>{% endif %}</td>{% endfor %}</tr></tbody></table></section>
+      <tr><td></td>{% for p in plans %}<td>{% if p.pk == current.pk %}<span class="muted">{% translate "Current" %}</span>{% elif p.price and online %}<form method="post" class="buy">{% csrf_token %}<input type="hidden" name="plan" value="{{ p.pk }}"><input type="hidden" name="months" value="1"><button class="btn sm">{% translate "Choose" %}</button></form>{% elif p.price %}<a class="btn sm" href="?tab=compare&amp;pay={{ p.pk }}#pay">{% translate "Choose" %}</a>{% endif %}</td>{% endfor %}</tr></tbody></table></section>
     {% endif %}
 
     {% if tab == 'mine' %}
@@ -113,4 +115,7 @@
 (function(){var f=document.querySelector('.paybox form');if(!f)return;var prices=JSON.parse(document.getElementById('plan-prices').textContent);
 var pl=f.querySelector('[name=plan]'),mo=f.querySelector('[name=months]'),out=document.getElementById('paytotal');
 function upd(){var v=(prices[pl.value]||0)*(+mo.value||1);out.textContent=v?'TSh '+v.toLocaleString('en-US'):'—'}pl.onchange=mo.onchange=upd;upd();
-var b=document.getElementById('pay');if(b)b.scrollIntoView({block:'start'});})();</script>{% endblock %}
+var b=document.getElementById('pay');if(b)b.scrollIntoView({block:'start'});})();
+// one tap on a plan starts the payment: stop double taps and show that the payment page is opening
+document.querySelectorAll('form.buy').forEach(function(f){f.addEventListener('submit',function(e){var btn=f.querySelector('button');
+  if(f.dataset.sent){e.preventDefault();return}f.dataset.sent=1;btn.classList.add('wait');btn.textContent=gettext('Opening payment…')})});</script>{% endblock %}
