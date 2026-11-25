@@ -5,6 +5,15 @@
 <div class="cards">{% for label, value, delta, icon, color in cards %}
   <div class="card" style="--c:{{ color }}"><span class="ci"><svg><use href="#i-{{ icon }}"/></svg></span>
     <div><small>{{ label }}</small><b>{{ value }}</b>{% if delta is not None %}<em class="{% if delta < 0 %}down{% endif %}">{% if delta < 0 %}&#9660;{% else %}&#9650;{% endif %} {{ delta }}%</em>{% endif %}<span class="note">{% translate "This month" %}</span></div></div>{% endfor %}</div>
+<section class="panel mailchk" id="mail-check">
+  <div class="mc-info"><b>{% translate "Email delivery" %}</b>
+    {% if email_live %}<span class="mc-on">{% blocktranslate %}On, through {{ mail_via }}{% endblocktranslate %}</span> <small>{% blocktranslate %}Sending from {{ mail_from }}{% endblocktranslate %}</small>
+    {% else %}<span class="mc-off">{% translate "Off" %}</span> <small>{% translate "Sign-up codes are skipped until email works." %}</small>{% endif %}
+    {% if mail_error %}<p class="mc-err"><b>{% blocktranslate with at=mail_error.at|date:"d M H:i" %}A sign-up code could not be sent ({{ at }}):{% endblocktranslate %}</b> {{ mail_error.error }}<br>{{ mail_error_hint }}</p>{% endif %}</div>
+  <form method="post" action="{% url 'dash_email_test' %}" class="mc-form">{% csrf_token %}
+    <input type="email" name="to" value="{{ request.user.email }}" placeholder="{% translate 'Email address' %}" required>
+    <button class="btn"><svg><use href="#i-send"/></svg>{% translate "Send test email" %}</button></form>
+</section>
 <form method="post" class="g-comm" id="compose">{% csrf_token %}{{ form.channel }}
   <section class="panel"><div class="pn-h"><svg><use href="#i-doc"/></svg><h2>{% translate "Create New Message" %}</h2></div>
     <div class="chans">{% for v, l in channels %}<button type="button" data-chan="{{ v }}" class="{% if form.channel.value == v %}on{% endif %}">{{ l }}</button>{% endfor %}<button type="button" disabled title="{% translate 'Needs an SMS provider' %}">{% translate "SMS (not set up)" %}</button></div>

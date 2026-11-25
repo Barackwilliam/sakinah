@@ -562,13 +562,49 @@ def communications(request):
                                   n_premium=Count("pk", filter=Q(premium_until__gte=timezone.localdate())),
                                   n_women=Count("pk", filter=Q(gender="F")), n_men=Count("pk", filter=Q(gender="M")))
     groups = [(_l("All Members"), rc["n_all"]), (_l("Verified Members"), rc["n_verified"]), (_l("Premium Members"), rc["n_premium"]), (_l("Women"), rc["n_women"]), (_l("Men"), rc["n_men"])]
+    from django.core.cache import cache
+    last_error = cache.get("email-last-error")
     groups += [(c["city"], c["n"]) for c in Member.objects.filter(user__isnull=False).values("city").annotate(n=Count("pk")).order_by("-n")[:4]]
     return page(request, "dashboard/communications.html", {"nav": "comms", "form": form, "cards": cards,
         "templates": MessageTemplate.objects.all(), "history": Broadcast.objects.select_related("created_by")[:8],
         "estimate": recipients(raw_filters(request.POST if request.method == "POST" else request.GET)).count(),
         "chart": bar_chart([d.strftime("%d %b") for d in days], [(_l("Emails"), "#e23d5a", weekly("email")), (_l("In-App"), "#2f6fe4", weekly("inapp")),
                                                                  (_l("Notifications"), "#22a052", weekly("notification"))]),
-        "groups": groups, "email_live": "console" not in settings.EMAIL_BACKEND, "channels": Broadcast.CHANNELS})
+        "groups": groups, "email_live": "console" not in settings.EMAIL_BACKEND, "channels": Broadcast.CHANNELS,
+        "mail_from": settings.DEFAULT_FROM_EMAIL, "mail_via": settings.EMAIL_BACKEND.rsplit(".", 1)[-1].replace("Backend", "").replace("Email", "SMTP"),
+        "mail_error": last_error, "mail_error_hint": email_hint(last_error["error"]) if last_error else ""})
+
+def email_hint(error):
+    """Turn a mail provider's error into the fix the admin should make."""
+    e = error.lower()
+    if "ip" in e and ("unrecogni" in e or "authori" in e or "not allowed" in e):
+        return _("Brevo is blocking the server's IP address. In Brevo open Security > Authorised IPs and turn off IP blocking (Render's IP changes).")
+    if "sender" in e or ("from" in e and "valid" in e):
+        return _("The sender address %(email)s is not verified in Brevo. Add and confirm it under Senders, or set DEFAULT_FROM_EMAIL on Render to the address you verified.") % {"email": settings.DEFAULT_FROM_EMAIL}
+    if "key not found" in e or "unauthori" in e or "401" in e or "api key" in e:
+        return _("The API key was rejected. Create a new key in Brevo (SMTP & API > API Keys) and paste it again as BREVO_API_KEY on Render.")
+    if "activat" in e or "suspend" in e or "permission" in e:
+        return _("Your Brevo account cannot send transactional email yet. Finish the account activation in Brevo or contact their support.")
+    return _("Check the error above in your email provider's dashboard.")
+
+@staff_required
+@require_POST
+def email_test(request):
+    """Send one email right now and show the provider's exact answer, so a wrong key or sender is easy to spot."""
+    from django.core.mail import send_mail
+    to = (request.POST.get("to") or request.user.email or "").strip()
+    if not to:
+        messages.error(request, _("Type the email address to send the test to.")); return redirect(reverse("dash_comms") + "#mail-check")
+    try:
+        send_mail(_("Test email from %(brand)s") % {"brand": SiteSetting.load().brand},
+                  _("If you can read this, emails (and sign-up codes) are working."), None, [to], fail_silently=False)
+    except Exception as e:
+        messages.error(request, _("The test email failed: %(e)s") % {"e": str(e)[:300]} + " " + email_hint(str(e)))
+    else:
+        messages.success(request, _("Test email sent to %(to)s. If it is not in the inbox in a few minutes, look in Spam.") % {"to": to})
+        from django.core.cache import cache
+        cache.delete("email-last-error")
+    return redirect(reverse("dash_comms") + "#mail-check")
 
 # ---------- payments ----------
 @staff_required

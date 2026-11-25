@@ -11,6 +11,7 @@ urlpatterns = [
     path("members/import/", views.members_import, name="dash_members_import"),
     path("matches/", views.matches, name="dash_matches"),
     path("communications/", views.communications, name="dash_comms"),
+    path("communications/test-email/", views.email_test, name="dash_email_test"),
     path("payments/", views.payments, name="dash_payments"),
     path("payments/export.csv", views.payments_csv, name="dash_payments_csv"),
     path("payments/<int:pk>/action/", views.payment_action, name="dash_payment_action"),

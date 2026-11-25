@@ -17,6 +17,12 @@ log = logging.getLogger(__name__)
 MAX_ATTEMPTS = 5
 
 
+def remember_failure(e):
+    """Keep the last mail error for a week so the admin's Communication Center can show why codes aren't going out."""
+    from django.core.cache import cache
+    cache.set("email-last-error", {"at": timezone.now(), "error": str(e)[:400]}, 7 * 24 * 3600)
+
+
 def required():
     return bool(getattr(settings, "EMAIL_LIVE", False))
 
@@ -54,6 +60,7 @@ def start(request, user, email=None):
         msg.send()
     except Exception as e:   # a mail outage must not lock the member out
         log.error("Verification email to user %s failed: %s", user.pk, e)
+        remember_failure(e)
         mark(user, True)
         return False
     return True

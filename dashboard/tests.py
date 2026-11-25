@@ -19,6 +19,21 @@ class DashboardTests(TestCase):
         self.asha = Member.objects.create(user=u2, name="Asha", age=25, gender="F", city="Dodoma", occupation="Nurse", verified=True)
         self.gold = Plan.objects.create(name="Gold", price=50000)
 
+    def test_admin_can_send_a_test_email_and_sees_why_it_fails(self):
+        self.client.force_login(self.admin)
+        self.client.post(reverse("dash_email_test"), {"to": "boss@example.com"})
+        self.assertEqual(mail.outbox[-1].to, ["boss@example.com"])
+        with mock.patch("django.core.mail.EmailMessage.send", side_effect=RuntimeError('Email could not be sent: {"code":"unauthorized","message":"unrecognised IP address 1.2.3.4"}')):
+            r = self.client.post(reverse("dash_email_test"), {"to": "boss@example.com"}, follow=True)
+        self.assertContains(r, "unrecognised IP address")
+        self.assertContains(r, "Authorised IPs")
+        # a sign-up code that couldn't be sent shows up in the Communication Center
+        from django.core.cache import cache
+        from core.verify import remember_failure
+        remember_failure(RuntimeError("Sender not valid"))
+        self.assertContains(self.client.get(reverse("dash_comms")), "Sender not valid")
+        cache.delete("email-last-error")
+
     def test_only_staff_can_open_dashboard(self):
         url = reverse("dashboard")
         self.assertRedirects(self.client.get(url), f"{reverse('dash_login')}?next={url}")

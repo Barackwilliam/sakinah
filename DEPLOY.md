@@ -55,6 +55,8 @@ Baada ya hapo `admin.sakinah.co.tz` inafungua login ya admin moja kwa moja, na v
 2. **SMTP & API → API Keys** → tengeneza key.
 3. Kwenye Render weka `BREVO_API_KEY` = key hiyo, na `DEFAULT_FROM_EMAIL` = `Sakinah <email-uliyothibitisha>`.
 
+**Kuhakikisha email zinafanya kazi:** dashboard → **Mawasiliano** → kisanduku **Utumaji wa email** → **Tuma email ya majaribio**. Ikishindwa, utaona kosa halisi la Brevo na jinsi ya kulirekebisha (sender hajathibitishwa, IP imezuiwa, key si sahihi). Code ya usajili ikishindwa kutumwa, kosa lake nalo linaonekana hapo.
+
 Mbadala: `RESEND_API_KEY` (resend.com), au `EMAIL_HOST`/`EMAIL_PORT`/`EMAIL_HOST_USER`/`EMAIL_HOST_PASSWORD` kwa SMTP (inafanya kazi kwenye plan za kulipia tu). Bila hivi, email zinaandikwa kwenye log tu.
 
 **Forgot password bila email:** member anaweza kuandika email, username au namba ya simu. Email ikishindwa kutumwa (au akaunti haina email), ombi linaingia **Support & Tickets** kama "Password reset help". Admin anafungua **Members Management → ⋮ → Password reset link**, ananakili link na kumtumia member kwa WhatsApp au SMS.
